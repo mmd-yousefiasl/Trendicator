@@ -17,6 +17,9 @@ try
     // Add services to the container.
     builder.Services.AddControllersWithViews();
 
+    // SiteTools
+    builder.Configuration.GetSection("SiteTools").Get<SiteTools>();
+
     #region Data protection
 
     builder.Services.AddDataProtection()

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
 
 namespace Web.Configuration
 {
@@ -25,14 +24,6 @@ namespace Web.Configuration
                 option.Cookie.IsEssential = true;
                 option.Cookie.HttpOnly = true;
                 option.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            })
-            .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
-            {
-                //builder.Configuration["Authentication:Google:ClientId"];
-                options.ClientId = "asdasdasdasd";
-
-                //builder.Configuration["Authentication:Google:ClientSecret"];
-                options.ClientSecret = "asdasdasd"; 
             });
         }
     }
