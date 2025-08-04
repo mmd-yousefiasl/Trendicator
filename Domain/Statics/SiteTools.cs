@@ -14,7 +14,6 @@
         #region User
 
         public static string UserAvatarFile { get; set; }
-        public static string UserDefaultAvatar { get; set; }
 
         #endregion
     }

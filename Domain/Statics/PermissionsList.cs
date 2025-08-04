@@ -1,4 +1,5 @@
 ﻿using Domain.Models.Identity;
+using System.Net.Http.Headers;
 
 namespace Domain.Statics
 {
@@ -13,9 +14,85 @@ namespace Domain.Statics
                 Title = "Admin Panel",
                 UniqueName = "AdminPanel"
             },
+
+            #region User
+            new Permission
+            {
+                Id = 2,
+                ParentId = 1,
+                Title = "مدیریت کاربران",
+                UniqueName = "ManageUsers"
+            },
+            new Permission
+            {
+                Id = 3,
+                ParentId = 2,
+                Title = "لیست کاربران",
+                UniqueName = "UsersList"
+            },
+            new Permission
+            {
+                Id = 4,
+                ParentId = 2,
+                Title = "افزودن کاربر جدید",
+                UniqueName = "CreateNewUser"
+            },
+            new Permission
+            {
+                Id = 5,
+                ParentId = 2,
+                Title = "ویرایش کاربر",
+                UniqueName = "UpdateUser"
+            },
+            new Permission
+            {
+                Id = 6,
+                ParentId = 2,
+                Title = "حذف کاربر",
+                UniqueName = "DeleteUser"
+            },
+            #endregion
+
+            #region Role
+            new Permission
+            {
+                Id = 7,
+                ParentId = 1,
+                Title = "مدیریت نقش ها",
+                UniqueName = "ManageRoles"
+            },
+            new Permission
+            {
+                Id = 8,
+                ParentId = 7,
+                Title = "لیست نقش ها",
+                UniqueName = "RolesList"
+            },
+            new Permission
+            {
+                Id = 9,
+                ParentId = 7,
+                Title = "افزودن نقش جدید",
+                UniqueName = "CreateNewRole"
+            },
+            new Permission
+            {
+                Id = 10,
+                ParentId = 7,
+                Title = "ویرایش نقش",
+                UniqueName = "UpdateRole"
+            },
+            new Permission
+            {
+                Id = 11,
+                ParentId = 7,
+                Title = "حذف نقش",
+                UniqueName = "DeleteRole"
+            },
+            #endregion
         };
 
-        //Last used id ==> 1
+        //Last used id ==> 11
         public static List<Permission> Permissions = _permissions;
     }
 }

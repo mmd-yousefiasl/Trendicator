@@ -1,0 +1,44 @@
+﻿<div class="vertical-menu">
+
+    <div data-simplebar class="h-100">
+
+        <!--- Sidemenu -->
+        <div id="sidebar-menu">
+            <!-- Left Menu Start -->
+            <ul class="metismenu list-unstyled" id="side-menu">
+                <li>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="waves-effect">
+                        <i class="mdi mdi-home"></i>
+                        <span>بازگشت به سایت</span>
+                    </a>
+                </li>
+
+                <li class="menu-title">منو اصلی </li>
+
+                <li permission="ManageUsers">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-account"></i>
+                        <span>مدیریت کاربران</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="UsersList"><a asp-area="Admin" asp-controller="User" asp-action="UsersList">لیست کاربران</a></li>
+                        <li permission="CreateNewUser"><a asp-area="Admin" asp-controller="User" asp-action="CreateNewUser">افزودن کاربر جدید</a></li>
+                    </ul>
+                </li>
+
+                <li permission="ManageRoles">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-account"></i>
+                        <span>مدیریت نقش ها</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="RolesList"><a asp-area="Admin" asp-controller="Role" asp-action="RolesList">لیست نقش ها</a></li>
+                        <li permission="CreateNewRole"><a asp-area="Admin" asp-controller="Role" asp-action="CreateNewRole">افزودن نقش جدید</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+        <!-- Sidebar -->
+    </div>
+</div>

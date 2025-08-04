@@ -45,10 +45,10 @@
                     value2 = (Page * TakeEntity > AllEntitiesCount) ? AllEntitiesCount : (Page * TakeEntity);
                 }
 
-                return $"Showing {value} to {value2} from {AllEntitiesCount} items";
+                return $"در حال نمایش {value} تا {value2} از {AllEntitiesCount} ورودی";
             }
 
-            return "0 item";
+            return "0 آیتم";
         }
 
         public async Task<BasePaging<T>> Paging(IQueryable<T> queryable)

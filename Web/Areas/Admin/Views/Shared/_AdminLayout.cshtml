@@ -1,0 +1,44 @@
+﻿<!doctype html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <partial name="_AdminMeta" />
+
+    <title>پنل ادمین | @ViewData["Title"]</title>
+
+    <partial name="_AdminHeaderReferences" />
+
+    @await RenderSectionAsync("HeaderReferences", required: false)
+</head>
+
+<body data-sidebar="dark">
+
+    <div id="layout-wrapper">
+
+        <partial name="_AdminHeader" />
+
+        <partial name="_AdminVerticalMenu" />
+
+        <div class="main-content">
+            <div class="page-content">
+                @RenderBody()
+            </div>
+            <partial name="_AdminFooter" />
+        </div>
+
+    </div>
+
+    <div class="rightbar-overlay"></div>
+
+    <partial name="_AdminFooterReferences" />
+
+    <partial name="_Notification" />
+    <partial name="_Modals" />
+
+    <partial name="_ValidationScriptsPartial" />
+
+    @await RenderSectionAsync("FooterReferences", required: false)
+
+</body>
+
+</html>

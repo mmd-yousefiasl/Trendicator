@@ -1,0 +1,124 @@
+﻿@using Application.Services.Interfaces
+@using Application.ViewModels.Role.AdminSide
+@using Application.ViewModels.User.AdminSide
+@model AdminSideUpdateUserViewModel
+@inject IRoleService _roleService;
+
+@{
+    ViewData["Title"] = "ویرایش کاربر";
+    var rolesList = await _roleService.GetAllRolesForUserCRUD();
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <h4>مدیریت کاربران</h4>
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="Home" asp-action="Index">صفحه نخست</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="User" asp-action="UsersList">لیست کاربران</a>
+                    </li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-9">
+            <div class="card">
+                <form class="card-body" asp-area="Admin" asp-controller="User" asp-action="UpdateUser" autocomplete="off" enctype="multipart/form-data" onsubmit="submitAnimation()" method="post">
+                    <input class="d-none image-input" type="file" asp-for="AvatarFile" accept="image/*" />
+                    <input type="hidden" asp-for="AvatarFileName" />
+                    <input type="hidden" asp-for="Id" />
+
+                    <h4 class="card-title">@ViewData["Title"]</h4>
+
+                    <div class="mb-3 row">
+                        <label asp-for="PhoneNumber" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" asp-for="PhoneNumber" required>
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="FirstName" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" asp-for="FirstName">
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="LastName" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" asp-for="LastName">
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-md-2 col-form-label" asp-for="IsUserBanned"></label>
+                        <div class="col-md-10">
+                            <select class="form-control" asp-for="IsUserBanned" required>
+                                <option value="false">فعال</option>
+                                <option value="true">غیرفعال</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h4 class="card-title">
+                        نقش ها
+                    </h4>
+                    <hr />
+
+                    <div class="mb-3 row px-5">
+                        @{
+                            int counter = 0;
+                            foreach (var item in rolesList.Value ?? new List<AdminSideRoleViewModel>())
+                            {
+                                counter++;
+                                <div class="form-check col-2">
+                                    @if (Model?.RoleIds?.Contains(item.Id) ?? false)
+                                    {
+                                        <input class="form-check-input" name="RoleIds" value="@item.Id" type="checkbox" id="formCheck-@counter" checked>
+                                    }
+                                    else
+                                    {
+                                        <input class="form-check-input" name="RoleIds" value="@item.Id" type="checkbox" id="formCheck-@counter">
+                                    }
+                                    <label class="form-check-label" for="formCheck-@counter">
+                                        @item.Title
+                                    </label>
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    <div class="col-12 text-end mt-5">
+                        <button class="btn btn-primary btn-submit" type="submit">ویرایش کاربر</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-3">
+            <div class="card p-3">
+                @if (Model.AvatarFileName == null)
+                {
+                    <img src="@SiteTools.DefaultImages" class="w-100 my-1 image-preview" alt="#user-profile" />
+                }
+                else
+                {
+                    <img src="@SiteTools.UserAvatarFile@Model.AvatarFileName" class="w-100 my-1 image-preview" alt="#user-profile" />
+                }
+                <label asp-for="AvatarFile" class="btn btn-primary m-0">انتخاب تصویر</label>
+            </div>
+        </div>
+    </div>
+</div>
