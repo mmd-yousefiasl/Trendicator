@@ -7110,16 +7110,6 @@ ul.wp-block-latest-posts.is-grid.alignwide {
 /* ----------------------------------------------------
     Product Options
 ---------------------------------------------------- */
-.nice-select .option {
-  margin-top: 0;
-  white-space: normal;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  line-height: 1.8; }
-
-.nice-select .list {
-  min-width: 100%; }
-
 .ltn__shop-options {
   margin-bottom: 40px; }
   .ltn__shop-options ul {

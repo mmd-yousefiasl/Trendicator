@@ -1,4 +1,5 @@
 ﻿using Application.ViewModels.User.AdminSide;
+using Application.ViewModels.User.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces
@@ -28,5 +29,9 @@ namespace Application.Services.Interfaces
         Task<Result> AdminSideUpdateUserProfile(AdminSideUpdateUserProfileViewModel model);
 
         Task<Result<string>> AdminSideGetAdminAvatar();
+
+        Task<Result> SendUserLoginCode(ClientSideLoginViewModel model);
+
+        Task<Result<ClientSideUserViewModel>> VerifyLoginCode(ClientSideLoginCodeViewModel model);
     }
 }

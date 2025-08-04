@@ -1,6 +1,7 @@
 ﻿using Application.Services.Interfaces;
 using Application.Tools;
 using Application.ViewModels.User.AdminSide;
+using Application.ViewModels.User.ClientSide;
 using Data.Context;
 using Domain.Models.Users;
 using Domain.Shared;
@@ -16,15 +17,18 @@ namespace Application.Services.Implementaions
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly TrendicatorDbContext _context;
         private protected DbSet<User> _dbSet;
+        private readonly IUserValidationService _userValidationService;
         #endregion
 
         #region Ctor
         public UserService(IHttpContextAccessor httpContextAccessor,
-            TrendicatorDbContext context)
+            TrendicatorDbContext context,
+            IUserValidationService userValidationService)
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
             _dbSet = context.Set<User>();
+            _userValidationService = userValidationService;
         }
         #endregion
 
@@ -306,6 +310,55 @@ namespace Application.Services.Implementaions
             if (string.IsNullOrWhiteSpace(userAvatar)) return Result.Failure<string>(Messages.OperationFailedError);
 
             return userAvatar;
+        }
+
+        public async Task<Result> SendUserLoginCode(ClientSideLoginViewModel model)
+        {
+            if (model is null) return Result.Failure<bool>(Messages.OperationFailedError);
+
+            User loginUser = await _dbSet.Where(n => n.PhoneNumber == model.PhoneNumber).FirstOrDefaultAsync();
+            if (loginUser is null)
+            {
+                loginUser = new User();
+
+                loginUser.PhoneNumber = model.PhoneNumber;
+                loginUser.IsUserBanned = false;
+
+                await _dbSet.AddAsync(loginUser);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                if (loginUser.IsUserBanned) return Result.Failure(Messages.OperationFailedError);
+            }
+
+            var validationResult = await _userValidationService.GenerateUserValidationCode(model.PhoneNumber);
+            if (validationResult.IsFailure) return Result.Failure(validationResult.Message);
+
+            Console.WriteLine("Login Code: " + validationResult.Value);
+
+            //await _smsServiec.SendLoginCode(validationResult.Value, loginUser.Mobile);
+
+            return Result.Success(Messages.LoginCodeSentSuccessfully);
+        }
+
+        public async Task<Result<ClientSideUserViewModel>> VerifyLoginCode(ClientSideLoginCodeViewModel model)
+        {
+            if (model is null) return Result.Failure<ClientSideUserViewModel>(Messages.OperationFailedError);
+
+            var validationResult = await _userValidationService.ValidateUserLoginCode(model.PhoneNumber, model.LoginCode);
+            if (validationResult.IsFailure) return Result.Failure<ClientSideUserViewModel>(validationResult.Message);
+
+            var user = await _dbSet.Where(n => n.PhoneNumber == model.PhoneNumber).Select(n => new ClientSideUserViewModel()
+            {
+                Id = n.Id,
+                Avatar = n.Avatar,
+                IsBanned = n.IsUserBanned,
+                Mobile = n.PhoneNumber,
+            }).AsNoTracking().FirstOrDefaultAsync();
+            if (user is null) return Result.Failure<ClientSideUserViewModel>(Messages.OperationFailedError);
+
+            return user;
         }
     }
 }

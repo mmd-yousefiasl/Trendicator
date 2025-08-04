@@ -32,3 +32,26 @@ function ConfirmDelete(element) {
         }
     });
 }
+
+function submitAnimation() {
+    var element = document.querySelector(".btn-submit");
+    var spinner = document.createElement('div');
+    const innerText = element.innerText;
+
+    element.innerText = "";
+    // Add a spinner element to the button
+    spinner.classList.add('spinner');
+
+    element.appendChild(spinner);
+
+    // Disable the button and start the animation
+    element.disabled = true;
+    spinner.style.display = 'inline-block';
+
+    setTimeout(function () {
+        // Enable the button and stop the animation after 3 seconds
+        element.disabled = false;
+        spinner.style.display = 'none';
+        element.innerText = innerText;
+    }, 3000);
+}

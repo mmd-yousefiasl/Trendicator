@@ -25,6 +25,7 @@ namespace IOC
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IPermissionService, PermissionService>();
+            services.AddScoped<IUserValidationService, UserValidationService>();
 
             #endregion
 
