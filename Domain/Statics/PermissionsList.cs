@@ -166,9 +166,47 @@ namespace Domain.Statics
                 UniqueName = "DeleteBanner"
             },
             #endregion
+
+            #region Faq
+            new Permission
+            {
+                Id = 22,
+                ParentId = 1,
+                Title = "مدیریت سوالات متداول",
+                UniqueName = "ManageFaqs"
+            },
+            new Permission
+            {
+                Id = 23,
+                ParentId = 22,
+                Title = "لیست سوالات متداول",
+                UniqueName = "FaqsList"
+            },
+            new Permission
+            {
+                Id = 24,
+                ParentId = 22,
+                Title = "افزودن سوال متداول جدید",
+                UniqueName = "CreateNewFaq"
+            },
+            new Permission
+            {
+                Id = 25,
+                ParentId = 22,
+                Title = "ویرایش سوال متداول",
+                UniqueName = "UpdateFaq"
+            },
+            new Permission
+            {
+                Id = 26,
+                ParentId = 22,
+                Title = "حذف سوال متداول",
+                UniqueName = "DeleteFaq"
+            },
+            #endregion
         };
 
-        //Last used id ==> 21
+        //Last used id ==> 26
         public static List<Permission> Permissions = _permissions;
     }
 }

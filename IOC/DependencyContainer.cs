@@ -29,6 +29,7 @@ namespace IOC
             services.AddScoped<IUserValidationService, UserValidationService>();
             services.AddScoped<ISliderService, SliderService>();
             services.AddScoped<IBannerService, BannerService>();
+            services.AddScoped<IFaqService, FaqService>();
 
             #endregion
 

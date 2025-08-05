@@ -58,6 +58,17 @@
                         <li permission="CreateNewBanner"><a asp-area="Admin" asp-controller="Banner" asp-action="CreateNewBanner">افزودن بنر جدید</a></li>
                     </ul>
                 </li>
+
+                <li permission="ManageFaqs">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-account"></i>
+                        <span>سوالات متداول</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="FaqsList"><a asp-area="Admin" asp-controller="Faq" asp-action="FaqsList">لیست سوالات متداول</a></li>
+                        <li permission="CreateNewFaq"><a asp-area="Admin" asp-controller="Faq" asp-action="CreateNewFaq">افزودن سوال متداول جدید</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->
