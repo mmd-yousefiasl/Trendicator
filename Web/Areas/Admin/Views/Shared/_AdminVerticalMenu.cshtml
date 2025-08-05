@@ -69,6 +69,17 @@
                         <li permission="CreateNewFaq"><a asp-area="Admin" asp-controller="Faq" asp-action="CreateNewFaq">افزودن سوال متداول جدید</a></li>
                     </ul>
                 </li>
+
+                <li permission="ManageOurFeatures">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-account"></i>
+                        <span>ویژگی های ما</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="OurFeaturesList"><a asp-area="Admin" asp-controller="OurFeature" asp-action="OurFeaturesList">لیست ویژگی های ما</a></li>
+                        <li permission="CreateNewOurFeature"><a asp-area="Admin" asp-controller="OurFeature" asp-action="CreateNewOurFeature">افزودن ویژگی جدید</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->

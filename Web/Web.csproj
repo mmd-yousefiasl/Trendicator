@@ -25,4 +25,8 @@
     <ProjectReference Include="..\IOC\IOC.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\files\our-feature\" />
+  </ItemGroup>
+
 </Project>

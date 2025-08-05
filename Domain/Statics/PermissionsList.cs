@@ -204,9 +204,47 @@ namespace Domain.Statics
                 UniqueName = "DeleteFaq"
             },
             #endregion
+
+            #region Our Feature
+            new Permission
+            {
+                Id = 27,
+                ParentId = 1,
+                Title = "مدیریت ویژگی های ما",
+                UniqueName = "ManageOurFeatures"
+            },
+            new Permission
+            {
+                Id = 28,
+                ParentId = 27,
+                Title = "لیست ویژگی های ما",
+                UniqueName = "OurFeaturesList"
+            },
+            new Permission
+            {
+                Id = 29,
+                ParentId = 27,
+                Title = "افزودن ویژگی جدید",
+                UniqueName = "CreateNewOurFeature"
+            },
+            new Permission
+            {
+                Id = 30,
+                ParentId = 27,
+                Title = "ویرایش ویژگی ما",
+                UniqueName = "UpdateOurFeature"
+            },
+            new Permission
+            {
+                Id = 31,
+                ParentId = 27,
+                Title = "حذف ویژگی ما",
+                UniqueName = "DeleteOurFeature"
+            },
+            #endregion
         };
 
-        //Last used id ==> 26
+        //Last used id ==> 31
         public static List<Permission> Permissions = _permissions;
     }
 }

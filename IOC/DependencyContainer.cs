@@ -30,6 +30,7 @@ namespace IOC
             services.AddScoped<ISliderService, SliderService>();
             services.AddScoped<IBannerService, BannerService>();
             services.AddScoped<IFaqService, FaqService>();
+            services.AddScoped<IOurFeaturesService, OurFeaturesService>();
 
             #endregion
 
