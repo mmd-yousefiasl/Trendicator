@@ -18,7 +18,7 @@
                 <li permission="ManageUsers">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="mdi mdi-account"></i>
-                        <span>مدیریت کاربران</span>
+                        <span>کاربران</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li permission="UsersList"><a asp-area="Admin" asp-controller="User" asp-action="UsersList">لیست کاربران</a></li>
@@ -29,11 +29,22 @@
                 <li permission="ManageRoles">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="mdi mdi-account"></i>
-                        <span>مدیریت نقش ها</span>
+                        <span>نقش ها</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li permission="RolesList"><a asp-area="Admin" asp-controller="Role" asp-action="RolesList">لیست نقش ها</a></li>
                         <li permission="CreateNewRole"><a asp-area="Admin" asp-controller="Role" asp-action="CreateNewRole">افزودن نقش جدید</a></li>
+                    </ul>
+                </li>
+
+                <li permission="ManageSlider">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-account"></i>
+                        <span>لغزنده ها</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="SlidersList"><a asp-area="Admin" asp-controller="Slider" asp-action="SlidersList">لیست لغزنده ها</a></li>
+                        <li permission="CreateNewSlider"><a asp-area="Admin" asp-controller="Slider" asp-action="CreateNewSlider">افزودن لغزنده جدید</a></li>
                     </ul>
                 </li>
 

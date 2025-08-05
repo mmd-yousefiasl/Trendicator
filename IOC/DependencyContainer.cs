@@ -1,4 +1,5 @@
-﻿using Application.Services.Implementaions;
+﻿using Application.Mediator;
+using Application.Services.Implementaions;
 using Application.Services.Interfaces;
 using Data.Context;
 using Microsoft.AspNetCore.Http;
@@ -26,10 +27,13 @@ namespace IOC
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IPermissionService, PermissionService>();
             services.AddScoped<IUserValidationService, UserValidationService>();
+            services.AddScoped<ISliderService, SliderService>();
 
             #endregion
 
+            services.AddSingleton<ICacheManager, CacheManager>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IMediatorHandler, MediatorHandler>();
         }
     }
 }

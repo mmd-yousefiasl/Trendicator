@@ -90,9 +90,47 @@ namespace Domain.Statics
                 UniqueName = "DeleteRole"
             },
             #endregion
+
+            #region Slider
+            new Permission
+            {
+                Id = 12,
+                ParentId = 1,
+                Title = "مدیریت لغزنده ها",
+                UniqueName = "ManageSlider"
+            },
+            new Permission
+            {
+                Id = 13,
+                ParentId = 12,
+                Title = "لیست لغزنده ها",
+                UniqueName = "SlidersList"
+            },
+            new Permission
+            {
+                Id = 14,
+                ParentId = 12,
+                Title = "افزودن لغزنده جدید",
+                UniqueName = "CreateNewSlider"
+            },
+            new Permission
+            {
+                Id = 15,
+                ParentId = 12,
+                Title = "ویرایش لغزنده",
+                UniqueName = "UpdateSlider"
+            },
+            new Permission
+            {
+                Id = 16,
+                ParentId = 12,
+                Title = "حذف لغزنده",
+                UniqueName = "DeleteSlider"
+            },
+            #endregion
         };
 
-        //Last used id ==> 11
+        //Last used id ==> 16
         public static List<Permission> Permissions = _permissions;
     }
 }

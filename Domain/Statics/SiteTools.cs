@@ -16,5 +16,17 @@
         public static string UserAvatarFile { get; set; }
 
         #endregion
+
+        #region Cache
+
+        public const int CachesDefaultExpirationTimeInMinutes = 60;
+
+        #endregion
+
+        #region SiteInfo
+
+        public static string SliderBanner { get; set; }
+
+        #endregion
     }
 }

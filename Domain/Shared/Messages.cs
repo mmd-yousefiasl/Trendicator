@@ -5,6 +5,7 @@
         #region Error Messages
 
         public const string RequiredError = "{0} ضروری می باشد";
+        public const string RangeError = "حداقل مقدار {0} {1} و حداکثر {2} می باشد";
         public const string OperationFailedError = "عملیات با خطا مواجه شد";
         public const string ThisPhoneNumberAlreadyRegisteredError = "این شماره موبایل قبلا ثبت شده است";
         public const string FileLengthError = "طول فایل بیش از حد مجاز است. لطفاً فایل کوچکتری انتخاب کنید";
