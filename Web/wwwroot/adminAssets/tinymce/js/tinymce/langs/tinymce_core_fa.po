@@ -1,0 +1,1233 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tinymce\n"
+"Report-Msgid-Bugs-To: http://tiny.cloud\n"
+"POT-Creation-Date: 2013-03-21 16:18:52+00:00\n"
+"PO-Revision-Date: 2023-10-08 20:38\n"
+"Last-Translator: Mike Chau\n"
+"Language-Team: Persian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"\"#: i18n:\n"
+"Language: fa_IR\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tinymce\n"
+"X-Crowdin-Project-ID: 508598\n"
+"X-Crowdin-Language: fa\n"
+"X-Crowdin-File: /pot/core/tinymce_core.pot\n"
+"X-Crowdin-File-ID: 40\n"
+
+msgid "Redo"
+msgstr "بازانجام"
+
+msgid "Undo"
+msgstr "واگرد"
+
+msgid "Cut"
+msgstr "برش"
+
+msgid "Copy"
+msgstr "کپی"
+
+msgid "Paste"
+msgstr "چسباندن"
+
+msgid "Select all"
+msgstr "انتخاب همه"
+
+msgid "New document"
+msgstr "سند جدید"
+
+msgid "Ok"
+msgstr "تأیید"
+
+msgid "Cancel"
+msgstr "لغو"
+
+msgid "Visual aids"
+msgstr "کمک‌های بصری"
+
+msgid "Bold"
+msgstr "پررنگ"
+
+msgid "Italic"
+msgstr "کج"
+
+msgid "Underline"
+msgstr "زیر خط دار"
+
+msgid "Strikethrough"
+msgstr "خط زدن"
+
+msgid "Superscript"
+msgstr "بالانگاشت"
+
+msgid "Subscript"
+msgstr "زیرنگاشت"
+
+msgid "Clear formatting"
+msgstr "پاک کردن قالب‌بندی"
+
+msgid "Remove"
+msgstr "پاک کردن"
+
+msgid "Align left"
+msgstr "ترازبندی از چپ"
+
+msgid "Align center"
+msgstr "ترازبندی از وسط"
+
+msgid "Align right"
+msgstr "ترازبندی از راست"
+
+msgid "No alignment"
+msgstr "بدون ترازبندی"
+
+msgid "Justify"
+msgstr "ترازبندی دوطرفه"
+
+msgid "Bullet list"
+msgstr "فهرست نشانه‌دار"
+
+msgid "Numbered list"
+msgstr "فهرست شماره‌دار"
+
+msgid "Decrease indent"
+msgstr "کاهش تورفتگی"
+
+msgid "Increase indent"
+msgstr "افزایش تورفتگی"
+
+msgid "Close"
+msgstr "بستن"
+
+msgid "Formats"
+msgstr "قالب‌بندی‌ها"
+
+msgid "Your browser doesn't support direct access to the clipboard. Please use the Ctrl+X/C/V keyboard shortcuts instead."
+msgstr "مرورگر شما از دسترسی مستقیم به کلیپ‌بورد پشتیبانی نمی‌کند، لطفاً از میانبرهای Ctrl+X/C/V صفحه کلید استفاده کنید."
+
+msgid "Headings"
+msgstr "سرفصل‌ها"
+
+msgid "Heading 1"
+msgstr "سرفصل 1"
+
+msgid "Heading 2"
+msgstr "سرفصل 2"
+
+msgid "Heading 3"
+msgstr "سرفصل 3"
+
+msgid "Heading 4"
+msgstr "سرفصل 4"
+
+msgid "Heading 5"
+msgstr "سرفصل 5"
+
+msgid "Heading 6"
+msgstr "سرفصل 6"
+
+msgid "Preformatted"
+msgstr "از پیش قالب‌بندی‌شده"
+
+msgid "Div"
+msgstr "بخش"
+
+msgid "Pre"
+msgstr "پیش"
+
+msgid "Code"
+msgstr "کد"
+
+msgid "Paragraph"
+msgstr "پاراگراف"
+
+msgid "Blockquote"
+msgstr "نقل قول بلوکی"
+
+msgid "Inline"
+msgstr "هم‌راستا"
+
+msgid "Blocks"
+msgstr "بلوک‌ها"
+
+msgid "Paste is now in plain text mode. Contents will now be pasted as plain text until you toggle this option off."
+msgstr "قابلیت چسباندن در حال حاضر در حالت متن ساده است. تا زمان فعال بودن این حالت، متون به صورت ساده چسبانده می‌شوند."
+
+msgid "Fonts"
+msgstr "فونت‌‌ها"
+
+msgid "Font sizes"
+msgstr "سایز فونت"
+
+msgid "Class"
+msgstr "دسته"
+
+msgid "Browse for an image"
+msgstr "انتخاب تصویر..."
+
+msgid "OR"
+msgstr "یا"
+
+msgid "Drop an image here"
+msgstr "تصویر مورد نظر را اینجا رها کنید"
+
+msgid "Upload"
+msgstr "آپلود"
+
+msgid "Uploading image"
+msgstr "در حال بارگزاری تصویر"
+
+msgid "Block"
+msgstr "بلوک"
+
+msgid "Align"
+msgstr "ترازبندی"
+
+msgid "Default"
+msgstr "پیش‌فرض"
+
+msgid "Circle"
+msgstr "دایره"
+
+msgid "Disc"
+msgstr "دیسک"
+
+msgid "Square"
+msgstr "مربع"
+
+msgid "Lower Alpha"
+msgstr "حروف کوچک"
+
+msgid "Lower Greek"
+msgstr "حروف کوچک یونانی"
+
+msgid "Lower Roman"
+msgstr "اعداد رومی کوچک"
+
+msgid "Upper Alpha"
+msgstr "حروف بزرگ"
+
+msgid "Upper Roman"
+msgstr "اعداد رومی بزرگ"
+
+msgid "Anchor..."
+msgstr "قلاب..."
+
+msgid "Anchor"
+msgstr "قلاب"
+
+msgid "Name"
+msgstr "نام"
+
+msgid "ID"
+msgstr "شناسه"
+
+msgid "ID should start with a letter, followed only by letters, numbers, dashes, dots, colons or underscores."
+msgstr "شناسه باید توسط یک حرف انگلیسی شروع شده و بعد از آن فقط حروف، اعداد، خط فاصله (-)، نقطه (.)، دو نقطه (:) یا زیرخط (_) قرار گیرد."
+
+msgid "You have unsaved changes are you sure you want to navigate away?"
+msgstr "تغییرات‌تان ذخیره نشده‌اند، آیا مطمئنید که می‌خواهید خارج شوید؟"
+
+msgid "Restore last draft"
+msgstr "بازیابی آخرین پیش‌نویس"
+
+msgid "Special character..."
+msgstr "نویسۀ ویژه..."
+
+msgid "Special Character"
+msgstr "نویسۀ ویژه"
+
+msgid "Source code"
+msgstr "کد منبع"
+
+msgid "Insert/Edit code sample"
+msgstr "درج/ویرایش نمونه کد"
+
+msgid "Language"
+msgstr "زبان"
+
+msgid "Code sample..."
+msgstr "نمونه کد..."
+
+msgid "Left to right"
+msgstr "چپ به راست"
+
+msgid "Right to left"
+msgstr "راست به چپ"
+
+msgid "Title"
+msgstr "عنوان"
+
+msgid "Fullscreen"
+msgstr "تمام‌صفحه"
+
+msgid "Action"
+msgstr "اقدام"
+
+msgid "Shortcut"
+msgstr "میانبر"
+
+msgid "Help"
+msgstr "راهنما"
+
+msgid "Address"
+msgstr "آدرس"
+
+msgid "Focus to menubar"
+msgstr "تمرکز بر نوار منو"
+
+msgid "Focus to toolbar"
+msgstr "تمرکز بر نوار ابزار"
+
+msgid "Focus to element path"
+msgstr "تمرکز بر مسیر المان"
+
+msgid "Focus to contextual toolbar"
+msgstr "تمرکز بر نوار ابزار بافتاری"
+
+msgid "Insert link (if link plugin activated)"
+msgstr "درج پیوند (در صورت فعال بودن افزونهٔ پیوند)"
+
+msgid "Save (if save plugin activated)"
+msgstr "ذخیره (در صورت فعال بودن افزونهٔ ذخیره)"
+
+msgid "Find (if searchreplace plugin activated)"
+msgstr "یافتن (در صورت فعال بودن افزونهٔ جستجو/جایگزینی)"
+
+msgid "Plugins installed ({0}):"
+msgstr "افزونه‌های نصب‌شده ({0}):"
+
+msgid "Premium plugins:"
+msgstr "افزونه‌های پولی:"
+
+msgid "Learn more..."
+msgstr "یادگیری بیشتر..."
+
+msgid "You are using {0}"
+msgstr "در حال استفاده از {0} هستید"
+
+msgid "Plugins"
+msgstr "افزونه‌ها"
+
+msgid "Handy Shortcuts"
+msgstr "میانبرهای مفید"
+
+msgid "Horizontal line"
+msgstr "خط افقی"
+
+msgid "Insert/edit image"
+msgstr "درج/ویرایش تصویر"
+
+msgid "Alternative description"
+msgstr "توضیحات جایگزین"
+
+msgid "Accessibility"
+msgstr "دسترسی"
+
+msgid "Image is decorative"
+msgstr "این تصویر دکوری است"
+
+msgid "Source"
+msgstr "منبع"
+
+msgid "Dimensions"
+msgstr "ابعاد"
+
+msgid "Constrain proportions"
+msgstr "محدود کردن مشخصات"
+
+msgid "General"
+msgstr "عمومی"
+
+msgid "Advanced"
+msgstr "پیشرفته"
+
+msgid "Style"
+msgstr "سبک"
+
+msgid "Vertical space"
+msgstr "فضای عمودی"
+
+msgid "Horizontal space"
+msgstr "فضای افقی"
+
+msgid "Border"
+msgstr "حاشیه"
+
+msgid "Insert image"
+msgstr "درج تصویر"
+
+msgid "Image..."
+msgstr "تصویر..."
+
+msgid "Image list"
+msgstr "فهرست تصویر"
+
+msgid "Resize"
+msgstr "تغییر اندازه"
+
+msgid "Insert date/time"
+msgstr "درج تاریخ/زمان"
+
+msgid "Date/time"
+msgstr "تاریخ/زمان"
+
+msgid "Insert/edit link"
+msgstr "درج/ویرایش پیوند"
+
+msgid "Text to display"
+msgstr "متن برای نمایش"
+
+msgid "Url"
+msgstr "نشانی وب"
+
+msgid "Open link in..."
+msgstr "باز کردن پیوند در..."
+
+msgid "Current window"
+msgstr "پنجره جاری"
+
+msgid "None"
+msgstr "هیچ‌کدام"
+
+msgid "New window"
+msgstr "پنجره جدید"
+
+msgid "Open link"
+msgstr "بازکردن لینک"
+
+msgid "Remove link"
+msgstr "حذف پیوند"
+
+msgid "Anchors"
+msgstr "قلاب‌ها"
+
+msgid "Link..."
+msgstr "پیوند..."
+
+msgid "Paste or type a link"
+msgstr "چسباندن یا تایپ کردن پیوند"
+
+msgid "The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?"
+msgstr "به نظر می‌رسد نشانی وب واردشده نشانی ایمیل است. آیا مایل به افزودن پیشوند لازم :mailto هستید؟"
+
+msgid "The URL you entered seems to be an external link. Do you want to add the required http:// prefix?"
+msgstr "به نظر می رسد نشانی وب واردشده پیوندی خارجی است. آیا مایل به افزودن پیشوند //:http هستید؟"
+
+msgid "The URL you entered seems to be an external link. Do you want to add the required https:// prefix?"
+msgstr "آدرس اینترنتی که شما وارد کرده اید گویا یک آدرس اینترنتی خارجی است. آیا میخواهید که پیشوند ضروری https:// اضافه کنم؟"
+
+msgid "Link list"
+msgstr "فهرست پیوندها"
+
+msgid "Insert video"
+msgstr "درج ویدیو"
+
+msgid "Insert/edit video"
+msgstr "درج/ویرایش ویدیو"
+
+msgid "Insert/edit media"
+msgstr "درج/ویرایش رسانه"
+
+msgid "Alternative source"
+msgstr "منبع جایگزین"
+
+msgid "Alternative source URL"
+msgstr "نشانی وب منبع جایگزین"
+
+msgid "Media poster (Image URL)"
+msgstr "پوستر رسانه (نشانی وب تصویر)"
+
+msgid "Paste your embed code below:"
+msgstr "چسباندن کد جاسازی شما در زیر:"
+
+msgid "Embed"
+msgstr "جاسازی"
+
+msgid "Media..."
+msgstr "رسانه..."
+
+msgid "Nonbreaking space"
+msgstr "فضای خالی برش ناپذیر"
+
+msgid "Page break"
+msgstr "برش صفحه"
+
+msgid "Paste as text"
+msgstr "چسباندن به‌صورت متن"
+
+msgid "Preview"
+msgstr "پیش‌نمایش"
+
+msgid "Print"
+msgstr "چاپ"
+
+msgid "Print..."
+msgstr "چاپ..."
+
+msgid "Save"
+msgstr "ذخيره"
+
+msgid "Find"
+msgstr "یافتن"
+
+msgid "Replace with"
+msgstr "جایگزین کردن با"
+
+msgid "Replace"
+msgstr "جایگزین کردن"
+
+msgid "Replace all"
+msgstr "جایگزین کردن همه"
+
+msgid "Previous"
+msgstr "قبلی"
+
+msgid "Next"
+msgstr "بعدی"
+
+msgid "Find and Replace"
+msgstr "جست‌و‌جو و جایگزین کردن"
+
+msgid "Find and replace..."
+msgstr "یافتن و جایگزین کردن..."
+
+msgid "Could not find the specified string."
+msgstr "رشته مورد نظر یافت نشد."
+
+msgid "Match case"
+msgstr "نمونه منطبق"
+
+msgid "Find whole words only"
+msgstr "یافتن دقیقاً کل واژه"
+
+msgid "Find in selection"
+msgstr "در گلچین بیابید"
+
+msgid "Insert table"
+msgstr "درج جدول"
+
+msgid "Table properties"
+msgstr "تنظیمات جدول"
+
+msgid "Delete table"
+msgstr "حذف جدول"
+
+msgid "Cell"
+msgstr "سلول"
+
+msgid "Row"
+msgstr "ردیف"
+
+msgid "Column"
+msgstr "ستون"
+
+msgid "Cell properties"
+msgstr "تنظیمات سلول"
+
+msgid "Merge cells"
+msgstr "ادغام سلول‌ها"
+
+msgid "Split cell"
+msgstr "جداسازی سلول‌ها"
+
+msgid "Insert row before"
+msgstr "درج سطر در بالا"
+
+msgid "Insert row after"
+msgstr "درج سطر در پایین"
+
+msgid "Delete row"
+msgstr "حذف سطر"
+
+msgid "Row properties"
+msgstr "تنظیمات سطر"
+
+msgid "Cut row"
+msgstr "برش سطر"
+
+msgid "Cut column"
+msgstr "برش ستون"
+
+msgid "Copy row"
+msgstr "کپی سطر"
+
+msgid "Copy column"
+msgstr "کپی ستون"
+
+msgid "Paste row before"
+msgstr "چسباندن سطر در بالا"
+
+msgid "Paste column before"
+msgstr "چسباندن ستون قبل از ستون جاری"
+
+msgid "Paste row after"
+msgstr "چسباندن سطر در پایین"
+
+msgid "Paste column after"
+msgstr "چسباندن ستون بعد از ستون جاری"
+
+msgid "Insert column before"
+msgstr "درج ستون در بالا"
+
+msgid "Insert column after"
+msgstr "درج ستون در پایین"
+
+msgid "Delete column"
+msgstr "حذف ستون"
+
+msgid "Cols"
+msgstr "ستون‌ها"
+
+msgid "Rows"
+msgstr "ردیف‌ها"
+
+msgid "Width"
+msgstr "عرض"
+
+msgid "Height"
+msgstr "ارتفاع"
+
+msgid "Cell spacing"
+msgstr "فاصله بین سلول‌ها"
+
+msgid "Cell padding"
+msgstr "حاشیه بین سلول‌ها"
+
+msgid "Row clipboard actions"
+msgstr "عملیات حافظه موقت ردیف‌ها"
+
+msgid "Column clipboard actions"
+msgstr "عملیات حافظه موقت ستون‌ها"
+
+msgid "Table styles"
+msgstr "سبک‌های جدول"
+
+msgid "Cell styles"
+msgstr "سبک‌های خانه جدول"
+
+msgid "Column header"
+msgstr "ستون تیتر"
+
+msgid "Row header"
+msgstr "سطر تیتر"
+
+msgid "Table caption"
+msgstr "عنوان جدول"
+
+msgid "Caption"
+msgstr "عنوان"
+
+msgid "Show caption"
+msgstr "نمایش عنوان"
+
+msgid "Left"
+msgstr "چپ"
+
+msgid "Center"
+msgstr "مرکز"
+
+msgid "Right"
+msgstr "راست"
+
+msgid "Cell type"
+msgstr "نوع سلول"
+
+msgid "Scope"
+msgstr "گستره"
+
+msgid "Alignment"
+msgstr "ترازبندی"
+
+msgid "Horizontal align"
+msgstr "تراز افقی"
+
+msgid "Vertical align"
+msgstr "تراز عمودی"
+
+msgid "Top"
+msgstr "بالا"
+
+msgid "Middle"
+msgstr "وسط"
+
+msgid "Bottom"
+msgstr "پایین"
+
+msgid "Header cell"
+msgstr "سلول سرستون"
+
+msgid "Row group"
+msgstr "گروه سطری"
+
+msgid "Column group"
+msgstr "گروه ستونی"
+
+msgid "Row type"
+msgstr "نوع سطر"
+
+msgid "Header"
+msgstr "سربرگ"
+
+msgid "Body"
+msgstr "بدنه"
+
+msgid "Footer"
+msgstr "پاورقی"
+
+msgid "Border color"
+msgstr "رنگ حاشیه"
+
+msgid "Solid"
+msgstr "خط ممتد"
+
+msgid "Dotted"
+msgstr "نقطه نقطه"
+
+msgid "Dashed"
+msgstr "فاصله فاصله"
+
+msgid "Double"
+msgstr "دو خطی"
+
+msgid "Groove"
+msgstr "شیاردار"
+
+msgid "Ridge"
+msgstr "لبه‌دار"
+
+msgid "Inset"
+msgstr "تو رفته"
+
+msgid "Outset"
+msgstr "برجسته"
+
+msgid "Hidden"
+msgstr "مخفی"
+
+msgid "Insert template..."
+msgstr "درج الگو..."
+
+msgid "Templates"
+msgstr "الگوها"
+
+msgid "Template"
+msgstr "الگو"
+
+msgid "Insert Template"
+msgstr "درج قالب"
+
+msgid "Text color"
+msgstr "رنگ متن"
+
+msgid "Background color"
+msgstr "رنگ پس‌زمینه"
+
+msgid "Custom..."
+msgstr "سفارشی..."
+
+msgid "Custom color"
+msgstr "رنگ سفارشی"
+
+msgid "No color"
+msgstr "بدون رنگ"
+
+msgid "Remove color"
+msgstr "حذف رنگ"
+
+msgid "Show blocks"
+msgstr "نمایش بلوک‌ها"
+
+msgid "Show invisible characters"
+msgstr "نمایش نویسه‌های ناپیدا"
+
+msgid "Word count"
+msgstr "تعداد واژه‌ها"
+
+msgid "Count"
+msgstr "شمارش"
+
+msgid "Document"
+msgstr "سند"
+
+msgid "Selection"
+msgstr "انتخاب"
+
+msgid "Words"
+msgstr "کلمات"
+
+#, csharp-format
+msgid "Words: {0}"
+msgstr "واژه‌ها: {0}"
+
+msgid "{0} words"
+msgstr "{0} واژه"
+
+msgid "File"
+msgstr "پرونده"
+
+msgid "Edit"
+msgstr "ویرایش"
+
+msgid "Insert"
+msgstr "درج"
+
+msgid "View"
+msgstr "نمایش"
+
+msgid "Format"
+msgstr "قالب"
+
+msgid "Table"
+msgstr "جدول"
+
+msgid "Tools"
+msgstr "ابزارها"
+
+msgid "Powered by {0}"
+msgstr "قوت‌گرفته از {0}"
+
+msgid "Rich Text Area. Press ALT-F9 for menu. Press ALT-F10 for toolbar. Press ALT-0 for help"
+msgstr "ناحیه متن غنی. جهت مشاهدهٔ منو از کلیدهای ترکیبی ALT + F9 استفاده کنید. جهت مشاهدهٔ نوار ابزار از کلیدهای ترکیبی ALT + F10 استفاده کنید. جهت مشاهده راهنما از کلیدهای ترکیبی ALT + 0 استفاده کنید."
+
+msgid "Image title"
+msgstr "عنوان تصویر"
+
+msgid "Border width"
+msgstr "عرض حاشیه"
+
+msgid "Border style"
+msgstr "سبک حاشیه"
+
+msgid "Error"
+msgstr "خطا"
+
+msgid "Warn"
+msgstr "هشدار"
+
+msgid "Valid"
+msgstr "معتبر"
+
+msgid "To open the popup, press Shift+Enter"
+msgstr "جهت باز کردن پنجره بازشو، کلیدهای Shift + Enter را فشار دهید."
+
+msgid "Rich Text Area"
+msgstr "جعبه متن بزرگ (Textarea)"
+
+msgid "Rich Text Area. Press ALT-0 for help."
+msgstr "ناحیه متن غنی. جهت مشاهدهٔ راهنما کلیدهای ALT + 0 را فشار دهید."
+
+msgid "System Font"
+msgstr "فونت سیستمی"
+
+msgid "Failed to upload image: {0}"
+msgstr "عدم موفقیت در بارگذاری تصویر: {0}"
+
+msgid "Failed to load plugin: {0} from url {1}"
+msgstr "عدم موفقیت در بارگذاری افزونه: {0} از نشانی وب {1}"
+
+msgid "Failed to load plugin url: {0}"
+msgstr "عدم موفقیت در بارگذاری نشانی وب افزونه: {0}"
+
+msgid "Failed to initialize plugin: {0}"
+msgstr "عدم موفقیت در راه‌اندازی افزونه: {0}"
+
+msgid "example"
+msgstr "مثال"
+
+msgid "Search"
+msgstr "جستجو"
+
+msgid "All"
+msgstr "همه"
+
+msgid "Currency"
+msgstr "ارز"
+
+msgid "Text"
+msgstr "متن"
+
+msgid "Quotations"
+msgstr "نقل‌قول‌ها"
+
+msgid "Mathematical"
+msgstr "ریاضی"
+
+msgid "Extended Latin"
+msgstr "لاتین گسترده"
+
+msgid "Symbols"
+msgstr "نمادها"
+
+msgid "Arrows"
+msgstr "پیکان‌ها"
+
+msgid "User Defined"
+msgstr "به خواست کاربر"
+
+msgid "dollar sign"
+msgstr "نماد دلار"
+
+msgid "currency sign"
+msgstr "نماد ارز"
+
+msgid "euro-currency sign"
+msgstr "نماد یورو"
+
+msgid "colon sign"
+msgstr "نماد دونقطه"
+
+msgid "cruzeiro sign"
+msgstr "نماد کروزیرو"
+
+msgid "french franc sign"
+msgstr "نماد فرانک فرانسه"
+
+msgid "lira sign"
+msgstr "نماد لیره"
+
+msgid "mill sign"
+msgstr "نماد میل"
+
+msgid "naira sign"
+msgstr "نماد نایرا"
+
+msgid "peseta sign"
+msgstr "نماد پزتا"
+
+msgid "rupee sign"
+msgstr "نماد روپیه"
+
+msgid "won sign"
+msgstr "نماد وون"
+
+msgid "new sheqel sign"
+msgstr "نماد شکل جدید"
+
+msgid "dong sign"
+msgstr "نماد دانگ"
+
+msgid "kip sign"
+msgstr "نماد کیپ"
+
+msgid "tugrik sign"
+msgstr "نماد توگروگ"
+
+msgid "drachma sign"
+msgstr "نماد دراخما"
+
+msgid "german penny symbol"
+msgstr "نماد پنی آلمانی"
+
+msgid "peso sign"
+msgstr "نماد پزو"
+
+msgid "guarani sign"
+msgstr "نماد گوارانی"
+
+msgid "austral sign"
+msgstr "نماد آسترال"
+
+msgid "hryvnia sign"
+msgstr "نماد گریونا"
+
+msgid "cedi sign"
+msgstr "نماد سدی"
+
+msgid "livre tournois sign"
+msgstr "نماد لیوره تورنوا"
+
+msgid "spesmilo sign"
+msgstr "نماد اسپسمیلو"
+
+msgid "tenge sign"
+msgstr "نماد تنگه"
+
+msgid "indian rupee sign"
+msgstr "نماد روپیه هندی"
+
+msgid "turkish lira sign"
+msgstr "نماد لیره ترکی"
+
+msgid "nordic mark sign"
+msgstr "نماد مارک نروژ"
+
+msgid "manat sign"
+msgstr "نماد منات"
+
+msgid "ruble sign"
+msgstr "نماد روبل"
+
+msgid "yen character"
+msgstr "نویسه ین"
+
+msgid "yuan character"
+msgstr "نویسه یوان"
+
+msgid "yuan character, in hong kong and taiwan"
+msgstr "نویسه یوان، در هنگ‌کنگ و تایوان"
+
+msgid "yen/yuan character variant one"
+msgstr "نویسه جایگزین ین/یوان"
+
+msgid "Emojis"
+msgstr "استیکرها"
+
+msgid "Emojis..."
+msgstr "استیکرها..."
+
+msgid "Loading emojis..."
+msgstr "فراخوانی استیکرها..."
+
+msgid "Could not load emojis"
+msgstr "امکان بارگیری ایموجی‌ها وجود ندارد"
+
+msgid "People"
+msgstr "افراد"
+
+msgid "Animals and Nature"
+msgstr "حیوانات و طبیعت"
+
+msgid "Food and Drink"
+msgstr "غذا و نوشیدنی"
+
+msgid "Activity"
+msgstr "فعالیت"
+
+msgid "Travel and Places"
+msgstr "سفر و اماکن"
+
+msgid "Objects"
+msgstr "اشیا"
+
+msgid "Flags"
+msgstr "پرچم‌ها"
+
+msgid "Characters"
+msgstr "نویسه‌ها"
+
+msgid "Characters (no spaces)"
+msgstr "نویسه ها (بدون فاصله)"
+
+msgid "{0} characters"
+msgstr "{0} کاراکتر"
+
+msgid "Error: Form submit field collision."
+msgstr "خطا: تداخل در ثبت فرم."
+
+msgid "Error: No form element found."
+msgstr "خطا: هیچ المان فرمی یافت نشد."
+
+msgid "Color swatch"
+msgstr "نمونه رنگ"
+
+msgid "Color Picker"
+msgstr "انتخاب‌کننده رنگ"
+
+msgid "Invalid hex color code: {0}"
+msgstr "کد رنگ 16 بیتی معتبر: {0}"
+
+msgid "Invalid input"
+msgstr "ورودی نامعتبر"
+
+msgid "R"
+msgstr "قرمز"
+
+msgid "Red component"
+msgstr "جزء قرمز"
+
+msgid "G"
+msgstr "سبز"
+
+msgid "Green component"
+msgstr "جزء سبز"
+
+msgid "B"
+msgstr "آبی"
+
+msgid "Blue component"
+msgstr "جزء آبی"
+
+msgid "#"
+msgstr "#"
+
+msgid "Hex color code"
+msgstr "کد رنگ 16 بیتی"
+
+msgid "Range 0 to 255"
+msgstr "بازه‌ی صفر تا 255"
+
+msgid "Turquoise"
+msgstr "فیروزه‌ای"
+
+msgid "Green"
+msgstr "سبز"
+
+msgid "Blue"
+msgstr "آبی"
+
+msgid "Purple"
+msgstr "بنفش"
+
+msgid "Navy Blue"
+msgstr "سرمه‌ای"
+
+msgid "Dark Turquoise"
+msgstr "فیروزه‌ای تیره"
+
+msgid "Dark Green"
+msgstr "سبز تیره"
+
+msgid "Medium Blue"
+msgstr "آبی سیر"
+
+msgid "Medium Purple"
+msgstr "آبی بنفش"
+
+msgid "Midnight Blue"
+msgstr "آبی نفتی"
+
+msgid "Yellow"
+msgstr "زرد"
+
+msgid "Orange"
+msgstr "نارنجی"
+
+msgid "Red"
+msgstr "قرمز"
+
+msgid "Light Gray"
+msgstr "خاکستری روشن"
+
+msgid "Gray"
+msgstr "خاکستری"
+
+msgid "Dark Yellow"
+msgstr "زرد تیره"
+
+msgid "Dark Orange"
+msgstr "نارنجی تیره"
+
+msgid "Dark Red"
+msgstr "قرمز تیره"
+
+msgid "Medium Gray"
+msgstr "خاکستری نیمه‌روشن"
+
+msgid "Dark Gray"
+msgstr "خاکستری تیره"
+
+msgid "Light Green"
+msgstr "سبز روشن"
+
+msgid "Light Yellow"
+msgstr "زرد روشن"
+
+msgid "Light Red"
+msgstr "قرمز روشن"
+
+msgid "Light Purple"
+msgstr "بنفش روشن"
+
+msgid "Light Blue"
+msgstr "آبی روشن"
+
+msgid "Dark Purple"
+msgstr "بنفش تیره"
+
+msgid "Dark Blue"
+msgstr "آبی تیره"
+
+msgid "Black"
+msgstr "سیاه"
+
+msgid "White"
+msgstr "سفید"
+
+msgid "Switch to or from fullscreen mode"
+msgstr "تغییر از حالت تمام‌صفحه یا به حالت تمام‌صفحه"
+
+msgid "Open help dialog"
+msgstr "باز کردن کادر راهنما"
+
+msgid "history"
+msgstr "تاریخچه"
+
+msgid "styles"
+msgstr "سبک‌ها"
+
+msgid "formatting"
+msgstr "قالب‌بندی"
+
+msgid "alignment"
+msgstr "ترازبندی"
+
+msgid "indentation"
+msgstr "تورفتگی"
+
+msgid "Font"
+msgstr "فونت"
+
+msgid "Size"
+msgstr "اندازه"
+
+msgid "More..."
+msgstr "بیشتر..."
+
+msgid "Select..."
+msgstr "انتخاب..."
+
+msgid "Preferences"
+msgstr "ترجیحات"
+
+msgid "Yes"
+msgstr "بله"
+
+msgid "No"
+msgstr "خیر"
+
+msgid "Keyboard Navigation"
+msgstr "مرور با صفحه کلید"
+
+msgid "Version"
+msgstr "نسخه"
+
+msgid "Code view"
+msgstr "نمای کد"
+
+msgid "Open popup menu for split buttons"
+msgstr "منوی بازشو برای دکمه های تقسیم شده را باز کنید"
+
+msgid "List Properties"
+msgstr "تنظیمات فهرست"
+
+msgid "List properties..."
+msgstr "تنظیمات فهرست"
+
+msgid "Start list at number"
+msgstr "لیست را در شماره شروع کنید"
+
+msgid "Line height"
+msgstr "بلندی خط "
+
+msgid "Dropped file type is not supported"
+msgstr "فرمت فایل حذف شده پشتیبانی نمی‌شود"
+
+msgid "Loading..."
+msgstr "بارگیری..."
+
+msgid "ImageProxy HTTP error: Rejected request"
+msgstr "خطای ImageProxy HTTP: درخواست برگردانده شد"
+
+msgid "ImageProxy HTTP error: Could not find Image Proxy"
+msgstr "خطای ImageProxy HTTP: شیء ImageProxy پیدا نشد"
+
+msgid "ImageProxy HTTP error: Incorrect Image Proxy URL"
+msgstr "خطای ImageProxy HTTP: آدرس ImageProxy اشتباه است"
+
+msgid "ImageProxy HTTP error: Unknown ImageProxy error"
+msgstr "خطای ImageProxy HTTP: خطا شناسایی نشد"
+

@@ -80,6 +80,41 @@
                         <li permission="CreateNewOurFeature"><a asp-area="Admin" asp-controller="OurFeature" asp-action="CreateNewOurFeature">افزودن ویژگی جدید</a></li>
                     </ul>
                 </li>
+
+                <li class="menu-title">مدیریت مقالات</li>
+
+                <li permission="ManageBlogCategories">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-account"></i>
+                        <span>دسته بندی ها</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="BlogCategoriesList"><a asp-area="Admin" asp-controller="BlogCategory" asp-action="BlogCategoriesList">لیست دسته بندی ها</a></li>
+                        <li permission="CreateNewBlogCategory"><a asp-area="Admin" asp-controller="BlogCategory" asp-action="CreateNewBlogCategory">افزودن دسته بندی جدید</a></li>
+                    </ul>
+                </li>
+
+                <li permission="ManageBlogTags">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-account"></i>
+                        <span>برچسب ها</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="BlogTagsList"><a asp-area="Admin" asp-controller="BlogTag" asp-action="BlogTagsList">لیست برچسب ها</a></li>
+                        <li permission="CraeteNewBlogTag"><a asp-area="Admin" asp-controller="BlogTag" asp-action="CraeteNewBlogTag">افزودن برچسب جدید</a></li>
+                    </ul>
+                </li>
+
+                <li permission="ManageBlogs">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-account"></i>
+                        <span>مقالات</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="BlogsList"><a asp-area="Admin" asp-controller="Blog" asp-action="BlogsList">لیست مقالات</a></li>
+                        <li permission="CreateNewBlog"><a asp-area="Admin" asp-controller="Blog" asp-action="CreateNewBlog">افزودن مقاله جدید</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->

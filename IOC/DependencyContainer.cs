@@ -31,6 +31,10 @@ namespace IOC
             services.AddScoped<IBannerService, BannerService>();
             services.AddScoped<IFaqService, FaqService>();
             services.AddScoped<IOurFeaturesService, OurFeaturesService>();
+            services.AddScoped<IBlogCategoryService, BlogCategoryService>();
+            services.AddScoped<IBlogService, BlogService>();
+            services.AddScoped<IBlogTagService, BlogTagService>();
+            services.AddScoped<IBlogViewService, BlogViewService>();
 
             #endregion
 

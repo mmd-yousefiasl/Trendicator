@@ -30,5 +30,11 @@
         public static string OurFeature { get; set; }
 
         #endregion
+
+        #region Blog
+
+        public static string BlogBanner { get; set; }
+
+        #endregion
     }
 }

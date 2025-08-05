@@ -242,9 +242,123 @@ namespace Domain.Statics
                 UniqueName = "DeleteOurFeature"
             },
             #endregion
+
+            #region BlogCategory
+            new Permission
+            {
+                Id = 32,
+                ParentId = 1,
+                Title = "مدیریت دستی بندی مقالات",
+                UniqueName = "ManageBlogCategories"
+            },
+            new Permission
+            {
+                Id = 33,
+                ParentId = 32,
+                Title = "لیست دسته بندی ها",
+                UniqueName = "BlogCategoriesList"
+            },
+            new Permission
+            {
+                Id = 34,
+                ParentId = 32,
+                Title = "افزودن دسته بندی جدید",
+                UniqueName = "CreateNewBlogCategory"
+            },
+            new Permission
+            {
+                Id = 35,
+                ParentId = 32,
+                Title = "ویرایش دسته بندی",
+                UniqueName = "UpdateBlogCategory"
+            },
+            new Permission
+            {
+                Id = 36,
+                ParentId = 32,
+                Title = "حذف دسته بندی",
+                UniqueName = "DeleteBlogCategory"
+            },
+            #endregion
+
+            #region BlogTag
+            new Permission
+            {
+                Id = 37,
+                ParentId = 1,
+                Title = "مدیریت برچسب مقالات",
+                UniqueName = "ManageBlogTags"
+            },
+            new Permission
+            {
+                Id = 38,
+                ParentId = 37,
+                Title = "لیست برچسب ها",
+                UniqueName = "BlogTagsList"
+            },
+            new Permission
+            {
+                Id = 39,
+                ParentId = 37,
+                Title = "افزودن برچسب جدید",
+                UniqueName = "CraeteNewBlogTag"
+            },
+            new Permission
+            {
+                Id = 40,
+                ParentId = 37,
+                Title = "ویرایش برچسب",
+                UniqueName = "UpdateBlogTag"
+            },
+            new Permission
+            {
+                Id = 41,
+                ParentId = 37,
+                Title = "حذف برچسب",
+                UniqueName = "DeleteBlogTag"
+            },
+            #endregion
+
+            #region Blog
+            new Permission
+            {
+                Id = 42,
+                ParentId = 1,
+                Title = "مدیریت مقالات",
+                UniqueName = "ManageBlogs"
+            },
+            new Permission
+            {
+                Id = 43,
+                ParentId = 42,
+                Title = "لیست مقالات",
+                UniqueName = "BlogsList"
+            },
+            new Permission
+            {
+                Id = 44,
+                ParentId =42,
+                Title = "افزودن مقاله جدید",
+                UniqueName = "CreateNewBlog"
+            },
+            new Permission
+            {
+                Id = 45,
+                ParentId = 42,
+                Title = "ویرایش مقاله",
+                UniqueName = "UpdateBlog"
+            },
+            new Permission
+            {
+                Id = 46,
+                ParentId = 42,
+                Title = "حذف مقاله",
+                UniqueName = "DeleteBlog"
+            },
+            #endregion
         };
 
-        //Last used id ==> 31
+        //Last used id ==> 46
         public static List<Permission> Permissions = _permissions;
     }
 }
