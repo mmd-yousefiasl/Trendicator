@@ -1,4 +1,5 @@
-﻿using Application.ViewModels.Slider.AdminSide;
+﻿using Application.ViewModels.Slider;
+using Application.ViewModels.Slider.AdminSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces
@@ -14,5 +15,7 @@ namespace Application.Services.Interfaces
         Task<Result> AdminSideUpdateSlider(AdminSideUpdateSliderViewModel model);
 
         Task<Result> AdminSideDeleteSlider(int id);
+
+        Task<Result<List<ClientSideSliderViewModel>>> ClientSideGetMainPageSliders();
     }
 }

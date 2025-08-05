@@ -1,6 +1,7 @@
 ﻿using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Tools;
+using Application.ViewModels.Slider;
 using Application.ViewModels.Slider.AdminSide;
 using Data.Context;
 using Domain.Events.SiteInfo.Slider;
@@ -190,6 +191,22 @@ namespace Application.Services.Implementaions
             await _mediator.PublishEvent(SliderDeletedEvent);
 
             return Result.Success();
+        }
+
+        public async Task<Result<List<ClientSideSliderViewModel>>> ClientSideGetMainPageSliders()
+        {
+            var sliders = await _dbSet.Where(n => n.IsPublished).OrderBy(n => n.Priority)
+                .Select(n => new ClientSideSliderViewModel()
+                {
+                    Title = n.Title,
+                    Banner = n.Banner,
+                    SubTitle = n.SubTitle,
+                    ButtonTitle = n.ButtonTitle,
+                    Url = n.Url
+                }).AsNoTracking().ToListAsync();
+            if (!sliders.Any()) return Result.Failure<List<ClientSideSliderViewModel>>(Messages.OperationFailedError);
+
+            return sliders;
         }
     }
 }
