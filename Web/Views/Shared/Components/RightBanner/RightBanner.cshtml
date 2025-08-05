@@ -1,0 +1,16 @@
+﻿@using Application.ViewModels.Banner.ClientSide
+@model List<ClientSideBannerViewModel>
+
+@if (Model?.Any() ?? false)
+{
+    @foreach (var item in Model.Take(1).ToList() ?? new List<ClientSideBannerViewModel>())
+    {
+        <div class="col-lg-6 col-md-6">
+            <div class="ltn__banner-item">
+                <div class="ltn__banner-img">
+                    <a href="@item.Url"><img src="@SiteTools.Banner@item.FileName" alt="@item.Title"></a>
+                </div>
+            </div>
+        </div>
+    }
+}

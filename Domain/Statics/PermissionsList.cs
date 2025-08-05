@@ -128,9 +128,47 @@ namespace Domain.Statics
                 UniqueName = "DeleteSlider"
             },
             #endregion
+
+            #region Banner
+            new Permission
+            {
+                Id = 17,
+                ParentId = 1,
+                Title = "مدیریت بنر ها",
+                UniqueName = "ManageBanners"
+            },
+            new Permission
+            {
+                Id = 18,
+                ParentId = 17,
+                Title = "لیست بنر ها",
+                UniqueName = "BannersList"
+            },
+            new Permission
+            {
+                Id = 19,
+                ParentId = 17,
+                Title = "افزودن بنر جدید",
+                UniqueName = "CreateNewBanner"
+            },
+            new Permission
+            {
+                Id = 20,
+                ParentId = 17,
+                Title = "ویرایش بنر",
+                UniqueName = "UpdateBanner"
+            },
+            new Permission
+            {
+                Id = 21,
+                ParentId = 17,
+                Title = "حذف بنر",
+                UniqueName = "DeleteBanner"
+            },
+            #endregion
         };
 
-        //Last used id ==> 16
+        //Last used id ==> 21
         public static List<Permission> Permissions = _permissions;
     }
 }

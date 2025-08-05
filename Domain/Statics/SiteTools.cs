@@ -26,6 +26,7 @@
         #region SiteInfo
 
         public static string SliderBanner { get; set; }
+        public static string Banner { get; set; }
 
         #endregion
     }

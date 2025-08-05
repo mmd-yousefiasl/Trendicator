@@ -48,6 +48,16 @@
                     </ul>
                 </li>
 
+                <li permission="ManageBanners">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-account"></i>
+                        <span>بنر ها</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="BannersList"><a asp-area="Admin" asp-controller="Banner" asp-action="BannersList">لیست بنر ها</a></li>
+                        <li permission="CreateNewBanner"><a asp-area="Admin" asp-controller="Banner" asp-action="CreateNewBanner">افزودن بنر جدید</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->
