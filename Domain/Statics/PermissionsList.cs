@@ -356,9 +356,47 @@ namespace Domain.Statics
                 UniqueName = "DeleteBlog"
             },
             #endregion
+
+            #region SocialMedia
+            new Permission
+            {
+                Id = 47,
+                ParentId = 1,
+                Title = "مدیریت شبکه های اجتماعی",
+                UniqueName = "ManageSocialMedia"
+            },
+            new Permission
+            {
+                Id = 48,
+                ParentId = 47,
+                Title = "لیست شبکه های اجتماعی",
+                UniqueName = "SocialMediaList"
+            },
+            new Permission
+            {
+                Id = 49,
+                ParentId = 47,
+                Title = "افزودن شبکه اجتماعی جدید",
+                UniqueName = "CreateNewSocialMedia"
+            },
+            new Permission
+            {
+                Id = 50,
+                ParentId = 47,
+                Title = "ویرایش شبکه اجتماعی",
+                UniqueName = "UpdateSocialMedia"
+            },
+            new Permission
+            {
+                Id = 51,
+                ParentId = 47,
+                Title = "حذف شبکه اجتماعی",
+                UniqueName = "DeleteSocialMedia"
+            },
+            #endregion
         };
 
-        //Last used id ==> 46
+        //Last used id ==> 51
         public static List<Permission> Permissions = _permissions;
     }
 }

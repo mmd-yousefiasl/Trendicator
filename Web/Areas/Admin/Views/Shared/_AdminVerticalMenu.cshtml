@@ -81,6 +81,17 @@
                     </ul>
                 </li>
 
+                <li permission="ManageSocialMedia">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-account"></i>
+                        <span>شبکه های اجتماعی</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="SocialMediaList"><a asp-area="Admin" asp-controller="SocialMedia" asp-action="SocialMediaList">لیست شبکه های اجتماعی</a></li>
+                        <li permission="CreateNewSocialMedia"><a asp-area="Admin" asp-controller="SocialMedia" asp-action="CreateNewSocialMedia">افزودن شبکه اجتماعی جدید</a></li>
+                    </ul>
+                </li>
+
                 <li class="menu-title">مدیریت مقالات</li>
 
                 <li permission="ManageBlogCategories">

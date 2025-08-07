@@ -1,0 +1,18 @@
+﻿@using Application.Tools
+@using Application.ViewModels.SocialMedia.ClientSide
+@model List<ClientSideSocialMediaViewModel>
+
+@if (Model?.Any() ?? false)
+{
+    <div class="widget ltn__social-media-widget">
+        <h4 class="ltn__widget-title ltn__widget-title-border">هرگز اخبار را از دست ندهید</h4>
+        <div class="ltn__social-media-2">
+            <ul>
+                @foreach (var item in Model ?? new List<ClientSideSocialMediaViewModel>())
+                {
+                    <li><a href="@item.Url"><i class="fab @item.Type.GetDisplayName()"></i></a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}

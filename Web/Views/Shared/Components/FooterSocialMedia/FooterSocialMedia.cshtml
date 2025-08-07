@@ -1,0 +1,15 @@
+﻿@using Application.Tools
+@using Application.ViewModels.SocialMedia.ClientSide
+@model List<ClientSideSocialMediaViewModel>
+
+@if (Model?.Any() ?? false)
+{
+    <div class="ltn__social-media mt-20">
+        <ul>
+            @foreach (var item in Model ?? new List<ClientSideSocialMediaViewModel>())
+            {
+                <li><a href="@item.Url"><i class="fab @item.Type.GetDisplayName()"></i></a></li>
+            }
+        </ul>
+    </div>
+}
