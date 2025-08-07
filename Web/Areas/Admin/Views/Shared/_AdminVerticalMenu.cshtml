@@ -92,6 +92,17 @@
                     </ul>
                 </li>
 
+                <li permission="ManageSocialMedia">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-account"></i>
+                        <span>گواهی ها</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="TestimonialsList"><a asp-area="Admin" asp-controller="Testimonial" asp-action="TestimonialsList">لیست گواهی ها</a></li>
+                        <li permission="CreateNewTestimonial"><a asp-area="Admin" asp-controller="Testimonial" asp-action="CreateNewTestimonial">افزودن گواهی جدید</a></li>
+                    </ul>
+                </li>
+
                 <li class="menu-title">مدیریت مقالات</li>
 
                 <li permission="ManageBlogCategories">

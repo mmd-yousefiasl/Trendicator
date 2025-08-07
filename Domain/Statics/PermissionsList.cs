@@ -394,9 +394,47 @@ namespace Domain.Statics
                 UniqueName = "DeleteSocialMedia"
             },
             #endregion
+
+            #region Testimonial
+            new Permission
+            {
+                Id = 52,
+                ParentId = 1,
+                Title = "مدیریت گواهی ها",
+                UniqueName = "ManageTestimonials"
+            },
+            new Permission
+            {
+                Id = 53,
+                ParentId = 52,
+                Title = "لیست گواهی ها",
+                UniqueName = "TestimonialsList"
+            },
+            new Permission
+            {
+                Id = 54,
+                ParentId = 52,
+                Title = "افزودن گواهی جدید",
+                UniqueName = "CreateNewTestimonial"
+            },
+            new Permission
+            {
+                Id = 55,
+                ParentId = 52,
+                Title = "ویرایش گواهی",
+                UniqueName = "UpdateTestimonial"
+            },
+            new Permission
+            {
+                Id = 56,
+                ParentId = 52,
+                Title = "حذف گواهی",
+                UniqueName = "DeleteTestimonial"
+            },
+            #endregion
         };
 
-        //Last used id ==> 51
+        //Last used id ==> 56
         public static List<Permission> Permissions = _permissions;
     }
 }
