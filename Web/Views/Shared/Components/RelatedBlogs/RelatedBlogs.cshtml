@@ -1,0 +1,40 @@
+﻿@using Application.Tools
+@using Application.ViewModels.Blog.ClientSide
+@model ClientSideFilterBlogsViewModel
+
+@if (Model?.Entities?.Any() ?? false)
+{
+    <hr>
+
+    <div class="related-post-area mb-50">
+        <h4 class="title-2">مقالات مرتبط</h4>
+        <div class="row">
+            @foreach (var item in Model.Entities ?? new List<ClientSideBlogViewModel>())
+            {
+                <div class="col-md-6">
+                    <div class="ltn__blog-item ltn__blog-item-6">
+                        <div class="ltn__blog-img">
+                            <a asp-area="" asp-controller="Blog" asp-action="BlogDetails" asp-route-slug="@item.Slug">
+                                <img src="@SiteTools.BlogBanner@item.FileName" alt="@item.Title">
+                            </a>
+                        </div>
+                        <div class="ltn__blog-brief">
+                            <div class="ltn__blog-meta">
+                                <ul>
+                                    <li class="ltn__blog-date ltn__secondary-color">
+                                        <i class="far fa-calendar-alt"></i>@item.CreatedDate.GetDate()
+                                    </li>
+                                </ul>
+                            </div>
+                            <h3 class="ltn__blog-title">
+                                <a asp-area="" asp-controller="Blog" asp-action="BlogDetails" asp-route-slug="@item.Slug">
+                                    @item.Title
+                                </a>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

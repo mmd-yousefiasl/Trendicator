@@ -1,4 +1,6 @@
-﻿namespace Application.ViewModels.Blog.ClientSide
+﻿using Application.ViewModels.BlogTag.ClientSide;
+
+namespace Application.ViewModels.Blog.ClientSide
 {
     public class ClientSideBlogDetailsViewModel : CommonViewModel
     {
@@ -7,5 +9,8 @@
         public string Title { get; set; }
         public string Writer { get; set; }
         public string Body { get; set; }
+        public string Category { get; set; }
+        public int CategoryId { get; set; }
+        public List<ClientSideBlogTagViewModel>? Tags { get; set; }
     }
 }

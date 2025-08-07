@@ -3,6 +3,7 @@ using Application.Services.Interfaces;
 using Application.Tools;
 using Application.ViewModels.Blog.AdminSide;
 using Application.ViewModels.Blog.ClientSide;
+using Application.ViewModels.BlogTag.ClientSide;
 using Data.Context;
 using Domain.Events.Blogs.Blog;
 using Domain.Models.Blogs;
@@ -121,6 +122,8 @@ namespace Application.Services.Implementaions
         public async Task<Result> CreateNewBlog(AdminSideCreateNewBlogViewModel model)
         {
             if (model is null) return Result.Failure(Messages.OperationFailedError);
+            if (await _dbSet.AnyAsync(n => n.Slug == model.Slug.Replace(" ", "-")))
+                return Result.Failure(Messages.DuplicateSlugError);
 
             if (!model.File.IsImage()) return Result.Failure(Messages.InvalidFileFormatError);
             if (model.File.FileName.Length > SiteTools.MaxImageFileLength.CalculateMB()) return Result.Failure(Messages.FileLengthError);
@@ -170,6 +173,9 @@ namespace Application.Services.Implementaions
             var blog = await _dbSet.Include(n => n.Tags).FirstOrDefaultAsync(n => n.Id == model.Id);
             if (blog is null) return Result.Failure(Messages.OperationFailedError);
 
+            if (await _dbSet.AnyAsync(n => n.Id != blog.Id && n.Slug == model.Slug.Replace(" ", "-")))
+                return Result.Failure(Messages.DuplicateSlugError);
+
             if (model.File is not null)
             {
                 if (!model.File.IsImage()) return Result.Failure(Messages.OperationFailedError);
@@ -189,15 +195,9 @@ namespace Application.Services.Implementaions
             blog.Writer = model.Writer;
             blog.BlogCategoryId = model.CategoryId;
 
-            var removedTags = blog.Tags.Select(n => n.TagId).Except(model.Tags ?? new List<int>()).ToList();
+            blog.Tags = new List<BlogTagMapping>();
 
-            foreach (var item in removedTags ?? new List<int>())
-            {
-                blog.Tags.Remove(blog.Tags.First(n => n.TagId == item));
-            }
-            var newRoles = model.Tags?.Except(blog.Tags.Select(n => n.TagId)).ToList();
-
-            blog.Tags = newRoles?.Select(n => new BlogTagMapping()
+            blog.Tags = model.Tags?.Select(n => new BlogTagMapping()
             {
                 BlogId = blog.Id,
                 TagId = n
@@ -256,7 +256,9 @@ namespace Application.Services.Implementaions
                 Slug = n.Slug,
                 FileName = n.FileName,
                 CreatedDate = n.CreatedDate,
-                Writer = n.Writer
+                Writer = n.Writer,
+                CategoryId = n.BlogCategoryId,
+                Category = n.Category.Title
             }));
 
             return filter;
@@ -274,12 +276,78 @@ namespace Application.Services.Implementaions
                     Body = n.Body,
                     FileName = n.FileName,
                     CreatedDate = n.CreatedDate,
-                    Writer = n.Writer
+                    Writer = n.Writer,
+                    Category = n.Category.Title,
+                    CategoryId = n.BlogCategoryId,
+                    Tags = n.Tags.Select(n => new ClientSideBlogTagViewModel()
+                    {
+                        Id = n.TagId,
+                        Title = n.Tag.Title
+                    }).ToList()
                 }).AsNoTracking().FirstOrDefaultAsync();
             if (blog is null) return Result.Failure<ClientSideBlogDetailsViewModel>(Messages.OperationFailedError);
 
             return blog;
         }
 
+        public async Task<Result<ClientSideFilterBlogsViewModel>> ClientSideGetLatestBlogs()
+        {
+            ClientSideFilterBlogsViewModel filter = new ClientSideFilterBlogsViewModel() { TakeEntity = 6 };
+
+            var conditions = Filter.GenerateConditions<Blog>();
+            conditions.Add(n => n.IsPublished);
+
+            IQueryable<Blog> query = _dbSet;
+            query = query.OrderByDescending(n => n.Id);
+
+            foreach (var item in conditions ?? new FilterConditions<Blog>())
+            {
+                query = query.Where(item);
+            }
+
+            await filter.Paging(query.Select(n => new ClientSideBlogViewModel()
+            {
+                Title = n.Title,
+                Slug = n.Slug,
+                FileName = n.FileName,
+                Category = n.Category.Title,
+                CreatedDate = n.CreatedDate,
+                Writer = n.Writer,
+                CategoryId = n.BlogCategoryId,
+            }));
+
+            return filter;
+        }
+
+        public async Task<Result<ClientSideFilterBlogsViewModel>> ClientSideGetRelatedBlogs(int id, int categoryId)
+        {
+            ClientSideFilterBlogsViewModel filter = new ClientSideFilterBlogsViewModel() { TakeEntity = 2 };
+
+            var conditions = Filter.GenerateConditions<Blog>();
+            conditions.Add(n => n.IsPublished);
+            conditions.Add(n => n.Id != id);
+            conditions.Add(n => n.BlogCategoryId == categoryId);
+
+            IQueryable<Blog> query = _dbSet;
+            query = query.OrderByDescending(n => n.Id);
+
+            foreach (var item in conditions ?? new FilterConditions<Blog>())
+            {
+                query = query.Where(item);
+            }
+
+            await filter.Paging(query.Select(n => new ClientSideBlogViewModel()
+            {
+                Title = n.Title,
+                Slug = n.Slug,
+                FileName = n.FileName,
+                Category = n.Category.Title,
+                CreatedDate = n.CreatedDate,
+                Writer = n.Writer,
+                CategoryId = n.BlogCategoryId,
+            }));
+
+            return filter;
+        }
     }
 }

@@ -19,5 +19,9 @@ namespace Application.Services.Interfaces
         Task<Result<ClientSideFilterBlogsViewModel>> ClientSideFilterBlogs(ClientSideFilterBlogsViewModel filter);
 
         Task<Result<ClientSideBlogDetailsViewModel>> ClientSideGetBlogDetails(string slug);
+
+        Task<Result<ClientSideFilterBlogsViewModel>> ClientSideGetLatestBlogs();
+
+        Task<Result<ClientSideFilterBlogsViewModel>> ClientSideGetRelatedBlogs(int id, int categoryId);
     }
 }

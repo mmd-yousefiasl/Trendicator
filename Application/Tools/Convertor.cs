@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Reflection;
 
 namespace Application.Tools
@@ -27,12 +28,36 @@ namespace Application.Tools
 
         public static string GetDate(this DateTime value)
         {
-            return value.ToString("dd MMMM yyyy");
+            PersianCalendar pc = new PersianCalendar();
+
+            int day = pc.GetDayOfMonth(value);
+            int month = pc.GetMonth(value);
+            int year = pc.GetYear(value);
+
+            string[] persianMonthNames = {
+"فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور",
+"مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"};
+
+            string persianDate = $"{day} {persianMonthNames[month - 1]} {year}";
+            return persianDate;
         }
 
         public static string GetDateTime(this DateTime value)
         {
-            return value.ToString("dd MMMM yyyy HH:mm");
+            PersianCalendar pc = new PersianCalendar();
+
+            int day = pc.GetDayOfMonth(value);
+            int month = pc.GetMonth(value);
+            int year = pc.GetYear(value);
+            int hour = pc.GetHour(value);
+            int minute = pc.GetMinute(value);
+
+            string[] persianMonthNames = {
+"فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور",
+"مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"};
+
+            string persianDateTime = $"{day} {persianMonthNames[month - 1]} {year} {hour:D2}:{minute:D2}";
+            return persianDateTime;
         }
     }
 }

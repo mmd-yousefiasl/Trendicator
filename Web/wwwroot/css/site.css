@@ -17,6 +17,7 @@ h1, h2, h3, h4, h5, h6, h7, p, div, a, button, li, span, label, input {
     animation: spin 0.3s linear infinite;
     margin: 0 auto; /* Center it inside the button */
 }
+
 @keyframes spin {
     0% {
         transform: rotate(0deg);
@@ -29,4 +30,10 @@ h1, h2, h3, h4, h5, h6, h7, p, div, a, button, li, span, label, input {
 
 .login-code {
     letter-spacing: 10px;
+}
+
+.blog-title {
+    height: 75px !important;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
 }

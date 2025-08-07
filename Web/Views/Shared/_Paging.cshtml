@@ -1,0 +1,47 @@
+﻿@using Domain.Models
+@model PagingViewModel
+
+@if (Model.PageCount > 1)
+{
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ltn__pagination-area text-center">
+                <div class="ltn__pagination">
+                    <ul>
+                        @if (Model.StartPage < Model.Page)
+                        {
+                            <li>
+                                <a href="javascript:void(0);" data-page="@(Model.Page - 1)" onclick="FillPageId(@(Model.Page - 1))">
+                                    <i class="fas fa-angle-double-right"></i>
+                                </a>
+                            </li>
+                        }
+                        @for (int i = Model.StartPage; i <= Model.EndPage; i++)
+                        {
+                            if (Model.Page == i)
+                            {
+                                <li class="active">
+                                    <a href="javascript:void(0);" data-page="0">@i</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <a href="javascript:void(0);" data-page="@i" onclick="FillPageId(@i)">@i</a>
+                                </li>
+                            }
+                        }
+                        @if (Model.EndPage > Model.Page)
+                        {
+                            <li>
+                                <a href="javascript:void(0);" data-page="@(Model.Page + 1)" onclick="FillPageId(@(Model.Page + 1))">
+                                    <i class="fas fa-angle-double-left"></i>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
