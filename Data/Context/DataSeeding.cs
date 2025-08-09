@@ -1,4 +1,5 @@
 ﻿using Domain.Models.Identity;
+using Domain.Models.SiteInfo;
 using Domain.Models.Users;
 using Domain.Statics;
 using Microsoft.EntityFrameworkCore;
@@ -59,6 +60,17 @@ namespace Data.Context
             };
 
             modelBuilder.Entity<UserRoleMapping>().HasData(adminUserRoleMapping);
+
+            #endregion
+
+            #region SiteData 
+
+            SiteData siteData = new SiteData()
+            {
+                Id = 1,
+                SiteName = "ترندیکاتور",
+            };
+            modelBuilder.Entity<SiteData>().HasData(siteData);
 
             #endregion
         }

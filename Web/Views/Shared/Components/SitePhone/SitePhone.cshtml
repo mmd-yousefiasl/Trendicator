@@ -1,0 +1,14 @@
+﻿@model string
+
+@if (!string.IsNullOrWhiteSpace(Model))
+{
+    <div class="header-feature-item">
+        <div class="header-feature-icon">
+            <i class="icon-call"></i>
+        </div>
+        <div class="header-feature-info">
+            <h6>تلفن</h6>
+            <p><a href="tel:@Model">@Model</a></p>
+        </div>
+    </div>
+}

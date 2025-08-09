@@ -1,0 +1,10 @@
+﻿@model string
+
+@if (!string.IsNullOrWhiteSpace(Model))
+{
+    <title>@ViewData["Title"] | @Model</title>
+}
+else
+{
+    <title>@ViewData["Title"] | @SiteTools.SiteName</title>
+}

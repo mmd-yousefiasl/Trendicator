@@ -432,9 +432,26 @@ namespace Domain.Statics
                 UniqueName = "DeleteTestimonial"
             },
             #endregion
+
+            #region SiteData
+            new Permission
+            {
+                Id = 57,
+                ParentId = 1,
+                Title = "مدیریت اطلاعات سایت",
+                UniqueName = "ManageSiteData"
+            },
+            new Permission
+            {
+                Id = 58,
+                ParentId = 57,
+                Title = "ویرایش اطلاعات سایت",
+                UniqueName = "UpdateSiteData"
+            },
+            #endregion
         };
 
-        //Last used id ==> 56
+        //Last used id ==> 58
         public static List<Permission> Permissions = _permissions;
     }
 }

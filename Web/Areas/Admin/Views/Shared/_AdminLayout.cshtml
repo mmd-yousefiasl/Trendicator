@@ -4,7 +4,7 @@
 <head>
     <partial name="_AdminMeta" />
 
-    <title>پنل ادمین | @ViewData["Title"]</title>
+    @await Component.InvokeAsync("SiteName")
 
     <partial name="_AdminHeaderReferences" />
 

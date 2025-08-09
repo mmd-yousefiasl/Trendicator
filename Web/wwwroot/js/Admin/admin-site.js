@@ -116,7 +116,7 @@ function showLargeModal2(title, url) {
 $(document).ready(function () {
     $('.select2').select2();
 });
-
+ 
 document.addEventListener('DOMContentLoaded', function () {
     tinymce.init({
         selector: 'textarea.ck-editor',

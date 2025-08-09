@@ -1,0 +1,13 @@
+﻿@using Application.ViewModels.SiteData.ClientSide
+@model ClientSideSiteLogoViewModel
+
+@if (Model is not null)
+{
+    <div class="sticky-logo">
+        <div class="site-logo">
+            <a asp-area="" asp-controller="Home" asp-action="Index">
+                <img src="@SiteTools.SiteLogo@Model.DarkBgLogo" alt="@Model.SiteName">
+            </a>
+        </div>
+    </div>
+}

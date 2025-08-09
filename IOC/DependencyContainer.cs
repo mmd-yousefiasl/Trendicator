@@ -37,6 +37,7 @@ namespace IOC
             services.AddScoped<IBlogViewService, BlogViewService>();
             services.AddScoped<ISocialMediaService, SocialMediaService>();
             services.AddScoped<ITestimonialService, TestimonialService>();
+            services.AddScoped<ISiteDataService, SiteDataService>();
 
             #endregion
 

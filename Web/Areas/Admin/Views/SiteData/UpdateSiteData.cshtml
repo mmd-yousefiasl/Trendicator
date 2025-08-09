@@ -1,0 +1,111 @@
+﻿@using Application.ViewModels.SiteData.AdminSide
+@model AdminSideUpdateSiteDataViewModel
+
+@{
+    ViewData["Title"] = "ویرایش اطلاعات سایت";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <h4>مدیریت اطلاعات سایت</h4>
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="Home" asp-action="Index">صفحه نخست</a>
+                    </li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-9">
+            <div class="card">
+                <form class="card-body" asp-area="Admin" asp-controller="SiteData" asp-action="UpdateSiteData" autocomplete="off" enctype="multipart/form-data" onsubmit="submitAnimation()" method="post">
+                    <input class="d-none image-input" type="file" asp-for="DarkBgLogoFile" accept="image/*" />
+                    <input type="hidden" asp-for="DarkBgLogoFileName" />
+
+                    <input class="d-none image-input2" type="file" asp-for="LightBgLogoFile" accept="image/*" />
+                    <input type="hidden" asp-for="LightBgLogoFileName" />
+
+                    <h4 class="card-title">@ViewData["Title"]</h4>
+
+                    <div class="mb-3 row">
+                        <label asp-for="SiteName" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" asp-for="SiteName">
+                            <span asp-validation-for="SiteName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Phone" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" asp-for="Phone">
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="FooterDescription" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <textarea class="form-control" type="text" asp-for="FooterDescription"></textarea>
+                            <span asp-validation-for="FooterDescription" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Address" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" asp-for="Address">
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Email" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" asp-for="Email">
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="TermsAndCondition" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <textarea class="form-control ck-editor" type="text" rows="6" asp-for="TermsAndCondition"></textarea>
+                            <span asp-validation-for="TermsAndCondition" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="PrivacyPolicy" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <textarea class="form-control ck-editor" type="text" rows="6" asp-for="PrivacyPolicy"></textarea>
+                            <span asp-validation-for="PrivacyPolicy" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 text-end mt-5">
+                        <button class="btn btn-primary btn-submit" type="submit">ویرایش</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-3">
+            <div class="card p-3">
+                <img src="@SiteTools.SiteLogo@Model.DarkBgLogoFileName" class="w-100 my-1 image-preview" alt="#image" />
+                <label asp-for="DarkBgLogoFile" class="btn btn-primary m-0">لوگو متن سفید</label>
+            </div>
+
+            <div class="card p-3">
+                <img src="@SiteTools.SiteLogo@Model.LightBgLogoFileName" class="w-100 my-1 image-preview2" alt="#image" />
+                <label asp-for="LightBgLogoFile" class="btn btn-primary m-0">لوگو متن سیاه</label>
+            </div>
+        </div>
+    </div>
+</div>

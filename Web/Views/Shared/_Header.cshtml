@@ -4,23 +4,10 @@
     <div class="ltn__header-middle-area">
         <div class="container">
             <div class="row">
-                <div class="col">
-                    <div class="site-logo">
-                        <a asp-area="" asp-controller="Home" asp-action="Index"><img src="/assets/img/logo.png" alt="Logo"></a>
-                    </div>
-                </div>
+                @await Component.InvokeAsync("SiteLogo")
                 <div class="col header-contact-serarch-column d-none d-lg-block">
                     <div class="header-contact-search">
-                        <!-- header-feature-item -->
-                        <div class="header-feature-item">
-                            <div class="header-feature-icon">
-                                <i class="icon-call"></i>
-                            </div>
-                            <div class="header-feature-info">
-                                <h6>Phone</h6>
-                                <p><a href="tel:0123456789">+0123-456-789</a></p>
-                            </div>
-                        </div>
+                        @await Component.InvokeAsync("SitePhone")
                         <!-- header-search-2 -->
                         <div class="header-search-2">
                             <form id="#123" method="get" action="#">
@@ -36,26 +23,6 @@
                     <!-- header-options -->
                     <div class="ltn__header-options">
                         <ul>
-                            <li class="d-none">
-                                <!-- ltn__currency-menu -->
-                                <div class="ltn__drop-menu ltn__currency-menu">
-                                    <ul>
-                                        <li>
-                                            <a href="#" class="dropdown-toggle"><span class="active-currency">USD</span></a>
-                                            <ul>
-                                                <li><a href="login.html">USD - US Dollar</a></li>
-                                                <li><a href="wishlist.html">CAD - Canada Dollar</a></li>
-                                                <li><a href="register.html">EUR - Euro</a></li>
-                                                <li><a href="account.html">GBP - British Pound</a></li>
-                                                <li><a href="wishlist.html">INR - Indian Rupee</a></li>
-                                                <li><a href="wishlist.html">BDT - Bangladesh Taka</a></li>
-                                                <li><a href="wishlist.html">JPY - Japan Yen</a></li>
-                                                <li><a href="wishlist.html">AUD - Australian Dollar</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
                             <li class="d-lg-none">
                                 <!-- header-search-1 -->
                                 <div class="header-search-wrap">
@@ -117,11 +84,7 @@
         <div class="container">
             <div class="row">
                 <div class="col header-menu-column justify-content-center">
-                    <div class="sticky-logo">
-                        <div class="site-logo">
-                            <a asp-area="" asp-controller="Home" asp-action="Index"><img src="/assets/img/logo-2.png" alt="Logo"></a>
-                        </div>
-                    </div>
+                    @await Component.InvokeAsync("StickySiteLogo")
                     <div class="header-menu header-menu-2">
                         <nav>
                             <div class="ltn__main-menu">
