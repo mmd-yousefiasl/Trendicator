@@ -19,6 +19,7 @@
         public const string LoginFailedError = "ورود ناموفق، لطفا دوباره امتحان کنید";
         public const string CantDeleteThisRecordError = "نمی‌توان این رکورد را حذف کرد";
         public const string DuplicateSlugError = "عنوان در مرورگر تکراری می باشد";
+        public const string ThisEmailAlreadyRegisterdError = "این ایمیل قبلا ثبت شده است";
 
         #endregion
 

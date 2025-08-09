@@ -73,6 +73,15 @@ namespace Data.Context
             modelBuilder.Entity<SiteData>().HasData(siteData);
 
             #endregion
+
+            #region EmailData
+            EmailData emailData = new EmailData()
+            {
+                Id = 1,
+            };
+
+            modelBuilder.Entity<EmailData>().HasData(emailData);
+            #endregion
         }
     }
 }

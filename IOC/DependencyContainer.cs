@@ -38,6 +38,11 @@ namespace IOC
             services.AddScoped<ISocialMediaService, SocialMediaService>();
             services.AddScoped<ITestimonialService, TestimonialService>();
             services.AddScoped<ISiteDataService, SiteDataService>();
+            services.AddScoped<IEmailDataService, EmailDataService>();
+            services.AddScoped<ISendEmailService, SendEmailService>();
+            services.AddScoped<ISentLetterService, SentLetterService>();
+            services.AddScoped<INewsLetterService, NewsLetterService>();
+            services.AddScoped<IViewRenderService, ViewRenderService>();
 
             #endregion
 

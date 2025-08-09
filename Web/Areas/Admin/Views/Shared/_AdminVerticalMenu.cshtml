@@ -110,6 +110,31 @@
                     </a>
                 </li>
 
+                <li permission="ManageEmailData">
+                    <a asp-area="Admin" asp-controller="EmailData" asp-action="UpdateEmailData" class="waves-effect">
+                        <i class="mdi mdi-home"></i>
+                        <span>اطلاعات ایمیل</span>
+                    </a>
+                </li>
+
+                <li permission="ManageNewsLetters">
+                    <a asp-area="Admin" asp-controller="NewsLetters" asp-action="NewsLettersList" class="waves-effect">
+                        <i class="mdi mdi-home"></i>
+                        <span>ایمیل های خبرنامه</span>
+                    </a>
+                </li>
+
+                <li permission="ManageNewsLetters">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-account"></i>
+                        <span>ایمیل های ارسال شده</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="SentLettersList"><a asp-area="Admin" asp-controller="SentLetter" asp-action="SentLettersList">لیست ایمیل های ارسال شده</a></li>
+                        <li permission="SendLetter"><a asp-area="Admin" asp-controller="SentLetter" asp-action="SendLetter">ارسال ایمیل جدید</a></li>
+                    </ul>
+                </li>
+
                 <li class="menu-title">مدیریت مقالات</li>
 
                 <li permission="ManageBlogCategories">

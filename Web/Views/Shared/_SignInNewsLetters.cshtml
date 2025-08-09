@@ -1,0 +1,12 @@
+﻿@using Application.ViewModels.NewsLetter.ClientSide
+@model ClientSideSignInNewsLettersViewModel
+
+<form asp-area="" asp-controller="Home" asp-action="SignInNewsLetters" method="post">
+    <input type="text" asp-for="Email" class="m-0">
+    <div class="btn-wrapper">
+        <button class="theme-btn-1 btn" type="submit">
+            <i class="fas fa-location-arrow"></i>
+        </button>
+    </div>
+    <span class="text-danger" asp-validation-for="Email"></span>
+</form>

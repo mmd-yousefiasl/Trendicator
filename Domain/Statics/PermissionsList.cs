@@ -449,9 +449,81 @@ namespace Domain.Statics
                 UniqueName = "UpdateSiteData"
             },
             #endregion
+
+            #region EmailData
+            new Permission
+            {
+                Id = 59,
+                ParentId = 1,
+                Title = "مدیریت اطلاعات ایمیل",
+                UniqueName = "ManageEmailData"
+            },
+            new Permission
+            {
+                Id = 60,
+                ParentId = 59,
+                Title = "ویرایش اطلاعات ایمیل",
+                UniqueName = "UpdateEmailData"
+            },
+            #endregion
+
+            #region NewsLetters
+            new Permission
+            {
+                Id = 61,
+                ParentId = 1,
+                Title = "مدیریت ایمیل های خبرنامه",
+                UniqueName = "ManageNewsLetters"
+            },
+            new Permission
+            {
+                Id = 62,
+                ParentId = 61,
+                Title = "لیست ایمیل های خبرنامه",
+                UniqueName = "NewsLettersList"
+            },
+            new Permission
+            {
+                Id = 63,
+                ParentId = 61,
+                Title = "حذف ایمیل خبرنامه",
+                UniqueName = "DeleteNewsLetters"
+            },
+            #endregion
+
+            #region SentLetter
+            new Permission
+            {
+                Id = 64,
+                ParentId = 1,
+                Title = "مدیریت ایمیل های ارسال شده",
+                UniqueName = "ManageNewsLetters"
+            },
+            new Permission
+            {
+                Id = 65,
+                ParentId = 64,
+                Title = "لیست ایمیل های ارسال شده",
+                UniqueName = "SentLettersList"
+            },
+            new Permission
+            {
+                Id = 66,
+                ParentId = 64,
+                Title = "حذف ایمیل ارسال شده",
+                UniqueName = "DeleteSentLetter"
+            },
+            new Permission
+            {
+                Id = 67,
+                ParentId = 64,
+                Title = "ارسال ایمیل جدید",
+                UniqueName = "SendLetter"
+            },
+            #endregion
         };
 
-        //Last used id ==> 58
+        //Last used id ==> 67
         public static List<Permission> Permissions = _permissions;
     }
 }
