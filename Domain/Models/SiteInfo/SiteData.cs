@@ -11,5 +11,6 @@
         public string? Email { get; set; }
         public string? TermsAndCondition { get; set; }
         public string? PrivacyPolicy { get; set; }
+        public string? FooterContent { get; set; }
     }
 }

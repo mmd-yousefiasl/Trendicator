@@ -21,5 +21,9 @@ namespace Application.Services.Interfaces
         Task<Result<string>> ClientSideGetPrivacyPolicy();
 
         Task<Result<string>> GetSiteName();
+
+        Task<Result<ClientSideContactUsAddressViewModel>> ClientSideGetContactAddress();
+
+        Task<Result<string>> GetFooterContent();
     }
 }

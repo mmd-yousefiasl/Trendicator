@@ -8,5 +8,7 @@ namespace Domain.Enums.Banner
         Banner650x295,
         [Display(Name = "565*550")]
         Banner560x550,
+        [Display(Name = "روش های پرداخت")]
+        PaymentMethods,
     }
 }

@@ -39,6 +39,10 @@ namespace Application.ViewModels.SiteData.AdminSide
         [MaxLength(200, ErrorMessage = Messages.MaxLengthError)]
         public string? Email { get; set; }
 
+        [Display(Name = "متن فوتر")]
+        [MaxLength(1000, ErrorMessage = Messages.MaxLengthError)]
+        public string? FooterContent { get; set; }
+
         [Display(Name = "شرایط و ضوابط")]
         [MaxLength(10000, ErrorMessage = Messages.MaxLengthError)]
         public string? TermsAndCondition { get; set; }

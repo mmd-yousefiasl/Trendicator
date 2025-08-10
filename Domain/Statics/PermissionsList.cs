@@ -521,9 +521,33 @@ namespace Domain.Statics
                 UniqueName = "SendLetter"
             },
             #endregion
+
+            #region ContactUs
+            new Permission
+            {
+                Id = 68,
+                ParentId = 1,
+                Title = "مدیریت فرم های تماس باما",
+                UniqueName = "ManageContactUs"
+            },
+            new Permission
+            {
+                Id = 69,
+                ParentId = 68,
+                Title = "لیست فرم های تماس باما",
+                UniqueName = "ContactUsList"
+            },
+            new Permission
+            {
+                Id = 70,
+                ParentId = 68,
+                Title = "حذف فرم تماس باما",
+                UniqueName = "DeleteContactUsForm"
+            },
+            #endregion
         };
 
-        //Last used id ==> 67
+        //Last used id ==> 70
         public static List<Permission> Permissions = _permissions;
     }
 }

@@ -39,6 +39,7 @@ namespace Application.Services.Implementaions
                 Address = n.Address,
                 Email = n.Email,
                 FooterDescription = n.FooterDescription,
+                FooterContent = n.FooterContent,
                 Phone = n.Phone,
                 PrivacyPolicy = n.PrivacyPolicy,
                 TermsAndCondition = n.TermsAndCondition,
@@ -88,6 +89,7 @@ namespace Application.Services.Implementaions
             siteData.Address = model.Address;
             siteData.TermsAndCondition = model.TermsAndCondition;
             siteData.PrivacyPolicy = model.PrivacyPolicy;
+            siteData.FooterContent = model.FooterContent;
 
             _dbSet.Update(siteData);
             await _context.SaveChangesAsync();
@@ -164,6 +166,27 @@ namespace Application.Services.Implementaions
         public async Task<Result<string>> GetSiteName()
         {
             var data = await _dbSet.Where(n => n.Id == 1).Select(n => n.SiteName).FirstOrDefaultAsync();
+            if (string.IsNullOrWhiteSpace(data)) return Result.Failure<string>(Messages.OperationFailedError);
+
+            return data;
+        }
+
+        public async Task<Result<ClientSideContactUsAddressViewModel>> ClientSideGetContactAddress()
+        {
+            var data = await _dbSet.Where(n => n.Id == 1).Select(n => new ClientSideContactUsAddressViewModel()
+            {
+                Address = n.Address,
+                Email = n.Email,
+                Phone = n.Phone
+            }).AsNoTracking().FirstOrDefaultAsync();
+            if (data is null) return Result.Failure<ClientSideContactUsAddressViewModel>(Messages.OperationFailedError);
+
+            return data;
+        }
+
+        public async Task<Result<string>> GetFooterContent()
+        {
+            var data = await _dbSet.Where(n => n.Id == 1).Select(n => n.FooterContent).AsNoTracking().FirstOrDefaultAsync();
             if (string.IsNullOrWhiteSpace(data)) return Result.Failure<string>(Messages.OperationFailedError);
 
             return data;

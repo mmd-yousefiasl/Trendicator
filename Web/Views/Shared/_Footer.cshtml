@@ -14,7 +14,7 @@
                                 <li><a asp-area="" asp-controller="Blog" asp-action="BlogsList">بلاگ</a></li>
                                 <li><a href="shop.html">All Products</a></li>
                                 <li><a asp-area="" asp-controller="Faq" asp-action="Faqs">سوالات متداول</a></li>
-                                <li><a href="contact.html">Contact us</a></li>
+                                <li><a asp-area="" asp-controller="ContactUs" asp-action="ContactUs">تماس باما</a></li>
                             </ul>
                         </div>
                     </div>
@@ -28,8 +28,8 @@
                                 <li><a href="wishlist.html">Wish List</a></li>
                                 <li><a asp-area="" asp-controller="Account" asp-action="Login">ورود</a></li>
                                 <li><a href="account.html">My account</a></li>
-                                <li><a href="about.html">Terms & Conditions</a></li>
-                                <li><a href="about.html">Promotional Offers</a></li>
+                                <li><a asp-area="" asp-controller="TermsAndConditions" asp-action="TermsAndConditions">شرایط و ضوابط</a></li>
+                                <li><a asp-area="" asp-controller="TermsAndConditions" asp-action="PrivacyPolicy">سیاست حفظ حریم خصوصی</a></li>
                             </ul>
                         </div>
                     </div>
@@ -56,8 +56,7 @@
                         <div class="footer-newsletter">
                             <partial name="_SignInNewsLetters" model="@(new ClientSideSignInNewsLettersViewModel())" />
                         </div>
-                        <h5 class="mt-30">We Accept</h5>
-                        <img src="/assets/img/icons/payment-4.png" alt="Payment Image">
+                        @await Component.InvokeAsync("FooterPaymentMethods")
                     </div>
                 </div>
             </div>
@@ -66,11 +65,7 @@
     <div class="ltn__copyright-area ltn__copyright-2 section-bg-2  ltn__border-top-2--- plr--5">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-6 col-12">
-                    <div class="ltn__copyright-design clearfix">
-                        <p>All Rights Reserved @@ Company <span class="current-year"></span></p>
-                    </div>
-                </div>
+                @await Component.InvokeAsync("FooterContent")
                 <div class="col-md-6 col-12 align-self-center">
                     <div class="ltn__copyright-menu text-right">
                         <ul>

@@ -1,0 +1,84 @@
+﻿@using Application.ViewModels.ContactUsForm.ClientSide
+@model ClientSideContactUsViewModel
+
+@{
+    ViewData["Title"] = "تماس باما";
+}
+
+<!-- BREADCRUMB AREA START -->
+<div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-90 bg-image" data-bg="/assets/img/bg/9.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
+                    <div class="section-title-area ltn__section-title-2">
+                        <h6 class="section-subtitle ltn__secondary-color">
+                            به
+                            @SiteTools.SiteName
+                            خوش آمدید
+                        </h6>
+                        <h1 class="section-title white-color">تماس باما</h1>
+                    </div>
+                    <div class="ltn__breadcrumb-list">
+                        <ul>
+                            <li><a asp-area="" asp-controller="Home" asp-action="Index">صفحه اصلی</a></li>
+                            <li>تماس باما</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- BREADCRUMB AREA END -->
+@await Component.InvokeAsync("ContactUsAddress")
+
+<!-- CONTACT MESSAGE AREA START -->
+<div class="ltn__contact-message-area mb-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ltn__form-box contact-form-box box-shadow white-bg">
+                    <h4 class="title-2">تماس باما</h4>
+                    <form asp-area="" asp-controller="ContactUs" asp-action="ContactUs" method="post" onsubmit="submitAnimation()">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="input-item input-item-name ltn__custom-icon">
+                                    <input type="text" asp-for="FullName">
+                                </div>
+                                <span class="text-danger" asp-validation-for="FullName"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-item input-item-email ltn__custom-icon">
+                                    <input asp-for="Email">
+                                </div>
+                                <span class="text-danger" asp-validation-for="Email"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-item input-item-email ltn__custom-icon">
+                                    <input asp-for="Subject">
+                                </div>
+                                <span class="text-danger" asp-validation-for="Subject"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-item input-item-phone ltn__custom-icon">
+                                    <input type="text" asp-for="PhoneNumber">
+                                </div>
+                                <span class="text-danger" asp-validation-for="PhoneNumber"></span>
+                            </div>
+                        </div>
+                        <div class="input-item input-item-textarea ltn__custom-icon">
+                            <textarea asp-for="Message"></textarea>
+                        </div>
+                        <span class="text-danger" asp-validation-for="Message"></span>
+                        <p>
+                            <div class="btn-wrapper mt-0">
+                                <button class="btn theme-btn-1 btn-effect-1 text-uppercase btn-submit" type="submit">ارسال</button>
+                            </div>
+                        <p class="form-messege mb-0 mt-20"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

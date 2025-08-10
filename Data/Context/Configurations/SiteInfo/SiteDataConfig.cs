@@ -19,6 +19,7 @@ namespace Data.Context.Configurations.SiteInfo
             builder.Property(n => n.Email).HasMaxLength(200);
             builder.Property(n => n.TermsAndCondition).HasMaxLength(10000);
             builder.Property(n => n.PrivacyPolicy).HasMaxLength(10000);
+            builder.Property(n => n.FooterContent).HasMaxLength(1000);
         }
     }
 }

@@ -43,6 +43,7 @@ namespace IOC
             services.AddScoped<ISentLetterService, SentLetterService>();
             services.AddScoped<INewsLetterService, NewsLetterService>();
             services.AddScoped<IViewRenderService, ViewRenderService>();
+            services.AddScoped<IContactUsFormService, ContactUsFormService>();
 
             #endregion
 

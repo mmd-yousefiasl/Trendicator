@@ -1,0 +1,13 @@
+﻿@using Application.ViewModels.Banner.ClientSide
+@model List<ClientSideBannerViewModel>
+
+@if (Model?.Any() ?? false)
+{
+    foreach (var item in Model.Take(1).ToList() ?? new List<ClientSideBannerViewModel>())
+    {
+        <h5 class="mt-30">روش های پرداخت</h5>
+        <a href="@item.Url">
+            <img src="@SiteTools.Banner@item.FileName" alt="@item.Title">
+        </a>
+    }
+}
