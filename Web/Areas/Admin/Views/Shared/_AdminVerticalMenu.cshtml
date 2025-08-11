@@ -176,6 +176,20 @@
                         <li permission="CreateNewBlog"><a asp-area="Admin" asp-controller="Blog" asp-action="CreateNewBlog">افزودن مقاله جدید</a></li>
                     </ul>
                 </li>
+
+                <li class="menu-title">مدیریت محصولات</li>
+
+                <li permission="ManageProductCategories">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-account"></i>
+                        <span>دسته بندی ها</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="ProductCategoriesList"><a asp-area="Admin" asp-controller="ProductCategory" asp-action="ProductCategoriesList">لیست دسته بندی ها</a></li>
+                        <li permission="CreateNewProductCategory"><a asp-area="Admin" asp-controller="ProductCategory" asp-action="CreateNewProductCategory">افزودن دسته بندی جدید</a></li>
+                    </ul>
+                </li>
+
             </ul>
         </div>
         <!-- Sidebar -->

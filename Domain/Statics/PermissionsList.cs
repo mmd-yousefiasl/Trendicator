@@ -545,9 +545,47 @@ namespace Domain.Statics
                 UniqueName = "DeleteContactUsForm"
             },
             #endregion
+
+            #region ProductCategory
+            new Permission
+            {
+                Id = 71,
+                ParentId = 1,
+                Title = "مدیریت دسته بندی های محصولات",
+                UniqueName = "ManageProductCategories"
+            },
+            new Permission
+            {
+                Id = 72,
+                ParentId = 71,
+                Title = "لیست دسته بندی های محصولات",
+                UniqueName = "ProductCategoriesList"
+            },
+            new Permission
+            {
+                Id = 73,
+                ParentId = 71,
+                Title = "افزودن دسته بندی جدید",
+                UniqueName = "CreateNewProductCategory"
+            },
+            new Permission
+            {
+                Id = 74,
+                ParentId = 71,
+                Title = "ویرایش دسته بندی",
+                UniqueName = "UpdateProductCategory"
+            },
+            new Permission
+            {
+                Id = 75,
+                ParentId = 71,
+                Title = "حذف دسته بندی",
+                UniqueName = "DeleteProductCategory"
+            },
+            #endregion
         };
 
-        //Last used id ==> 70
+        //Last used id ==> 75
         public static List<Permission> Permissions = _permissions;
     }
 }
