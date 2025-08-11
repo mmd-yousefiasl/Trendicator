@@ -30,7 +30,7 @@ namespace Application.Services.Interfaces
 
         Task<Result<string>> AdminSideGetAdminAvatar();
 
-        Task<Result> SendUserLoginCode(ClientSideLoginViewModel model);
+        Task<Result<string>> SendUserLoginCode(ClientSideLoginViewModel model);
 
         Task<Result<ClientSideUserViewModel>> VerifyLoginCode(ClientSideLoginCodeViewModel model);
     }

@@ -45,7 +45,8 @@ namespace Web.Controllers
             return RedirectToAction(nameof(LoginCode), new
             {
                 PhoneNumber = model.PhoneNumber,
-                ReturnUrl = model.ReturnUrl
+                ReturnUrl = model.ReturnUrl,
+                LoginCode = result.Value
             });
         }
 

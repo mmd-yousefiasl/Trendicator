@@ -312,9 +312,9 @@ namespace Application.Services.Implementaions
             return userAvatar;
         }
 
-        public async Task<Result> SendUserLoginCode(ClientSideLoginViewModel model)
+        public async Task<Result<string>> SendUserLoginCode(ClientSideLoginViewModel model)
         {
-            if (model is null) return Result.Failure<bool>(Messages.OperationFailedError);
+            if (model is null) return Result.Failure<string>(Messages.OperationFailedError);
 
             User loginUser = await _dbSet.Where(n => n.PhoneNumber == model.PhoneNumber).FirstOrDefaultAsync();
             if (loginUser is null)
@@ -329,17 +329,17 @@ namespace Application.Services.Implementaions
             }
             else
             {
-                if (loginUser.IsUserBanned) return Result.Failure(Messages.OperationFailedError);
+                if (loginUser.IsUserBanned) return Result.Failure<string>(Messages.OperationFailedError);
             }
 
             var validationResult = await _userValidationService.GenerateUserValidationCode(model.PhoneNumber);
-            if (validationResult.IsFailure) return Result.Failure(validationResult.Message);
+            if (validationResult.IsFailure) return Result.Failure<string>(validationResult.Message);
 
             Console.WriteLine("Login Code: " + validationResult.Value);
 
             //await _smsServiec.SendLoginCode(validationResult.Value, loginUser.Mobile);
 
-            return Result.Success(Messages.LoginCodeSentSuccessfully);
+            return validationResult.Value;
         }
 
         public async Task<Result<ClientSideUserViewModel>> VerifyLoginCode(ClientSideLoginCodeViewModel model)
