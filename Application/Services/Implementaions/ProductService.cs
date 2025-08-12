@@ -145,6 +145,7 @@ namespace Application.Services.Implementaions
                 IsPublished = n.IsPublished,
                 Priority = n.Priority,
                 Category = n.Category.Title,
+                ViewsCount = n.Views.Count()
             }));
 
             return filter;

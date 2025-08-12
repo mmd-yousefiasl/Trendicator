@@ -83,6 +83,7 @@
                                         <th>دسته بندی</th>
                                         <th>اولویت</th>
                                         <th>وضعیت انتشار</th>
+                                        <th>بازدید</th>
                                         <th>عملیات</th>
                                     </tr>
                                 </thead>
@@ -121,9 +122,14 @@
                                                         <span class="text-danger">منتشرنشده</span>
                                                     }
                                                 </td>
+                                                <td>@item.ViewsCount</td>
                                                 <td>
                                                     <a permission="UpdateProduct" asp-area="Admin" asp-controller="Product" asp-action="UpdateProduct" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm edit" title="ویرایش">
                                                         <i class="fas fa-pencil-alt"></i>
+                                                    </a>
+
+                                                    <a permission="ProductGalleryList" href="javascript:void(0)" onclick="showLargeModal('Product Gallery', '/admin/product-gallery-list?id=@item.Id')" class="btn btn-outline-secondary btn-sm edit" title="گالری">
+                                                        <i class="fas fa-file-image"></i>
                                                     </a>
 
                                                     <form permission="DeleteProduct" class="btn btn-outline-secondary btn-sm" method="post" onclick="ConfirmDelete(this)" asp-route-id="@item.Id" asp-area="Admin" asp-controller="Product" asp-action="DeleteProduct" title="حذف">
@@ -149,3 +155,7 @@
         <partial name="_NotFoundPartial" />
     }
 </div>
+
+@section FooterReferences {
+    <script asp-append-version="true" src="/js/Admin/products-list.js"></script>
+}
