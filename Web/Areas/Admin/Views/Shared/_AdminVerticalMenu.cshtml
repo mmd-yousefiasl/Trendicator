@@ -190,6 +190,17 @@
                     </ul>
                 </li>
 
+                <li permission="ManageProducts">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-account"></i>
+                        <span>محصولات</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="ProductsList"><a asp-area="Admin" asp-controller="Product" asp-action="ProductsList">لیست محصولات</a></li>
+                        <li permission="CreateNewProduct"><a asp-area="Admin" asp-controller="Product" asp-action="CreateNewProduct">افزودن محصول جدید</a></li>
+                    </ul>
+                </li>
+
             </ul>
         </div>
         <!-- Sidebar -->

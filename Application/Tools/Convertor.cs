@@ -59,5 +59,10 @@ namespace Application.Tools
             string persianDateTime = $"{day} {persianMonthNames[month - 1]} {year} {hour:D2}:{minute:D2}";
             return persianDateTime;
         }
+
+        public static string ToToman(this long value)
+        {
+            return value.ToString("#,0 تومان");
+        }
     }
 }

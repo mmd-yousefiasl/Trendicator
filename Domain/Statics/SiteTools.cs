@@ -37,5 +37,13 @@
         public static string BlogBanner { get; set; }
 
         #endregion
+
+        #region Product
+
+        public static string ProductBanner { get; set; }
+
+        public static string ProductGallery { get; set; }
+
+        #endregion
     }
 }

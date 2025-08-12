@@ -45,6 +45,7 @@ namespace IOC
             services.AddScoped<IViewRenderService, ViewRenderService>();
             services.AddScoped<IContactUsFormService, ContactUsFormService>();
             services.AddScoped<IProductCategoryService, ProductCategoryService>();
+            services.AddScoped<IProductService, ProductService>();
 
             #endregion
 
