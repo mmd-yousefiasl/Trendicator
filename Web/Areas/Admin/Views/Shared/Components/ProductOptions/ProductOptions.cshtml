@@ -1,0 +1,45 @@
+﻿@using Application.Tools
+@using Application.ViewModels.ProductStock.AdminSide
+@model AdminSideFilterProductOptionsViewModel
+
+@if (Model.Entities?.Any() ?? false)
+{
+    <div class="col-sm-12">
+        <div class="table-responsive table-desi">
+            <table class="table all-package table-category " id="editableTable">
+                <thead>
+                    <tr>
+                        <th>عنوان</th>
+                        <th>قیمت</th>
+                        <th>قیمت سفارش</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.Entities ?? new List<AdminSideProductOptionViewModel>())
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+                            <td>@item.Price.ToToman()</td>
+                            <td>@item.OrderPrice?.ToToman()</td>
+                            <td>
+                                <a permission="UpdateProductOption" href="javascript:void(0)" onclick="UpdateProductOption('@item.Id')">
+                                    <i class="fa fa-edit" title="Edit"></i>
+                                </a>
+                                <form permission="DeleteProductOption" method="post" onclick="RemoveProductOption(this)" asp-route-id="@item.Id" asp-area="Admin" asp-controller="ProductOption" asp-action="DeleteProductOption" title="Delete" class="list-delete-button">
+                                    <i class="fa fa-trash" title="Delete"></i>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <partial name="_Paging" model="@Model.GetCurrentPaging()" />
+}
+else
+{
+    <partial name="_NotFoundPartial" />
+}

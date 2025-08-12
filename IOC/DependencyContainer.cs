@@ -47,6 +47,7 @@ namespace IOC
             services.AddScoped<IProductCategoryService, ProductCategoryService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductGalleryService, ProductGalleryService>();
+            services.AddScoped<IProductOptionService, ProductOptionService>();
 
             #endregion
 

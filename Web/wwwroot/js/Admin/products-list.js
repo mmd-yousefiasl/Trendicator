@@ -86,10 +86,10 @@ function showSuccessMessage(message) {
     })
 }
 
-function submitProductStockForm(event) {
+function submitProductOptionForm(event) {
     event.preventDefault();
 
-    const $form = $('#createStockForm');
+    const $form = $('#createOptionForm');
 
     // Trigger client-side validation
     if (!$form.valid()) {
@@ -107,7 +107,7 @@ function submitProductStockForm(event) {
             if (data.success) {
 
                 showSuccessMessage(data.message);
-                ReloadProductStock();
+                ReloadProductOption();
 
             } else {
                 showErrorMessage(data.message);
@@ -119,16 +119,16 @@ function submitProductStockForm(event) {
     });
 }
 
-function ReloadProductStock() {
-    const productId = document.getElementById("ProductStockProductId").value;
-    $("#ProductStocks").load("/admin/add-product-stock?id=" + productId);
+function ReloadProductOption() {
+    const productId = document.getElementById("ProductOptionProductId").value;
+    $("#ProductOptions").load("/admin/add-product-option?id=" + productId);
 }
 
-function UpdateProductStock(stockId) {
-    $("#ProductStocks").load("/admin/edit-product-stock?id=" + stockId);
+function UpdateProductOption(stockId) {
+    $("#ProductOptions").load("/admin/edit-product-option?id=" + stockId);
 }
 
-function RemoveProductStock(formElement) {
+function RemoveProductOption(formElement) {
     event.preventDefault();
 
     Swal.fire({
@@ -150,7 +150,7 @@ function RemoveProductStock(formElement) {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        ReloadProductStock(); // optionally pass productId if needed
+                        ReloadProductOption(); // optionally pass productId if needed
                         showSuccessMessage(data.message);
                     } else {
                         showErrorMessage(data.message);
