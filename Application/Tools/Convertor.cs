@@ -64,5 +64,10 @@ namespace Application.Tools
         {
             return value.ToString("#,0 تومان");
         }
+
+        public static string ToTomanFormat(this long value)
+        {
+            return value.ToString("#,0");
+        }
     }
 }

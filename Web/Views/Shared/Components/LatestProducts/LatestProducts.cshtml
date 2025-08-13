@@ -1,0 +1,25 @@
+﻿@using Application.ViewModels.Product.ClientSide
+@model List<ClientSideProductViewModel>
+
+@if (Model?.Any() ?? false)
+{
+    <div class="ltn__product-area ltn__product-gutter pt-115 pb-70">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title-area ltn__section-title-2 text-center">
+                        <h1 class="section-title">جدید ترین محصولات</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="row ltn__tab-product-slider-one-active--- slick-arrow-1">
+                @foreach (var item in Model ?? new List<ClientSideProductViewModel>())
+                {
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-6">
+                        <partial name="_ProductListView" model="@item" />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

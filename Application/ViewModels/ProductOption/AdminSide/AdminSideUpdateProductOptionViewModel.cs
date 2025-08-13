@@ -1,7 +1,7 @@
 ﻿using Domain.Shared;
 using System.ComponentModel.DataAnnotations;
 
-namespace Application.ViewModels.ProductStock.AdminSide
+namespace Application.ViewModels.ProductOption.AdminSide
 {
     public class AdminSideUpdateProductOptionViewModel : CommonViewModel
     {

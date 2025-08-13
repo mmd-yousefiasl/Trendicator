@@ -1,4 +1,4 @@
-﻿namespace Application.ViewModels.ProductStock.AdminSide
+﻿namespace Application.ViewModels.ProductOption.AdminSide
 {
     public class AdminSideProductOptionViewModel : CommonViewModel
     {

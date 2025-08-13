@@ -1,7 +1,7 @@
 ﻿using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Tools;
-using Application.ViewModels.ProductStock.AdminSide;
+using Application.ViewModels.ProductOption.AdminSide;
 using Data.Context;
 using Domain.Events.Products.ProductOption;
 using Domain.Models.Products;

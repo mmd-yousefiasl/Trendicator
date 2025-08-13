@@ -1,0 +1,49 @@
+﻿@using Application.Tools
+@using Application.ViewModels.Product.ClientSide
+@model List<ClientSideProductViewModel>
+
+@if (Model?.Any() ?? false)
+{
+    <div class="widget ltn__top-rated-product-widget">
+        <h4 class="ltn__widget-title ltn__widget-title-border">محصولات برتر</h4>
+        <ul>
+            @foreach (var item in Model ?? new List<ClientSideProductViewModel>())
+            {
+                <li>
+                    <div class="top-rated-product-item clearfix">
+                        <div class="top-rated-product-img">
+                            <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-slug="@item.Slug">
+                                <img src="@SiteTools.ProductBanner@item.BannerFileName" alt="@item.Title">
+                            </a>
+                        </div>
+                        <div class="top-rated-product-info">
+                            <div class="product-ratting">
+                                <ul>
+                                    <li><a href="javascript:void(0)"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="javascript:void(0)"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="javascript:void(0)"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="javascript:void(0)"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="javascript:void(0)"><i class="fas fa-star"></i></a></li>
+                                </ul>
+                            </div>
+                            <h6>
+                                <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-slug="@item.Slug">
+                                    @item.Title
+                                </a>
+                            </h6>
+                            @if (item.HaveDiscount)
+                            {
+                                <span class="fs-large">@item.OrderPrice?.ToToman()</span>
+                                <del class="fs-small">@item.Price.ToTomanFormat()</del>
+                            }
+                            else
+                            {
+                                <span class="fs-large">@item.Price.ToToman()</span>
+                            }
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+}

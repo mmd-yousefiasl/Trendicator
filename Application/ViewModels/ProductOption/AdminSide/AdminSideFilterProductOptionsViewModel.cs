@@ -1,6 +1,6 @@
 ﻿using Domain.Models;
 
-namespace Application.ViewModels.ProductStock.AdminSide
+namespace Application.ViewModels.ProductOption.AdminSide
 {
     public class AdminSideFilterProductOptionsViewModel : BasePaging<AdminSideProductOptionViewModel>
     {

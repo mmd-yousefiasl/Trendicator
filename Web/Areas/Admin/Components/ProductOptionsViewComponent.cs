@@ -1,5 +1,5 @@
 ﻿using Application.Services.Interfaces;
-using Application.ViewModels.ProductStock.AdminSide;
+using Application.ViewModels.ProductOption.AdminSide;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Areas.Admin.Components

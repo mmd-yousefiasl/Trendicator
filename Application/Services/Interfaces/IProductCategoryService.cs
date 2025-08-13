@@ -1,4 +1,5 @@
 ﻿using Application.ViewModels.ProductCategory.AdminSide;
+using Application.ViewModels.ProductCategory.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces
@@ -16,5 +17,7 @@ namespace Application.Services.Interfaces
         Task<Result> AdminSideDeleteProductCategory(int id);
 
         Task<Result<List<AdminSideProductCategoryAsOptionViewModel>>> AdminSideGetProductCategoriesAsOptions(int? id);
+
+        Task<Result<List<ClientSideProductCategoryViewModel>>> ClientSideGetProductCategories();
     }
 }

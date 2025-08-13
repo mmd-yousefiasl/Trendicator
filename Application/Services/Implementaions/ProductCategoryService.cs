@@ -2,6 +2,7 @@
 using Application.Services.Interfaces;
 using Application.Tools;
 using Application.ViewModels.ProductCategory.AdminSide;
+using Application.ViewModels.ProductCategory.ClientSide;
 using Data.Context;
 using Domain.Events.Products.ProductCategory;
 using Domain.Models.Products;
@@ -149,6 +150,52 @@ namespace Application.Services.Implementaions
             await _mediator.PublishEvent(ProductCategoryUpdatedEvent);
 
             return Result.Success();
+        }
+
+        public async Task<Result<List<ClientSideProductCategoryViewModel>>> ClientSideGetProductCategories()
+        {
+            var categories = await _dbSet.AsNoTracking().ToListAsync();
+            if (!categories.Any()) return Result.Failure<List<ClientSideProductCategoryViewModel>>(Messages.OperationFailedError);
+
+            var firstParents = new List<ClientSideProductCategoryViewModel>();
+            foreach (var item in categories.Where(n => n.ParentCategoryId == null).ToList() ?? new List<ProductCategory>())
+            {
+                ClientSideProductCategoryViewModel firstParent = new ClientSideProductCategoryViewModel()
+                {
+                    Id = item.Id,
+                    Title = item.Title,
+                    ParentId = null,
+                    Categories = new List<ClientSideProductCategoryViewModel>()
+                };
+                foreach (var item2 in categories.Where(n => n.ParentCategoryId == item.Id).ToList() ?? new List<ProductCategory>())
+                {
+                    ClientSideProductCategoryViewModel secondParent = new ClientSideProductCategoryViewModel()
+                    {
+                        Id = item2.Id,
+                        Title = item2.Title,
+                        ParentId = item.Id,
+                        Categories = new List<ClientSideProductCategoryViewModel>()
+                    };
+                    foreach (var item3 in categories.Where(n => n.ParentCategoryId == item2.Id).ToList() ?? new List<ProductCategory>())
+                    {
+                        ClientSideProductCategoryViewModel sub = new ClientSideProductCategoryViewModel()
+                        {
+                            Id = item3.Id,
+                            Title = item3.Title,
+                            ParentId = item2.Id,
+                        };
+
+                        secondParent.Categories.Add(sub);
+                    }
+
+                    firstParent.Categories.Add(secondParent);
+                }
+
+                firstParents.Add(firstParent);
+            }
+            if (!firstParents.Any()) return Result.Failure<List<ClientSideProductCategoryViewModel>>(Messages.OperationFailedError);
+
+            return firstParents;
         }
     }
 }

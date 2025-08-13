@@ -6,6 +6,7 @@ namespace Domain.Events.Products.Product
     string BannerFileName,
     string Title,
     string Slug,
+    string ShortDescription,
     string Description,
     int Priority,
     bool IsPublished,

@@ -2,7 +2,9 @@
 using Application.Services.Interfaces;
 using Application.Tools;
 using Application.ViewModels.Product.AdminSide;
+using Application.ViewModels.Product.ClientSide;
 using Data.Context;
+using Domain.Enums.Products;
 using Domain.Events.Products.Product;
 using Domain.Models.Products;
 using Domain.Shared;
@@ -53,6 +55,7 @@ namespace Application.Services.Implementaions
                 IsPublished = model.IsPublished,
                 Priority = model.Priority,
                 CategoryId = model.CategoryId,
+                ShortDescription = model.ShortDescription
             };
 
             await _dbSet.AddAsync(product);
@@ -62,6 +65,7 @@ namespace Application.Services.Implementaions
                 product.BannerFileName,
                 product.Title,
                 product.Slug,
+                product.ShortDescription,
                 product.Description,
                 product.Priority,
                 product.IsPublished,
@@ -113,7 +117,8 @@ namespace Application.Services.Implementaions
                 conditions.Add(n => n.Title.Contains(filter.Search) ||
                 n.Slug.Contains(filter.Search) ||
                 n.Description.Contains(filter.Search) ||
-                n.Category.Title.Contains(filter.Search));
+                n.Category.Title.Contains(filter.Search) ||
+                n.ShortDescription.Contains(filter.Search));
             }
 
             if (filter.IsPublished is not null)
@@ -167,7 +172,8 @@ namespace Application.Services.Implementaions
                 DisplayPrice = n.DisplayPrice,
                 IsPublished = n.IsPublished,
                 IsAvailable = n.IsAvailable,
-                Priority = n.Priority
+                Priority = n.Priority,
+                ShortDescription = n.ShortDescription,
             }).AsNoTracking().FirstOrDefaultAsync();
             if (product is null) return Result.Failure<AdminSideUpdateProductViewModel>(Messages.OperationFailedError);
 
@@ -204,6 +210,7 @@ namespace Application.Services.Implementaions
             product.DisplayPrice = model.DisplayPrice;
             product.IsAvailable = model.IsAvailable;
             product.CategoryId = model.CategoryId;
+            product.ShortDescription = model.ShortDescription;
 
             _dbSet.Update(product);
             await _context.SaveChangesAsync();
@@ -213,6 +220,7 @@ namespace Application.Services.Implementaions
                 product.BannerFileName,
                 product.Title,
                 product.Slug,
+                product.ShortDescription,
                 product.Description,
                 product.Priority,
                 product.IsPublished,
@@ -223,6 +231,180 @@ namespace Application.Services.Implementaions
             await _mediator.PublishEvent(ProductUpdatedEvent);
 
             return Result.Success();
+        }
+
+        public async Task<Result<List<ClientSideProductViewModel>>> ClientSideGetLatestProducts()
+        {
+            var products = await _dbSet.Where(n => n.IsPublished).OrderByDescending(n => n.Id)
+                .Take(16)
+                .Select(n => new ClientSideProductViewModel()
+                {
+                    Id = n.Id,
+                    BannerFileName = n.BannerFileName,
+                    ReviewRate = 5,
+                    Title = n.Title,
+                    Slug = n.Slug,
+                    ShortDescription = n.ShortDescription,
+                    Price = n.DisplayPrice,
+                    HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
+                    OrderPrice = n.DisplayOrderPrice,
+                    Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
+                }).AsNoTracking().ToListAsync();
+            if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
+
+            return products;
+        }
+
+        public async Task<Result<ClientSideFilterProductsViewModel>> ClientSideFilterProducts(ClientSideFilterProductsViewModel filter)
+        {
+            if (filter is null) return Result.Failure<ClientSideFilterProductsViewModel>(Messages.OperationFailedError);
+
+            var conditions = Filter.GenerateConditions<Product>();
+
+            conditions.Add(n => n.IsPublished);
+
+            if (!string.IsNullOrWhiteSpace(filter.Search))
+            {
+                conditions.Add(n => n.Title.Contains(filter.Search) ||
+                n.Slug.Contains(filter.Search) ||
+                n.ShortDescription.Contains(filter.Search) ||
+                n.Category.Title.Contains(filter.Search));
+            }
+
+            if (filter.CategoryId is not null)
+            {
+                conditions.Add(n => n.CategoryId == filter.CategoryId ||
+                n.Category.ParentCategoryId == filter.CategoryId ||
+                n.Category.ParentCategory.ParentCategoryId == filter.CategoryId);
+            }
+
+            IQueryable<Product> query = _dbSet;
+            if (filter.Sort is not null)
+            {
+                switch (filter.Sort)
+                {
+                    case ProductSortTypeEnum.NewArrivals:
+                        query = query.OrderByDescending(n => n.Id);
+                        break;
+                    case ProductSortTypeEnum.Popularity:
+                        query = query.OrderBy(n => n.Views.Count());
+                        break;
+                    case ProductSortTypeEnum.PriceLowToHigh:
+                        query = query.OrderBy(n => n.DisplayPrice);
+                        break;
+                    case ProductSortTypeEnum.PriceHighToLow:
+                        query = query.OrderByDescending(n => n.DisplayPrice);
+                        break;
+                    default:
+                        query = query.OrderByDescending(n => n.Id);
+                        break;
+                }
+            }
+            else
+            {
+                query = query.OrderByDescending(n => n.Id);
+            }
+
+            foreach (var item in conditions ?? new FilterConditions<Product>())
+            {
+                query = query.Where(item);
+            }
+
+            await filter.Paging(query.Select(n => new ClientSideProductViewModel()
+            {
+                Id = n.Id,
+                Title = n.Title,
+                Slug = n.Slug,
+                BannerFileName = n.BannerFileName,
+                ReviewRate = 5,
+                ShortDescription = n.ShortDescription,
+                HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
+                Price = n.DisplayPrice,
+                OrderPrice = n.DisplayOrderPrice,
+                Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0)
+            }));
+
+            return filter;
+        }
+
+        public async Task<Result<List<ClientSideProductViewModel>>> ClientSideGetTopRatedProducts()
+        {
+            var products = await _dbSet.Where(n => n.IsPublished).OrderBy(n => n.Views.Count())
+                .Take(5)
+                .Select(n => new ClientSideProductViewModel()
+                {
+                    Id = n.Id,
+                    BannerFileName = n.BannerFileName,
+                    Title = n.Title,
+                    Slug = n.Slug,
+                    ShortDescription = n.ShortDescription,
+                    ReviewRate = 5,
+                    HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
+                    Price = n.DisplayPrice,
+                    OrderPrice = n.DisplayOrderPrice,
+                    Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0)
+                }).AsNoTracking().ToListAsync();
+            if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
+
+            return products;
+        }
+
+        public async Task<Result<ClientSideProductDetailsViewModel>> ClientSideGetProductDetails(string slug)
+        {
+            if (string.IsNullOrWhiteSpace(slug)) return Result.Failure<ClientSideProductDetailsViewModel>(Messages.OperationFailedError);
+
+            var product = await _dbSet.Where(n => n.Slug == slug && n.IsPublished)
+                .Select(n => new ClientSideProductDetailsViewModel()
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Slug = n.Slug,
+                    IsAvailable = n.IsAvailable,
+                    ShortDescription = n.ShortDescription,
+                    Description = n.Description,
+                    BannerFileName = n.BannerFileName,
+                    Gallery = n.Gallery.Select(n => n.FileName).ToList(),
+                    HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
+                    OrderPrice = n.DisplayOrderPrice,
+                    Price = n.DisplayPrice,
+                    Category = n.Category.Title,
+                    CategoryId = n.CategoryId,
+                    Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
+                    Options = n.Options.Select(o => new ClientSideProductOptionViewModel()
+                    {
+                        Id = o.Id,
+                        Title = o.Title,
+                        Price = o.Price,
+                        OrderPrice = o.OrderPrice
+                    }).ToList()
+                }).AsNoTracking().FirstOrDefaultAsync();
+            if (product is null) return Result.Failure<ClientSideProductDetailsViewModel>(Messages.OperationFailedError);
+
+            return product;
+        }
+
+        public async Task<Result<List<ClientSideProductViewModel>>> ClientSideGetRelatedProducts(int id, int categoryId)
+        {
+            if (id < 1 || categoryId < 1) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
+
+            var products = await _dbSet.Where(n => n.IsPublished && n.Id != id && n.CategoryId == categoryId)
+                .Take(8)
+                .Select(n => new ClientSideProductViewModel()
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Slug = n.Slug,
+                    BannerFileName = n.BannerFileName,
+                    Price = n.DisplayPrice,
+                    ReviewRate = 5,
+                    ShortDescription = n.ShortDescription,
+                    HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
+                    OrderPrice = n.DisplayOrderPrice,
+                    Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0)
+                }).AsNoTracking().ToListAsync();
+            if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
+
+            return products;
         }
     }
 }

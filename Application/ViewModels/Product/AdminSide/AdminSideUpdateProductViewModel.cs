@@ -24,6 +24,11 @@ namespace Application.ViewModels.Product.AdminSide
         [MaxLength(200, ErrorMessage = Messages.MaxLengthError)]
         public string Slug { get; set; }
 
+        [Display(Name = "توضیحات کوتاه")]
+        [Required(ErrorMessage = Messages.RequiredError)]
+        [MaxLength(500, ErrorMessage = Messages.MaxLengthError)]
+        public string ShortDescription { get; set; }
+
         [Display(Name = "توضیحات")]
         [Required(ErrorMessage = Messages.RequiredError)]
         public string Description { get; set; }
@@ -33,7 +38,7 @@ namespace Application.ViewModels.Product.AdminSide
         [Range(1, 100, ErrorMessage = Messages.RangeError)]
         public int Priority { get; set; }
 
-        [Display(Name = "توضیحات")]
+        [Display(Name = "وضعیت انتشار")]
         [Required(ErrorMessage = Messages.RequiredError)]
         public bool IsPublished { get; set; }
 

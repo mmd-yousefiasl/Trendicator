@@ -1,4 +1,4 @@
-﻿using Application.ViewModels.ProductStock.AdminSide;
+﻿using Application.ViewModels.ProductOption.AdminSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

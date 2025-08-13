@@ -1,6 +1,4 @@
-﻿    <!-- HEADER AREA START (header-3) -->
-<header class="ltn__header-area ltn__header-3 section-bg-6">
-    <!-- ltn__header-middle-area start -->
+﻿<header class="ltn__header-area ltn__header-3 section-bg-6">
     <div class="ltn__header-middle-area">
         <div class="container">
             <div class="row">
@@ -8,10 +6,9 @@
                 <div class="col header-contact-serarch-column d-none d-lg-block">
                     <div class="header-contact-search">
                         @await Component.InvokeAsync("SitePhone")
-                        <!-- header-search-2 -->
                         <div class="header-search-2">
-                            <form id="#123" method="get" action="#">
-                                <input type="text" name="search" value="" placeholder="Search here..." />
+                            <form asp-area="" asp-controller="Product" asp-action="ProductsList" method="get">
+                                <input type="text" name="Search" value="" placeholder="جستجو کنید ..." />
                                 <button type="submit">
                                     <span><i class="icon-search"></i></span>
                                 </button>
@@ -90,7 +87,7 @@
                             <div class="ltn__main-menu">
                                 <ul>
                                     <li><a asp-area="" asp-controller="Home" asp-action="Index">صفحه اصلی</a></li>
-                                    <li><a asp-area="" asp-controller="Home" asp-action="Index">محصولات</a></li>
+                                    <li><a asp-area="" asp-controller="Product" asp-action="ProductsList">محصولات</a></li>
                                     <li permission="AdminPanel"><a asp-area="Admin" asp-controller="Home" asp-action="Index">پنل ادمین</a></li>
                                     <li><a asp-area="" asp-controller="Home" asp-action="Index">داشبورد</a></li>
                                     <li><a asp-area="" asp-controller="Blog" asp-action="BlogsList">بلاگ</a></li>
@@ -102,6 +99,4 @@
             </div>
         </div>
     </div>
-    <!-- header-bottom-area end -->
 </header>
-<!-- HEADER AREA END -->

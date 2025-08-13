@@ -3,7 +3,7 @@
     src: url(/fonts/Vazir-Thin-FD.ttf);
 }
 
-h1, h2, h3, h4, h5, h6, h7, p, div, a, button, li, span, label, input, textarea {
+h1, h2, h3, h4, h5, h6, h7, p, div, a, button, li, span, label, input, textarea, select {
     font-family: VazirFont !important;
 }
 
@@ -41,4 +41,32 @@ h1, h2, h3, h4, h5, h6, h7, p, div, a, button, li, span, label, input, textarea 
 
 .swal2-container {
     z-index: 200000 !important;
+}
+
+.fs-small {
+    font-size: small !important;
+}
+
+.fs-large {
+    font-size: large !important;
+}
+
+.fix-product-price {
+    height: 32px !important;
+    text-overflow: ellipsis !important;
+    overflow-y: hidden !important;
+}
+
+.fix-product-title {
+    height: 46px !important;
+    text-overflow: ellipsis !important;
+    overflow: hidden !important;
+}
+
+.mr-20 {
+    margin-right : 20px;
+}
+
+.mr-40 {
+    margin-right: 40px;
 }

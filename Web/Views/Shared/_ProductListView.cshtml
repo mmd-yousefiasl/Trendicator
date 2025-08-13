@@ -1,0 +1,63 @@
+﻿@using Application.Tools
+@using Application.ViewModels.Product.ClientSide
+@model ClientSideProductViewModel
+
+<div class="ltn__product-item ltn__product-item-3 text-center">
+    <div class="product-img">
+        <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-slug="@Model.Slug">
+            <img src="@SiteTools.ProductBanner@Model.BannerFileName" alt="@Model.Title">
+        </a>
+        @if (Model.HaveDiscount)
+        {
+            <div class="product-badge">
+                <ul>
+                    <li class="sale-badge">@Model.Percent%</li>
+                </ul>
+            </div>
+        }
+        <div class="product-hover-action">
+            <ul>
+                <li>
+                    <a href="javascript:void(0)" title="بازدید سریع" data-toggle="modal" data-target="#quick_view_modal">
+                        <i class="far fa-eye"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" title="افزودن به سبد خرید" data-toggle="modal" data-target="#add_to_cart_modal">
+                        <i class="fas fa-shopping-cart"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" title="Wishlist" data-toggle="modal" data-target="#liton_wishlist_modal">
+                        <i class="far fa-heart"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="product-info">
+        <div class="product-ratting">
+            <ul>
+                <li><a href="javascript:void(0)"><i class="fas fa-star"></i></a></li>
+                <li><a href="javascript:void(0)"><i class="fas fa-star"></i></a></li>
+                <li><a href="javascript:void(0)"><i class="fas fa-star"></i></a></li>
+                <li><a href="javascript:void(0)"><i class="fas fa-star-half-alt"></i></a></li>
+                <li><a href="javascript:void(0)"><i class="far fa-star"></i></a></li>
+            </ul>
+        </div>
+        <h2 class="product-title fix-product-title">
+            <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-slug="@Model.Slug">@Model.Title</a>
+        </h2>
+        <div class="product-price fix-product-price">
+            @if (Model.HaveDiscount)
+            {
+                <span class="fs-large">@Model.OrderPrice?.ToToman()</span>
+                <del class="fs-small">@Model.Price.ToTomanFormat()</del>
+            }
+            else
+            {
+                <span class="fs-large">@Model.Price.ToToman()</span>
+            }
+        </div>
+    </div>
+</div>

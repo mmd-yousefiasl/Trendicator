@@ -87,6 +87,14 @@
                     </div>
 
                     <div class="mb-3 row">
+                        <label asp-for="ShortDescription" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <textarea class="form-control" type="text" asp-for="ShortDescription" rows="6"></textarea>
+                            <span asp-validation-for="ShortDescription" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
                         <label asp-for="Description" class="col-md-2 col-form-label"></label>
                         <div class="col-md-10">
                             <textarea class="form-control ck-editor" type="text" asp-for="Description" rows="6"></textarea>
