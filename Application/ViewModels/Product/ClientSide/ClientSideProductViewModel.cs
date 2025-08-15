@@ -7,5 +7,6 @@
         public string Slug { get; set; }
         public int ReviewRate { get; set; }
         public string ShortDescription { get; set; }
+        public bool IsInUserWishList { get; set; }
     }
 }

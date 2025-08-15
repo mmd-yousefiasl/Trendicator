@@ -19,15 +19,21 @@ namespace Application.Services.Implementaions
         private readonly TrendicatorDbContext _context;
         private protected DbSet<Product> _dbSet;
         private readonly IMediatorHandler _mediator;
+        private readonly IProductWishListService _wishListService;
+        private readonly IProductCompareService _compareService;
         #endregion
 
         #region Ctor
         public ProductService(TrendicatorDbContext context,
-            IMediatorHandler mediator)
+            IMediatorHandler mediator,
+            IProductWishListService wishListService,
+            IProductCompareService compareService)
         {
             _context = context;
             _dbSet = _context.Set<Product>();
             _mediator = mediator;
+            _wishListService = wishListService;
+            _compareService = compareService;
         }
         #endregion
 
@@ -324,6 +330,16 @@ namespace Application.Services.Implementaions
                 Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0)
             }));
 
+            var wishListResult = await _wishListService.GetCurrentUserWishListIds();
+
+            foreach (var item in filter.Entities ?? new List<ClientSideProductViewModel>())
+            {
+                if (wishListResult.IsSuccess)
+                {
+                    var id = wishListResult.Value.FirstOrDefault(n => n == item.Id);
+                    if (id > 0) item.IsInUserWishList = true;
+                }
+            }
             return filter;
         }
 
@@ -376,9 +392,13 @@ namespace Application.Services.Implementaions
                         Title = o.Title,
                         Price = o.Price,
                         OrderPrice = o.OrderPrice
-                    }).ToList()
+                    }).ToList(),
+                    ReviewsCount = n.Reviews.Count(),
                 }).AsNoTracking().FirstOrDefaultAsync();
             if (product is null) return Result.Failure<ClientSideProductDetailsViewModel>(Messages.OperationFailedError);
+
+            product.IsInUserWishList = await _wishListService.IsInUserWishList(product.Id);
+            product.IsInUserCompare = await _compareService.IsInUserCompare(product.Id);
 
             return product;
         }
@@ -403,6 +423,17 @@ namespace Application.Services.Implementaions
                     Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0)
                 }).AsNoTracking().ToListAsync();
             if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
+
+            var wishListResult = await _wishListService.GetCurrentUserWishListIds();
+
+            foreach (var item in products ?? new List<ClientSideProductViewModel>())
+            {
+                if (wishListResult.IsSuccess)
+                {
+                    var productId = wishListResult.Value.FirstOrDefault(n => n == item.Id);
+                    if (productId > 0) item.IsInUserWishList = true;
+                }
+            }
 
             return products;
         }

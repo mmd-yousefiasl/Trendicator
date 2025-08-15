@@ -68,12 +68,17 @@
                             <div class="modal-product-info shop-details-info pl-0">
                                 <div class="product-ratting">
                                     <ul>
-                                        <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-star"></i></a></li>
-                                        <li><a href="#"><i class="fas fa-star-half-alt"></i></a></li>
-                                        <li><a href="#"><i class="far fa-star"></i></a></li>
-                                        <li class="review-total"> <a href="#"> ( 95 بازخورد )</a></li>
+                                        <li><a href="javascript:void(0)"><i class="fas fa-star"></i></a></li>
+                                        <li><a href="javascript:void(0)"><i class="fas fa-star"></i></a></li>
+                                        <li><a href="javascript:void(0)"><i class="fas fa-star"></i></a></li>
+                                        <li><a href="javascript:void(0)"><i class="fas fa-star-half-alt"></i></a></li>
+                                        <li><a href="javascript:void(0)"><i class="far fa-star"></i></a></li>
+                                        <li class="review-total">
+                                            <a href="javascript:void(0)">
+                                                ( @Model.ReviewsCount
+                                                بازخورد )
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                                 <h3>@Model.Title</h3>
@@ -100,10 +105,19 @@
                                         </li>
                                     </ul>
                                 </div>
+                                @Html.Raw(Model.ShortDescription)
                                 <div class="ltn__product-details-menu-2">
                                     <ul>
                                         <li>
-                                            <a href="#" class="theme-btn-1 btn btn-effect-1" title="Add to Cart" data-toggle="modal" data-target="#add_to_cart_modal">
+                                            <select class="form-control">
+                                                @foreach (var item in Model.Options ?? new List<ClientSideProductOptionViewModel>())
+                                                {
+                                                    <option value="@item.Id">@item.Title</option>
+                                                }
+                                            </select>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="theme-btn-1 btn btn-effect-1" data-toggle="modal" data-target="#add_to_cart_modal">
                                                 <i class="fas fa-shopping-cart"></i>
                                                 <span>افزودن به سبد خرید</span>
                                             </a>
@@ -113,15 +127,16 @@
                                 <div class="ltn__product-details-menu-3">
                                     <ul>
                                         <li>
-                                            <a href="#" class="" title="Wishlist" data-toggle="modal" data-target="#liton_wishlist_modal">
-                                                <i class="far fa-heart"></i>
-                                                <span>افزودن به علاقمندی ها</span>
+                                            <a href="javascript:void(0)" class="wishlist-toggle" data-product-id="@Model.Id">
+                                                <i class="@((Model.IsInUserWishList) ? "fa" : "far") fa-heart"></i>
+                                                <span>@((Model.IsInUserWishList) ? "حذف از علاقه مندی ها" : "افزودن به علاقمندی ها")</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#" class="" title="Compare" data-toggle="modal" data-target="#quick_view_modal">
+                                            <a href="javascript:void(0)" class="compare-toggle" data-product-id="@Model.Id"
+                                               title="@(Model.IsInUserCompare ? "حذف از لیست مقایسه" : "اضافه کردن به لیست مقایسه")">
                                                 <i class="fas fa-exchange-alt"></i>
-                                                <span>مقایسه</span>
+                                                <span>@(Model.IsInUserCompare ? "حذف از لیست مقایسه" : "اضافه کردن به لیست مقایسه")</span>
                                             </a>
                                         </li>
                                     </ul>
@@ -283,7 +298,7 @@
         </div>
     </div>
 </div>
-<!-- SHOP DETAILS AREA END -->
+
 @await Component.InvokeAsync("RelatedProducts", new { id = Model.Id, categoryId = Model.CategoryId })
 
 @await Component.InvokeAsync("OurFeatures")

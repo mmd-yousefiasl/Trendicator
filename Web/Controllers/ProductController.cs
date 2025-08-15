@@ -9,12 +9,15 @@ namespace Web.Controllers
     {
         #region Fields
         private readonly IProductService _productService;
+        private readonly IProductViewService _viewService;
         #endregion
 
         #region Ctor
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService,
+            IProductViewService viewService)
         {
             _productService = productService;
+            _viewService = viewService;
         }
         #endregion
 
@@ -42,6 +45,8 @@ namespace Web.Controllers
                 TempData[TemporaryErrorMessage] = result.Message;
                 return RedirectToAction(nameof(ProductsList));
             }
+
+            await _viewService.AddProductView(result.Value.Id);
 
             return View(result.Value);
         }

@@ -10,6 +10,9 @@
         public bool IsAvailable { get; set; }
         public string Category { get; set; }
         public int CategoryId { get; set; }
+        public int ReviewsCount { get; set; }
+        public bool IsInUserWishList { get; set; }
+        public bool IsInUserCompare { get; set; }
 
         public List<ClientSideProductOptionViewModel>? Options { get; set; }
         public List<string>? Gallery { get; set; }
