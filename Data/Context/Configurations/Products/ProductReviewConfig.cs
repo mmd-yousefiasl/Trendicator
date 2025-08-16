@@ -12,6 +12,9 @@ namespace Data.Context.Configurations.Products
             builder.HasQueryFilter(n => !n.IsDeleted);
 
             builder.Property(n => n.Review).HasMaxLength(1000);
+            builder.Property(n => n.UserName).HasMaxLength(100);
+            builder.Property(n => n.PhoneNumber).HasMaxLength(11);
+            builder.Property(n => n.UserIP).HasMaxLength(50);
 
             builder.HasOne(n => n.Product)
                 .WithMany(n => n.Reviews)

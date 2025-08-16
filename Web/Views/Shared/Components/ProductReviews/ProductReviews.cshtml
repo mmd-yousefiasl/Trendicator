@@ -1,0 +1,34 @@
+﻿@using Application.Tools
+@using Application.ViewModels.ProductReview.ClientSide
+@model List<ClientSideProductReviewViewModel>
+
+@if (Model?.Any() ?? false)
+{
+    <div class="ltn__comment-area mb-30">
+        <div class="ltn__comment-inner">
+            <ul>
+                @foreach (var item in Model ?? new List<ClientSideProductReviewViewModel>())
+                {
+                    <li>
+                        <div class="ltn__comment-item clearfix">
+                            <div class="ltn__commenter-comment">
+                                <h6><a href="javascript:void(0)">@item.FullName</a></h6>
+                                <div class="product-ratting">
+                                    <ul>
+                                        <partial name="_ProductReviewStars" model="@item.Rate" />
+                                    </ul>
+                                </div>
+                                <p>@item.Review</p>
+                                <span class="ltn__comment-reply-btn">@item.CreatedDate.GetDate()</span>
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+else
+{
+    <partial name="_NotFoundPartial" />
+}

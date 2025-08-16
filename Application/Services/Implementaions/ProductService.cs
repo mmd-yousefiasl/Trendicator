@@ -21,19 +21,22 @@ namespace Application.Services.Implementaions
         private readonly IMediatorHandler _mediator;
         private readonly IProductWishListService _wishListService;
         private readonly IProductCompareService _compareService;
+        private readonly IProductReviewService _reviewService;
         #endregion
 
         #region Ctor
         public ProductService(TrendicatorDbContext context,
             IMediatorHandler mediator,
             IProductWishListService wishListService,
-            IProductCompareService compareService)
+            IProductCompareService compareService,
+            IProductReviewService reviewService)
         {
             _context = context;
             _dbSet = _context.Set<Product>();
             _mediator = mediator;
             _wishListService = wishListService;
             _compareService = compareService;
+            _reviewService = reviewService;
         }
         #endregion
 
@@ -322,7 +325,6 @@ namespace Application.Services.Implementaions
                 Title = n.Title,
                 Slug = n.Slug,
                 BannerFileName = n.BannerFileName,
-                ReviewRate = 5,
                 ShortDescription = n.ShortDescription,
                 HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
                 Price = n.DisplayPrice,
@@ -330,7 +332,11 @@ namespace Application.Services.Implementaions
                 Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0)
             }));
 
+            var productIds = filter.Entities.Select(n => n.Id).ToList();
+
             var wishListResult = await _wishListService.GetCurrentUserWishListIds();
+
+            var reviewsResult = await _reviewService.GetProductsReviewRate(productIds);
 
             foreach (var item in filter.Entities ?? new List<ClientSideProductViewModel>())
             {
@@ -338,6 +344,12 @@ namespace Application.Services.Implementaions
                 {
                     var id = wishListResult.Value.FirstOrDefault(n => n == item.Id);
                     if (id > 0) item.IsInUserWishList = true;
+                }
+
+                if (reviewsResult.IsSuccess)
+                {
+                    var review = reviewsResult.Value.FirstOrDefault(n => n.ProductId == item.Id);
+                    if (review is not null) item.ReviewRate = review.RoundedAvrage;
                 }
             }
             return filter;
@@ -354,13 +366,25 @@ namespace Application.Services.Implementaions
                     Title = n.Title,
                     Slug = n.Slug,
                     ShortDescription = n.ShortDescription,
-                    ReviewRate = 5,
                     HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
                     Price = n.DisplayPrice,
                     OrderPrice = n.DisplayOrderPrice,
                     Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0)
                 }).AsNoTracking().ToListAsync();
             if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
+
+            var productIds = products.Select(n => n.Id).ToList();
+
+            var reviewsResult = await _reviewService.GetProductsReviewRate(productIds);
+
+            foreach (var item in products ?? new List<ClientSideProductViewModel>())
+            {
+                if (reviewsResult.IsSuccess)
+                {
+                    var review = reviewsResult.Value.FirstOrDefault(n => n.ProductId == item.Id);
+                    if (review is not null) item.ReviewRate = review.RoundedAvrage;
+                }
+            }
 
             return products;
         }
@@ -393,7 +417,7 @@ namespace Application.Services.Implementaions
                         Price = o.Price,
                         OrderPrice = o.OrderPrice
                     }).ToList(),
-                    ReviewsCount = n.Reviews.Count(),
+                    ReviewsCount = n.Reviews.Where(n => n.IsConfirmed).Count(),
                 }).AsNoTracking().FirstOrDefaultAsync();
             if (product is null) return Result.Failure<ClientSideProductDetailsViewModel>(Messages.OperationFailedError);
 
@@ -416,13 +440,16 @@ namespace Application.Services.Implementaions
                     Slug = n.Slug,
                     BannerFileName = n.BannerFileName,
                     Price = n.DisplayPrice,
-                    ReviewRate = 5,
                     ShortDescription = n.ShortDescription,
                     HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
                     OrderPrice = n.DisplayOrderPrice,
                     Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0)
                 }).AsNoTracking().ToListAsync();
             if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
+
+            var productIds = products.Select(n => n.Id).ToList();
+
+            var reviewsResult = await _reviewService.GetProductsReviewRate(productIds);
 
             var wishListResult = await _wishListService.GetCurrentUserWishListIds();
 
@@ -432,6 +459,12 @@ namespace Application.Services.Implementaions
                 {
                     var productId = wishListResult.Value.FirstOrDefault(n => n == item.Id);
                     if (productId > 0) item.IsInUserWishList = true;
+                }
+
+                if (reviewsResult.IsSuccess)
+                {
+                    var review = reviewsResult.Value.FirstOrDefault(n => n.ProductId == item.Id);
+                    if (review is not null) item.ReviewRate = review.RoundedAvrage;
                 }
             }
 

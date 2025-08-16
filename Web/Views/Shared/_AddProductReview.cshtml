@@ -1,0 +1,33 @@
+﻿@using Application.ViewModels.ProductReview.ClientSide
+@using Domain.Enums.Products
+@model ClientSideWriteProductReviewViewModel
+
+<div class="ltn__comment-reply-area ltn__form-box mb-30">
+    <form asp-area="" asp-controller="ProductReview" asp-action="WriteReview" method="post" onsubmit="submitAnimation()">
+        <input type="hidden" asp-for="ProductId" />
+        <input type="hidden" asp-for="Slug" />
+        <h4 class="title-2">نظر خود را اضافه کنید</h4>
+
+        <div class="input-item input-item-name">
+            <input type="text" asp-for="UserName" />
+            <span class="text-danger" asp-validation-for="UserName"></span>
+        </div>
+
+        <div class="input-item input-item-name">
+            <input type="text" asp-for="PhoneNumber" />
+            <span class="text-danger" asp-validation-for="PhoneNumber"></span>
+        </div>
+
+        <div class="input-item input-item-textarea">
+            <select asp-for="Stars" asp-items="@Html.GetEnumSelectList<ProductReviewStarsEnum>()" class="form-control"></select>
+            <span class="text-danger" asp-validation-for="Stars"></span>
+        </div>
+        <div class="input-item input-item-textarea">
+            <textarea asp-for="Review"></textarea>
+            <span class="text-danger" asp-validation-for="Review"></span>
+        </div>
+        <div class="btn-wrapper">
+            <button class="btn theme-btn-1 btn-effect-1 text-uppercase btn-submit" type="submit">ثبت</button>
+        </div>
+    </form>
+</div>

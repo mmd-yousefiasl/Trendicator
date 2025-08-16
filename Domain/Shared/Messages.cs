@@ -27,7 +27,8 @@
         public const string SuccessfullyDone = "عملیات با موفقیت به پایان رسید";
         public const string LogedInSuccessfully = "با موفقیت وارد حساب کاربری خود شدید";
         public const string LogedoutSuccessfully = "با موفقیت از حساب کاربری خود خارج شدید";
-        public const string LoginCodeSentSuccessfully = "کد ورود با موفقیت ارسال شد.";
+        public const string LoginCodeSentSuccessfully = "کد ورود با موفقیت ارسال شد";
+        public const string ReviewAddedSuccessfully = "نظر شما با موفقیت ثبت شد";
         #endregion
     }
 }

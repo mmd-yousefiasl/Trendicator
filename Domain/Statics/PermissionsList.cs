@@ -683,9 +683,47 @@ namespace Domain.Statics
                 UniqueName = "DeleteProductOption"
             },
             #endregion
+
+            #region ProductReview
+            new Permission
+            {
+                Id = 89,
+                ParentId = 1,
+                Title = "مدیریت بازخورد محصولات",
+                UniqueName = "ManageProductReviews"
+            },
+            new Permission
+            {
+                Id = 90,
+                ParentId = 89,
+                Title = "لیست بازخورد های محصولات",
+                UniqueName = "ProductReviewsList"
+            },
+            new Permission
+            {
+                Id = 91,
+                ParentId = 89,
+                Title = "تایید بازخورد محصول",
+                UniqueName = "ConfirmProductReview"
+            },
+            new Permission
+            {
+                Id = 92,
+                ParentId = 89,
+                Title = "رد بازخورد محصول",
+                UniqueName = "RejectProductReview"
+            },
+            new Permission
+            {
+                Id = 93,
+                ParentId = 89,
+                Title = "حذف بازخورد محصول",
+                UniqueName = "DeleteProductReview"
+            },
+            #endregion
         };
 
-        //Last used id ==> 88
+        //Last used id ==> 93
         public static List<Permission> Permissions = _permissions;
     }
 }

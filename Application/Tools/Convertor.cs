@@ -69,5 +69,17 @@ namespace Application.Tools
         {
             return value.ToString("#,0");
         }
+
+        public static int RoundToHigher(this decimal value)
+        {
+            return (int)Math.Ceiling(value);
+        }
+
+        public static decimal GetRateAvrage(this int sum, int total)
+        {
+            if (total < 1) return 0;
+
+            return Math.Round((decimal)sum / total, 1);
+        }
     }
 }

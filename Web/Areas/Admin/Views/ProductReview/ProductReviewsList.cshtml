@@ -1,0 +1,167 @@
+﻿@using Application.Tools
+@using Application.ViewModels.ProductReview.AdminSide
+@using Domain.Enums.Products
+@model AdminSideFilterProductReviewsViewModel
+
+@{
+    ViewData["Title"] = "لیست نظرات محصولات";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <h4>مدیریت نظرات محصولات</h4>
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="Home" asp-action="Index">صفحه نخست</a>
+                    </li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">جست و جوی نظرات محصولات</h4>
+                    <form novalidate asp-area="Admin" asp-controller="ProductReview" method="get" asp-action="ProductReviewsList" id="search-form">
+                        <input type="hidden" asp-for="Page" id="Page" />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label" asp-for="Search"></label>
+                                    <input type="text" class="form-control" asp-for="Search" autocomplete="off">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label" asp-for="Stars"></label>
+                                    <select class="form-control" asp-for="Stars" autocomplete="off"
+                                            asp-items="@Html.GetEnumSelectList<ProductReviewStarsEnum>()">
+                                        <option value="">همه</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label" asp-for="IsConfirmed"></label>
+                                    <select class="form-control" asp-for="IsConfirmed" autocomplete="off">
+                                        <option value="">همه</option>
+                                        <option value="true">تایید شده</option>
+                                        <option value="false">تایید نشده</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit">جست و جو</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model?.Entities?.Any() ?? false)
+    {
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>نام</th>
+                                        <th>امتیاز</th>
+                                        <th>وضعیت</th>
+                                        <th>شماره تلفن</th>
+                                        <th>محصول</th>
+                                        <th>کاربر</th>
+                                        <th>عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int counter = 0;
+
+                                        foreach (var item in Model.Entities ?? new List<AdminSideProductReviewViewModel>())
+                                        {
+                                            counter++;
+
+                                            <tr>
+                                                <th scope="row">@counter</th>
+                                                <td>@item.FullName</td>
+                                                <td>@item.Stars.GetDisplayName()</td>
+                                                <td>
+                                                    @if (item.IsConfirmed)
+                                                    {
+                                                        <span class="text-success">تایید شده</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-danger">تایید نشده</span>
+                                                    }
+                                                </td>
+                                                <td>@item.PhoneNumber</td>
+                                                <td>
+                                                    <a asp-area="Admin" asp-controller="Product" asp-action="UpdateProduct" asp-route-id="@item.ProductId" target="_blank">
+                                                        @item.ProductTitle
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    @if (item.UserId > 0)
+                                                    {
+                                                        <a asp-area="Admin" asp-controller="User" asp-action="UpdateUser" asp-route-id="@item.UserId" target="_blank">
+                                                            @item.UserIP
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        @item.UserIP
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <form permission="DeleteProductReview" class="btn btn-outline-secondary btn-sm" method="post" onclick="ConfirmDelete(this)" asp-route-id="@item.Id" asp-area="Admin" asp-controller="ProductReview" asp-action="DeleteProductReview" title="حذف">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </form>
+
+                                                    @if (item.IsConfirmed)
+                                                    {
+                                                        <form permission="RejectProductReview" class="btn btn-outline-secondary btn-sm" method="post" onclick="ConfirmDelete(this)" asp-route-id="@item.Id" asp-area="Admin" asp-controller="ProductReview" asp-action="RejectProductReview" title="رد نظر">
+                                                            <i class="fa fa-ban"></i>
+                                                        </form>
+                                                    }
+                                                    else
+                                                    {
+                                                        <form permission="ConfirmProductReview" class="btn btn-outline-secondary btn-sm" method="post" onclick="ConfirmDelete(this)" asp-route-id="@item.Id" asp-area="Admin" asp-controller="ProductReview" asp-action="ConfirmProductReview" title="تایید نظر">
+                                                            <i class="fa fa-check"></i>
+                                                        </form>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="8">@item.Review</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <partial name="_Paging" model="@Model.GetCurrentPaging()" />
+    }
+    else
+    {
+        <partial name="_NotFoundPartial" />
+    }
+</div>

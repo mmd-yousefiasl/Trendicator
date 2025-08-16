@@ -19,11 +19,7 @@
                         <div class="top-rated-product-info">
                             <div class="product-ratting">
                                 <ul>
-                                    <li><a href="javascript:void(0)"><i class="fas fa-star"></i></a></li>
-                                    <li><a href="javascript:void(0)"><i class="fas fa-star"></i></a></li>
-                                    <li><a href="javascript:void(0)"><i class="fas fa-star"></i></a></li>
-                                    <li><a href="javascript:void(0)"><i class="fas fa-star"></i></a></li>
-                                    <li><a href="javascript:void(0)"><i class="fas fa-star"></i></a></li>
+                                    <partial name="_ProductReviewStars" model="@item.ReviewRate" />
                                 </ul>
                             </div>
                             <h6>
