@@ -1,0 +1,83 @@
+﻿@using Application.Tools
+@using Application.ViewModels.Product.ClientSide
+@model ClientSideProductDetailsViewModel
+
+<div class="ltn__quick-view-modal-inner">
+    <div class="modal-product-item">
+        <div class="row">
+            <div class="col-lg-6 col-12">
+                <div class="modal-product-img">
+                    <img src="@SiteTools.ProductBanner@Model.BannerFileName" alt="@Model.Title">
+                </div>
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="modal-product-info">
+                    <div class="product-ratting">
+                        <ul>
+                            @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id })
+                            <li class="review-total">
+                                <a href="javascript:void(0)">
+                                    ( @Model.ReviewsCount
+                                    بازخورد )
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-slug="@Model.Slug">
+                        <h3>@Model.Title</h3>
+                    </a>
+                    <div class="product-price">
+                        @if (Model.HaveDiscount)
+                        {
+                            <span>@Model.OrderPrice?.ToToman()</span>
+                            <del>@Model.Price.ToTomanFormat()</del>
+                        }
+                        else
+                        {
+                            <span>@Model.Price.ToToman()</span>
+                        }
+                    </div>
+                    <div class="modal-product-meta ltn__product-details-menu-1">
+                        <ul>
+                            <li>
+                                <strong>دسته بندی: </strong>
+                                <span>
+                                    <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-CategoryId="@Model.CategoryId">@Model.Category</a>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    @Html.Raw(Model.ShortDescription)
+                    <div class="ltn__product-details-menu-2">
+                        <ul>
+                            <li>
+                                <select class="form-control">
+                                    @foreach (var item in Model.Options ?? new List<ClientSideProductOptionViewModel>())
+                                    {
+                                        <option value="@item.Id">@item.Title</option>
+                                    }
+                                </select>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="theme-btn-1 btn btn-effect-1" data-toggle="modal" data-target="#add_to_cart_modal">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <span>افزودن به سبد خرید</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <hr>
+                    <div class="ltn__social-media">
+                        <ul>
+                            <li>اشتراک گذاری: </li>
+                            <li><a href="javascript:void(0)" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+                            <li><a href="javascript:void(0)" title="Twitter"><i class="fab fa-twitter"></i></a></li>
+                            <li><a href="javascript:void(0)" title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
+                            <li><a href="javascript:void(0)" title="Instagram"><i class="fab fa-instagram"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

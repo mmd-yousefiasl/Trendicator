@@ -166,3 +166,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+
+function ShowQuickViewModel(url) {
+    $("#Product_Quick_View_Model_Body").load(url);
+
+    $("#Product_Quick_View_Model").modal("show");
+}

@@ -50,5 +50,14 @@ namespace Web.Controllers
 
             return View(result.Value);
         }
+
+        [HttpGet("/product/quick-view/{slug}")]
+        public async Task<IActionResult> ProductQuickView(string slug)
+        {
+            var result = await _productService.ClientSideGetProductDetails(slug);
+            if (result.IsFailure) return PartialView("_ProductQuickView", new ClientSideProductDetailsViewModel());
+
+            return PartialView("_ProductQuickView", result.Value);
+        }
     }
 }
