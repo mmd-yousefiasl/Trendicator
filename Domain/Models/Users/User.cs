@@ -1,4 +1,6 @@
-﻿namespace Domain.Models.Users
+﻿using Domain.Models.Coupons;
+
+namespace Domain.Models.Users
 {
     public class User : AuditBaseEntity<int>
     {
@@ -13,11 +15,15 @@
         public bool IsActive { get; set; }
 
         #region Relations
+
         public ICollection<UserRoleMapping>? UserRoleMapping { get; set; }
         public ICollection<BalanceTransaction>? Transactions { get; set; }
         public ICollection<User>? SubUsers { get; set; }
+        public ICollection<CouponUserMapping>? Coupons { get; set; }
+
         public int? ParentUserId { get; set; }
         public User? ParentUser { get; set; }
+
         #endregion
     }
 }

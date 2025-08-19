@@ -57,6 +57,8 @@ namespace Web.Controllers
             var result = await _productService.ClientSideGetProductDetails(slug);
             if (result.IsFailure) return PartialView("_ProductQuickView", new ClientSideProductDetailsViewModel());
 
+            await _viewService.AddProductView(result.Value.Id);
+
             return PartialView("_ProductQuickView", result.Value);
         }
     }
