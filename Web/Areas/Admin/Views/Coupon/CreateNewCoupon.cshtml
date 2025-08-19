@@ -1,0 +1,109 @@
+﻿@using Application.Services.Interfaces
+@using Application.ViewModels.Coupon.AdminSide
+@using Application.ViewModels.User.AdminSide
+@model AdminSideCreateNewCouponViewModel
+
+@inject IUserService _userService;
+
+@{
+    ViewData["Title"] = "افزودن کد تخفیف جدید";
+    var usersResult = await _userService.AdminSideGetUsersForCoupon();
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <h4>مدیریت کدهای تخفیف</h4>
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="Home" asp-action="Index">صفحه نخست</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="Coupon" asp-action="CouponsList">لیست کد های تخفیف</a>
+                    </li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <form class="card-body" asp-area="Admin" asp-controller="Coupon" asp-action="CreateNewCoupon" autocomplete="off" onsubmit="submitAnimation()">
+                    <h4 class="card-title">@ViewData["Title"]</h4>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Title" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" asp-for="Title">
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Code" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" asp-for="Code">
+                            <span asp-validation-for="Code" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="FromDate" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <div class="input-group" id="datepicker1">
+                                <input type="text" class="form-control" data-jdp data-jdp-min-date="today" asp-for="FromDate" />
+
+                                <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
+                            </div><!-- input-group -->
+                            <span asp-validation-for="FromDate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="ToDate" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <div class="input-group" id="datepicker1">
+                                <input type="text" class="form-control" data-jdp data-jdp-min-date="today" asp-for="ToDate" />
+
+                                <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
+                            </div><!-- input-group -->
+                            <span asp-validation-for="ToDate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Percent" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" asp-for="Percent">
+                            <span asp-validation-for="Percent" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="UserIds" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <select class="form-control select2" asp-for="UserIds" multiple="multiple">
+                                @if (usersResult.IsSuccess)
+                                {
+                                    foreach (var item in usersResult.Value ?? new List<AdminSideUserAsOptionViewModel>())
+                                    {
+                                        <option value="@item.Id">@($"{item.PhoneNumber} {item.FullName}")</option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="UserIds" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 text-end mt-5">
+                        <button class="btn btn-primary btn-submit" type="submit">ثبت</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

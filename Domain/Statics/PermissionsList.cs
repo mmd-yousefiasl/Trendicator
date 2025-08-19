@@ -721,9 +721,47 @@ namespace Domain.Statics
                 UniqueName = "DeleteProductReview"
             },
             #endregion
+
+            #region Coupon
+            new Permission
+            {
+                Id = 94,
+                ParentId = 1,
+                Title = "مدیریت کدهای تخفیف",
+                UniqueName = "ManageCoupons"
+            },
+            new Permission
+            {
+                Id = 95,
+                ParentId = 94,
+                Title = "لیست کدهای تخفیف",
+                UniqueName = "CouponsList"
+            },
+            new Permission
+            {
+                Id = 96,
+                ParentId = 94,
+                Title = "افزودن کد تخفیف جدید",
+                UniqueName = "CreateNewCoupon"
+            },
+            new Permission
+            {
+                Id = 97,
+                ParentId = 94,
+                Title = "ویرایش کد تخفیف",
+                UniqueName = "UpdateCoupon"
+            },
+            new Permission
+            {
+                Id = 98,
+                ParentId = 94,
+                Title = "حذف کد تخفیف",
+                UniqueName = "DeleteCoupon"
+            },
+            #endregion
         };
 
-        //Last used id ==> 93
+        //Last used id ==> 98
         public static List<Permission> Permissions = _permissions;
     }
 }

@@ -8,6 +8,7 @@ using Domain.Shared;
 using Domain.Statics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Crypto.Prng;
 
 namespace Application.Services.Implementaions
 {
@@ -359,6 +360,19 @@ namespace Application.Services.Implementaions
             if (user is null) return Result.Failure<ClientSideUserViewModel>(Messages.OperationFailedError);
 
             return user;
+        }
+
+        public async Task<Result<List<AdminSideUserAsOptionViewModel>>> AdminSideGetUsersForCoupon()
+        {
+            var users = await _dbSet.Where(n => n.IsUserBanned == false).Select(n => new AdminSideUserAsOptionViewModel()
+            {
+                Id = n.Id,
+                PhoneNumber = n.PhoneNumber,
+                FullName = n.FirstName + " " + n.LastName
+            }).AsNoTracking().ToListAsync();
+            if (!users.Any()) return Result.Failure<List<AdminSideUserAsOptionViewModel>>(Messages.OperationFailedError);
+
+            return users;
         }
     }
 }

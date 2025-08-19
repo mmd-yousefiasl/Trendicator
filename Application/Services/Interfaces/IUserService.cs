@@ -33,5 +33,7 @@ namespace Application.Services.Interfaces
         Task<Result<string>> SendUserLoginCode(ClientSideLoginViewModel model);
 
         Task<Result<ClientSideUserViewModel>> VerifyLoginCode(ClientSideLoginCodeViewModel model);
+
+        Task<Result<List<AdminSideUserAsOptionViewModel>>> AdminSideGetUsersForCoupon();
     }
 }

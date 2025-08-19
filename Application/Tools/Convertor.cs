@@ -81,5 +81,21 @@ namespace Application.Tools
 
             return Math.Round((decimal)sum / total, 1);
         }
+
+        public static DateTime ConvertToMiladi(this DateTime value)
+        {
+            PersianCalendar pc = new PersianCalendar();
+            return new DateTime(value.Year, value.Month, value.Day, pc);
+        }
+
+        public static DateTime ConvertToShamsi(this DateTime value)
+        {
+            PersianCalendar pc = new PersianCalendar();
+            int year = pc.GetYear(value);
+            int month = pc.GetMonth(value);
+            int day = pc.GetDayOfMonth(value);
+
+            return new DateTime(year, month, day, new GregorianCalendar());
+        }
     }
 }

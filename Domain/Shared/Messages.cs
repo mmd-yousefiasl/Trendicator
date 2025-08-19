@@ -20,6 +20,8 @@
         public const string CantDeleteThisRecordError = "نمی‌توان این رکورد را حذف کرد";
         public const string DuplicateSlugError = "عنوان در مرورگر تکراری می باشد";
         public const string ThisEmailAlreadyRegisterdError = "این ایمیل قبلا ثبت شده است";
+        public const string FromDateCantBeGreaterThanToDateError = "تاریخ شروع نمی‌تواند بعد از تاریخ پایان باشد";
+        public const string CouponCodeDuplicateError = "این کد تخفیف قبلا ثبت شده است";
 
         #endregion
 

@@ -52,6 +52,7 @@ namespace IOC
             services.AddScoped<IProductWishListService, ProductWishListService>();
             services.AddScoped<IProductCompareService, ProductCompareService>();
             services.AddScoped<IProductReviewService, ProductReviewService>();
+            services.AddScoped<ICouponService, CouponService>();
 
             #endregion
 

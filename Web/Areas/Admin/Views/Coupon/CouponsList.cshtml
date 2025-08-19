@@ -1,0 +1,108 @@
+﻿@using Application.Tools
+@using Application.ViewModels.Coupon.AdminSide
+@model AdminSideFilterCouponsViewModel
+
+@{
+    ViewData["Title"] = "لیست کدهای تخفیف";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <h4>مدیریت کدهای تخفیف</h4>
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="Home" asp-action="Index">صفحه نخست</a>
+                    </li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">جست و جوی کد های تخفیف</h4>
+                    <form novalidate asp-area="Admin" asp-controller="Coupon" method="get" asp-action="CouponsList" id="search-form">
+                        <input type="hidden" asp-for="Page" id="Page" />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label" asp-for="Search"></label>
+                                    <input type="text" class="form-control" asp-for="Search" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit">جست و جو</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model?.Entities?.Any() ?? false)
+    {
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>عنوان</th>
+                                        <th>از تاریخ</th>
+                                        <th>تا تاریخ</th>
+                                        <th>کد تخفیف</th>
+                                        <th>درصد</th>
+                                        <th>عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int counter = 0;
+
+                                        foreach (var item in Model.Entities ?? new List<AdminSideCouponViewModel>())
+                                        {
+                                            counter++;
+
+                                            <tr>
+                                                <th scope="row">@counter</th>
+                                                <td>@item.Title</td>
+                                                <td>@item.FromDate.GetDate()</td>
+                                                <td>@item.ToDate.GetDate()</td>
+                                                <td>@item.Code</td>
+                                                <td>@item.Percent%</td>
+                                                <td>
+                                                    <a permission="UpdateCoupon" asp-area="Admin" asp-controller="Coupon" asp-action="UpdateCoupon" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm edit" title="ویرایش">
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </a>
+
+                                                    <form permission="DeleteCoupon" class="btn btn-outline-secondary btn-sm" method="post" onclick="ConfirmDelete(this)" asp-route-id="@item.Id" asp-area="Admin" asp-controller="Coupon" asp-action="DeleteCoupon" title="حذف">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <partial name="_Paging" model="@Model.GetCurrentPaging()" />
+    }
+    else
+    {
+        <partial name="_NotFoundPartial" />
+    }
+</div>
