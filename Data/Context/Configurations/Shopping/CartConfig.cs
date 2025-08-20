@@ -13,6 +13,7 @@ namespace Data.Context.Configurations.Shopping
 
             builder.Property(n => n.UserIP).HasMaxLength(50);
             builder.Property(n => n.DiscountCode).HasMaxLength(200);
+            builder.Property(n => n.TradingViewAccountName).HasMaxLength(500);
 
             // Configure Id to start from 10000
             builder.Property(n => n.Id)

@@ -14,5 +14,9 @@ namespace Application.Services.Interfaces
         Task<Result> AddCoupon(ClientSideAddCouponToCartViewModel model);
 
         Task<Result> ClientSideAddUserIdToCurrentUserCart();
+
+        Task<Result<string>> ClientSideGetCurrentUserTradingViewAccountName();
+
+        Task<Result> ClientSideUpdateCurrentUserTradingViewAccountName(ClientSideUpdateTradingViewAccountNameViewModel model);
     }
 }

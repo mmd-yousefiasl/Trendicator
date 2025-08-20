@@ -9,6 +9,7 @@ using Domain.Models.Shopping;
 using Domain.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Tls.Crypto.Impl;
 
 namespace Application.Services.Implementaions
 {
@@ -214,6 +215,40 @@ namespace Application.Services.Implementaions
             if (cart is null) return Result.Failure(Messages.OperationFailedError);
 
             cart.UserId = userId;
+            _dbSet.Update(cart);
+            await _context.SaveChangesAsync();
+
+            return Result.Success();
+        }
+
+        public async Task<Result<string>> ClientSideGetCurrentUserTradingViewAccountName()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1) return Result.Failure<string>(Messages.OperationFailedError);
+
+            var accountName = await _dbSet.Where(n => n.Status == CartStatusEnum.PendingPayment && n.UserId == userId)
+                .Select(n => n.TradingViewAccountName).FirstOrDefaultAsync();
+            if (string.IsNullOrWhiteSpace(accountName)) return Result.Failure<string>(Messages.OperationFailedError);
+
+            return accountName;
+        }
+
+        public async Task<Result> ClientSideUpdateCurrentUserTradingViewAccountName(ClientSideUpdateTradingViewAccountNameViewModel model)
+        {
+            if (model is null) return Result.Failure(Messages.OperationFailedError);
+
+            var IsAllowedResult = await _itemService.IsAnyTradingViewProductInCart();
+            if (IsAllowedResult.IsFailure) return Result.Failure(Messages.OperationFailedError);
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1) return Result.Failure(Messages.OperationFailedError);
+
+            var cart = await _dbSet.Where(n => n.UserId == userId && n.Status == CartStatusEnum.PendingPayment)
+                .FirstOrDefaultAsync();
+            if (cart is null) return Result.Failure(Messages.OperationFailedError);
+
+            cart.TradingViewAccountName = model.TradingViewAccountName;
+
             _dbSet.Update(cart);
             await _context.SaveChangesAsync();
 

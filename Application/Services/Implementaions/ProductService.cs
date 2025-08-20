@@ -64,7 +64,8 @@ namespace Application.Services.Implementaions
                 IsPublished = model.IsPublished,
                 Priority = model.Priority,
                 CategoryId = model.CategoryId,
-                ShortDescription = model.ShortDescription
+                ShortDescription = model.ShortDescription,
+                Type = model.Type
             };
 
             await _dbSet.AddAsync(product);
@@ -80,7 +81,8 @@ namespace Application.Services.Implementaions
                 product.IsPublished,
                 product.DisplayPrice,
                 product.DisplayOrderPrice,
-                product.IsAvailable);
+                product.IsAvailable,
+                product.Type);
 
             await _mediator.PublishEvent(ProductCreatedEvent);
 
@@ -121,6 +123,11 @@ namespace Application.Services.Implementaions
 
             var conditions = Filter.GenerateConditions<Product>();
 
+            if (filter.Type is not null)
+            {
+                conditions.Add(n => n.Type == filter.Type);
+            }
+
             if (!string.IsNullOrWhiteSpace(filter.Search))
             {
                 conditions.Add(n => n.Title.Contains(filter.Search) ||
@@ -159,7 +166,8 @@ namespace Application.Services.Implementaions
                 IsPublished = n.IsPublished,
                 Priority = n.Priority,
                 Category = n.Category.Title,
-                ViewsCount = n.Views.Count()
+                ViewsCount = n.Views.Count(),
+                Type = n.Type,
             }));
 
             return filter;
@@ -183,6 +191,7 @@ namespace Application.Services.Implementaions
                 IsAvailable = n.IsAvailable,
                 Priority = n.Priority,
                 ShortDescription = n.ShortDescription,
+                Type = n.Type,
             }).AsNoTracking().FirstOrDefaultAsync();
             if (product is null) return Result.Failure<AdminSideUpdateProductViewModel>(Messages.OperationFailedError);
 
@@ -220,6 +229,7 @@ namespace Application.Services.Implementaions
             product.IsAvailable = model.IsAvailable;
             product.CategoryId = model.CategoryId;
             product.ShortDescription = model.ShortDescription;
+            product.Type = model.Type;
 
             _dbSet.Update(product);
             await _context.SaveChangesAsync();
@@ -235,7 +245,8 @@ namespace Application.Services.Implementaions
                 product.IsPublished,
                 product.DisplayPrice,
                 product.DisplayOrderPrice,
-                product.IsAvailable);
+                product.IsAvailable,
+                product.Type);
 
             await _mediator.PublishEvent(ProductUpdatedEvent);
 

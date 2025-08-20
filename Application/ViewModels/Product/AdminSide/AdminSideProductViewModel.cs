@@ -1,4 +1,6 @@
-﻿namespace Application.ViewModels.Product.AdminSide
+﻿using Domain.Enums.Products;
+
+namespace Application.ViewModels.Product.AdminSide
 {
     public class AdminSideProductViewModel : CommonViewModel
     {
@@ -11,5 +13,6 @@
         public bool IsAvailable { get; set; }
         public string Category { get; set; }
         public int ViewsCount { get; set; }
+        public ProductTypeEnum Type { get; set; }
     }
 }

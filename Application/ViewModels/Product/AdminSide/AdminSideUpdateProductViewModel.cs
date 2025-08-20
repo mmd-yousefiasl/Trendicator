@@ -1,4 +1,5 @@
-﻿using Domain.Shared;
+﻿using Domain.Enums.Products;
+using Domain.Shared;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
@@ -56,5 +57,9 @@ namespace Application.ViewModels.Product.AdminSide
         [Display(Name = "دسته بندی")]
         [Required(ErrorMessage = Messages.RequiredError)]
         public int CategoryId { get; set; }
+
+        [Display(Name = "نوع")]
+        [Required(ErrorMessage = Messages.RequiredError)]
+        public ProductTypeEnum Type { get; set; }
     }
 }

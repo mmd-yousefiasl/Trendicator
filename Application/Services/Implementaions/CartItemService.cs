@@ -2,6 +2,7 @@
 using Application.Tools;
 using Application.ViewModels.CartItem.ClientSide;
 using Data.Context;
+using Domain.Enums.Products;
 using Domain.Enums.Shopping;
 using Domain.Models.Shopping;
 using Domain.Shared;
@@ -80,6 +81,20 @@ namespace Application.Services.Implementaions
             if (!AnyItem) return Result.Failure(Messages.AddAProductAtLeastToCartBeforeProceedToCheckout);
 
             return Result.Success();
+        }
+
+        public async Task<Result> IsAnyTradingViewProductInCart()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1) return Result.Failure(Messages.OperationFailedError);
+
+            bool IsAny = await _dbSet.Where(n => n.Cart.Status == CartStatusEnum.PendingPayment &&
+            n.Cart.UserId == userId &&
+            n.Product.Type == ProductTypeEnum.TradingView).AnyAsync();
+
+            if (IsAny) return Result.Success();
+
+            return Result.Failure(Messages.OperationFailedError);
         }
     }
 }

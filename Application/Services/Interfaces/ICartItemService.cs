@@ -10,5 +10,7 @@ namespace Application.Services.Interfaces
         Task<Result> ClientSideDeleteItemFromCart(int id);
 
         Task<Result> CheckIfCartItemsIsAvailable();
+
+        Task<Result> IsAnyTradingViewProductInCart();
     }
 }

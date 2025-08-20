@@ -14,6 +14,7 @@ namespace Domain.Models.Shopping
         public long? SubTotal { get; set; }
         public long? Tax { get; set; }
         public DateTime? PaidDate { get; set; }
+        public string? TradingViewAccountName { get; set; }
 
         #region Relations
 

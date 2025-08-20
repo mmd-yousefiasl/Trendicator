@@ -1,4 +1,5 @@
-﻿using Domain.Models.Shopping;
+﻿using Domain.Enums.Products;
+using Domain.Models.Shopping;
 
 namespace Domain.Models.Products
 {
@@ -14,6 +15,7 @@ namespace Domain.Models.Products
         public long DisplayPrice { get; set; }
         public long? DisplayOrderPrice { get; set; }
         public bool IsAvailable { get; set; }
+        public ProductTypeEnum Type { get; set; }
 
         #region Relations
 

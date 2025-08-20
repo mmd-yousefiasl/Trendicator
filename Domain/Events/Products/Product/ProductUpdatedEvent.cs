@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Domain.Enums.Products;
+using MediatR;
 
 namespace Domain.Events.Products.Product
 {
@@ -13,6 +14,7 @@ namespace Domain.Events.Products.Product
     bool IsPublished,
     long DisplayPrice,
     long? DisplayOrderPrice,
-    bool IsAvailable
+    bool IsAvailable,
+    ProductTypeEnum Type
     ) : INotification;
 }

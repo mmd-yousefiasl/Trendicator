@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Domain.Enums.Products;
+using Domain.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModels.Product.AdminSide
@@ -13,5 +14,8 @@ namespace Application.ViewModels.Product.AdminSide
 
         [Display(Name = "وضعیت موجودی")]
         public bool? IsAvailable { get; set; }
+
+        [Display(Name = "نوع")]
+        public ProductTypeEnum? Type { get; set; }
     }
 }

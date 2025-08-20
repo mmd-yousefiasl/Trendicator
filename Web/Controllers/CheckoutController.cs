@@ -58,5 +58,26 @@ namespace Web.Controllers
 
             return RedirectToAction(nameof(Checkout));
         }
+
+        [HttpPost("/edit-trading-view-account-name"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateTradingViewAccountName(ClientSideUpdateTradingViewAccountNameViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
+                return RedirectToAction(nameof(Checkout));
+            }
+            var result = await _cartService.ClientSideUpdateCurrentUserTradingViewAccountName(model);
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+            }
+            else
+            {
+                TempData[TemporarySuccessMessage] = result.Message;
+            }
+
+            return RedirectToAction(nameof(Checkout));
+        }
     }
 }

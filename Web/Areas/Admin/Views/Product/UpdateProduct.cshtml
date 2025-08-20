@@ -1,6 +1,7 @@
 ﻿@using Application.Services.Interfaces
 @using Application.ViewModels.Product.AdminSide
 @using Application.ViewModels.ProductCategory.AdminSide
+@using Domain.Enums.Products
 @model AdminSideUpdateProductViewModel
 
 @inject IProductCategoryService _categoryService;
@@ -129,6 +130,14 @@
                             <select class="form-control" asp-for="IsPublished" required>
                                 <option value="true">منتشرشده</option>
                                 <option value="false">منتشرنشده</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-md-2 col-form-label" asp-for="Type"></label>
+                        <div class="col-md-10">
+                            <select class="form-control" asp-for="Type" asp-items="@Html.GetEnumSelectList<ProductTypeEnum>()">
                             </select>
                         </div>
                     </div>
