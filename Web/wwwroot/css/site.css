@@ -70,3 +70,7 @@ h1, h2, h3, h4, h5, h6, h7, p, div, a, button, li, span, label, input, textarea,
 .mr-40 {
     margin-right: 40px;
 }
+
+.cart-product-info {
+    width: 100%;
+}

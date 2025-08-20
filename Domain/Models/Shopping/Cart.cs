@@ -16,7 +16,9 @@ namespace Domain.Models.Shopping
         public DateTime? PaidDate { get; set; }
 
         #region Relations
+
         public ICollection<CartItem>? Items { get; set; }
+
         #endregion
     }
 }

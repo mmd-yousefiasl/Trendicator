@@ -68,6 +68,18 @@ function showSuccessMessage(message) {
     })
 }
 
+function showErrorMessage(message) {
+    Swal.fire({
+        toast: true,
+        position: 'top-start',
+        icon: 'error',
+        title: message,
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true
+    })
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".wishlist-toggle").forEach(button => {
         button.addEventListener("click", function () {
@@ -171,4 +183,88 @@ function ShowQuickViewModel(url) {
     $("#Product_Quick_View_Model_Body").load(url);
 
     $("#Product_Quick_View_Model").modal("show");
+}
+
+let isWorking = false;
+
+function AddToCart() {
+    if (isWorking == false) {
+        isWorking = true;
+        toggleSubmitAnimation();
+
+        let optionId = document.getElementById("Product-Option-Id").value;
+
+        fetch('/add-to-cart/' + optionId)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSuccessMessage(data.message);
+                } else {
+                    showErrorMessage(data.message);
+                }
+
+                isWorking = false;
+                toggleSubmitAnimation()
+            })
+            .catch(error => {
+                isWorking = false;
+                toggleSubmitAnimation()
+            });
+    }
+}
+
+let spinnerActive = false; // Tracks spinner state
+let spinnerRef = null;
+let originalText = "";
+
+function toggleSubmitAnimation() {
+    const button = document.querySelector(".btn-submit");
+
+    if (!spinnerActive) {
+        // First call: start spinner
+        spinnerActive = true;
+        originalText = button.innerText;
+        button.innerText = "";
+
+        spinnerRef = document.createElement("div");
+        spinnerRef.classList.add("spinner");
+        spinnerRef.style.display = "inline-block";
+
+        button.appendChild(spinnerRef);
+        button.disabled = true;
+    } else {
+        // Second call: stop spinner
+        spinnerActive = false;
+        button.disabled = false;
+
+        if (spinnerRef) {
+            spinnerRef.style.display = "none";
+            button.removeChild(spinnerRef);
+            spinnerRef = null;
+        }
+
+        button.innerText = originalText;
+    }
+}
+
+function LoadCartModal() {
+    // Clear the Cart-Menu content
+    $("#Cart-Menu").html("");
+
+    // Then load the cart modal
+    $("#Cart-Menu").load("/cart-modal");
+}
+
+function RemoveItemFromCart(itemId) {
+    fetch('/remove-cart-modal-item/' + itemId)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                LoadCartModal();
+            } else {
+                showErrorMessage(data.message);
+            }
+        })
+        .catch(error => {
+        });
 }

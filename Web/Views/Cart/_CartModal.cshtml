@@ -1,0 +1,62 @@
+﻿@using Application.Tools
+@using Application.ViewModels.Cart.ClientSide
+@model List<ClientSideCartViewModel>
+
+<div class="ltn__utilize-menu-head">
+    <span class="ltn__utilize-menu-title">سبد خرید</span>
+    <button class="ltn__utilize-close">×</button>
+</div>
+@if (Model?.Any() ?? false)
+{
+    <div class="mini-cart-product-area ltn__scrollbar">
+        @foreach (var item in Model ?? new List<ClientSideCartViewModel>())
+        {
+            <div class="mini-cart-item clearfix">
+                <div class="mini-cart-img">
+                    <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-slug="@item.Slug">
+                        <img src="@SiteTools.ProductBanner@item.FileName" alt="@item.Title">
+                    </a>
+
+                    <span class="mini-cart-item-delete" onclick="RemoveItemFromCart('@item.Id')"><i class="icon-cancel"></i></span>
+                </div>
+                <div class="mini-cart-info">
+                    <h6>
+                        <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-slug="@item.Slug">
+                            @item.Title
+                            (@item.OptionTitle)
+                        </a>
+                    </h6>
+                    <span class="mini-cart-quantity">
+                        @if (item.OrderPrice > 0)
+                        {
+                            <span>@item.OrderPrice?.ToToman()</span>
+                            <del>@item.Price.ToTomanFormat()</del>
+                        }
+                        else
+                        {
+                            <span>@item.Price.ToToman()</span>
+                        }
+                    </span>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="mini-cart-footer">
+        <div class="mini-cart-sub-total">
+            <h5>
+                مجموع:
+                <span>
+                    @Model.Select(n => n.Price).Sum().ToToman()
+                </span>
+            </h5>
+        </div>
+        <div class="btn-wrapper">
+            <a asp-area="" asp-controller="Cart" asp-action="Cart" class="theme-btn-1 btn btn-effect-1">سبد خرید</a>
+            <a asp-area="" asp-controller="Checkout" asp-action="Checkout" class="theme-btn-2 btn btn-effect-2">تسویه حساب</a>
+        </div>
+    </div>
+}
+else
+{
+    <partial name="_NotFoundPartial" />
+}

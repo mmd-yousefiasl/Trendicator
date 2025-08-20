@@ -1,0 +1,116 @@
+﻿@using Application.Tools
+@using Application.ViewModels.Cart.ClientSide
+@model List<ClientSideCartViewModel>
+
+@{
+    ViewData["Title"] = "سبد خرید";
+}
+
+<div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-90 bg-image" data-bg="/assets/img/bg/9.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
+                    <div class="section-title-area ltn__section-title-2">
+                        <h1 class="section-title white-color">سبد خرید</h1>
+                    </div>
+                    <div class="ltn__breadcrumb-list">
+                        <ul>
+                            <li><a asp-area="" asp-controller="Home" asp-action="Index">صفحه اصلی</a></li>
+                            <li>سبد خرید</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="liton__shoping-cart-area mb-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="shoping-cart-inner">
+                    @if (Model?.Any() ?? false)
+                    {
+                        <div class="shoping-cart-table table-responsive">
+                            <table class="table">
+                                <tbody>
+                                    @foreach (var item in Model ?? new List<ClientSideCartViewModel>())
+                                    {
+                                        <tr>
+                                            <td class="cart-product-remove">
+                                                <a asp-area="" asp-controller="Cart" asp-action="RemoveCartItem" asp-route-id="@item.Id">
+                                                    x
+                                                </a>
+                                            </td>
+                                            <td class="cart-product-image">
+                                                <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-slug="@item.Slug">
+                                                    <img src="@SiteTools.ProductBanner@item.FileName" alt="@item.Title">
+                                                </a>
+                                            </td>
+                                            <td class="cart-product-info">
+                                                <h4>
+                                                    <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-slug="@item.Slug">
+                                                        @item.Title
+                                                        (@item.OptionTitle)
+                                                    </a>
+                                                </h4>
+                                            </td>
+                                            <td class="cart-product-price">
+                                                @if (item.OrderPrice > 0)
+                                                {
+                                                    <span>@item.OrderPrice?.ToToman()</span>
+                                                    <del>@item.Price.ToTomanFormat()</del>
+                                                }
+                                                else
+                                                {
+                                                    <span>@item.Price.ToToman()</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <partial name="_NotFoundPartial" />
+                    }
+                    <div class="shoping-cart-total mt-50">
+                        <h4>خلاصه سبد خرید</h4>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>جمع سبد خرید</td>
+                                    <td>@Model?.Sum(n => n.Price).ToToman()</td>
+                                </tr>
+                                @if (Model?.Sum(n => n.OrderPrice) > 0)
+                                {
+                                    <tr>
+                                        <td>تخفیف</td>
+                                        <td>@(Model.Where(n => n.OrderPrice > 0).Sum(n => n.Price - n.OrderPrice)?.ToToman())</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td><strong>جمع سفارش</strong></td>
+                                    <td>
+                                        <strong>
+                                            @((Model?.Sum(n => n.Price) - Model?.Where(n => n.OrderPrice > 0).Sum(n => n.Price - n.OrderPrice))?.ToToman())
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="btn-wrapper text-right">
+                            <a asp-area="" asp-controller="Checkout" asp-action="Checkout" class="theme-btn-1 btn btn-effect-1">تسویه حساب</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Component.InvokeAsync("OurFeatures")

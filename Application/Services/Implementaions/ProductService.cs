@@ -490,5 +490,16 @@ namespace Application.Services.Implementaions
 
             return products;
         }
+
+        public async Task<Result<int>> ClientSideGetProductIdByOptionId(int optionId)
+        {
+            if (optionId < 1) return Result.Failure<int>(Messages.OperationFailedError);
+
+            var productId = await _dbSet.Where(n => n.Options.Any(n => n.Id == optionId) && n.IsAvailable && n.IsPublished)
+                .Select(n => n.Id).FirstOrDefaultAsync();
+            if (productId < 1) return Result.Failure<int>(Messages.OperationFailedError);
+
+            return productId;
+        }
     }
 }

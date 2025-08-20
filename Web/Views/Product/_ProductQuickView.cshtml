@@ -51,7 +51,7 @@
                     <div class="ltn__product-details-menu-2">
                         <ul>
                             <li>
-                                <select class="form-control">
+                                <select class="form-control" id="Product-Option-Id">
                                     @foreach (var item in Model.Options ?? new List<ClientSideProductOptionViewModel>())
                                     {
                                         <option value="@item.Id">@item.Title</option>
@@ -59,7 +59,7 @@
                                 </select>
                             </li>
                             <li>
-                                <a href="javascript:void(0)" class="theme-btn-1 btn btn-effect-1" data-toggle="modal" data-target="#add_to_cart_modal">
+                                <a href="javascript:void(0)" class="theme-btn-1 btn btn-effect-1 btn-submit" onclick="AddToCart()">
                                     <i class="fas fa-shopping-cart"></i>
                                     <span>افزودن به سبد خرید</span>
                                 </a>

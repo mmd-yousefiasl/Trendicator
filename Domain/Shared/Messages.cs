@@ -22,15 +22,19 @@
         public const string ThisEmailAlreadyRegisterdError = "این ایمیل قبلا ثبت شده است";
         public const string FromDateCantBeGreaterThanToDateError = "تاریخ شروع نمی‌تواند بعد از تاریخ پایان باشد";
         public const string CouponCodeDuplicateError = "این کد تخفیف قبلا ثبت شده است";
+        public const string ProductAlreadyInYourCartError = "این محصول قبلاً به سبد خرید شما اضافه شده است";
 
         #endregion
 
         #region Success Messages
+
         public const string SuccessfullyDone = "عملیات با موفقیت به پایان رسید";
         public const string LogedInSuccessfully = "با موفقیت وارد حساب کاربری خود شدید";
         public const string LogedoutSuccessfully = "با موفقیت از حساب کاربری خود خارج شدید";
         public const string LoginCodeSentSuccessfully = "کد ورود با موفقیت ارسال شد";
         public const string ReviewAddedSuccessfully = "نظر شما با موفقیت ثبت شد";
+        public const string AddedToCartSuccessfully = "محصول با موفقیت به سبد خرید اضافه شد";
+
         #endregion
     }
 }

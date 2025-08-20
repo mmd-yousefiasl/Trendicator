@@ -58,6 +58,8 @@
                                                 <li><a asp-area="" asp-controller="ProductWishList" asp-action="WishList">علاقه مندی ها</a></li>
 
                                                 <li><a asp-area="" asp-controller="ProductCompare" asp-action="Compare">مقایسه</a></li>
+
+                                                <li><a asp-area="" asp-controller="Cart" asp-action="Cart">سبد خرید</a></li>
                                             </ul>
                                         </li>
                                     </ul>
@@ -66,7 +68,7 @@
                             <li>
                                 <!-- mini-cart 2 -->
                                 <div class="mini-cart-icon mini-cart-icon-2">
-                                    <a href="#ltn__utilize-cart-menu" class="ltn__utilize-toggle">
+                                    <a href="#ltn__utilize-cart-menu" class="ltn__utilize-toggle" onclick="LoadCartModal()">
                                         <span class="mini-cart-icon">
                                             <i class="icon-shopping-cart"></i>
                                         </span>
@@ -96,6 +98,7 @@
                                     <li><a asp-area="" asp-controller="Home" asp-action="Index">داشبورد</a></li>
                                     <li><a asp-area="" asp-controller="Blog" asp-action="BlogsList">بلاگ</a></li>
                                     <li><a asp-area="" asp-controller="ProductWishList" asp-action="WishList">علاقه مندی ها</a></li>
+                                    <li><a asp-area="" asp-controller="Cart" asp-action="Cart">سبد خرید</a></li>
                                 </ul>
                             </div>
                         </nav>

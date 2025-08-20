@@ -25,5 +25,7 @@ namespace Application.Services.Interfaces
         Task<Result<ClientSideProductDetailsViewModel>> ClientSideGetProductDetails(string slug);
 
         Task<Result<List<ClientSideProductViewModel>>> ClientSideGetRelatedProducts(int id, int categoryId);
+
+        Task<Result<int>> ClientSideGetProductIdByOptionId(int optionId);
     }
 }
