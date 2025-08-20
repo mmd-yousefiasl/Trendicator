@@ -22,6 +22,7 @@ namespace Application.Services.Implementaions
         private readonly IProductService _productService;
         private readonly ICartItemService _itemService;
         private readonly IPaymentDataService _paymentDataService;
+        private readonly ICouponService _couponService;
         #endregion
 
         #region Ctor
@@ -30,7 +31,8 @@ namespace Application.Services.Implementaions
             IHttpContextAccessor httpContextAccessor,
             IProductService productService,
             ICartItemService itemService,
-            IPaymentDataService paymentDataService)
+            IPaymentDataService paymentDataService,
+            ICouponService couponService)
         {
             _context = context;
             _dbSet = _context.Set<Cart>();
@@ -39,6 +41,7 @@ namespace Application.Services.Implementaions
             _productService = productService;
             _itemService = itemService;
             _paymentDataService = paymentDataService;
+            _couponService = couponService;
         }
         #endregion
 
@@ -103,6 +106,7 @@ namespace Application.Services.Implementaions
                 .Select(item => new
                 {
                     item.Id,
+                    item.Product.IsAvailable,
                     item.Product.BannerFileName,
                     item.Product.Title,
                     item.Product.Slug,
@@ -112,6 +116,7 @@ namespace Application.Services.Implementaions
                 {
                     Id = x.Id,
                     FileName = x.BannerFileName,
+                    IsAvailable = x.IsAvailable,
                     Title = x.Title,
                     Slug = x.Slug,
                     Price = x.Option != null ? x.Option.Price : 0,
@@ -127,25 +132,92 @@ namespace Application.Services.Implementaions
 
         public async Task<Result<ClientSideCartSummaryViewModel>> ClientSideCartSummary()
         {
-            var cartResult = await ClientSideGetCart();
-            if (cartResult.IsFailure) return Result.Failure<ClientSideCartSummaryViewModel>(cartResult.Message);
+            var cartItemsResult = await ClientSideGetCart();
+            if (cartItemsResult.IsFailure) return Result.Failure<ClientSideCartSummaryViewModel>(cartItemsResult.Message);
 
-            var cart = cartResult.Value;
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            var userIP = _httpContextAccessor.HttpContext.GetUserIP();
+
+            var cartItems = cartItemsResult.Value;
 
             ClientSideCartSummaryViewModel summary = new ClientSideCartSummaryViewModel();
-            summary.SubTotal = cart.Sum(n => n.Price);
-            summary.TotalDiscount = cart.Where(n => n.OrderPrice > 0).Sum(n => n.Price - n.OrderPrice);
+            summary.SubTotal = cartItems.Where(n => n.IsAvailable).Sum(n => n.Price);
+            summary.TotalDiscount = cartItems.Where(n => n.OrderPrice > 0 && n.IsAvailable).Sum(n => n.Price - n.OrderPrice);
             summary.SubTotalAfterDisocunt = summary.SubTotal - (summary.TotalDiscount ?? 0);
+
+            var cartCode = await _dbSet.Where(n => (n.UserId == userId || n.UserIP == userIP) &&
+            n.Status == CartStatusEnum.PendingPayment)
+                .Select(n => n.DiscountCode)
+                .FirstOrDefaultAsync();
+            if (!string.IsNullOrWhiteSpace(cartCode))
+            {
+                var percentResult = await _couponService.ClientSideGetCouponPercentByCode(cartCode);
+                if (percentResult.IsSuccess)
+                {
+                    summary.DiscountCode = cartCode;
+                    summary.DiscountPercent = percentResult.Value;
+                    summary.DiscountCodeAmount = summary.SubTotal.GetAmount(percentResult.Value);
+                    summary.SubTotalAfterDisocunt -= (summary.DiscountCodeAmount ?? 0);
+                }
+            }
 
             var taxResult = await _paymentDataService.GetTaxRate();
             if (taxResult.IsSuccess)
             {
-                summary.Tax = summary.SubTotalAfterDisocunt.GetTaxAmount(taxResult.Value);
+                summary.Tax = summary.SubTotalAfterDisocunt.GetAmount(taxResult.Value);
                 summary.TaxRate = taxResult.Value;
             }
-            summary.Total = summary.SubTotal - (summary.TotalDiscount ?? 0) + (summary.Tax ?? 0);
+            summary.Total = summary.SubTotal -
+                (summary.TotalDiscount ?? 0) -
+                (summary.DiscountCodeAmount ?? 0) +
+                (summary.Tax ?? 0);
 
             return summary;
+        }
+
+        public async Task<Result> AddCoupon(ClientSideAddCouponToCartViewModel model)
+        {
+            if (model is null) return Result.Failure(Messages.OperationFailedError);
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1) return Result.Failure(Messages.OperationFailedError);
+
+            if (await _dbSet.AnyAsync(n => n.UserId == userId &&
+            n.DiscountCode == model.Code &&
+            n.Status == CartStatusEnum.PendingPayment))
+                return Result.Failure(Messages.AlreadyUsedThisCouponError);
+
+            var couponResult = await _couponService.CheckCouponIsValidForUser(model.Code);
+            if (couponResult.IsFailure) return Result.Failure(couponResult.Message);
+
+            var cart = await _dbSet.Where(n => n.UserId == userId && n.Status == CartStatusEnum.PendingPayment)
+                .FirstOrDefaultAsync();
+            if (cart is null) return Result.Failure(Messages.OperationFailedError);
+
+            cart.DiscountCode = model.Code;
+
+            _dbSet.Update(cart);
+            await _context.SaveChangesAsync();
+
+            return Result.Success(Messages.DiscountAppliedSuccessfully);
+        }
+
+        public async Task<Result> ClientSideAddUserIdToCurrentUserCart()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1) return Result.Failure(Messages.OperationFailedError);
+
+            var userIP = _httpContextAccessor.HttpContext.GetUserIP();
+
+            var cart = await _dbSet.Where(n => (n.UserId == userId || n.UserIP == userIP) &&
+            n.Status == CartStatusEnum.PendingPayment && (n.UserId == null || n.UserId == 0)).FirstOrDefaultAsync();
+            if (cart is null) return Result.Failure(Messages.OperationFailedError);
+
+            cart.UserId = userId;
+            _dbSet.Update(cart);
+            await _context.SaveChangesAsync();
+
+            return Result.Success();
         }
     }
 }

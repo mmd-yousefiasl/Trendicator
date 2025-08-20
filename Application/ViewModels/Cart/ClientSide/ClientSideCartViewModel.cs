@@ -8,5 +8,6 @@
         public string OptionTitle { get; set; }
         public long Price { get; set; }
         public long? OrderPrice { get; set; }
+        public bool IsAvailable { get; set; }
     }
 }

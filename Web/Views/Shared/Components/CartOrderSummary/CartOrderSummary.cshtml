@@ -19,6 +19,20 @@
                         <td>@Model.TotalDiscount?.ToToman()</td>
                     </tr>
                 }
+
+                @if (Model.DiscountPercent > 0)
+                {
+                    <tr>
+                        <td>
+                            کد تخفیف
+                            (%@Model.DiscountPercent)
+                            :
+                            @Model.DiscountCode
+                        </td>
+                        <td>@Model.DiscountCodeAmount?.ToToman()</td>
+                    </tr>
+                }
+
                 @if (Model.Tax > 0 && Model.TaxRate > 0)
                 {
                     <tr>
@@ -29,6 +43,7 @@
                         <td>@Model.Tax?.ToToman()</td>
                     </tr>
                 }
+
                 <tr>
                     <td><strong>جمع سفارش</strong></td>
                     <td>
@@ -38,7 +53,14 @@
             </tbody>
         </table>
         <div class="btn-wrapper text-right">
-            <a asp-area="" asp-controller="Checkout" asp-action="Checkout" class="theme-btn-1 btn btn-effect-1">تسویه حساب</a>
+            @if (Model.Total > 0)
+            {
+                <a asp-area="" asp-controller="Checkout" asp-action="Checkout" class="theme-btn-1 btn btn-effect-1">تسویه حساب</a>
+            }
+            else
+            {
+                <a asp-area="" asp-controller="Product" asp-action="ProductsList" class="theme-btn-1 btn btn-effect-1">مشاهده محصولات</a>
+            }
         </div>
     </div>
 }

@@ -105,20 +105,31 @@
                                 @Html.Raw(Model.ShortDescription)
                                 <div class="ltn__product-details-menu-2">
                                     <ul>
-                                        <li>
-                                            <select class="form-control" id="Product-Option-Id">
-                                                @foreach (var item in Model.Options ?? new List<ClientSideProductOptionViewModel>())
-                                                {
-                                                    <option value="@item.Id">@item.Title</option>
-                                                }
-                                            </select>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0)" class="theme-btn-1 btn btn-effect-1 btn-submit" onclick="AddToCart()">
-                                                <i class="fas fa-shopping-cart"></i>
-                                                <span>افزودن به سبد خرید</span>
-                                            </a>
-                                        </li>
+                                        @if (Model.IsAvailable)
+                                        {
+                                            <li>
+                                                <select class="form-control" id="Product-Option-Id">
+                                                    @foreach (var item in Model.Options ?? new List<ClientSideProductOptionViewModel>())
+                                                    {
+                                                        <option value="@item.Id">@item.Title</option>
+                                                    }
+                                                </select>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)" class="theme-btn-1 btn btn-effect-1 btn-submit" onclick="AddToCart()">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    <span>افزودن به سبد خرید</span>
+                                                </a>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li>
+                                                <a href="javascript:void(0)" class="btn btn-outline-danger">
+                                                    <span>ناموجود</span>
+                                                </a>
+                                            </li>
+                                        }
                                     </ul>
                                 </div>
                                 <div class="ltn__product-details-menu-3">

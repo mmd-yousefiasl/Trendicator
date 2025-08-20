@@ -58,14 +58,21 @@
                                                 </h4>
                                             </td>
                                             <td class="cart-product-price">
-                                                @if (item.OrderPrice > 0)
+                                                @if (item.IsAvailable)
                                                 {
-                                                    <span>@item.OrderPrice?.ToToman()</span>
-                                                    <del>@item.Price.ToTomanFormat()</del>
+                                                    @if (item.OrderPrice > 0)
+                                                    {
+                                                        <span>@item.OrderPrice?.ToToman()</span>
+                                                        <del>@item.Price.ToTomanFormat()</del>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@item.Price.ToToman()</span>
+                                                    }
                                                 }
                                                 else
                                                 {
-                                                    <span>@item.Price.ToToman()</span>
+                                                    <span class="text-danger">ناموجود</span>
                                                 }
                                             </td>
                                         </tr>

@@ -8,5 +8,8 @@
         public long? Tax { get; set; }
         public long Total { get; set; }
         public int? TaxRate { get; set; }
+        public string? DiscountCode { get; set; }
+        public int? DiscountPercent { get; set; }
+        public long? DiscountCodeAmount { get; set; }
     }
 }

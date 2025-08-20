@@ -8,5 +8,7 @@ namespace Application.Services.Interfaces
         Task<Result> ClientSideCreateNewCartItem(ClientSideCreateNewCartItemViewModel model);
 
         Task<Result> ClientSideDeleteItemFromCart(int id);
+
+        Task<Result> CheckIfCartItemsIsAvailable();
     }
 }

@@ -2,7 +2,6 @@
 using Application.ViewModels.Cart.ClientSide;
 using Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol.Core.Types;
 
 namespace Web.Controllers
 {

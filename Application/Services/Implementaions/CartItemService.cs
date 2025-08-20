@@ -64,5 +64,22 @@ namespace Application.Services.Implementaions
 
             return Result.Success();
         }
+
+        public async Task<Result> CheckIfCartItemsIsAvailable()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1) return Result.Failure(Messages.OperationFailedError);
+
+            bool AnyUnAvailable = await _dbSet.Where(n => n.Cart.Status == CartStatusEnum.PendingPayment && n.Cart.UserId == userId &&
+            n.Product.IsAvailable == false).AnyAsync();
+
+            if (AnyUnAvailable) return Result.Failure(Messages.RemoveUnavailableItemsBeforeProceedToCheckout);
+
+            bool AnyItem = await _dbSet.Where(n => n.Cart.Status == CartStatusEnum.PendingPayment && n.Cart.UserId == userId)
+                .AnyAsync();
+            if (!AnyItem) return Result.Failure(Messages.AddAProductAtLeastToCartBeforeProceedToCheckout);
+
+            return Result.Success();
+        }
     }
 }

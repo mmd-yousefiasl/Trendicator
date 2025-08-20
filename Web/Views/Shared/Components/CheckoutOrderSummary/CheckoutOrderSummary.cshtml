@@ -1,0 +1,57 @@
+﻿@using Application.Tools
+@using Application.ViewModels.Cart.ClientSide
+@model ClientSideCartSummaryViewModel
+
+@if (Model is not null)
+{
+    <div class="col-lg-6">
+        <div class="shoping-cart-total mt-50">
+            <h4 class="title-2">خلاصه سبد خرید</h4>
+            <partial name="_AddCoupon" model="@(new ClientSideAddCouponToCartViewModel())" />
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>جمع سبد خرید</td>
+                        <td>@Model.SubTotal.ToToman()</td>
+                    </tr>
+                    @if (Model.TotalDiscount > 0)
+                    {
+                        <tr>
+                            <td>تخفیف</td>
+                            <td>@Model.TotalDiscount?.ToToman()</td>
+                        </tr>
+                    }
+                    @if (Model.DiscountPercent > 0)
+                    {
+                        <tr>
+                            <td>
+                                کد تخفیف
+                                (%@Model.DiscountPercent)
+                                :
+                                @Model.DiscountCode
+                            </td>
+                            <td>@Model.DiscountCodeAmount?.ToToman()</td>
+                        </tr>
+                    }
+
+                    @if (Model.Tax > 0 && Model.TaxRate > 0)
+                    {
+                        <tr>
+                            <td>
+                                مالیات بر ارزش افزوده
+                                (%@Model.TaxRate)
+                            </td>
+                            <td>@Model.Tax?.ToToman()</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td><strong>جمع سفارش</strong></td>
+                        <td>
+                            <strong>@Model.Total.ToToman()</strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

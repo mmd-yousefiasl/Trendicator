@@ -14,5 +14,9 @@ namespace Application.Services.Interfaces
         Task<Result<AdminSideUpdateCouponViewModel>> GetCouponFouUpdate(int id);
 
         Task<Result> UpdateCoupon(AdminSideUpdateCouponViewModel model);
+
+        Task<Result> CheckCouponIsValidForUser(string code);
+
+        Task<Result<int>> ClientSideGetCouponPercentByCode(string code);
     }
 }

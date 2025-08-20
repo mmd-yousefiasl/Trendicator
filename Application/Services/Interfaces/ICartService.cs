@@ -10,5 +10,9 @@ namespace Application.Services.Interfaces
         Task<Result<List<ClientSideCartViewModel>>> ClientSideGetCart();
 
         Task<Result<ClientSideCartSummaryViewModel>> ClientSideCartSummary();
+
+        Task<Result> AddCoupon(ClientSideAddCouponToCartViewModel model);
+
+        Task<Result> ClientSideAddUserIdToCurrentUserCart();
     }
 }

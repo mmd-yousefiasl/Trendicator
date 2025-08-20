@@ -19,21 +19,18 @@ namespace Application.Services.Implementaions
         private protected DbSet<Coupon> _dbSet;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMediatorHandler _mediator;
-        private readonly IUserService _userService;
 
         #endregion
 
         #region Ctor
         public CouponService(TrendicatorDbContext context,
             IHttpContextAccessor httpContextAccessor,
-            IMediatorHandler mediator,
-            IUserService userService)
+            IMediatorHandler mediator)
         {
             _context = context;
             _dbSet = _context.Set<Coupon>();
             _httpContextAccessor = httpContextAccessor;
             _mediator = mediator;
-            _userService = userService;
         }
         #endregion
 
@@ -189,6 +186,36 @@ namespace Application.Services.Implementaions
             await _mediator.PublishEvent(CouponUpdatedEvent);
 
             return Result.Success();
+        }
+
+        public async Task<Result> CheckCouponIsValidForUser(string code)
+        {
+            if (string.IsNullOrWhiteSpace(code))
+                return Result.Failure(Messages.InvalidCouponCodeError);
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1)
+                return Result.Failure(Messages.InvalidCouponCodeError);
+
+            var currentDateTime = DateTime.Now;
+
+            bool isValid = await _dbSet.AnyAsync(coupon =>
+                coupon.Code == code && coupon.FromDate <= currentDateTime && coupon.ToDate > currentDateTime &&
+                (!coupon.Users.Any() || coupon.Users.Any(u => u.UserId == userId)));
+
+            return isValid
+                ? Result.Success()
+                : Result.Failure(Messages.InvalidCouponCodeError);
+        }
+
+        public async Task<Result<int>> ClientSideGetCouponPercentByCode(string code)
+        {
+            if (string.IsNullOrWhiteSpace(code)) return Result.Failure<int>(Messages.OperationFailedError);
+
+            var percent = await _dbSet.Where(n => n.Code == code).Select(n => n.Percent).FirstOrDefaultAsync();
+            if (percent < 1) return Result.Failure<int>(Messages.OperationFailedError);
+
+            return percent;
         }
     }
 }

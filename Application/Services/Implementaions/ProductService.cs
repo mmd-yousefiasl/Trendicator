@@ -257,6 +257,7 @@ namespace Application.Services.Implementaions
                     HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
                     OrderPrice = n.DisplayOrderPrice,
                     Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
+                    IsAvailable = n.IsAvailable,
                 }).AsNoTracking().ToListAsync();
             if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
 
@@ -319,9 +320,11 @@ namespace Application.Services.Implementaions
                         query = query.OrderBy(n => n.Views.Count());
                         break;
                     case ProductSortTypeEnum.PriceLowToHigh:
+                        conditions.Add(n => n.IsAvailable);
                         query = query.OrderBy(n => n.DisplayPrice);
                         break;
                     case ProductSortTypeEnum.PriceHighToLow:
+                        conditions.Add(n => n.IsAvailable);
                         query = query.OrderByDescending(n => n.DisplayPrice);
                         break;
                     default:
@@ -349,7 +352,8 @@ namespace Application.Services.Implementaions
                 HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
                 Price = n.DisplayPrice,
                 OrderPrice = n.DisplayOrderPrice,
-                Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0)
+                Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
+                IsAvailable = n.IsAvailable,
             }));
 
             var productIds = filter.Entities.Select(n => n.Id).ToList();
@@ -389,7 +393,8 @@ namespace Application.Services.Implementaions
                     HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
                     Price = n.DisplayPrice,
                     OrderPrice = n.DisplayOrderPrice,
-                    Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0)
+                    Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
+                    IsAvailable = n.IsAvailable,
                 }).AsNoTracking().ToListAsync();
             if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
 
@@ -463,7 +468,8 @@ namespace Application.Services.Implementaions
                     ShortDescription = n.ShortDescription,
                     HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
                     OrderPrice = n.DisplayOrderPrice,
-                    Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0)
+                    Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
+                    IsAvailable = n.IsAvailable,
                 }).AsNoTracking().ToListAsync();
             if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
 

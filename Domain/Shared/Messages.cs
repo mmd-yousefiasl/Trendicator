@@ -23,6 +23,10 @@
         public const string FromDateCantBeGreaterThanToDateError = "تاریخ شروع نمی‌تواند بعد از تاریخ پایان باشد";
         public const string CouponCodeDuplicateError = "این کد تخفیف قبلا ثبت شده است";
         public const string ProductAlreadyInYourCartError = "این محصول قبلاً به سبد خرید شما اضافه شده است";
+        public const string AlreadyUsedThisCouponError = "قبلا از این کد تخفیف استفاده کرده اید";
+        public const string InvalidCouponCodeError = "کد تخفیف نامعتبر می باشد";
+        public const string RemoveUnavailableItemsBeforeProceedToCheckout = "لطفاً اقلام ناموجود را قبل از ادامه فرایند پرداخت حذف کنید";
+        public const string AddAProductAtLeastToCartBeforeProceedToCheckout = "لطفاً پیش از ادامه فرایند پرداخت، حداقل یک محصول را به سبد خرید اضافه کنید";
 
         #endregion
 
@@ -34,6 +38,7 @@
         public const string LoginCodeSentSuccessfully = "کد ورود با موفقیت ارسال شد";
         public const string ReviewAddedSuccessfully = "نظر شما با موفقیت ثبت شد";
         public const string AddedToCartSuccessfully = "محصول با موفقیت به سبد خرید اضافه شد";
+        public const string DiscountAppliedSuccessfully = "تخفیف با موفقیت اعمال شد";
 
         #endregion
     }

@@ -11,7 +11,7 @@
             return 100 - discountedPercent;
         }
 
-        public static long GetTaxAmount(this long value, int taxRate)
+        public static long GetAmount(this long value, int taxRate)
         {
             return value * taxRate / 100;
         }

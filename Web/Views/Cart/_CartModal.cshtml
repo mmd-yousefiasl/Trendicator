@@ -27,14 +27,21 @@
                         </a>
                     </h6>
                     <span class="mini-cart-quantity">
-                        @if (item.OrderPrice > 0)
+                        @if (item.IsAvailable)
                         {
-                            <span>@item.OrderPrice?.ToToman()</span>
-                            <del>@item.Price.ToTomanFormat()</del>
+                            @if (item.OrderPrice > 0)
+                            {
+                                <span>@item.OrderPrice?.ToToman()</span>
+                                <del>@item.Price.ToTomanFormat()</del>
+                            }
+                            else
+                            {
+                                <span>@item.Price.ToToman()</span>
+                            }
                         }
                         else
                         {
-                            <span>@item.Price.ToToman()</span>
+                            <span class="text-danger">ناموجود</span>
                         }
                     </span>
                 </div>
@@ -46,7 +53,7 @@
             <h5>
                 مجموع:
                 <span>
-                    @Model.Select(n => n.Price).Sum().ToToman()
+                    @Model.Where(n => n.IsAvailable).Select(n => n.Price).Sum().ToToman()
                 </span>
             </h5>
         </div>

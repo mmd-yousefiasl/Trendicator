@@ -8,5 +8,6 @@
         public int ReviewRate { get; set; }
         public string ShortDescription { get; set; }
         public bool IsInUserWishList { get; set; }
+        public bool IsAvailable { get; set; }
     }
 }

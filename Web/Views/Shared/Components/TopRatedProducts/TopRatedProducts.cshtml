@@ -27,14 +27,21 @@
                                     @item.Title
                                 </a>
                             </h6>
-                            @if (item.HaveDiscount)
+                            @if (item.IsAvailable)
                             {
-                                <span class="fs-large">@item.OrderPrice?.ToToman()</span>
-                                <del class="fs-small">@item.Price.ToTomanFormat()</del>
+                                @if (item.HaveDiscount)
+                                {
+                                    <span class="fs-large">@item.OrderPrice?.ToToman()</span>
+                                    <del class="fs-small">@item.Price.ToTomanFormat()</del>
+                                }
+                                else
+                                {
+                                    <span class="fs-large">@item.Price.ToToman()</span>
+                                }
                             }
                             else
                             {
-                                <span class="fs-large">@item.Price.ToToman()</span>
+                                <span class="text-danger">ناموجود</span>
                             }
                         </div>
                     </div>
