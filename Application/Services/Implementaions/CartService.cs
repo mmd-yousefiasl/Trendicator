@@ -21,6 +21,7 @@ namespace Application.Services.Implementaions
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IProductService _productService;
         private readonly ICartItemService _itemService;
+        private readonly IPaymentDataService _paymentDataService;
         #endregion
 
         #region Ctor
@@ -28,7 +29,8 @@ namespace Application.Services.Implementaions
             IMediatorHandler mediator,
             IHttpContextAccessor httpContextAccessor,
             IProductService productService,
-            ICartItemService itemService)
+            ICartItemService itemService,
+            IPaymentDataService paymentDataService)
         {
             _context = context;
             _dbSet = _context.Set<Cart>();
@@ -36,6 +38,7 @@ namespace Application.Services.Implementaions
             _httpContextAccessor = httpContextAccessor;
             _productService = productService;
             _itemService = itemService;
+            _paymentDataService = paymentDataService;
         }
         #endregion
 
@@ -120,6 +123,29 @@ namespace Application.Services.Implementaions
             if (!items.Any()) return Result.Failure<List<ClientSideCartViewModel>>(Messages.OperationFailedError);
 
             return items;
+        }
+
+        public async Task<Result<ClientSideCartSummaryViewModel>> ClientSideCartSummary()
+        {
+            var cartResult = await ClientSideGetCart();
+            if (cartResult.IsFailure) return Result.Failure<ClientSideCartSummaryViewModel>(cartResult.Message);
+
+            var cart = cartResult.Value;
+
+            ClientSideCartSummaryViewModel summary = new ClientSideCartSummaryViewModel();
+            summary.SubTotal = cart.Sum(n => n.Price);
+            summary.TotalDiscount = cart.Where(n => n.OrderPrice > 0).Sum(n => n.Price - n.OrderPrice);
+            summary.SubTotalAfterDisocunt = summary.SubTotal - (summary.TotalDiscount ?? 0);
+
+            var taxResult = await _paymentDataService.GetTaxRate();
+            if (taxResult.IsSuccess)
+            {
+                summary.Tax = summary.SubTotalAfterDisocunt.GetTaxAmount(taxResult.Value);
+                summary.TaxRate = taxResult.Value;
+            }
+            summary.Total = summary.SubTotal - (summary.TotalDiscount ?? 0) + (summary.Tax ?? 0);
+
+            return summary;
         }
     }
 }

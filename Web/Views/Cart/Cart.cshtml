@@ -78,35 +78,7 @@
                     {
                         <partial name="_NotFoundPartial" />
                     }
-                    <div class="shoping-cart-total mt-50">
-                        <h4>خلاصه سبد خرید</h4>
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <td>جمع سبد خرید</td>
-                                    <td>@Model?.Sum(n => n.Price).ToToman()</td>
-                                </tr>
-                                @if (Model?.Sum(n => n.OrderPrice) > 0)
-                                {
-                                    <tr>
-                                        <td>تخفیف</td>
-                                        <td>@(Model.Where(n => n.OrderPrice > 0).Sum(n => n.Price - n.OrderPrice)?.ToToman())</td>
-                                    </tr>
-                                }
-                                <tr>
-                                    <td><strong>جمع سفارش</strong></td>
-                                    <td>
-                                        <strong>
-                                            @((Model?.Sum(n => n.Price) - Model?.Where(n => n.OrderPrice > 0).Sum(n => n.Price - n.OrderPrice))?.ToToman())
-                                        </strong>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="btn-wrapper text-right">
-                            <a asp-area="" asp-controller="Checkout" asp-action="Checkout" class="theme-btn-1 btn btn-effect-1">تسویه حساب</a>
-                        </div>
-                    </div>
+                    @await Component.InvokeAsync("CartOrderSummary")
                 </div>
             </div>
         </div>

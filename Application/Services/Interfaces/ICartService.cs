@@ -8,5 +8,7 @@ namespace Application.Services.Interfaces
         Task<Result> AddToCart(int optionId);
 
         Task<Result<List<ClientSideCartViewModel>>> ClientSideGetCart();
+
+        Task<Result<ClientSideCartSummaryViewModel>> ClientSideCartSummary();
     }
 }

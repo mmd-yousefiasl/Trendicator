@@ -1,0 +1,44 @@
+﻿@using Application.Tools
+@using Application.ViewModels.Cart.ClientSide
+@model ClientSideCartSummaryViewModel
+
+@if (Model is not null)
+{
+    <div class="shoping-cart-total mt-50">
+        <h4>خلاصه سبد خرید</h4>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>جمع سبد خرید</td>
+                    <td>@Model.SubTotal.ToToman()</td>
+                </tr>
+                @if (Model.TotalDiscount > 0)
+                {
+                    <tr>
+                        <td>تخفیف</td>
+                        <td>@Model.TotalDiscount?.ToToman()</td>
+                    </tr>
+                }
+                @if (Model.Tax > 0 && Model.TaxRate > 0)
+                {
+                    <tr>
+                        <td>
+                            مالیات بر ارزش افزوده
+                            (%@Model.TaxRate)
+                        </td>
+                        <td>@Model.Tax?.ToToman()</td>
+                    </tr>
+                }
+                <tr>
+                    <td><strong>جمع سفارش</strong></td>
+                    <td>
+                        <strong>@Model.Total.ToToman()</strong>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="btn-wrapper text-right">
+            <a asp-area="" asp-controller="Checkout" asp-action="Checkout" class="theme-btn-1 btn btn-effect-1">تسویه حساب</a>
+        </div>
+    </div>
+}

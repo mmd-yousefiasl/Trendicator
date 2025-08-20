@@ -72,6 +72,14 @@ namespace Data.Context
             };
             modelBuilder.Entity<SiteData>().HasData(siteData);
 
+            PaymentData paymentData = new PaymentData()
+            {
+                Id = 1,
+                IsDeleted = false,
+                Tax = 9,
+            };
+            modelBuilder.Entity<PaymentData>().HasData(paymentData);
+
             #endregion
 
             #region EmailData

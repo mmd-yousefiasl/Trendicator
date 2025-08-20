@@ -759,9 +759,26 @@ namespace Domain.Statics
                 UniqueName = "DeleteCoupon"
             },
             #endregion
+
+            #region PaymentData
+            new Permission
+            {
+                Id = 99,
+                ParentId = 1,
+                Title = "مدیریت اطلاعات پرداخت",
+                UniqueName = "ManagePaymentData"
+            },
+            new Permission
+            {
+                Id = 100,
+                ParentId = 99,
+                Title = "ویرایش اطلاعات پرداخت",
+                UniqueName = "UpdatePaymentData"
+            },
+            #endregion
         };
 
-        //Last used id ==> 98
+        //Last used id ==> 100
         public static List<Permission> Permissions = _permissions;
     }
 }

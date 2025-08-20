@@ -55,6 +55,7 @@ namespace IOC
             services.AddScoped<ICouponService, CouponService>();
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<ICartItemService, CartItemService>();
+            services.AddScoped<IPaymentDataService, PaymentDataService>();
 
             #endregion
 
