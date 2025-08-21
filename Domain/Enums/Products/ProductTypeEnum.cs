@@ -9,6 +9,6 @@ namespace Domain.Enums.Products
         [Display(Name = "لینک متاتریدر")]
         MetaTraderLink = 2,
         [Display(Name = "فایل")]
-        File = 3,
+        IndicatorFile = 3,
     }
 }

@@ -61,5 +61,14 @@ namespace Application.ViewModels.Product.AdminSide
         [Display(Name = "نوع")]
         [Required(ErrorMessage = Messages.RequiredError)]
         public ProductTypeEnum Type { get; set; }
+
+        [Display(Name = "لینک متاتریدر")]
+        [MaxLength(200, ErrorMessage = Messages.MaxLengthError)]
+        public string? MetaTraderLink { get; set; }
+
+        [Display(Name = "فایل اندیکاتور")]
+        public IFormFile? IndicatorFile { get; set; }
+
+        public string? IndicatorFileName { get; set; }
     }
 }

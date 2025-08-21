@@ -89,9 +89,6 @@
                                         <th>عنوان</th>
                                         <th>قیمت نمایشی</th>
                                         <th>قیمت سفارش</th>
-                                        <th>وضعیت موجودی</th>
-                                        <th>دسته بندی</th>
-                                        <th>اولویت</th>
                                         <th>وضعیت انتشار</th>
                                         <th>بازدید</th>
                                         <th>نوع</th>
@@ -111,18 +108,6 @@
                                                 <td title="@item.Slug">@item.Title</td>
                                                 <td>@item.DisplayPrice.ToToman()</td>
                                                 <td>@item.DisplayOrderPrice?.ToToman()</td>
-                                                <td>
-                                                    @if (item.IsAvailable)
-                                                    {
-                                                        <span class="text-success">موجود</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="text-danger">ناموجود</span>
-                                                    }
-                                                </td>
-                                                <td>@item.Category</td>
-                                                <td>@item.Priority</td>
                                                 <td>
                                                     @if (item.IsPublished)
                                                     {

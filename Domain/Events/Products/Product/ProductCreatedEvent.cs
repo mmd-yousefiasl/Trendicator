@@ -14,6 +14,8 @@ namespace Domain.Events.Products.Product
     long DisplayPrice,
     long? DisplayOrderPrice,
     bool IsAvailable,
-    ProductTypeEnum Type
+    ProductTypeEnum Type,
+    string? MetaTraderLink,
+    string? IndicatorFileName
     ) : INotification;
 }

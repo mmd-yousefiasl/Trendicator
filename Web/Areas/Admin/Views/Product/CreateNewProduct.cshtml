@@ -139,6 +139,22 @@
                         </div>
                     </div>
 
+                    <div class="mb-3 row">
+                        <label asp-for="MetaTraderLink" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" asp-for="MetaTraderLink">
+                            <span asp-validation-for="MetaTraderLink" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-md-2 col-form-label" asp-for="IndicatorFile"></label>
+                        <div class="col-md-10">
+                            <input type="file" class="filestyle" data-buttonname="btn-secondary" asp-for="IndicatorFile">
+                            <span asp-validation-for="IndicatorFile" class="text-danger"></span>
+                        </div>
+                    </div>
+
                     <div class="col-12 text-end mt-5">
                         <button class="btn btn-primary btn-submit" type="submit">ثبت</button>
                     </div>

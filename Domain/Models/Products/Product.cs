@@ -16,6 +16,8 @@ namespace Domain.Models.Products
         public long? DisplayOrderPrice { get; set; }
         public bool IsAvailable { get; set; }
         public ProductTypeEnum Type { get; set; }
+        public string? MetaTraderLink { get; set; }
+        public string? IndicatorFileName { get; set; }
 
         #region Relations
 

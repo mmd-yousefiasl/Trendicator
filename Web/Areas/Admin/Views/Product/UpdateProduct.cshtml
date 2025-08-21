@@ -39,6 +39,8 @@
                     <input class="d-none image-input" type="file" asp-for="BannerFile" accept="image/*" />
                     <input type="hidden" asp-for="BannerFileName" />
 
+                    <input type="hidden" asp-for="IndicatorFileName" />
+
                     <h4 class="card-title">@ViewData["Title"]</h4>
 
                     <div class="mb-3 row">
@@ -139,6 +141,22 @@
                         <div class="col-md-10">
                             <select class="form-control" asp-for="Type" asp-items="@Html.GetEnumSelectList<ProductTypeEnum>()">
                             </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="MetaTraderLink" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" asp-for="MetaTraderLink">
+                            <span asp-validation-for="MetaTraderLink" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-md-2 col-form-label" asp-for="IndicatorFile"></label>
+                        <div class="col-md-10">
+                            <input type="file" class="filestyle" data-buttonname="btn-secondary" asp-for="IndicatorFile">
+                            <span>@Model.IndicatorFileName</span>
                         </div>
                     </div>
 

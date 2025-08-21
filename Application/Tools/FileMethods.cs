@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using MimeKit.Cryptography;
 
 namespace Application.Tools
 {
@@ -19,6 +20,34 @@ namespace Application.Tools
             using (var stream = new FileStream(savePath, FileMode.Create))
             {
                 file.CopyTo(stream);
+            }
+        }
+
+        public static void UploadSensitiveFileToServer(this IFormFile file, string name, string path)
+        {
+            string saveFoler = Directory.GetCurrentDirectory() + "/SensitiveFiles" + path;
+            string savePath = Path.Combine(saveFoler, name);
+
+            if (!Directory.Exists(saveFoler))
+            {
+                Directory.CreateDirectory(saveFoler);
+            }
+
+            savePath.RemoveFileFromServer();
+
+            using (var stream = new FileStream(savePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+        }
+
+        public static void RemoveSensitiveFileFromServer(this string name, string path)
+        {
+            string fileAddress = Directory.GetCurrentDirectory() + "/SensitiveFiles" + path + name;
+
+            if (File.Exists(fileAddress))
+            {
+                File.Delete(fileAddress);
             }
         }
 
@@ -64,6 +93,44 @@ namespace Application.Tools
                     && Path.GetExtension(postedFile.FileName).ToLower() != ".png"
                     && Path.GetExtension(postedFile.FileName).ToLower() != ".jpeg"
                     && Path.GetExtension(postedFile.FileName).ToLower() != ".svg")
+                {
+                    return false;
+                }
+
+                return true;
+            }
+
+            return true;
+        }
+
+        public static bool IsCompressedFile(this IFormFile postedFile, bool checkFile = true)
+        {
+            if (checkFile)
+            {
+                //-------------------------------------------
+                //  Check the compressed file mime types
+                //-------------------------------------------
+                var allowedMimeTypes = new[]
+                {
+            "application/x-rar-compressed",
+            "application/x-rar",
+            "application/zip",
+            "application/x-zip-compressed",
+            "multipart/x-zip"
+        };
+
+                if (!allowedMimeTypes.Contains(postedFile.ContentType.ToLower()))
+                {
+                    return false;
+                }
+
+                //-------------------------------------------
+                //  Check the file extension
+                //-------------------------------------------
+                var allowedExtensions = new[] { ".zip", ".rar" };
+                var fileExtension = Path.GetExtension(postedFile.FileName).ToLower();
+
+                if (!allowedExtensions.Contains(fileExtension))
                 {
                     return false;
                 }

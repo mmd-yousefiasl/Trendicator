@@ -44,6 +44,8 @@
 
         public static string ProductGallery { get; set; }
 
+        public static string ProductIndicator { get; set; }
+
         #endregion
     }
 }

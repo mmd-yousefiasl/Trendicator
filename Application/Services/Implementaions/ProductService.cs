@@ -42,21 +42,24 @@ namespace Application.Services.Implementaions
 
         public async Task<Result> AdminSideCreateNewProduct(AdminSideCreateNewProductViewModel model)
         {
-            if (model is null) return Result.Failure(Messages.OperationFailedError);
-            if (await _dbSet.AnyAsync(n => n.Slug == model.Slug.Replace(" ", "-"))) return Result.Failure(Messages.DuplicateSlugError);
+            if (model is null)
+                return Result.Failure(Messages.OperationFailedError);
 
-            if (!model.BannerFile.IsImage()) return Result.Failure(Messages.InvalidFileFormatError);
-            if (model.BannerFile.Length > SiteTools.MaxImageFileLength.CalculateMB()) return Result.Failure(Messages.FileLengthError);
+            model.Slug = model.Slug.Replace(" ", "-");
 
-            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.BannerFile.FileName);
+            if (await _dbSet.AnyAsync(n => n.Slug == model.Slug))
+                return Result.Failure(Messages.DuplicateSlugError);
 
-            model.BannerFile.UplaodFileToServer(fileName, SiteTools.ProductBanner);
+            if (!model.BannerFile.IsImage())
+                return Result.Failure(Messages.InvalidFileFormatError);
 
-            var product = new Product()
+            if (model.BannerFile.Length > SiteTools.MaxImageFileLength.CalculateMB())
+                return Result.Failure(Messages.FileLengthError);
+
+            var product = new Product
             {
-                BannerFileName = fileName,
                 Title = model.Title,
-                Slug = model.Slug.Replace(" ", "-"),
+                Slug = model.Slug,
                 Description = model.Description,
                 DisplayPrice = model.DisplayPrice,
                 DisplayOrderPrice = model.DisplayOrderPrice,
@@ -65,13 +68,31 @@ namespace Application.Services.Implementaions
                 Priority = model.Priority,
                 CategoryId = model.CategoryId,
                 ShortDescription = model.ShortDescription,
-                Type = model.Type
+                Type = model.Type,
             };
+            if (model.Type == ProductTypeEnum.MetaTraderLink) product.MetaTraderLink = model.MetaTraderLink;
+
+            if (model.IndicatorFile is not null && model.Type == ProductTypeEnum.IndicatorFile)
+            {
+                if (!model.IndicatorFile.IsCompressedFile())
+                    return Result.Failure(Messages.InvalidFileFormatError);
+
+                if (model.IndicatorFile.Length > SiteTools.MaxImageFileLength.CalculateMB())
+                    return Result.Failure(Messages.FileLengthError);
+
+                var indicatorFileName = Guid.NewGuid() + Path.GetExtension(model.IndicatorFile.FileName);
+                model.IndicatorFile.UploadSensitiveFileToServer(indicatorFileName, SiteTools.ProductIndicator);
+                product.IndicatorFileName = indicatorFileName;
+            }
+
+            var bannerFileName = Guid.NewGuid() + Path.GetExtension(model.BannerFile.FileName);
+            model.BannerFile.UplaodFileToServer(bannerFileName, SiteTools.ProductBanner);
+            product.BannerFileName = bannerFileName;
 
             await _dbSet.AddAsync(product);
             await _context.SaveChangesAsync();
 
-            ProductCreatedEvent ProductCreatedEvent = new ProductCreatedEvent(
+            await _mediator.PublishEvent(new ProductCreatedEvent(
                 product.BannerFileName,
                 product.Title,
                 product.Slug,
@@ -82,9 +103,10 @@ namespace Application.Services.Implementaions
                 product.DisplayPrice,
                 product.DisplayOrderPrice,
                 product.IsAvailable,
-                product.Type);
-
-            await _mediator.PublishEvent(ProductCreatedEvent);
+                product.Type,
+                product.MetaTraderLink,
+                product.IndicatorFileName
+            ));
 
             return Result.Success();
         }
@@ -103,6 +125,7 @@ namespace Application.Services.Implementaions
             await _context.SaveChangesAsync();
 
             product.BannerFileName.RemoveFileFromServer(SiteTools.ProductBanner);
+            product.IndicatorFileName?.RemoveSensitiveFileFromServer(SiteTools.ProductIndicator);
 
             foreach (var item in product.Gallery ?? new List<ProductGallery>())
             {
@@ -192,6 +215,8 @@ namespace Application.Services.Implementaions
                 Priority = n.Priority,
                 ShortDescription = n.ShortDescription,
                 Type = n.Type,
+                MetaTraderLink = n.MetaTraderLink,
+                IndicatorFileName = n.IndicatorFileName,
             }).AsNoTracking().FirstOrDefaultAsync();
             if (product is null) return Result.Failure<AdminSideUpdateProductViewModel>(Messages.OperationFailedError);
 
@@ -200,27 +225,52 @@ namespace Application.Services.Implementaions
 
         public async Task<Result> AdminSideUpdateProduct(AdminSideUpdateProductViewModel model)
         {
-            if (model is null) return Result.Failure(Messages.OperationFailedError);
-            if (await _dbSet.AnyAsync(n => n.Id != model.Id && n.Slug == model.Slug.Replace(" ", "-")))
+            if (model is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            model.Slug = model.Slug.Replace(" ", "-");
+
+            bool isDuplicateSlug = await _dbSet.AnyAsync(n => n.Id != model.Id && n.Slug == model.Slug);
+            if (isDuplicateSlug)
                 return Result.Failure(Messages.DuplicateSlugError);
 
             var product = await _dbSet.FindAsync(model.Id);
-            if (product is null) return Result.Failure(Messages.OperationFailedError);
+            if (product is null)
+                return Result.Failure(Messages.OperationFailedError);
 
+            // Handle Banner File
             if (model.BannerFile is not null)
             {
-                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.BannerFile.FileName);
-                if (!model.BannerFile.IsImage()) return Result.Failure(Messages.InvalidFileFormatError);
-                if (model.BannerFile.Length > SiteTools.MaxImageFileLength.CalculateMB()) return Result.Failure(Messages.FileLengthError);
+                if (!model.BannerFile.IsImage())
+                    return Result.Failure(Messages.InvalidFileFormatError);
 
-                model.BannerFile.UplaodFileToServer(fileName, SiteTools.ProductBanner);
+                if (model.BannerFile.Length > SiteTools.MaxImageFileLength.CalculateMB())
+                    return Result.Failure(Messages.FileLengthError);
+
+                var bannerFileName = Guid.NewGuid() + Path.GetExtension(model.BannerFile.FileName);
+                model.BannerFile.UplaodFileToServer(bannerFileName, SiteTools.ProductBanner);
                 product.BannerFileName.RemoveFileFromServer(SiteTools.ProductBanner);
-
-                product.BannerFileName = fileName;
+                product.BannerFileName = bannerFileName;
             }
 
+            // Handle Indicator File
+            if (model.IndicatorFile is not null && model.Type == ProductTypeEnum.IndicatorFile)
+            {
+                if (!model.IndicatorFile.IsCompressedFile())
+                    return Result.Failure(Messages.InvalidFileFormatError);
+
+                if (model.IndicatorFile.Length > SiteTools.MaxImageFileLength.CalculateMB())
+                    return Result.Failure(Messages.FileLengthError);
+
+                var indicatorFileName = Guid.NewGuid() + Path.GetExtension(model.IndicatorFile.FileName);
+                model.IndicatorFile.UploadSensitiveFileToServer(indicatorFileName, SiteTools.ProductIndicator);
+                product.IndicatorFileName?.RemoveSensitiveFileFromServer(SiteTools.ProductIndicator);
+                product.IndicatorFileName = indicatorFileName;
+            }
+
+            // Update product fields
             product.Title = model.Title;
-            product.Slug = model.Slug.Replace(" ", "-");
+            product.Slug = model.Slug;
             product.Description = model.Description;
             product.Priority = model.Priority;
             product.IsPublished = model.IsPublished;
@@ -231,10 +281,12 @@ namespace Application.Services.Implementaions
             product.ShortDescription = model.ShortDescription;
             product.Type = model.Type;
 
+            if (model.Type == ProductTypeEnum.MetaTraderLink) product.MetaTraderLink = model.MetaTraderLink;
+
             _dbSet.Update(product);
             await _context.SaveChangesAsync();
 
-            ProductUpdatedEvent ProductUpdatedEvent = new ProductUpdatedEvent(
+            await _mediator.PublishEvent(new ProductUpdatedEvent(
                 product.Id,
                 product.BannerFileName,
                 product.Title,
@@ -246,9 +298,10 @@ namespace Application.Services.Implementaions
                 product.DisplayPrice,
                 product.DisplayOrderPrice,
                 product.IsAvailable,
-                product.Type);
-
-            await _mediator.PublishEvent(ProductUpdatedEvent);
+                product.Type,
+                product.MetaTraderLink,
+                product.IndicatorFileName
+            ));
 
             return Result.Success();
         }
