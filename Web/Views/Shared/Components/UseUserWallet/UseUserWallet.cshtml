@@ -1,0 +1,15 @@
+﻿@using Application.Tools
+@using Application.ViewModels.Cart.ClientSide
+@model ClientSideCheckoutViewModel
+
+@if (Model?.Balance > 0)
+{
+    <label class="checkbox-inline">
+        <input type="checkbox" asp-for="UseWallet">
+        <span>
+            از موجودی کیف پولم استفاده کن
+            (موجودی:
+            @Model.Balance.ToToman())
+        </span>
+    </label>
+}

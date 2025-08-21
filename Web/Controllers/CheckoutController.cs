@@ -38,6 +38,28 @@ namespace Web.Controllers
             return View();
         }
 
+        [HttpPost("/checkout"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> Checkout(ClientSideCheckoutViewModel model)
+        {
+            var itemsResult = await _itemService.CheckIfCartItemsIsAvailable();
+            if (itemsResult.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = itemsResult.Message;
+                return RedirectToAction("Cart", "Cart");
+            }
+
+            if (!model.UseWallet)
+            {
+                TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
+            }
+            else
+            {
+                TempData[TemporarySuccessMessage] = Messages.SuccessfullyDone;
+            }
+
+            return RedirectToAction(nameof(Checkout));
+        }
+
         [HttpPost("/add-coupon"), ValidateAntiForgeryToken]
         public async Task<IActionResult> AddCoupon(ClientSideAddCouponToCartViewModel model)
         {

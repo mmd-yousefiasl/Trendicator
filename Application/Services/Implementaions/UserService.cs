@@ -242,7 +242,7 @@ namespace Application.Services.Implementaions
             return user;
         }
 
-        public async Task<decimal> GetCurrentUserBalance()
+        public async Task<long> GetCurrentUserBalance()
         {
             var userId = _httpContextAccessor.HttpContext.User.GetUserId();
             if (userId < 1) return 0;

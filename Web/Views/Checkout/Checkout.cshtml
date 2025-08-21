@@ -29,7 +29,7 @@
 
             @await Component.InvokeAsync("CheckoutOrderSummary")
             <div class="col-lg-6">
-                <div class="ltn__checkout-payment-method mt-50">
+                <form asp-area="" asp-controller="Checkout" asp-action="Checkout" method="post" onsubmit="submitAnimation()" class="ltn__checkout-payment-method mt-50">
                     <h4 class="title-2">روش های پرداخت</h4>
                     <div id="checkout_accordion_1">
                         <!-- card -->
@@ -54,9 +54,12 @@
                             </a>
                             ما شرح داده شده است، استفاده خواهد شد.
                         </p>
+
+                        @await Component.InvokeAsync("UseUserWallet")
+
                     </div>
-                    <button class="btn theme-btn-1 btn-effect-1 text-uppercase" type="submit">ثبت سفارش</button>
-                </div>
+                    <button class="btn theme-btn-1 btn-effect-1 text-uppercase btn-submit m-0" type="submit">ثبت سفارش</button>
+                </form>
             </div>
         </div>
     </div>

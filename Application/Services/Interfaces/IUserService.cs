@@ -22,7 +22,7 @@ namespace Application.Services.Interfaces
 
         Task<Result<AdminSideUserDetailsViewModel>> AdminSideGetUserDetails(int id);
 
-        Task<decimal> GetCurrentUserBalance();
+        Task<long> GetCurrentUserBalance();
 
         Task<Result<AdminSideUpdateUserProfileViewModel>> AdminSideGetUserProfileForUpdate();
 
