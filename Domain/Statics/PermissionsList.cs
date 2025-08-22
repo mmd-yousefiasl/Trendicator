@@ -776,9 +776,40 @@ namespace Domain.Statics
                 UniqueName = "UpdatePaymentData"
             },
             #endregion
+
+            #region BalanceTransaction
+            new Permission
+            {
+                Id = 101,
+                ParentId = 1,
+                Title = "مدیریت تراکنش ها",
+                UniqueName = "ManageBalanceTransaction"
+            },
+            new Permission
+            {
+                Id = 102,
+                ParentId = 101,
+                Title = "لیست تراکنش ها",
+                UniqueName = "BalanceTransactionsList"
+            },
+            new Permission
+            {
+                Id = 103,
+                ParentId = 101,
+                Title = "افزودن تراکنش جدید",
+                UniqueName = "CreateNewBalanceTransaction"
+            },
+            new Permission
+            {
+                Id = 104,
+                ParentId = 101,
+                Title = "حذف تراکنش",
+                UniqueName = "DeleteBalanceTransaction"
+            },
+            #endregion
         };
 
-        //Last used id ==> 100
+        //Last used id ==> 104
         public static List<Permission> Permissions = _permissions;
     }
 }

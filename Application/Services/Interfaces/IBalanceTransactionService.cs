@@ -1,4 +1,5 @@
-﻿using Application.ViewModels.BalanceTransaction.ClientSide;
+﻿using Application.ViewModels.BalanceTransaction.AdminSide;
+using Application.ViewModels.BalanceTransaction.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces
@@ -10,5 +11,11 @@ namespace Application.Services.Interfaces
         Task<Result<long>> GetTransactionAmountByTransId(string transId);
 
         Task<Result> VerifyTransaction(string transId);
+
+        Task<Result<AdminSideFilterBalanceTransactionsViewModel>> AdminSideFilterTransactions(AdminSideFilterBalanceTransactionsViewModel filter);
+
+        Task<Result<int>> AdminSideDeleteTransaction(int id);
+
+        Task<Result> AdminSideCreateNewTransaction(AdminSideCreateNewBalanceTransactionViewModel model);
     }
 }

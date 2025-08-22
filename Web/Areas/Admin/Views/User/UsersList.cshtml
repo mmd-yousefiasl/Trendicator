@@ -1,4 +1,5 @@
-﻿@using Application.ViewModels.User.AdminSide
+﻿@using Application.Tools
+@using Application.ViewModels.User.AdminSide
 @model AdminSideFilterUsersViewModel
 
 @{
@@ -67,6 +68,7 @@
                                         <th>موبایل</th>
                                         <th>نام و نام خانوادگی</th>
                                         <th>وضعیت حساب کاربری</th>
+                                        <th>کیف پول</th>
                                         <th>عملیات</th>
                                     </tr>
                                 </thead>
@@ -92,6 +94,7 @@
                                                         <span class="text-danger">غیرفعال</span>
                                                     }
                                                 </td>
+                                                <td>@item.Balance.ToToman()</td>
                                                 <td>
                                                     <a permission="UpdateUser" asp-area="Admin" asp-controller="User" asp-action="UpdateUser" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm edit" title="ویرایش">
                                                         <i class="fas fa-pencil-alt"></i>
@@ -100,6 +103,10 @@
                                                     <form permission="DeleteUser" class="btn btn-outline-secondary btn-sm" method="post" onclick="ConfirmDelete(this)" asp-route-id="@item.Id" asp-area="Admin" asp-controller="User" asp-action="DeleteUser" title="حذف">
                                                         <i class="mdi mdi-delete"></i>
                                                     </form>
+
+                                                    <a permission="ManageBalanceTransaction" asp-area="Admin" asp-controller="BalanceTransaction" asp-action="BalanceTransactionsList" asp-route-userId="@item.Id" class="btn btn-outline-secondary btn-sm edit" title="تراکنش ها">
+                                                        <i class="fas fa-money-check-alt"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         }

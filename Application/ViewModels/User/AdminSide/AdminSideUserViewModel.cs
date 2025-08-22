@@ -6,6 +6,6 @@
         public string? LastName { get; set; }
         public string PhoneNumber { get; set; }
         public bool IsUserBanned { get; set; }
-        public decimal Balance { get; set; }
+        public long Balance { get; set; }
     }
 }

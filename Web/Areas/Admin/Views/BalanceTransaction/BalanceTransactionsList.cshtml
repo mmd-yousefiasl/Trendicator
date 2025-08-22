@@ -1,0 +1,146 @@
+﻿@using Application.Tools
+@using Application.ViewModels.BalanceTransaction.AdminSide
+@using Domain.Enums.Users
+@model AdminSideFilterBalanceTransactionsViewModel
+
+@{
+    ViewData["Title"] = "لیست تراکنش ها";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <h4>مدیریت کاربران</h4>
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="Home" asp-action="Index">صفحه نخست</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="User" asp-action="UsersList">لیست کاربران</a>
+                    </li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">جست و جوی تراکنش ها</h4>
+                    <form novalidate asp-area="Admin" asp-controller="BalanceTransaction" method="get" asp-action="BalanceTransactionsList" id="search-form">
+                        <input type="hidden" asp-for="Page" id="Page" />
+                        <input type="hidden" asp-for="UserId" />
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label" asp-for="Search"></label>
+                                    <input type="text" class="form-control" asp-for="Search" autocomplete="off">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label" asp-for="Type"></label>
+                                    <select class="form-control" asp-for="Type" asp-items="@Html.GetEnumSelectList<BalanceTransactionTypeEnum>()">
+                                        <option value="">همه</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label" asp-for="IsSuccess"></label>
+                                    <select class="form-control" asp-for="IsSuccess">
+                                        <option value="">همه</option>
+                                        <option value="true">موفق</option>
+                                        <option value="false">ناموفق</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" type="submit">جست و جو</button>
+
+                        <a class="btn btn-primary" asp-area="Admin" asp-controller="BalanceTransaction" asp-action="CreateNewBalanceTransaction" asp-route-userId="@Model.UserId">افزودن تراکنش</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model?.Entities?.Any() ?? false)
+    {
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>تاریخ</th>
+                                        <th>مقدار</th>
+                                        <th>نوع</th>
+                                        <th>وضعیت</th>
+                                        <th>کد تراکنش</th>
+                                        <th>عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int counter = 0;
+
+                                        foreach (var item in Model.Entities ?? new List<AdminSideBalanceTransactionViewModel>())
+                                        {
+                                            counter++;
+
+                                            <tr>
+                                                <th scope="row">@counter</th>
+                                                <td>@item.CreatedDate.GetDateTime()</td>
+                                                <td>@item.Amount.ToToman()</td>
+                                                <td>@item.Type.GetDisplayName()</td>
+                                                <td>
+                                                    @if (item.IsSuccess)
+                                                    {
+                                                        <span class="text-success">موفق</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-danger">ناموفق</span>
+                                                    }
+                                                </td>
+                                                <td>@item.TransId</td>
+                                                <td>
+                                                    <form permission="DeleteBalanceTransaction" class="btn btn-outline-secondary btn-sm" method="post" onclick="ConfirmDelete(this)" asp-route-id="@item.Id" asp-area="Admin" asp-controller="BalanceTransaction" asp-action="DeleteBalanceTransaction" title="حذف">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="1"></td>
+                                                <td colspan="6">@item.Description</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <partial name="_Paging" model="@Model.GetCurrentPaging()" />
+    }
+    else
+    {
+        <partial name="_NotFoundPartial" />
+    }
+</div>
