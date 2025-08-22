@@ -47,5 +47,14 @@
         public static string ProductIndicator { get; set; }
 
         #endregion
+
+        #region Payment
+
+        public static string PaymentRequestURL { get; set; }
+        public static string CallBackURL { get; set; }
+        public static string StartPaymentURL { get; set; }
+        public static string VerifyPaymentURL { get; set; }
+
+        #endregion
     }
 }

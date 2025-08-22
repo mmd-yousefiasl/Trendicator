@@ -1,15 +1,19 @@
 ﻿using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Tools;
+using Application.ViewModels.BalanceTransaction.ClientSide;
 using Application.ViewModels.Cart.ClientSide;
 using Application.ViewModels.CartItem.ClientSide;
+using Application.ViewModels.Payment;
 using Data.Context;
+using Domain.Enums.Payment;
 using Domain.Enums.Shopping;
+using Domain.Enums.Users;
 using Domain.Models.Shopping;
 using Domain.Shared;
+using Domain.Statics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Tls.Crypto.Impl;
 
 namespace Application.Services.Implementaions
 {
@@ -24,6 +28,9 @@ namespace Application.Services.Implementaions
         private readonly ICartItemService _itemService;
         private readonly IPaymentDataService _paymentDataService;
         private readonly ICouponService _couponService;
+        private readonly IPaymentService _paymentService;
+        private readonly IUserService _userService;
+        private readonly IBalanceTransactionService _transactionService;
         #endregion
 
         #region Ctor
@@ -33,7 +40,10 @@ namespace Application.Services.Implementaions
             IProductService productService,
             ICartItemService itemService,
             IPaymentDataService paymentDataService,
-            ICouponService couponService)
+            ICouponService couponService,
+            IPaymentService paymentService,
+            IUserService userService,
+            IBalanceTransactionService transactionService)
         {
             _context = context;
             _dbSet = _context.Set<Cart>();
@@ -43,6 +53,9 @@ namespace Application.Services.Implementaions
             _itemService = itemService;
             _paymentDataService = paymentDataService;
             _couponService = couponService;
+            _paymentService = paymentService;
+            _userService = userService;
+            _transactionService = transactionService;
         }
         #endregion
 
@@ -253,6 +266,138 @@ namespace Application.Services.Implementaions
             await _context.SaveChangesAsync();
 
             return Result.Success();
+        }
+
+        public async Task<Result> CheckUserCanProccedToCheckout()
+        {
+            var itemResult = await _itemService.IsAnyTradingViewProductInCart();
+            if (itemResult.IsFailure) return Result.Success();
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1) return Result.Failure(Messages.OperationFailedError);
+
+            bool IsAnyAccountName = await _dbSet.Where(n => n.UserId == userId &&
+            n.Status == CartStatusEnum.PendingPayment && n.TradingViewAccountName != null).AnyAsync();
+
+            if (IsAnyAccountName) return Result.Success();
+
+            return Result.Failure(Messages.AddYourTradingViewAccountNameError);
+        }
+
+        public async Task<Result<ClientSideProceedToCheckoutViewModel>> ClientSideProceedToCheckout(bool useWallet)
+        {
+            var orderResult = await ClientSideCartSummary();
+            if (orderResult.IsFailure)
+                return Result.Failure<ClientSideProceedToCheckoutViewModel>(orderResult.Message);
+
+            long totalOrder = orderResult.Value.Total;
+            if (totalOrder < 1)
+                return Result.Failure<ClientSideProceedToCheckoutViewModel>(Messages.OperationFailedError);
+
+            var userBalance = await _userService.GetCurrentUserBalance();
+
+            long payAmount = useWallet ? totalOrder - userBalance : totalOrder;
+
+            if (useWallet && userBalance >= totalOrder)
+            {
+                return Result.Success(new ClientSideProceedToCheckoutViewModel
+                {
+                    IsDone = true
+                });
+            }
+
+            if (payAmount < 1)
+                return Result.Failure<ClientSideProceedToCheckoutViewModel>(Messages.OperationFailedError);
+
+            var paymentResult = await _paymentService.Request(new PaymentRequestViewModel
+            {
+                Amount = payAmount,
+                CallBackUrl = SiteTools.SiteUrl + SiteTools.CallBackURL
+            });
+
+            if (paymentResult.IsFailure)
+                return Result.Failure<ClientSideProceedToCheckoutViewModel>(paymentResult.Message);
+
+            var transactionResult = await _transactionService.AddUnVerifiedTransaction(new ClientSideCreateNewTransactionViewModel()
+            {
+                Amount = payAmount,
+                TransId = paymentResult.Value.TransId,
+                IsSuccess = false,
+                Type = BalanceTransactionTypeEnum.Credit,
+                Description = "افزایش موجودی کیف پول از طریق درگاه پرداخت به منظور پردازش سفارش"
+            });
+            if (transactionResult.IsFailure)
+                return Result.Failure<ClientSideProceedToCheckoutViewModel>(transactionResult.Message);
+
+            return Result.Success(new ClientSideProceedToCheckoutViewModel
+            {
+                IsDone = false,
+                TransId = paymentResult.Value.TransId
+            });
+        }
+
+        public async Task<Result> ClientSideCheckout(PaymentResultViewModel model)
+        {
+            if (model is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            if (model.status != PaymentResultStatusEnum.Succeed)
+                return Result.Failure(Messages.PaymentFailedError);
+
+            var amountResult = await _transactionService.GetTransactionAmountByTransId(model.transid);
+            if (amountResult.IsFailure)
+                return Result.Failure(amountResult.Message);
+
+            var verifyModel = new VerifyPaymentViewModel
+            {
+                TransId = model.transid,
+                Amount = amountResult.Value
+            };
+
+            var paymentResult = await _paymentService.VerifyPayment(verifyModel);
+            if (paymentResult.IsFailure || paymentResult.Value.Code != VerifyPaymentResultStatusEnum.Success)
+                return Result.Failure(Messages.PaymentFailedError);
+
+            var verifyTransaction = await _transactionService.VerifyTransaction(model.transid);
+            if (verifyTransaction.IsFailure)
+                return Result.Failure(Messages.PaymentFailedError);
+
+            return Result.Success(Messages.PaymentDoneSuccessfully);
+        }
+
+        public async Task<Result<int>> ClientSideVerifyCart()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1) return Result.Failure<int>(Messages.OperationFailedError);
+
+            var cart = await _dbSet.Where(n => n.UserId == userId && n.Status == CartStatusEnum.PendingPayment)
+                .FirstOrDefaultAsync();
+            if (cart is null) return Result.Failure<int>(Messages.OperationFailedError);
+
+            var orderResult = await ClientSideCartSummary();
+            if (orderResult.IsFailure) return Result.Failure<int>(orderResult.Message);
+
+            var order = orderResult.Value;
+            if (order.Total < 1) return Result.Failure<int>(Messages.OperationFailedError);
+
+            var transactionResult = await _userService.WithdrawCurrentUserCart(order.Total, cart.Id);
+            if (transactionResult.IsFailure) return Result.Failure<int>(transactionResult.Message);
+
+            var itemResult = await _itemService.IsAnyTradingViewProductInCart();
+            if (itemResult.IsSuccess) cart.Status = CartStatusEnum.InProgress;
+            else cart.Status = CartStatusEnum.Done;
+
+            cart.IsPaid = true;
+            cart.TotalPaid = order.Total;
+            cart.TotalDiscount = (order.TotalDiscount ?? 0) + (order.DiscountCodeAmount ?? 0);
+            cart.SubTotal = order.SubTotal;
+            cart.Tax = order.Tax ?? 0;
+            cart.PaidDate = DateTime.Now;
+
+            _dbSet.Update(cart);
+            await _context.SaveChangesAsync();
+
+            return cart.Id;
         }
     }
 }

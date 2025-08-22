@@ -32,6 +32,7 @@ namespace Application.Services.Implementaions
             var data = await _dbSet.Where(n => n.Id == 1).Select(n => new AdminSideUpdatePaymentDataViewModel()
             {
                 Tax = n.Tax ?? 0,
+                PaymentGatewayPin = n.PaymentGatewayPin,
             }).AsNoTracking().FirstOrDefaultAsync();
             if (data is null) return Result.Failure<AdminSideUpdatePaymentDataViewModel>(Messages.OperationFailedError);
 
@@ -46,13 +47,15 @@ namespace Application.Services.Implementaions
             if (data is null) return Result.Failure(Messages.OperationFailedError);
 
             data.Tax = model.Tax;
+            data.PaymentGatewayPin = model.PaymentGatewayPin;
 
             _dbSet.Update(data);
             await _context.SaveChangesAsync();
 
             PaymentDataUpdatedEvent PaymentDataUpdatedEvent = new PaymentDataUpdatedEvent(
                 data.Id,
-                data.Tax.Value);
+                data.Tax.Value,
+                data.PaymentGatewayPin);
 
             await _mediator.PublishEvent(PaymentDataUpdatedEvent);
 
@@ -65,6 +68,14 @@ namespace Application.Services.Implementaions
             if (taxRate < 1) return Result.Failure<int>(Messages.OperationFailedError);
 
             return taxRate;
+        }
+
+        public async Task<Result<string>> GetPin()
+        {
+            var pin = await _dbSet.Where(n => n.Id == 1).Select(n => n.PaymentGatewayPin).FirstOrDefaultAsync();
+            if (string.IsNullOrWhiteSpace(pin)) return Result.Failure<string>(Messages.OperationFailedError);
+
+            return pin;
         }
     }
 }

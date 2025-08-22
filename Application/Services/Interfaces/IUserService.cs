@@ -35,5 +35,7 @@ namespace Application.Services.Interfaces
         Task<Result<ClientSideUserViewModel>> VerifyLoginCode(ClientSideLoginCodeViewModel model);
 
         Task<Result<List<AdminSideUserAsOptionViewModel>>> AdminSideGetUsersForCoupon();
+
+        Task<Result> WithdrawCurrentUserCart(long amount, int orderId);
     }
 }

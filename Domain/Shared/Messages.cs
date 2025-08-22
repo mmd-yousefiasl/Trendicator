@@ -27,6 +27,10 @@
         public const string InvalidCouponCodeError = "کد تخفیف نامعتبر می باشد";
         public const string RemoveUnavailableItemsBeforeProceedToCheckout = "لطفاً اقلام ناموجود را قبل از ادامه فرایند پرداخت حذف کنید";
         public const string AddAProductAtLeastToCartBeforeProceedToCheckout = "لطفاً پیش از ادامه فرایند پرداخت، حداقل یک محصول را به سبد خرید اضافه کنید";
+        public const string AddYourTradingViewAccountNameError = "لطفاً نام حساب تریدینگ ویو خود را وارد کنید";
+        public const string PaymentFailedError = "پرداخت با شکست مواجه شد";
+        public const string TransactionAlreadyVerified = "تراکنش قبلاً تأیید شده است";
+        public const string InSufficentBalanceError = "موجودی کافی برای انجام تراکنش وجود ندارد";
 
         #endregion
 
@@ -39,6 +43,7 @@
         public const string ReviewAddedSuccessfully = "نظر شما با موفقیت ثبت شد";
         public const string AddedToCartSuccessfully = "محصول با موفقیت به سبد خرید اضافه شد";
         public const string DiscountAppliedSuccessfully = "تخفیف با موفقیت اعمال شد";
+        public const string PaymentDoneSuccessfully = "پرداخت با موفقیت انجام شد";
 
         #endregion
     }

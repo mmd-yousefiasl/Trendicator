@@ -1,6 +1,8 @@
 ﻿using Application.Services.Interfaces;
 using Application.ViewModels.Cart.ClientSide;
+using Application.ViewModels.Payment;
 using Domain.Shared;
+using Domain.Statics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -48,16 +50,25 @@ namespace Web.Controllers
                 return RedirectToAction("Cart", "Cart");
             }
 
-            if (!model.UseWallet)
+            var proceedResult = await _cartService.CheckUserCanProccedToCheckout();
+            if (proceedResult.IsFailure)
             {
-                TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
-            }
-            else
-            {
-                TempData[TemporarySuccessMessage] = Messages.SuccessfullyDone;
+                TempData[TemporaryErrorMessage] = proceedResult.Message;
+                return RedirectToAction(nameof(Checkout));
             }
 
-            return RedirectToAction(nameof(Checkout));
+            var checkoutResult = await _cartService.ClientSideProceedToCheckout(model.UseWallet);
+            if (checkoutResult.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = checkoutResult.Message;
+                return RedirectToAction(nameof(Checkout));
+            }
+
+            if (checkoutResult.Value.IsDone)
+                return RedirectToAction(nameof(VerifyCart));
+
+
+            return Redirect(SiteTools.StartPaymentURL + checkoutResult.Value.TransId);
         }
 
         [HttpPost("/add-coupon"), ValidateAntiForgeryToken]
@@ -100,6 +111,45 @@ namespace Web.Controllers
             }
 
             return RedirectToAction(nameof(Checkout));
+        }
+
+        [AllowAnonymous]
+        [HttpPost("/payment-result")]
+        public async Task<IActionResult> PaymentResult(PaymentResultViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData[TemporaryErrorMessage] = Messages.PaymentFailedError;
+                return RedirectToAction(nameof(Checkout));
+            }
+            var result = await _cartService.ClientSideCheckout(model);
+            if (result.IsFailure)
+            {
+                return RedirectToAction(nameof(PaymentFailed));
+            }
+
+            return RedirectToAction(nameof(VerifyCart));
+        }
+
+        [HttpGet("/verify-cart")]
+        public async Task<IActionResult> VerifyCart()
+        {
+            var result = await _cartService.ClientSideVerifyCart();
+            if (result.IsFailure) return RedirectToAction(nameof(PaymentFailed));
+
+            return RedirectToAction(nameof(PaymentSuccess), new { orderId = result.Value });
+        }
+
+        [HttpGet("/payment/success/{orderId}")]
+        public IActionResult PaymentSuccess(int orderId)
+        {
+            return View(orderId);
+        }
+
+        [HttpGet("/payment/failed")]
+        public IActionResult PaymentFailed()
+        {
+            return View();
         }
     }
 }

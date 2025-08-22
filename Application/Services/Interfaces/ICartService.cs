@@ -1,4 +1,5 @@
 ﻿using Application.ViewModels.Cart.ClientSide;
+using Application.ViewModels.Payment;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces
@@ -18,5 +19,13 @@ namespace Application.Services.Interfaces
         Task<Result<string>> ClientSideGetCurrentUserTradingViewAccountName();
 
         Task<Result> ClientSideUpdateCurrentUserTradingViewAccountName(ClientSideUpdateTradingViewAccountNameViewModel model);
+
+        Task<Result> CheckUserCanProccedToCheckout();
+
+        Task<Result<ClientSideProceedToCheckoutViewModel>> ClientSideProceedToCheckout(bool useWallet);
+
+        Task<Result> ClientSideCheckout(PaymentResultViewModel model);
+
+        Task<Result<int>> ClientSideVerifyCart();
     }
 }

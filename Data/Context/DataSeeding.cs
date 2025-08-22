@@ -77,6 +77,7 @@ namespace Data.Context
                 Id = 1,
                 IsDeleted = false,
                 Tax = 9,
+                PaymentGatewayPin = "sandbox"
             };
             modelBuilder.Entity<PaymentData>().HasData(paymentData);
 

@@ -3,12 +3,12 @@ using Application.Tools;
 using Application.ViewModels.User.AdminSide;
 using Application.ViewModels.User.ClientSide;
 using Data.Context;
+using Domain.Enums.Users;
 using Domain.Models.Users;
 using Domain.Shared;
 using Domain.Statics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Crypto.Prng;
 
 namespace Application.Services.Implementaions
 {
@@ -373,6 +373,38 @@ namespace Application.Services.Implementaions
             if (!users.Any()) return Result.Failure<List<AdminSideUserAsOptionViewModel>>(Messages.OperationFailedError);
 
             return users;
+        }
+
+        public async Task<Result> WithdrawCurrentUserCart(long amount, int orderId)
+        {
+            if (amount < 1) return Result.Failure(Messages.OperationFailedError);
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1) return Result.Failure(Messages.OperationFailedError);
+
+            var user = await _dbSet.Where(n => n.Id == userId)
+                .Include(n => n.Transactions)
+                .FirstOrDefaultAsync();
+            if (user is null) return Result.Failure(Messages.OperationFailedError);
+
+            if (user.Balance < amount) return Result.Failure(Messages.InSufficentBalanceError);
+
+            user.Balance = user.Balance - amount;
+
+            user.Transactions?.Add(new BalanceTransaction()
+            {
+                TransId = null,
+                IsSuccess = true,
+                Amount = amount,
+                Type = BalanceTransactionTypeEnum.Debit,
+                UserId = user.Id,
+                Description = "کاهش موجودی کیف پول جهت تسویه حساب سفارش با شناسه " + orderId
+            });
+
+            _dbSet.Update(user);
+            await _context.SaveChangesAsync();
+
+            return Result.Success();
         }
     }
 }

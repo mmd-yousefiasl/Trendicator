@@ -56,6 +56,8 @@ namespace IOC
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<ICartItemService, CartItemService>();
             services.AddScoped<IPaymentDataService, PaymentDataService>();
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IBalanceTransactionService, BalanceTransactionService>();
 
             #endregion
 
