@@ -15,6 +15,13 @@
 
                 <li class="menu-title">منو اصلی </li>
 
+                <li permission="ManageOrders">
+                    <a asp-area="Admin" asp-controller="Cart" asp-action="OrdersList" class="waves-effect">
+                        <i class="mdi mdi-home"></i>
+                        <span>سفارش ها</span>
+                    </a>
+                </li>
+
                 <li permission="ManageCoupons">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="mdi mdi-account"></i>

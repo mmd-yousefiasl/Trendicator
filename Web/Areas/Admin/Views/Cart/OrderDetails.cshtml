@@ -1,0 +1,143 @@
+﻿@using Application.Tools
+@using Application.ViewModels.Cart.AdminSide
+@using Domain.Statics
+@model AdminSideCartDetailsViewModel
+
+@{
+    ViewData["Title"] = "جزئیات سفارش";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <h4>مدیریت سفارش ها</h4>
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="Home" asp-action="Index">صفحه نخست</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="Cart" asp-action="OrdersList">لیست سفارش ها</a>
+                    </li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="invoice-title">
+                                <h4 class="font-size-16"><strong>سفارش #@Model.Id</strong></h4>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-6 mt-4">
+                                    <address>
+                                        <strong>تاریخ سفارش:</strong><br>
+                                        @Model.PaidDate.GetDateTime()<br><br>
+                                    </address>
+                                </div>
+
+                                @if (!string.IsNullOrWhiteSpace(Model.TradingViewAccountName))
+                                {
+                                    <div class="col-6 mt-4">
+                                        <address>
+                                            <strong>نام اکانت تریدینگ ویو:</strong><br>
+                                            @Model.TradingViewAccountName
+                                            <br><br>
+                                        </address>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div>
+                                <div class="p-2">
+                                    <h3 class="font-size-16"><strong>خلاصه سفارش</strong></h3>
+                                </div>
+                                <div class="">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <td><strong>محصول</strong></td>
+                                                    <td class="text-center">
+                                                        <strong>قیمت</strong>
+                                                    </td>
+                                                    <td class="text-end"><strong>مجموع</strong></td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model?.Products ?? new List<AdminSideCartItemViewModel>())
+                                                {
+                                                    <tr>
+                                                        <td>@item.Title (@item.Option)</td>
+                                                        <td class="text-center">@item.Price.ToToman()</td>
+                                                        <td class="thick-line"></td>
+                                                    </tr>
+                                                }
+                                                <tr>
+                                                    <td class="thick-line"></td>
+                                                    <td class="thick-line text-center">
+                                                        <strong>مجموع</strong>
+                                                    </td>
+                                                    <td class="thick-line text-end">@Model.SubTotal.ToToman()</td>
+                                                </tr>
+                                                @if (Model.TotalDiscount > 0)
+                                                {
+                                                    <tr>
+                                                        <td class="thick-line"></td>
+                                                        <td class="thick-line text-center">
+                                                            <strong>تخفیف</strong>
+                                                        </td>
+                                                        <td class="thick-line text-end">@Model.TotalDiscount.ToToman()</td>
+                                                    </tr>
+                                                }
+                                                @if (Model.Tax > 0)
+                                                {
+                                                    <tr>
+                                                        <td class="no-line"></td>
+                                                        <td class="no-line text-center">
+                                                            <strong>مالیات</strong>
+                                                        </td>
+                                                        <td class="no-line text-end">@Model.Tax.ToToman()</td>
+                                                    </tr>
+                                                }
+                                                <tr>
+                                                    <td class="no-line"></td>
+                                                    <td class="no-line text-center">
+                                                        <strong>کل</strong>
+                                                    </td>
+                                                    <td class="no-line text-end">
+                                                        <h4 class="m-0">@Model.TotalPaid.ToToman()</h4>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="d-print-none">
+                                        <div class="float-end">
+                                            <a href="javascript:window.print()" class="btn btn-success waves-effect waves-light me-2">
+                                                <i class="fa fa-print"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

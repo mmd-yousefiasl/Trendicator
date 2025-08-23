@@ -2,6 +2,7 @@
 using Application.Services.Interfaces;
 using Application.Tools;
 using Application.ViewModels.BalanceTransaction.ClientSide;
+using Application.ViewModels.Cart.AdminSide;
 using Application.ViewModels.Cart.ClientSide;
 using Application.ViewModels.CartItem.ClientSide;
 using Application.ViewModels.Payment;
@@ -398,6 +399,115 @@ namespace Application.Services.Implementaions
             await _context.SaveChangesAsync();
 
             return cart.Id;
+        }
+
+        public async Task<Result<AdminSideFilterCartsViewModel>> AdminSideFilterCarts(AdminSideFilterCartsViewModel filter)
+        {
+            if (filter is null) return Result.Failure<AdminSideFilterCartsViewModel>(Messages.OperationFailedError);
+
+            var conditions = Filter.GenerateConditions<Cart>();
+            conditions.Add(n => n.Status != CartStatusEnum.PendingPayment);
+
+            if (!string.IsNullOrWhiteSpace(filter.Search))
+            {
+                conditions.Add(n => n.UserIP == filter.Search ||
+                n.TradingViewAccountName.Contains(filter.Search) ||
+                n.DiscountCode.Contains(filter.Search));
+            }
+
+            if (filter.Status is not null)
+            {
+                conditions.Add(n => n.Status == filter.Status);
+            }
+
+            IQueryable<Cart> query = _dbSet;
+            query = query.OrderByDescending(n => n.Id);
+
+            foreach (var item in conditions ?? new FilterConditions<Cart>())
+            {
+                query = query.Where(item);
+            }
+
+            await filter.Paging(query.Select(n => new AdminSideCartViewModel()
+            {
+                Id = n.Id,
+                DiscountCode = n.DiscountCode,
+                Status = n.Status,
+                PaidDate = n.PaidDate,
+                TotalDiscount = n.TotalDiscount,
+                TotalPaid = n.TotalPaid,
+                UserId = n.UserId,
+                UserIP = n.UserIP
+            }));
+
+            return filter;
+        }
+
+        public async Task<Result<AdminSideUpdateCartStatusViewModel>> AdminSideGetStatusForUpdate(int id)
+        {
+            if (id < 1) return Result.Failure<AdminSideUpdateCartStatusViewModel>(Messages.OperationFailedError);
+
+            var status = await _dbSet.Where(n => n.Id == id).Select(n => new AdminSideUpdateCartStatusViewModel()
+            {
+                Id = n.Id,
+                Status = n.Status,
+            }).AsNoTracking().FirstOrDefaultAsync();
+            if (status is null) return Result.Failure<AdminSideUpdateCartStatusViewModel>(Messages.OperationFailedError);
+
+            return status;
+        }
+
+        public async Task<Result> AdminSideUpdateCartStatus(AdminSideUpdateCartStatusViewModel model)
+        {
+            if (model is null) return Result.Failure(Messages.OperationFailedError);
+
+            var cart = await _dbSet.FindAsync(model.Id);
+            if (cart is null) return Result.Failure(Messages.OperationFailedError);
+
+            cart.Status = model.Status;
+
+            _dbSet.Update(cart);
+            await _context.SaveChangesAsync();
+
+            return Result.Success();
+        }
+
+        public async Task<Result<AdminSideCartDetailsViewModel>> AdminSideGetCartDetails(int id)
+        {
+            if (id < 1)
+                return Result.Failure<AdminSideCartDetailsViewModel>(Messages.OperationFailedError);
+
+            var cartEntity = await _dbSet.Include(n => n.Items).ThenInclude(i => i.Product).ThenInclude(p => p.Options)
+                .AsNoTracking()
+                .AsSplitQuery()
+                .FirstOrDefaultAsync(n => n.Id == id && n.Status != CartStatusEnum.PendingPayment);
+
+            if (cartEntity is null)
+                return Result.Failure<AdminSideCartDetailsViewModel>(Messages.OperationFailedError);
+
+            var cart = new AdminSideCartDetailsViewModel
+            {
+                Id = cartEntity.Id,
+                TradingViewAccountName = cartEntity.TradingViewAccountName,
+                PaidDate = cartEntity.PaidDate ?? DateTime.Now,
+                SubTotal = cartEntity.SubTotal ?? 0,
+                Tax = cartEntity.Tax ?? 0,
+                TotalDiscount = cartEntity.TotalDiscount ?? 0,
+                TotalPaid = cartEntity.TotalPaid ?? 0,
+                Products = cartEntity.Items?.Select(i =>
+                {
+                    var option = i.Product.Options?.FirstOrDefault(o => o.Id == i.StockOptionId);
+                    return new AdminSideCartItemViewModel
+                    {
+                        Title = i.Product.Title,
+                        Option = option?.Title ?? "",
+                        Price = option?.Price ?? 0,
+                        OrderPrice = option?.OrderPrice ?? 0
+                    };
+                }).ToList() ?? new List<AdminSideCartItemViewModel>()
+            };
+
+            return cart;
         }
     }
 }

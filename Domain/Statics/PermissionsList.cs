@@ -807,9 +807,40 @@ namespace Domain.Statics
                 UniqueName = "DeleteBalanceTransaction"
             },
             #endregion
+
+            #region Order
+            new Permission
+            {
+                Id = 105,
+                ParentId = 1,
+                Title = "مدیریت سفارش ها",
+                UniqueName = "ManageOrders"
+            },
+            new Permission
+            {
+                Id = 106,
+                ParentId = 105,
+                Title = "لیست سفارش ها",
+                UniqueName = "OrdersList"
+            },
+            new Permission
+            {
+                Id = 107,
+                ParentId = 105,
+                Title = "ویرایش سفارش",
+                UniqueName = "UpdateOrder"
+            },
+            new Permission
+            {
+                Id = 108,
+                ParentId = 105,
+                Title = "جزئیات سفارش",
+                UniqueName = "OrderDetails"
+            },
+            #endregion
         };
 
-        //Last used id ==> 104
+        //Last used id ==> 108
         public static List<Permission> Permissions = _permissions;
     }
 }

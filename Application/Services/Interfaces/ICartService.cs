@@ -1,4 +1,5 @@
-﻿using Application.ViewModels.Cart.ClientSide;
+﻿using Application.ViewModels.Cart.AdminSide;
+using Application.ViewModels.Cart.ClientSide;
 using Application.ViewModels.Payment;
 using Domain.Shared;
 
@@ -27,5 +28,13 @@ namespace Application.Services.Interfaces
         Task<Result> ClientSideCheckout(PaymentResultViewModel model);
 
         Task<Result<int>> ClientSideVerifyCart();
+
+        Task<Result<AdminSideFilterCartsViewModel>> AdminSideFilterCarts(AdminSideFilterCartsViewModel filter);
+
+        Task<Result<AdminSideUpdateCartStatusViewModel>> AdminSideGetStatusForUpdate(int id);
+
+        Task<Result> AdminSideUpdateCartStatus(AdminSideUpdateCartStatusViewModel model);
+
+        Task<Result<AdminSideCartDetailsViewModel>> AdminSideGetCartDetails(int id);
     }
 }
