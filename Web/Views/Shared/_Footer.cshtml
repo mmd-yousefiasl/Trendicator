@@ -23,10 +23,9 @@
                         <h4 class="footer-title">خدمات</h4>
                         <div class="footer-menu">
                             <ul>
-                                <li><a href="order-tracking.html">Order tracking</a></li>
-                                <li><a href="wishlist.html">Wish List</a></li>
+                                <li><a asp-area="" asp-controller="ProductCompare" asp-action="Compare">مقایسه</a></li>
+                                <li><a asp-area="" asp-controller="ProductWishList" asp-action="WishList">علاقه مندی ها</a></li>
                                 <li><a asp-area="" asp-controller="Account" asp-action="Login">ورود</a></li>
-                                <li><a href="account.html">My account</a></li>
                                 <li><a asp-area="" asp-controller="TermsAndConditions" asp-action="TermsAndConditions">شرایط و ضوابط</a></li>
                                 <li><a asp-area="" asp-controller="TermsAndConditions" asp-action="PrivacyPolicy">سیاست حفظ حریم خصوصی</a></li>
                             </ul>
@@ -39,8 +38,7 @@
                         <div class="footer-menu">
                             <ul>
                                 <li><a asp-area="" asp-controller="Account" asp-action="Login">ورود</a></li>
-                                <li><a href="account.html">My account</a></li>
-                                <li><a href="wishlist.html">Wish List</a></li>
+                                <li><a asp-area="UserPanel" asp-controller="Home" asp-action="Index">حساب من</a></li>
                                 <li><a href="order-tracking.html">Order tracking</a></li>
                                 <li><a asp-area="" asp-controller="Faq" asp-action="Faqs">سوالات متداول</a></li>
                                 <li><a asp-area="" asp-controller="ContactUs" asp-action="ContactUs">تماس باما</a></li>

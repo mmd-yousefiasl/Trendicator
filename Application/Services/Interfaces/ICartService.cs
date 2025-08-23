@@ -36,5 +36,9 @@ namespace Application.Services.Interfaces
         Task<Result> AdminSideUpdateCartStatus(AdminSideUpdateCartStatusViewModel model);
 
         Task<Result<AdminSideCartDetailsViewModel>> AdminSideGetCartDetails(int id);
+
+        Task<Result<ClientSideFilterCartsViewModel>> ClientSideFilterCarts(ClientSideFilterCartsViewModel filter);
+
+        Task<Result<ClientSideCartDetailsViewModel>> ClientSideGetCartDetails(int id);
     }
 }

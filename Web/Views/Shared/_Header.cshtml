@@ -46,20 +46,19 @@
                                         <li>
                                             <a href="javascript:void(0)"><i class="icon-user"></i></a>
                                             <ul>
+                                                <li><a asp-area="" asp-controller="ProductWishList" asp-action="WishList">علاقه مندی ها</a></li>
+                                                <li><a asp-area="" asp-controller="ProductCompare" asp-action="Compare">مقایسه</a></li>
+                                                <li><a asp-area="" asp-controller="Cart" asp-action="Cart">سبد خرید</a></li>
+
                                                 @if (User?.Identity?.IsAuthenticated ?? false)
                                                 {
+                                                    <li><a asp-area="UserPanel" asp-controller="Home" asp-action="Index">حساب من</a></li>
                                                     <li><a asp-area="" asp-controller="Account" asp-action="Logout">خروج از حساب</a></li>
                                                 }
                                                 else
                                                 {
                                                     <li><a asp-area="" asp-controller="Account" asp-action="Login">ورود</a></li>
                                                 }
-
-                                                <li><a asp-area="" asp-controller="ProductWishList" asp-action="WishList">علاقه مندی ها</a></li>
-
-                                                <li><a asp-area="" asp-controller="ProductCompare" asp-action="Compare">مقایسه</a></li>
-
-                                                <li><a asp-area="" asp-controller="Cart" asp-action="Cart">سبد خرید</a></li>
                                             </ul>
                                         </li>
                                     </ul>

@@ -1,0 +1,95 @@
+﻿@if (TempData["ErrorMessage"] != null)
+{
+    <script asp-append-version="true">
+        Swal.fire({
+            icon: 'error',
+            html: '@TempData["ErrorMessage"]',
+            confirmButtonText: 'باشه'
+        })
+    </script>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <script asp-append-version="true">
+        Swal.fire({
+            icon: 'success',
+            html: '@TempData["SuccessMessage"]',
+            confirmButtonText: 'باشه'
+        });
+    </script>
+}
+
+
+@if (TempData["InfoMessage"] != null)
+{
+    <script asp-append-version="true">
+
+        Swal.fire({
+            icon: 'info',
+            html: '@TempData["InfoMessage"]',
+            confirmButtonText: 'باشه'
+        });
+
+    </script>
+}
+
+
+@if (TempData["WarningMessage"] != null)
+{
+    <script asp-append-version="true">
+
+        Swal.fire({
+            icon: 'warning',
+            html: '@TempData["WarningMessage"]',
+            confirmButtonText: 'باشه'
+        });
+    </script>
+}
+
+
+@if (TempData["TemporarySuccessMessage"] != null)
+{
+    <script asp-append-version="true">
+        Swal.fire({
+            toast: true,
+            position: 'top-start',
+            icon: 'success',
+            title: '@TempData["TemporarySuccessMessage"]',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+        })
+    </script>
+}
+
+
+@if (TempData["TemporaryErrorMessage"] != null)
+{
+    <script asp-append-version="true">
+         Swal.fire({
+            toast: true,
+            position: 'top-start',
+            icon: 'error',
+            title: '@TempData["TemporaryErrorMessage"]',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+        })
+    </script>
+}
+
+
+@if (TempData["TemporaryMessage"] != null)
+{
+    <script asp-append-version="true">
+        Swal.fire({
+        toast: true,
+        position: 'top-start',
+        title: '@TempData["TemporaryMessage"]',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+        })
+    </script>
+}

@@ -15,6 +15,7 @@ using Domain.Shared;
 using Domain.Statics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.Xml;
 
 namespace Application.Services.Implementaions
 {
@@ -502,9 +503,86 @@ namespace Application.Services.Implementaions
                         Title = i.Product.Title,
                         Option = option?.Title ?? "",
                         Price = option?.Price ?? 0,
-                        OrderPrice = option?.OrderPrice ?? 0
                     };
                 }).ToList() ?? new List<AdminSideCartItemViewModel>()
+            };
+
+            return cart;
+        }
+
+        public async Task<Result<ClientSideFilterCartsViewModel>> ClientSideFilterCarts(ClientSideFilterCartsViewModel filter)
+        {
+            if (filter is null) return Result.Failure<ClientSideFilterCartsViewModel>(Messages.OperationFailedError);
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1) return Result.Failure<ClientSideFilterCartsViewModel>(Messages.OperationFailedError);
+
+            var conditions = Filter.GenerateConditions<Cart>();
+
+            conditions.Add(n => n.UserId == userId);
+            conditions.Add(n => n.Status != CartStatusEnum.PendingPayment);
+
+            IQueryable<Cart> query = _dbSet;
+            query = query.OrderByDescending(n => n.Id);
+
+            foreach (var item in conditions ?? new FilterConditions<Cart>())
+            {
+                query = query.Where(item);
+            }
+
+            await filter.Paging(query.Select(n => new ClientSideOrderViewModel()
+            {
+                Id = n.Id,
+                Status = n.Status,
+                DiscountCode = n.DiscountCode,
+                PaidDate = n.PaidDate,
+                TotalDiscount = n.TotalDiscount,
+                TotalPaid = n.TotalPaid
+            }));
+
+            return filter;
+        }
+
+        public async Task<Result<ClientSideCartDetailsViewModel>> ClientSideGetCartDetails(int id)
+        {
+            if (id < 1)
+                return Result.Failure<ClientSideCartDetailsViewModel>(Messages.OperationFailedError);
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1) return Result.Failure<ClientSideCartDetailsViewModel>(Messages.OperationFailedError);
+
+            var cartEntity = await _dbSet
+                .Include(n => n.Items)
+                .ThenInclude(i => i.Product)
+                .ThenInclude(p => p.Options)
+                .AsNoTracking()
+                .AsSplitQuery()
+                .FirstOrDefaultAsync(n => n.Id == id &&
+                n.Status != CartStatusEnum.PendingPayment &&
+                n.UserId == userId);
+
+            if (cartEntity is null)
+                return Result.Failure<ClientSideCartDetailsViewModel>(Messages.OperationFailedError);
+
+            var cart = new ClientSideCartDetailsViewModel
+            {
+                Id = cartEntity.Id,
+                TradingViewAccountName = cartEntity.TradingViewAccountName,
+                PaidDate = cartEntity.PaidDate ?? DateTime.Now,
+                SubTotal = cartEntity.SubTotal ?? 0,
+                Tax = cartEntity.Tax ?? 0,
+                TotalDiscount = cartEntity.TotalDiscount ?? 0,
+                TotalPaid = cartEntity.TotalPaid ?? 0,
+                Products = cartEntity.Items?.Select(i =>
+                {
+                    var option = i.Product.Options?.FirstOrDefault(o => o.Id == i.StockOptionId);
+                    return new ClientSIdeCartItemViewModel
+                    {
+                        Title = i.Product.Title,
+                        Option = option?.Title ?? "",
+                        Price = option?.Price ?? 0,
+                    };
+                }).ToList() ?? new List<ClientSIdeCartItemViewModel>()
             };
 
             return cart;

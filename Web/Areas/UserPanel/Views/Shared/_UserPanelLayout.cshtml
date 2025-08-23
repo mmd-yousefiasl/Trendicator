@@ -1,0 +1,44 @@
+﻿<!doctype html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <partial name="_UserPanelMeta" />
+
+    @await Component.InvokeAsync("SiteName")
+
+    <partial name="_UserPanelHeaderReferences" />
+
+    @await RenderSectionAsync("HeaderReferences", required: false)
+</head>
+
+<body data-sidebar="dark">
+
+    <div id="layout-wrapper">
+
+        <partial name="_UserPanelHeader" />
+
+        <partial name="_UserPanelVerticalMenu" />
+
+        <div class="main-content">
+            <div class="page-content">
+                @RenderBody()
+            </div>
+            <partial name="_UserPanelFooter" />
+        </div>
+
+    </div>
+
+    <div class="rightbar-overlay"></div>
+
+    <partial name="_UserPanelFooterReferences" />
+
+    <partial name="_Notification" />
+    <partial name="_Modals" />
+
+    <partial name="_ValidationScriptsPartial" />
+
+    @await RenderSectionAsync("FooterReferences", required: false)
+
+</body>
+
+</html>
