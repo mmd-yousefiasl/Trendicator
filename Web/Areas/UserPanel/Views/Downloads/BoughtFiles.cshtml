@@ -1,0 +1,107 @@
+﻿@using Application.Tools
+@using Application.ViewModels.CartItem.ClientSide
+@using Domain.Enums.Products
+@using Domain.Enums.Shopping
+@model ClientSideFilterBoughtFilesViewModel
+
+@{
+    ViewData["Title"] = "فایل های خریداری شده";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <h4>مدیریت فایل های خریداری شده</h4>
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a asp-area="UserPanel" asp-controller="Home" asp-action="Index">صفحه نخست</a>
+                    </li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <form novalidate asp-area="UserPanel" asp-controller="Downloads" method="get" asp-action="BoughtFiles" id="search-form">
+        <input type="hidden" asp-for="Page" id="Page" />
+    </form>
+
+    @if (Model?.Entities?.Any() ?? false)
+    {
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>تاریخ خرید</th>
+                                        <th>نام محصول</th>
+                                        <th>وضعیت</th>
+                                        <th>عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int counter = 0;
+                                        foreach (var item in Model.Entities ?? new List<ClientSideBoughtFileViewModel>())
+                                        {
+                                            counter++;
+                                            <tr>
+                                                <th scope="row">@counter</th>
+                                                <td>@item.PaidDate.GetDateTime()</td>
+                                                <td>@item.ProductTitle (@item.OptionTitle)</td>
+                                                <td>
+                                                    @if (item.Type == ProductTypeEnum.TradingView)
+                                                    {
+                                                        @item.Status.GetDisplayName()
+                                                    }
+                                                    else
+                                                    {
+                                                        @CartStatusEnum.Done.GetDisplayName()
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (item.Type != ProductTypeEnum.TradingView)
+                                                    {
+                                                        if (item.Type == ProductTypeEnum.MetaTraderLink)
+                                                        {
+                                                            <button onclick="@item.MetaTraderLink" class="btn btn-outline-secondary btn-sm edit" title="افزودن به متاتریدر">
+                                                                افزودن به متاتریدر
+                                                            </button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a asp-area="UserPanel" asp-controller="Downloads" asp-action="DownloadFile" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm edit" title="دانلود فایل">
+                                                                دانلود فایل
+                                                            </a>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        @: --
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <partial name="_Paging" model="@Model.GetCurrentPaging()" />
+    }
+    else
+    {
+        <partial name="_NotFoundPartial" />
+    }
+</div>

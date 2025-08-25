@@ -1,13 +1,16 @@
 ﻿using Application.Services.Interfaces;
 using Application.Tools;
 using Application.ViewModels.CartItem.ClientSide;
+using Application.ViewModels.NewsLetter.AdminSide;
 using Data.Context;
 using Domain.Enums.Products;
 using Domain.Enums.Shopping;
 using Domain.Models.Shopping;
 using Domain.Shared;
+using Domain.Statics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 namespace Application.Services.Implementaions
 {
@@ -95,6 +98,63 @@ namespace Application.Services.Implementaions
             if (IsAny) return Result.Success();
 
             return Result.Failure(Messages.OperationFailedError);
+        }
+
+        public async Task<Result<ClientSideFilterBoughtFilesViewModel>> ClientSideFilterBoughtFiles(ClientSideFilterBoughtFilesViewModel filter)
+        {
+            if (filter is null) return Result.Failure<ClientSideFilterBoughtFilesViewModel>(Messages.OperationFailedError);
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1) return Result.Failure<ClientSideFilterBoughtFilesViewModel>(Messages.OperationFailedError);
+
+            var conditions = Filter.GenerateConditions<CartItem>();
+            conditions.Add(n => n.Cart.UserId == userId);
+            conditions.Add(n => n.Cart.Status != CartStatusEnum.PendingPayment && n.Cart.Status != CartStatusEnum.Canceled);
+
+            IQueryable<CartItem> query = _dbSet;
+            query = query.OrderByDescending(n => n.Id);
+
+            foreach (var item in conditions ?? new FilterConditions<CartItem>())
+            {
+                query = query.Where(item);
+            }
+
+            await filter.Paging(query.Select(n => new ClientSideBoughtFileViewModel()
+            {
+                Id = n.Id,
+                PaidDate = n.Cart.PaidDate ?? DateTime.Now,
+                ProductTitle = n.Product.Title,
+                Type = n.Product.Type,
+                OptionTitle = n.Product.Options.Where(o => o.Id == n.StockOptionId).Select(o => o.Title).FirstOrDefault() ?? "",
+                Status = n.Cart.Status,
+                MetaTraderLink = n.Product.MetaTraderLink,
+            }));
+
+            return filter;
+        }
+
+        public async Task<Result<ClientSideDownloadFileViewModel>> CanUserDownlaodTheCurrentFile(int id)
+        {
+            if (id < 1) return Result.Failure<ClientSideDownloadFileViewModel>(Messages.OperationFailedError);
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1) return Result.Failure<ClientSideDownloadFileViewModel>(Messages.OperationFailedError);
+
+            var file = await _dbSet.Where(n => n.Id == id &&
+            n.Cart.UserId == userId &&
+            n.Cart.Status != CartStatusEnum.PendingPayment &&
+            n.Cart.Status != CartStatusEnum.Canceled &&
+            n.Product.Type == ProductTypeEnum.IndicatorFile)
+                .Select(n => new ClientSideDownloadFileViewModel()
+                {
+                    FileName = n.Product.Title,
+                    FileAddress = n.Product.IndicatorFileName,
+                }).AsNoTracking().FirstOrDefaultAsync();
+            if (file is null) return Result.Failure<ClientSideDownloadFileViewModel>(Messages.OperationFailedError);
+
+            file.FileAddress = Directory.GetCurrentDirectory() + "/SensitiveFiles" + SiteTools.ProductIndicator + file.FileAddress;
+
+            return file;
         }
     }
 }

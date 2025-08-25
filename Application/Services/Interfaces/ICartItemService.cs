@@ -12,5 +12,9 @@ namespace Application.Services.Interfaces
         Task<Result> CheckIfCartItemsIsAvailable();
 
         Task<Result> IsAnyTradingViewProductInCart();
+
+        Task<Result<ClientSideFilterBoughtFilesViewModel>> ClientSideFilterBoughtFiles(ClientSideFilterBoughtFilesViewModel filter);
+
+        Task<Result<ClientSideDownloadFileViewModel>> CanUserDownlaodTheCurrentFile(int id);
     }
 }
