@@ -838,9 +838,54 @@ namespace Domain.Statics
                 UniqueName = "OrderDetails"
             },
             #endregion
+
+            #region Ticket
+            new Permission
+            {
+                Id = 109,
+                ParentId = 1,
+                Title = "مدیریت تیکت ها",
+                UniqueName = "ManageTickets"
+            },
+            new Permission
+            {
+                Id = 110,
+                ParentId = 109,
+                Title = "لیست تیکت ها",
+                UniqueName = "TicketsList"
+            },
+            new Permission
+            {
+                Id = 111,
+                ParentId = 109,
+                Title = "جزئیات تیکت",
+                UniqueName = "TicketDetails"
+            },
+            new Permission
+            {
+                Id = 112,
+                ParentId = 109,
+                Title = "حذف تیکت",
+                UniqueName = "DeleteTicket"
+            },
+            new Permission
+            {
+                Id = 113,
+                ParentId = 109,
+                Title = "ارسال پیام",
+                UniqueName = "CreateNewMessage"
+            },
+            new Permission
+            {
+                 Id = 114,
+                 ParentId = 109,
+                 Title = "بستن تیکت",
+                 UniqueName = "CloseTicket"
+            },
+            #endregion
         };
 
-        //Last used id ==> 108
+        //Last used id ==> 114
         public static List<Permission> Permissions = _permissions;
     }
 }

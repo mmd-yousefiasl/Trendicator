@@ -1,0 +1,56 @@
+﻿@using Application.ViewModels.Ticket.ClientSide
+@model ClientSideCreateNewTicketViewModel
+
+@{
+    ViewData["Title"] = "ارسال تیکت پشتیبانی";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <h4>مدیریت تیکت ها</h4>
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a asp-area="UserPanel" asp-controller="Home" asp-action="Index">صفحه نخست</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-area="UserPanel" asp-controller="Ticket" asp-action="MyTickets">لیست تیکت ها</a>
+                    </li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <form class="card-body" asp-area="UserPanel" asp-controller="Ticket" asp-action="CreateNewTicket" autocomplete="off" onsubmit="submitAnimation()">
+                    <h4 class="card-title">@ViewData["Title"]</h4>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Subject" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" asp-for="Subject" required>
+                            <span asp-validation-for="Subject" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Message" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <textarea class="form-control" rows="6" asp-for="Message"></textarea>
+                            <span asp-validation-for="Message" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 text-end mt-5">
+                        <button class="btn btn-primary btn-submit" type="submit">ارسال</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

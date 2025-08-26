@@ -1,0 +1,68 @@
+﻿@using Application.Tools
+@using Application.ViewModels.Ticket.ClientSide
+@model ClientSideTicketDetailsViewModel
+
+@{
+    ViewData["Title"] = "جزئیات تیکت";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <h4>مدیریت تیکت ها</h4>
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a asp-area="UserPanel" asp-controller="Home" asp-action="Index">صفحه نخست</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-area="UserPanel" asp-controller="Ticket" asp-action="MyTickets">لیست تیکت ها</a>
+                    </li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    <div>
+                        <h5 class="font-size-14 mb-4">
+                            وضعیت: @Model.Status.GetDisplayName() :
+                            <a asp-area="UserPanel" asp-controller="Ticket" asp-action="CreateNewMessage" asp-route-id="@Model.Id" class="btn btn-sm btn-solid">
+                                + افزودن پیام جدید
+                            </a>
+                        </h5>
+
+                        <ul class="list-unstyled activity-feed ms-1">
+                            @foreach (var item in Model.Messages ?? new List<ClientSideTicketMessageViewModel>())
+                            {
+                                <li class="feed-item">
+                                    <div class="feed-item-list">
+                                        <div>
+                                            <div class="date">
+                                                @item.CreatedDate.GetDateTime()
+                                                @if (item.IsSentByUser)
+                                                {
+                                                    <a href="javascript:void(0);" class="text-info">@@شما</a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="javascript:void(0);" class="text-success">@@ادمین سایت</a>
+                                                }
+                                            </div>
+                                            <p class="activity-text mb-0">
+                                                @item.Message
+                                            </p>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

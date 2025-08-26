@@ -1,0 +1,49 @@
+﻿@using Application.ViewModels.Ticket.AdminSide
+@model AdminSideCreateNewTicketMessageViewModel
+
+@{
+    ViewData["Title"] = "پاسخ به تیکت پشتیبانی";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <h4>مدیریت تیکت ها</h4>
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="Home" asp-action="Index">صفحه نخست</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="Ticket" asp-action="TicketsList">لیست تیکت ها</a>
+                    </li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">s
+                <form class="card-body" asp-area="Admin" asp-controller="Ticket" asp-action="CreateNewMessage" autocomplete="off" onsubmit="submitAnimation()">
+                    <input type="hidden" asp-for="TicketId" />
+                    <h4 class="card-title">@ViewData["Title"]</h4>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Message" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <textarea class="form-control" rows="6" asp-for="Message"></textarea>
+                            <span asp-validation-for="Message" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 text-end mt-5">
+                        <button class="btn btn-primary btn-submit" type="submit">ارسال پیام</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
