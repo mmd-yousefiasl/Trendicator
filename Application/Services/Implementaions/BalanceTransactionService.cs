@@ -177,5 +177,37 @@ namespace Application.Services.Implementaions
 
             return filter;
         }
+
+        public async Task<Result<ClientSideFilterTransactionsViewModel>> ClientSideFilterTransaction(ClientSideFilterTransactionsViewModel filter)
+        {
+            if (filter is null) return Result.Failure<ClientSideFilterTransactionsViewModel>(Messages.OperationFailedError);
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1) return Result.Failure<ClientSideFilterTransactionsViewModel>(Messages.OperationFailedError);
+
+            var conditions = Filter.GenerateConditions<BalanceTransaction>();
+
+            conditions.Add(n => n.UserId == userId);
+
+            IQueryable<BalanceTransaction> query = _dbSet;
+            query = query.OrderByDescending(n => n.Id);
+
+            foreach (var item in conditions ?? new FilterConditions<BalanceTransaction>())
+            {
+                query = query.Where(item);
+            }
+
+            await filter.Paging(query.Select(n => new ClientSideTransactionViewModel()
+            {
+                Amount = n.Amount,
+                IsSuccess = n.IsSuccess,
+                Description = n.Description,
+                TransId = n.TransId,
+                Type = n.Type,
+                DateTime = n.CreatedDate
+            }));
+
+            return filter;
+        }
     }
 }

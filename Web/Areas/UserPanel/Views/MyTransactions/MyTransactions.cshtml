@@ -1,0 +1,100 @@
+﻿@using Application.Tools
+@using Application.ViewModels.BalanceTransaction.ClientSide
+@using Domain.Enums.Users
+@model ClientSideFilterTransactionsViewModel
+
+@{
+    ViewData["Title"] = "تراکنش های من";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <h4>مدیریت های تراکنش های من</h4>
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a asp-area="UserPanel" asp-controller="Home" asp-action="Index">صفحه نخست</a>
+                    </li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <form novalidate asp-area="UserPanel" asp-controller="MyTransactions" method="get" asp-action="MyTransactions" id="search-form">
+        <input type="hidden" asp-for="Page" id="Page" />
+    </form>
+
+    @if (Model?.Entities?.Any() ?? false)
+    {
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>تاریخ</th>
+                                        <th>مبلغ</th>
+                                        <th>نوع</th>
+                                        <th>کد تراکنش</th>
+                                        <th>وضعیت تراکنش</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int counter = 0;
+                                        foreach (var item in Model.Entities ?? new List<ClientSideTransactionViewModel>())
+                                        {
+                                            counter++;
+                                            <tr>
+                                                <th scope="row">@counter</th>
+                                                <td>@item.DateTime.GetDateTime()</td>
+                                                <td>@item.Amount.ToToman()</td>
+                                                <td>
+                                                    @if (item.Type == BalanceTransactionTypeEnum.Credit)
+                                                    {
+                                                        <span class="text-success">@item.Type.GetDisplayName()</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-danger">@item.Type.GetDisplayName()</span>
+                                                    }
+                                                </td>
+                                                <td>@item.TransId</td>
+                                                <td>
+                                                    @if (item.IsSuccess)
+                                                    {
+                                                        <span class="text-success">موفق</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-danger">ناموفق</span>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">@item.Description</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <partial name="_Paging" model="@Model.GetCurrentPaging()" />
+    }
+    else
+    {
+        <partial name="_NotFoundPartial" />
+    }
+</div>

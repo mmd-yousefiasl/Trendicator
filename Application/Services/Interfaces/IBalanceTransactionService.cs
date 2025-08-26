@@ -17,5 +17,7 @@ namespace Application.Services.Interfaces
         Task<Result<int>> AdminSideDeleteTransaction(int id);
 
         Task<Result> AdminSideCreateNewTransaction(AdminSideCreateNewBalanceTransactionViewModel model);
+
+        Task<Result<ClientSideFilterTransactionsViewModel>> ClientSideFilterTransaction(ClientSideFilterTransactionsViewModel filter);
     }
 }
