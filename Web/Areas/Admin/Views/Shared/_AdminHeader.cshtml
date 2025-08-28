@@ -3,21 +3,12 @@
         <div class="d-flex">
             <!-- LOGO -->
             <div class="navbar-brand-box">
-                <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="logo logo-dark">
-                    <span class="logo-sm">
-                        <img src="~/adminAssets/images/logo-sm.png" alt="" height="22">
-                    </span>
-                    <span class="logo-lg">
-                        <img src="~/adminAssets/images/logo-dark.png" alt="" height="17">
-                    </span>
-                </a>
-
                 <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="logo logo-light">
                     <span class="logo-sm">
                         <img src="~/adminAssets/images/logo-sm.png" alt="" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="~/adminAssets/images/logo-light.png" alt="" height="18">
+                        @await Component.InvokeAsync("AdminLogo")
                     </span>
                 </a>
             </div>
