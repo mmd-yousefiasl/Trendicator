@@ -37,5 +37,7 @@ namespace Application.Services.Interfaces
         Task<Result<List<AdminSideUserAsOptionViewModel>>> AdminSideGetUsersForCoupon();
 
         Task<Result> WithdrawCurrentUserCart(long amount, int orderId);
+
+        Task<int> SiteUsersCount();
     }
 }

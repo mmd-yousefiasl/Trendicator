@@ -40,5 +40,9 @@ namespace Application.Services.Interfaces
         Task<Result<ClientSideFilterCartsViewModel>> ClientSideFilterCarts(ClientSideFilterCartsViewModel filter);
 
         Task<Result<ClientSideCartDetailsViewModel>> ClientSideGetCartDetails(int id);
+
+        Task<int> OrdersCount();
+
+        Task<long> OrdersValue();
     }
 }

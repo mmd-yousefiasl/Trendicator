@@ -406,5 +406,10 @@ namespace Application.Services.Implementaions
 
             return Result.Success();
         }
+
+        public async Task<int> SiteUsersCount()
+        {
+            return await _dbSet.CountAsync();
+        }
     }
 }

@@ -156,5 +156,12 @@ namespace Application.Services.Implementaions
 
             return file;
         }
+
+        public async Task<int> SoldProductsCount()
+        {
+            return await _dbSet.Where(n => n.Cart.Status != CartStatusEnum.PendingPayment &&
+            n.Cart.Status != CartStatusEnum.Canceled)
+                .CountAsync();
+        }
     }
 }

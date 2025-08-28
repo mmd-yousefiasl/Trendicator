@@ -16,5 +16,7 @@ namespace Application.Services.Interfaces
         Task<Result<ClientSideFilterBoughtFilesViewModel>> ClientSideFilterBoughtFiles(ClientSideFilterBoughtFilesViewModel filter);
 
         Task<Result<ClientSideDownloadFileViewModel>> CanUserDownlaodTheCurrentFile(int id);
+
+        Task<int> SoldProductsCount();
     }
 }

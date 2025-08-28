@@ -1,0 +1,50 @@
+﻿@using Application.Tools
+@using Application.ViewModels.Cart.AdminSide
+@model AdminSideFilterCartsViewModel
+
+@if (Model?.Entities?.Any() ?? false)
+{
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-4">
+                    آخرین
+                    <a asp-area="Admin" asp-controller="Cart" asp-action="OrdersList">
+                        سفارشات
+                    </a>
+                </h4>
+                <div class="table-responsive">
+                    <table class="table align-middle table-centered table-vertical table-nowrap mb-1">
+                        <tbody>
+                            @foreach (var item in Model.Entities ?? new List<AdminSideCartViewModel>())
+                            {
+                                <tr>
+                                    <th scope="row">@item.Id#</th>
+                                    <td>@item.PaidDate?.GetDateTime()</td>
+                                    <td>
+                                        <a asp-area="Admin" asp-controller="User" asp-action="UpdateUser" asp-route-id="@item.UserId">
+                                            @item.UserIP
+                                        </a>
+                                    </td>
+                                    <td>@item.Status.GetDisplayName()</td>
+                                    <td>@item.TotalPaid?.ToToman()</td>
+                                    <td>@item.TotalDiscount?.ToToman()</td>
+                                    <td>@item.DiscountCode</td>
+                                    <td>
+                                        <a permission="UpdateOrder" asp-area="Admin" asp-controller="Cart" asp-action="UpdateOrder" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm edit" title="ویرایش">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </a>
+
+                                        <a permission="OrderDetails" asp-area="Admin" asp-controller="Cart" asp-action="OrderDetails" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm edit" title="جزئیات سفارش">
+                                            <i class="fa fa-file-text"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}

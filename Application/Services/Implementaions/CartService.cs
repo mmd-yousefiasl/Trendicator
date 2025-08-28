@@ -587,5 +587,18 @@ namespace Application.Services.Implementaions
 
             return cart;
         }
+
+        public async Task<int> OrdersCount()
+        {
+            return await _dbSet.Where(n => n.Status != CartStatusEnum.PendingPayment &&
+            n.Status != CartStatusEnum.Canceled).CountAsync();
+        }
+
+        public async Task<long> OrdersValue()
+        {
+            return await _dbSet.Where(n => n.Status != CartStatusEnum.PendingPayment &&
+            n.Status != CartStatusEnum.Canceled)
+                .SumAsync(n => (n.TotalPaid ?? 0));
+        }
     }
 }
