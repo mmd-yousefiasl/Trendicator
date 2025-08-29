@@ -15,41 +15,9 @@
 
                 <li class="menu-title">منو اصلی </li>
 
-                <li permission="ManageNotifications">
-                    <a asp-area="Admin" asp-controller="Notifications" asp-action="NotificationsList" class="waves-effect">
-                        <i class="mdi mdi-home"></i>
-                        <span>اعلانات</span>
-                    </a>
-                </li>
-
-                <li permission="ManageOrders">
-                    <a asp-area="Admin" asp-controller="Cart" asp-action="OrdersList" class="waves-effect">
-                        <i class="mdi mdi-home"></i>
-                        <span>سفارش ها</span>
-                    </a>
-                </li>
-
-                <li permission="ManageTickets">
-                    <a asp-area="Admin" asp-controller="Ticket" asp-action="TicketsList" class="waves-effect">
-                        <i class="mdi mdi-home"></i>
-                        <span>تیکت ها</span>
-                    </a>
-                </li>
-
-                <li permission="ManageCoupons">
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-account"></i>
-                        <span>کدهای تخفیف</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li permission="CouponsList"><a asp-area="Admin" asp-controller="Coupon" asp-action="CouponsList">لیست کد های تخفیف</a></li>
-                        <li permission="CreateNewCoupon"><a asp-area="Admin" asp-controller="Coupon" asp-action="CreateNewCoupon">افزودن کد تخفیف جدید</a></li>
-                    </ul>
-                </li>
-
                 <li permission="ManageUsers">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-account"></i>
+                        <i class="mdi mdi-account-multiple"></i>
                         <span>کاربران</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -60,7 +28,7 @@
 
                 <li permission="ManageRoles">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-account"></i>
+                        <i class="mdi mdi-certificate-outline"></i>
                         <span>نقش ها</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -69,103 +37,37 @@
                     </ul>
                 </li>
 
-                <li permission="ManageSlider">
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-account"></i>
-                        <span>لغزنده ها</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li permission="SlidersList"><a asp-area="Admin" asp-controller="Slider" asp-action="SlidersList">لیست لغزنده ها</a></li>
-                        <li permission="CreateNewSlider"><a asp-area="Admin" asp-controller="Slider" asp-action="CreateNewSlider">افزودن لغزنده جدید</a></li>
-                    </ul>
-                </li>
-
-                <li permission="ManageBanners">
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-account"></i>
-                        <span>بنر ها</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li permission="BannersList"><a asp-area="Admin" asp-controller="Banner" asp-action="BannersList">لیست بنر ها</a></li>
-                        <li permission="CreateNewBanner"><a asp-area="Admin" asp-controller="Banner" asp-action="CreateNewBanner">افزودن بنر جدید</a></li>
-                    </ul>
-                </li>
-
-                <li permission="ManageFaqs">
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-account"></i>
-                        <span>سوالات متداول</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li permission="FaqsList"><a asp-area="Admin" asp-controller="Faq" asp-action="FaqsList">لیست سوالات متداول</a></li>
-                        <li permission="CreateNewFaq"><a asp-area="Admin" asp-controller="Faq" asp-action="CreateNewFaq">افزودن سوال متداول جدید</a></li>
-                    </ul>
-                </li>
-
-                <li permission="ManageOurFeatures">
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-account"></i>
-                        <span>ویژگی های ما</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li permission="OurFeaturesList"><a asp-area="Admin" asp-controller="OurFeature" asp-action="OurFeaturesList">لیست ویژگی های ما</a></li>
-                        <li permission="CreateNewOurFeature"><a asp-area="Admin" asp-controller="OurFeature" asp-action="CreateNewOurFeature">افزودن ویژگی جدید</a></li>
-                    </ul>
-                </li>
-
-                <li permission="ManageSocialMedia">
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-account"></i>
-                        <span>شبکه های اجتماعی</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li permission="SocialMediaList"><a asp-area="Admin" asp-controller="SocialMedia" asp-action="SocialMediaList">لیست شبکه های اجتماعی</a></li>
-                        <li permission="CreateNewSocialMedia"><a asp-area="Admin" asp-controller="SocialMedia" asp-action="CreateNewSocialMedia">افزودن شبکه اجتماعی جدید</a></li>
-                    </ul>
-                </li>
-
-                <li permission="ManageSocialMedia">
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-account"></i>
-                        <span>گواهی ها</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li permission="TestimonialsList"><a asp-area="Admin" asp-controller="Testimonial" asp-action="TestimonialsList">لیست گواهی ها</a></li>
-                        <li permission="CreateNewTestimonial"><a asp-area="Admin" asp-controller="Testimonial" asp-action="CreateNewTestimonial">افزودن گواهی جدید</a></li>
-                    </ul>
-                </li>
-
-                <li permission="ManageSiteData">
-                    <a asp-area="Admin" asp-controller="SiteData" asp-action="UpdateSiteData" class="waves-effect">
-                        <i class="mdi mdi-home"></i>
-                        <span>اطلاعات سایت</span>
+                <li permission="ManageNotifications">
+                    <a asp-area="Admin" asp-controller="Notifications" asp-action="NotificationsList" class="waves-effect">
+                        <i class="mdi mdi-bell-ring-outline"></i>
+                        <span>اعلانات</span>
                     </a>
                 </li>
 
-                <li permission="ManagePaymentData">
-                    <a asp-area="Admin" asp-controller="PaymentData" asp-action="UpdatePaymentData" class="waves-effect">
-                        <i class="mdi mdi-home"></i>
-                        <span>اطلاعات پرداخت</span>
+                <li permission="ManageOrders">
+                    <a asp-area="Admin" asp-controller="Cart" asp-action="OrdersList" class="waves-effect">
+                        <i class="mdi mdi-basket-outline"></i>
+                        <span>سفارش ها</span>
                     </a>
                 </li>
 
-                <li permission="ManageEmailData">
-                    <a asp-area="Admin" asp-controller="EmailData" asp-action="UpdateEmailData" class="waves-effect">
-                        <i class="mdi mdi-home"></i>
-                        <span>اطلاعات ایمیل</span>
+                <li permission="ManageTickets">
+                    <a asp-area="Admin" asp-controller="Ticket" asp-action="TicketsList" class="waves-effect">
+                        <i class="mdi mdi-tag-multiple-outline"></i>
+                        <span>تیکت ها</span>
                     </a>
                 </li>
 
                 <li permission="ManageNewsLetters">
                     <a asp-area="Admin" asp-controller="NewsLetters" asp-action="NewsLettersList" class="waves-effect">
-                        <i class="mdi mdi-home"></i>
+                        <i class="mdi mdi-email-multiple-outline"></i>
                         <span>ایمیل های خبرنامه</span>
                     </a>
                 </li>
 
                 <li permission="ManageNewsLetters">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-account"></i>
+                        <i class="mdi mdi-email-send-outline"></i>
                         <span>ایمیل های ارسال شده</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -176,7 +78,7 @@
 
                 <li permission="ManageContactUs">
                     <a asp-area="Admin" asp-controller="ContactUs" asp-action="ContactUsList" class="waves-effect">
-                        <i class="mdi mdi-home"></i>
+                        <i class="mdi mdi-card-account-phone-outline"></i>
                         <span>فرم های تماس باما</span>
                     </a>
                 </li>
@@ -185,7 +87,7 @@
 
                 <li permission="ManageBlogCategories">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-account"></i>
+                        <i class="mdi mdi-format-list-bulleted"></i>
                         <span>دسته بندی ها</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -196,7 +98,7 @@
 
                 <li permission="ManageBlogTags">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-account"></i>
+                        <i class="mdi mdi-tag-text-outline"></i>
                         <span>برچسب ها</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -207,7 +109,7 @@
 
                 <li permission="ManageBlogs">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-account"></i>
+                        <i class="mdi mdi-blogger"></i>
                         <span>مقالات</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -220,7 +122,7 @@
 
                 <li permission="ManageProductCategories">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-account"></i>
+                        <i class="mdi mdi-format-list-bulleted"></i>
                         <span>دسته بندی ها</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -231,7 +133,7 @@
 
                 <li permission="ManageProducts">
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-account"></i>
+                        <i class="mdi mdi-cube-outline"></i>
                         <span>محصولات</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -242,8 +144,108 @@
 
                 <li permission="ManageProductReviews">
                     <a asp-area="Admin" asp-controller="ProductReview" asp-action="ProductReviewsList" class="waves-effect">
-                        <i class="mdi mdi-home"></i>
+                        <i class="mdi mdi-comment-multiple-outline"></i>
                         <span>نظرات محصولات</span>
+                    </a>
+                </li>
+
+                <li permission="ManageCoupons">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-ticket-percent"></i>
+                        <span>کدهای تخفیف</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="CouponsList"><a asp-area="Admin" asp-controller="Coupon" asp-action="CouponsList">لیست کد های تخفیف</a></li>
+                        <li permission="CreateNewCoupon"><a asp-area="Admin" asp-controller="Coupon" asp-action="CreateNewCoupon">افزودن کد تخفیف جدید</a></li>
+                    </ul>
+                </li>
+
+                <li class="menu-title">اطلاعات سایت</li>
+
+                <li permission="ManageSlider">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-image-multiple-outline"></i>
+                        <span>لغزنده ها</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="SlidersList"><a asp-area="Admin" asp-controller="Slider" asp-action="SlidersList">لیست لغزنده ها</a></li>
+                        <li permission="CreateNewSlider"><a asp-area="Admin" asp-controller="Slider" asp-action="CreateNewSlider">افزودن لغزنده جدید</a></li>
+                    </ul>
+                </li>
+
+                <li permission="ManageBanners">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-image-multiple-outline"></i>
+                        <span>بنر ها</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="BannersList"><a asp-area="Admin" asp-controller="Banner" asp-action="BannersList">لیست بنر ها</a></li>
+                        <li permission="CreateNewBanner"><a asp-area="Admin" asp-controller="Banner" asp-action="CreateNewBanner">افزودن بنر جدید</a></li>
+                    </ul>
+                </li>
+
+                <li permission="ManageFaqs">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-head-question-outline"></i>
+                        <span>سوالات متداول</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="FaqsList"><a asp-area="Admin" asp-controller="Faq" asp-action="FaqsList">لیست سوالات متداول</a></li>
+                        <li permission="CreateNewFaq"><a asp-area="Admin" asp-controller="Faq" asp-action="CreateNewFaq">افزودن سوال متداول جدید</a></li>
+                    </ul>
+                </li>
+
+                <li permission="ManageOurFeatures">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-playlist-star"></i>
+                        <span>ویژگی های ما</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="OurFeaturesList"><a asp-area="Admin" asp-controller="OurFeature" asp-action="OurFeaturesList">لیست ویژگی های ما</a></li>
+                        <li permission="CreateNewOurFeature"><a asp-area="Admin" asp-controller="OurFeature" asp-action="CreateNewOurFeature">افزودن ویژگی جدید</a></li>
+                    </ul>
+                </li>
+
+                <li permission="ManageSocialMedia">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-snapchat"></i>
+                        <span>شبکه های اجتماعی</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="SocialMediaList"><a asp-area="Admin" asp-controller="SocialMedia" asp-action="SocialMediaList">لیست شبکه های اجتماعی</a></li>
+                        <li permission="CreateNewSocialMedia"><a asp-area="Admin" asp-controller="SocialMedia" asp-action="CreateNewSocialMedia">افزودن شبکه اجتماعی جدید</a></li>
+                    </ul>
+                </li>
+
+                <li permission="ManageSocialMedia">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-card-text-outline"></i>
+                        <span>گواهی ها</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="TestimonialsList"><a asp-area="Admin" asp-controller="Testimonial" asp-action="TestimonialsList">لیست گواهی ها</a></li>
+                        <li permission="CreateNewTestimonial"><a asp-area="Admin" asp-controller="Testimonial" asp-action="CreateNewTestimonial">افزودن گواهی جدید</a></li>
+                    </ul>
+                </li>
+
+                <li permission="ManageSiteData">
+                    <a asp-area="Admin" asp-controller="SiteData" asp-action="UpdateSiteData" class="waves-effect">
+                        <i class="mdi mdi-card-text-outline"></i>
+                        <span>اطلاعات سایت</span>
+                    </a>
+                </li>
+
+                <li permission="ManagePaymentData">
+                    <a asp-area="Admin" asp-controller="PaymentData" asp-action="UpdatePaymentData" class="waves-effect">
+                        <i class="mdi mdi-card-text-outline"></i>
+                        <span>اطلاعات پرداخت</span>
+                    </a>
+                </li>
+
+                <li permission="ManageEmailData">
+                    <a asp-area="Admin" asp-controller="EmailData" asp-action="UpdateEmailData" class="waves-effect">
+                        <i class="mdi mdi-card-text-outline"></i>
+                        <span>اطلاعات ایمیل</span>
                     </a>
                 </li>
             </ul>
