@@ -24,7 +24,6 @@
                 <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="ti-bell"></i>
-                    <span class="badge bg-danger rounded-pill">3</span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
                      aria-labelledby="page-header-notifications-dropdown">
@@ -138,15 +137,12 @@
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" src="~/adminAssets/images/users/user-4.jpg"
-                         alt="Header Avatar">
+                    @await Component.InvokeAsync("AdminAvatar")
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
-                    <!-- item-->
-                    <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle font-size-17 text-muted align-middle mex-1"></i> مشخصات</a>
-                    <a class="dropdown-item" href="#"><i class="mdi mdi-wallet font-size-17 text-muted align-middle mex-1"></i> کیف پول من</a>
-                    <a class="dropdown-item d-flex align-items-center" href="#"><i class="mdi mdi-cog font-size-17 text-muted align-middle mex-1"></i> تنظیمات<span class="badge bg-success me-auto">11</span></a>
-                    <a class="dropdown-item" href="#"><i class="mdi mdi-lock-open-outline font-size-17 text-muted align-middle mex-1"></i> صفحه قفل</a>
+                    <a class="dropdown-item" asp-area="Admin" asp-controller="UserProfile" asp-action="UpdateUserProfile">
+                        <i class="mdi mdi-account-circle font-size-17 text-muted align-middle mex-1"></i> مشخصات
+                    </a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item text-danger" asp-area="" asp-controller="Account" asp-action="Logout"><i class="mdi mdi-power font-size-17 text-muted align-middle mex-1 text-danger"></i> خروج</a>
                 </div>

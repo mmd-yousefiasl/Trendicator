@@ -97,5 +97,17 @@ namespace Application.Tools
 
             return new DateTime(year, month, day, new GregorianCalendar());
         }
+
+        public static DateTime ConvertToShamsi(this DateTime? value)
+        {
+            if (value is null) value = DateTime.Now;
+
+            PersianCalendar pc = new PersianCalendar();
+            int year = pc.GetYear(value.Value);
+            int month = pc.GetMonth(value.Value);
+            int day = pc.GetDayOfMonth(value.Value);
+
+            return new DateTime(year, month, day, new GregorianCalendar());
+        }
     }
 }

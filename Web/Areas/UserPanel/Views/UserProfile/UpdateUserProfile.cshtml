@@ -1,0 +1,92 @@
+﻿@using Application.ViewModels.User.AdminSide
+@model AdminSideUpdateUserProfileViewModel
+
+@{
+    ViewData["Title"] = "ویرایش پروفایل";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <h4>ویرایش پروفایل</h4>
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a asp-area="UserPanel" asp-controller="Home" asp-action="Index">صفحه نخست</a>
+                    </li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-9">
+            <div class="card">
+                <form class="card-body" asp-area="UserPanel" asp-controller="UserProfile" asp-action="UpdateUserProfile" autocomplete="off" enctype="multipart/form-data" onsubmit="submitAnimation()" method="post">
+                    <input class="d-none image-input" type="file" asp-for="AvatarFile" accept="image/*" />
+                    <input type="hidden" asp-for="AvatarFileName" />
+
+                    <h4 class="card-title">@ViewData["Title"]</h4>
+
+                    <div class="mb-3 row">
+                        <label asp-for="FirstName" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" asp-for="FirstName">
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="LastName" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" asp-for="LastName">
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Email" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" asp-for="Email">
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="BirthDate" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <div class="input-group" id="datepicker1">
+                                <input type="text" class="form-control" data-jdp data-jdp-min-date="today" asp-for="BirthDate" />
+
+                                <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
+                            </div><!-- input-group -->
+                            <span asp-validation-for="BirthDate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div asp-validation-summary="All" class="text-danger"></div>
+
+                    <div class="col-12 text-end mt-5">
+                        <button class="btn btn-primary btn-submit" type="submit">ویرایش پروفایل</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-3">
+            <div class="card p-3">
+                @if (Model.AvatarFileName == null)
+                {
+                    <img src="@SiteTools.DefaultImages" class="w-100 my-1 image-preview" alt="#user-profile" />
+                }
+                else
+                {
+                    <img src="@SiteTools.UserAvatarFile@Model.AvatarFileName" class="w-100 my-1 image-preview" alt="#user-profile" />
+                }
+                <label asp-for="AvatarFile" class="btn btn-primary m-0">انتخاب تصویر</label>
+            </div>
+        </div>
+    </div>
+</div>

@@ -263,7 +263,8 @@ namespace Application.Services.Implementaions
                 AvatarFileName = n.Avatar,
                 FirstName = n.FirstName,
                 LastName = n.LastName,
-                BirthDate = n.BirthDate,
+                BirthDate = n.BirthDate.ConvertToShamsi(),
+                Email = n.Email,
             }).AsNoTracking().FirstOrDefaultAsync();
             if (user is null) return Result.Failure<AdminSideUpdateUserProfileViewModel>(Messages.OperationFailedError);
 
@@ -282,7 +283,8 @@ namespace Application.Services.Implementaions
 
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
-            user.BirthDate = model.BirthDate;
+            user.BirthDate = model.BirthDate?.ConvertToMiladi();
+            user.Email = model.Email;
 
             if (model.AvatarFile is not null)
             {
