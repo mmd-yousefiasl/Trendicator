@@ -9,11 +9,11 @@ namespace Domain.Events.Shopping
     int? UserId,
     CartStatusEnum Status,
     bool IsPaid,
-    decimal? TotalPaid,
-    decimal? TotalDiscount,
+    long? TotalPaid,
+    long? TotalDiscount,
     string? DiscountCode,
-    decimal? SubTotal,
-    decimal? Tax,
+    long? SubTotal,
+    long? Tax,
     DateTime? PaidDate
     ) : INotification;
 }

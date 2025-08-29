@@ -10,12 +10,12 @@ using Data.Context;
 using Domain.Enums.Payment;
 using Domain.Enums.Shopping;
 using Domain.Enums.Users;
+using Domain.Events.Shopping;
 using Domain.Models.Shopping;
 using Domain.Shared;
 using Domain.Statics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography.Xml;
 
 namespace Application.Services.Implementaions
 {
@@ -399,6 +399,20 @@ namespace Application.Services.Implementaions
             _dbSet.Update(cart);
             await _context.SaveChangesAsync();
 
+            CartUpdatedEvent CartUpdatedEvent = new CartUpdatedEvent(
+                cart.Id,
+                cart.UserIP,
+                cart.UserId,
+                cart.Status,
+                cart.IsPaid,
+                cart.TotalPaid,
+                cart.TotalDiscount,
+                cart.DiscountCode,
+                cart.SubTotal,
+                cart.Tax,
+                cart.PaidDate);
+
+            await _mediator.PublishEvent(CartUpdatedEvent);
             return cart.Id;
         }
 

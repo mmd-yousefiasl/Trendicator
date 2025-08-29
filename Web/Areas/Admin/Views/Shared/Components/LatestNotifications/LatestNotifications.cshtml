@@ -1,0 +1,53 @@
+﻿@using Application.ViewModels.SiteNotifications.AdminSide
+@model List<AdminSideNotificationViewModel>
+
+<div class="dropdown d-inline-block ms-1">
+    <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
+            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="ti-bell"></i>
+    </button>
+    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+         aria-labelledby="page-header-notifications-dropdown">
+        <div class="p-3">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h5 class="m-0">اعلانات</h5>
+                </div>
+            </div>
+        </div>
+        @if (Model?.Any() ?? false)
+        {
+            <div data-simplebar style="max-height: 230px;">
+                @foreach (var item in Model ?? new List<AdminSideNotificationViewModel>())
+                {
+                    <a href="javascript:void(0);" class="text-reset notification-item">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0 me-3">
+                                <div class="avatar-xs">
+                                    <span class="avatar-title rounded-circle ">
+                                        <i class="mdi mdi-information-outline"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="text-muted">
+                                    <p class="mb-1">@item.Content</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                }
+
+            </div>
+            <div class="p-2 border-top">
+                <a class="btn btn-sm btn-link font-size-14 w-100 text-center" asp-area="Admin" asp-controller="Notifications" asp-action="NotificationsList">
+                    مشاهده همه
+                </a>
+            </div>
+        }
+        else
+        {
+            <partial name="_NotFoundPartial" />
+        }
+    </div>
+</div>

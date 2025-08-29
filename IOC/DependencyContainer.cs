@@ -59,6 +59,7 @@ namespace IOC
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IBalanceTransactionService, BalanceTransactionService>();
             services.AddScoped<ITicketService, TicketService>();
+            services.AddScoped<ISiteNotificationService, SiteNotificationService>();
 
             #endregion
 

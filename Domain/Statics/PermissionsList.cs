@@ -883,9 +883,26 @@ namespace Domain.Statics
                  UniqueName = "CloseTicket"
             },
             #endregion
+
+            #region SiteNotifications
+            new Permission
+            {
+                Id = 115,
+                ParentId = 1,
+                Title = "مدیریت اعلانات",
+                UniqueName = "ManageNotifications"
+            },
+            new Permission
+            {
+                Id = 116,
+                ParentId = 115,
+                Title = "لیست اعلانات",
+                UniqueName = "NotificationsList"
+            },
+            #endregion
         };
 
-        //Last used id ==> 114
+        //Last used id ==> 116
         public static List<Permission> Permissions = _permissions;
     }
 }
