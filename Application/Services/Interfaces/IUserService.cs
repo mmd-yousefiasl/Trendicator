@@ -39,5 +39,7 @@ namespace Application.Services.Interfaces
         Task<Result> WithdrawCurrentUserCart(long amount, int orderId);
 
         Task<int> SiteUsersCount();
+
+        Task<Result<DateTime>> GetMySignInDate();
     }
 }

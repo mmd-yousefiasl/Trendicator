@@ -413,5 +413,15 @@ namespace Application.Services.Implementaions
         {
             return await _dbSet.CountAsync();
         }
+
+        public async Task<Result<DateTime>> GetMySignInDate()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1) return Result.Failure<DateTime>(Messages.OperationFailedError);
+
+            var date = await _dbSet.Where(n => n.Id == userId).Select(n => n.CreatedDate).FirstOrDefaultAsync();
+
+            return date;
+        }
     }
 }

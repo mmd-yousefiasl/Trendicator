@@ -614,5 +614,23 @@ namespace Application.Services.Implementaions
             n.Status != CartStatusEnum.Canceled)
                 .SumAsync(n => (n.TotalPaid ?? 0));
         }
+
+        public async Task<int> MyOrdersCount()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1) return 0;
+
+            return await _dbSet.Where(n => n.UserId == userId && n.Status != CartStatusEnum.PendingPayment &&
+            n.Status != CartStatusEnum.Canceled).CountAsync();
+        }
+
+        public async Task<long> MyTotalPurchesAmount()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1) return 0;
+
+            return await _dbSet.Where(n => n.UserId == userId && n.Status != CartStatusEnum.PendingPayment &&
+            n.Status != CartStatusEnum.Canceled).SumAsync(n => (n.TotalPaid ?? 0));
+        }
     }
 }

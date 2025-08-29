@@ -318,5 +318,13 @@ namespace Application.Services.Implementaions
 
             return Result.Success();
         }
+
+        public async Task<int> MyTicketsCount()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1) return 0;
+
+            return await _dbSet.Where(n => n.UserId == userId).CountAsync();
+        }
     }
 }

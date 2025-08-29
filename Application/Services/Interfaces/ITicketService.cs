@@ -25,5 +25,7 @@ namespace Application.Services.Interfaces
         Task<Result> AdminSideCloseTicket(int id);
 
         Task<Result> ClientSideClostTicket(int id);
+
+        Task<int> MyTicketsCount();
     }
 }

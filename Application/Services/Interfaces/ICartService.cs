@@ -44,5 +44,9 @@ namespace Application.Services.Interfaces
         Task<int> OrdersCount();
 
         Task<long> OrdersValue();
+
+        Task<int> MyOrdersCount();
+
+        Task<long> MyTotalPurchesAmount();
     }
 }
