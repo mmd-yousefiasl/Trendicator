@@ -30,8 +30,8 @@
                                         </div>
                                     </div>
                                     <div class="header-search-1-form">
-                                        <form id="#" method="get" action="#">
-                                            <input type="text" name="search" value="" placeholder="Search here..." />
+                                        <form asp-area="" asp-controller="Product" asp-action="ProductsList" method="get">
+                                            <input type="text" name="Search" value="" placeholder="جستجو کنید ..." />
                                             <button type="submit">
                                                 <span><i class="icon-search"></i></span>
                                             </button>
@@ -94,7 +94,7 @@
                                     <li><a asp-area="" asp-controller="Home" asp-action="Index">صفحه اصلی</a></li>
                                     <li><a asp-area="" asp-controller="Product" asp-action="ProductsList">محصولات</a></li>
                                     <li permission="AdminPanel"><a asp-area="Admin" asp-controller="Home" asp-action="Index">پنل ادمین</a></li>
-                                    <li><a asp-area="" asp-controller="Home" asp-action="Index">داشبورد</a></li>
+                                    <li><a asp-area="UserPanel" asp-controller="Home" asp-action="Index">داشبورد</a></li>
                                     <li><a asp-area="" asp-controller="Blog" asp-action="BlogsList">بلاگ</a></li>
                                     <li><a asp-area="" asp-controller="ProductWishList" asp-action="WishList">علاقه مندی ها</a></li>
                                     <li><a asp-area="" asp-controller="Cart" asp-action="Cart">سبد خرید</a></li>

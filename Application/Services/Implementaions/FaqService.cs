@@ -1,5 +1,6 @@
 ﻿using Application.Mediator;
 using Application.Services.Interfaces;
+using Application.Static;
 using Application.Tools;
 using Application.ViewModels.Faq.AdminSide;
 using Application.ViewModels.Faq.ClientSide;
@@ -17,15 +18,18 @@ namespace Application.Services.Implementaions
         private readonly TrendicatorDbContext _context;
         private protected DbSet<Faq> _dbSet;
         private readonly IMediatorHandler _mediator;
+        private readonly ICacheManager _cacheManager;
         #endregion
 
         #region Ctor
         public FaqService(TrendicatorDbContext context,
-            IMediatorHandler mediator)
+            IMediatorHandler mediator,
+            ICacheManager cacheManager)
         {
             _context = context;
             _dbSet = _context.Set<Faq>();
             _mediator = mediator;
+            _cacheManager = cacheManager;
         }
         #endregion
 
@@ -110,15 +114,18 @@ namespace Application.Services.Implementaions
 
         public async Task<Result<List<ClientSideFaqViewModel>>> GetFaqs()
         {
-            var faqs = await _dbSet.Where(n => n.IsPublished).OrderBy(n => n.Priority)
-                .Select(n => new ClientSideFaqViewModel()
-                {
-                    Question = n.Question,
-                    Answer = n.Answer
-                }).AsNoTracking().ToListAsync();
+            var faqs = await _cacheManager.GetAsync(CacheKeys.FaqCacheKey, async () =>
+            {
+                return await _dbSet.Where(n => n.IsPublished)
+                .AsNoTracking().ToListAsync();
+            });
             if (!faqs?.Any() ?? true) return Result.Failure<List<ClientSideFaqViewModel>>(Messages.OperationFailedError);
 
-            return faqs;
+            return faqs.OrderBy(n => n.Priority).Select(n => new ClientSideFaqViewModel()
+            {
+                Answer = n.Answer,
+                Question = n.Question
+            }).ToList();
         }
 
         public async Task<Result> SoftDeleteFaq(int id)

@@ -1,5 +1,6 @@
 ﻿using Application.Mediator;
 using Application.Services.Interfaces;
+using Application.Static;
 using Application.Tools;
 using Application.ViewModels.Slider;
 using Application.ViewModels.Slider.AdminSide;
@@ -18,15 +19,18 @@ namespace Application.Services.Implementaions
         private readonly TrendicatorDbContext _context;
         private protected DbSet<Slider> _dbSet;
         private readonly IMediatorHandler _mediator;
+        private readonly ICacheManager _cacheManager;
         #endregion
 
         #region Ctor
         public SliderService(TrendicatorDbContext context,
-            IMediatorHandler mediator)
+            IMediatorHandler mediator,
+            ICacheManager cacheManager)
         {
             _context = context;
             _dbSet = _context.Set<Slider>();
             _mediator = mediator;
+            _cacheManager = cacheManager;
         }
         #endregion
 
@@ -195,18 +199,21 @@ namespace Application.Services.Implementaions
 
         public async Task<Result<List<ClientSideSliderViewModel>>> ClientSideGetMainPageSliders()
         {
-            var sliders = await _dbSet.Where(n => n.IsPublished).OrderBy(n => n.Priority)
-                .Select(n => new ClientSideSliderViewModel()
-                {
-                    Title = n.Title,
-                    Banner = n.Banner,
-                    SubTitle = n.SubTitle,
-                    ButtonTitle = n.ButtonTitle,
-                    Url = n.Url
-                }).AsNoTracking().ToListAsync();
-            if (!sliders.Any()) return Result.Failure<List<ClientSideSliderViewModel>>(Messages.OperationFailedError);
+            var sliders = await _cacheManager.GetAsync(CacheKeys.SliderCacheKey, async () =>
+            {
+                return await _dbSet.Where(n => n.IsPublished)
+                .AsNoTracking().ToListAsync();
+            });
+            if (!sliders?.Any() ?? false) return Result.Failure<List<ClientSideSliderViewModel>>(Messages.OperationFailedError);
 
-            return sliders;
+            return sliders.OrderBy(n => n.Priority).Select(n => new ClientSideSliderViewModel()
+            {
+                Title = n.Title,
+                Banner = n.Banner,
+                SubTitle = n.SubTitle,
+                ButtonTitle = n.ButtonTitle,
+                Url = n.Url
+            }).ToList();
         }
     }
 }

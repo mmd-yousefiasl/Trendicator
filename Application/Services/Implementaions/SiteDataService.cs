@@ -1,5 +1,6 @@
 ﻿using Application.Mediator;
 using Application.Services.Interfaces;
+using Application.Static;
 using Application.Tools;
 using Application.ViewModels.SiteData.AdminSide;
 using Application.ViewModels.SiteData.ClientSide;
@@ -18,15 +19,18 @@ namespace Application.Services.Implementaions
         private readonly TrendicatorDbContext _context;
         private protected DbSet<SiteData> _dbSet;
         private readonly IMediatorHandler _mediator;
+        private readonly ICacheManager _cacheManager;
         #endregion
 
         #region Ctor
         public SiteDataService(TrendicatorDbContext context,
-            IMediatorHandler mediator)
+            IMediatorHandler mediator,
+            ICacheManager cacheManager)
         {
             _context = context;
             _dbSet = _context.Set<SiteData>();
             _mediator = mediator;
+            _cacheManager = cacheManager;
         }
         #endregion
 
@@ -111,85 +115,109 @@ namespace Application.Services.Implementaions
 
         public async Task<Result<ClientSideSiteDataViewModel>> ClientSideGetSiteData()
         {
-            var data = await _dbSet.Where(n => n.Id == 1).Select(n => new ClientSideSiteDataViewModel()
+            var data = await _cacheManager.GetAsync(CacheKeys.SiteDataCacheKey, async () =>
             {
-                SiteName = n.SiteName,
-                Address = n.Address,
-                DarkBgLogo = n.DarkBgLogo,
-                LightBgLogo = n.LightBgLogo,
-                Email = n.Email,
-                FooterDescription = n.FooterDescription,
-                Phone = n.Phone,
-            }).AsNoTracking().FirstOrDefaultAsync();
+                return await _dbSet.Where(n => n.Id == 1).AsNoTracking().FirstOrDefaultAsync();
+            });
             if (data is null) return Result.Failure<ClientSideSiteDataViewModel>(Messages.OperationFailedError);
 
-            return data;
+            return new ClientSideSiteDataViewModel()
+            {
+                Address = data.Address,
+                DarkBgLogo = data.DarkBgLogo,
+                SiteName = data.SiteName,
+                Email = data.Email,
+                FooterDescription = data.FooterDescription,
+                LightBgLogo = data.LightBgLogo,
+                Phone = data.Phone
+            };
         }
 
         public async Task<Result<ClientSideSiteLogoViewModel>> ClientSideGetSiteLogo()
         {
-            var data = await _dbSet.Where(n => n.Id == 1).Select(n => new ClientSideSiteLogoViewModel()
+            var data = await _cacheManager.GetAsync(CacheKeys.SiteDataCacheKey, async () =>
             {
-                SiteName = n.SiteName,
-                DarkBgLogo = n.DarkBgLogo,
-                LightBgLogo = n.LightBgLogo
-            }).AsNoTracking().FirstOrDefaultAsync();
+                return await _dbSet.Where(n => n.Id == 1).AsNoTracking().FirstOrDefaultAsync();
+            });
             if (data is null) return Result.Failure<ClientSideSiteLogoViewModel>(Messages.OperationFailedError);
 
-            return data;
+            return new ClientSideSiteLogoViewModel()
+            {
+                DarkBgLogo = data.DarkBgLogo,
+                LightBgLogo = data.LightBgLogo,
+                SiteName = data.SiteName,
+            };
         }
 
         public async Task<Result<string>> ClientSideGetSitePhone()
         {
-            var phone = await _dbSet.Where(n => n.Id == 1).Select(n => n.Phone).AsNoTracking().FirstOrDefaultAsync();
-            if (string.IsNullOrWhiteSpace(phone)) return Result.Failure<string>(Messages.OperationFailedError);
+            var data = await _cacheManager.GetAsync(CacheKeys.SiteDataCacheKey, async () =>
+            {
+                return await _dbSet.Where(n => n.Id == 1).AsNoTracking().FirstOrDefaultAsync();
+            });
+            if (data is null || string.IsNullOrWhiteSpace(data.Phone)) return Result.Failure<string>(Messages.OperationFailedError);
 
-            return phone;
+            return data.Phone;
         }
 
         public async Task<Result<string>> ClientSideGetTermsAndConditions()
         {
-            var data = await _dbSet.Where(n => n.Id == 1).Select(n => n.TermsAndCondition).AsNoTracking().FirstOrDefaultAsync();
-            if (string.IsNullOrWhiteSpace(data)) return Result.Failure<string>(Messages.OperationFailedError);
+            var data = await _cacheManager.GetAsync(CacheKeys.SiteDataCacheKey, async () =>
+            {
+                return await _dbSet.Where(n => n.Id == 1).AsNoTracking().FirstOrDefaultAsync();
+            });
+            if (data is null || string.IsNullOrWhiteSpace(data.TermsAndCondition)) return Result.Failure<string>(Messages.OperationFailedError);
 
-            return data;
+            return data.TermsAndCondition;
         }
 
         public async Task<Result<string>> ClientSideGetPrivacyPolicy()
         {
-            var data = await _dbSet.Where(n => n.Id == 1).Select(n => n.PrivacyPolicy).AsNoTracking().FirstOrDefaultAsync();
-            if (string.IsNullOrWhiteSpace(data)) return Result.Failure<string>(Messages.OperationFailedError);
+            var data = await _cacheManager.GetAsync(CacheKeys.SiteDataCacheKey, async () =>
+            {
+                return await _dbSet.Where(n => n.Id == 1).AsNoTracking().FirstOrDefaultAsync();
+            });
+            if (data is null || string.IsNullOrWhiteSpace(data.PrivacyPolicy)) return Result.Failure<string>(Messages.OperationFailedError);
 
-            return data;
+            return data.PrivacyPolicy;
         }
 
         public async Task<Result<string>> GetSiteName()
         {
-            var data = await _dbSet.Where(n => n.Id == 1).Select(n => n.SiteName).FirstOrDefaultAsync();
-            if (string.IsNullOrWhiteSpace(data)) return Result.Failure<string>(Messages.OperationFailedError);
+            var data = await _cacheManager.GetAsync(CacheKeys.SiteDataCacheKey, async () =>
+            {
+                return await _dbSet.Where(n => n.Id == 1).AsNoTracking().FirstOrDefaultAsync();
+            });
+            if (data is null || string.IsNullOrWhiteSpace(data.SiteName)) return Result.Failure<string>(Messages.OperationFailedError);
 
-            return data;
+            return data.SiteName;
         }
 
         public async Task<Result<ClientSideContactUsAddressViewModel>> ClientSideGetContactAddress()
         {
-            var data = await _dbSet.Where(n => n.Id == 1).Select(n => new ClientSideContactUsAddressViewModel()
+            var data = await _cacheManager.GetAsync(CacheKeys.SiteDataCacheKey, async () =>
             {
-                Address = n.Address,
-                Email = n.Email,
-                Phone = n.Phone
-            }).AsNoTracking().FirstOrDefaultAsync();
+                return await _dbSet.Where(n => n.Id == 1).AsNoTracking().FirstOrDefaultAsync();
+            });
             if (data is null) return Result.Failure<ClientSideContactUsAddressViewModel>(Messages.OperationFailedError);
 
-            return data;
+            return new ClientSideContactUsAddressViewModel()
+            {
+                Address = data.Address,
+                Email = data.Email,
+                Phone = data.Phone
+            };
         }
 
         public async Task<Result<string>> GetFooterContent()
         {
-            var data = await _dbSet.Where(n => n.Id == 1).Select(n => n.FooterContent).AsNoTracking().FirstOrDefaultAsync();
-            if (string.IsNullOrWhiteSpace(data)) return Result.Failure<string>(Messages.OperationFailedError);
+            var data = await _cacheManager.GetAsync(CacheKeys.SiteDataCacheKey, async () =>
+            {
+                return await _dbSet.Where(n => n.Id == 1).AsNoTracking().FirstOrDefaultAsync();
+            });
+            if (data is null || string.IsNullOrWhiteSpace(data.FooterContent)) return Result.Failure<string>(Messages.OperationFailedError);
 
-            return data;
+            return data.FooterContent;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Application.Mediator;
 using Application.Services.Interfaces;
+using Application.Static;
 using Application.Tools;
 using Application.ViewModels.SocialMedia.AdminSide;
 using Application.ViewModels.SocialMedia.ClientSide;
@@ -17,15 +18,18 @@ namespace Application.Services.Implementaions
         private readonly TrendicatorDbContext _context;
         private protected DbSet<SocialMedia> _dbSet;
         private readonly IMediatorHandler _mediator;
+        private readonly ICacheManager _cacheManager;
         #endregion
 
         #region Ctor
         public SocialMediaService(TrendicatorDbContext context,
-            IMediatorHandler mediator)
+            IMediatorHandler mediator,
+            ICacheManager cacheManager)
         {
             _context = context;
             _dbSet = _context.Set<SocialMedia>();
             _mediator = mediator;
+            _cacheManager = cacheManager;
         }
         #endregion
 
@@ -116,14 +120,19 @@ namespace Application.Services.Implementaions
 
         public async Task<Result<List<ClientSideSocialMediaViewModel>>> GetSocialMedia()
         {
-            var socialMedia = await _dbSet.Where(n => n.IsPublished).OrderBy(n => n.Priority).Select(n => new ClientSideSocialMediaViewModel()
+            var socialMedia = await _cacheManager.GetAsync(CacheKeys.SocialMediaCacheKey, async () =>
             {
-                Type = n.Type,
-                Url = n.Url,
-            }).AsNoTracking().ToListAsync();
+                return await _dbSet.Where(n => n.IsPublished)
+                .AsNoTracking().ToListAsync();
+            });
             if (!socialMedia?.Any() ?? true) return Result.Failure<List<ClientSideSocialMediaViewModel>>(Messages.OperationFailedError);
 
-            return socialMedia;
+            return socialMedia.OrderBy(n => n.Priority)
+                .Select(n => new ClientSideSocialMediaViewModel()
+                {
+                    Type = n.Type,
+                    Url = n.Url
+                }).ToList();
         }
 
         public async Task<Result<AdminSideUpdateSocialMediaViewModel>> GetSocialMediaForUpdate(int id)

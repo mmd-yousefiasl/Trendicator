@@ -1,5 +1,6 @@
 ﻿using Application.Mediator;
 using Application.Services.Interfaces;
+using Application.Static;
 using Application.Tools;
 using Application.ViewModels.Banner.AdminSide;
 using Application.ViewModels.Banner.ClientSide;
@@ -19,15 +20,18 @@ namespace Application.Services.Implementaions
         private readonly TrendicatorDbContext _context;
         private protected DbSet<Banner> _dbSet;
         private readonly IMediatorHandler _mediator;
+        private readonly ICacheManager _cacheManager;
         #endregion
 
         #region Ctor
         public BannerService(TrendicatorDbContext context,
-            IMediatorHandler mediator)
+            IMediatorHandler mediator,
+            ICacheManager cacheManager)
         {
             _context = context;
             _dbSet = _context.Set<Banner>();
             _mediator = mediator;
+            _cacheManager = cacheManager;
         }
         #endregion
 
@@ -192,16 +196,19 @@ namespace Application.Services.Implementaions
 
         public async Task<Result<List<ClientSideBannerViewModel>>> ClientSideGetBanners(BannerTypeEnum type)
         {
-            var banners = await _dbSet.Where(n => n.Type == type && n.IsPublished).OrderBy(n => n.Priority)
-                .Select(n => new ClientSideBannerViewModel()
-                {
-                    Title = n.Title,
-                    FileName = n.FileName,
-                    Url = n.Url
-                }).AsNoTracking().ToListAsync();
-            if (!banners.Any()) return Result.Failure<List<ClientSideBannerViewModel>>(Messages.OperationFailedError);
+            var banners = await _cacheManager.GetAsync(CacheKeys.BannerCacheKey, async () =>
+            {
+                return await _dbSet.Where(n => n.IsPublished)
+                .AsNoTracking().ToListAsync();
+            });
+            if (!banners?.Any() ?? true) return Result.Failure<List<ClientSideBannerViewModel>>(Messages.OperationFailedError);
 
-            return banners;
+            return banners.OrderBy(n => n.Priority).Where(n => n.Type == type).Select(n => new ClientSideBannerViewModel()
+            {
+                Title = n.Title,
+                FileName = n.FileName,
+                Url = n.Url
+            }).ToList();
         }
     }
 }

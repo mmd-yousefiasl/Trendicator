@@ -1,5 +1,6 @@
 ﻿using Application.Mediator;
 using Application.Services.Interfaces;
+using Application.Static;
 using Application.ViewModels.EmailData.AdminSide;
 using Data.Context;
 using Domain.Events.SiteInfo;
@@ -15,29 +16,35 @@ namespace Application.Services.Implementaions
         private readonly TrendicatorDbContext _context;
         private protected DbSet<EmailData> _dbSet;
         private readonly IMediatorHandler _mediator;
+        private readonly ICacheManager _cacheManager;
         #endregion
 
         #region Ctor
         public EmailDataService(TrendicatorDbContext context,
-            IMediatorHandler mediator)
+            IMediatorHandler mediator,
+            ICacheManager cacheManager)
         {
             _context = context;
             _dbSet = _context.Set<EmailData>();
             _mediator = mediator;
+            _cacheManager = cacheManager;
         }
         #endregion
 
         public async Task<Result<AdminSideEmailDataViewModel>> GetEmailData()
         {
-            var data = await _dbSet.Where(n => n.Id == 1).Select(n => new AdminSideEmailDataViewModel()
+            var data = await _cacheManager.GetAsync(CacheKeys.EmailDataCacheKey, async () =>
             {
-                Id = n.Id,
-                Smtp = n.Smtp,
-                EmailDisplayName = n.EmailDisplayName,
-                From = n.From,
-                Password = n.Password,
-                Port = n.Port ?? 1
-            }).AsNoTracking().FirstOrDefaultAsync();
+                return await _dbSet.Where(n => n.Id == 1).Select(n => new AdminSideEmailDataViewModel()
+                {
+                    Id = n.Id,
+                    Smtp = n.Smtp,
+                    EmailDisplayName = n.EmailDisplayName,
+                    From = n.From,
+                    Password = n.Password,
+                    Port = n.Port ?? 1
+                }).AsNoTracking().FirstOrDefaultAsync();
+            });
             if (data is null) return Result.Failure<AdminSideEmailDataViewModel>(Messages.OperationFailedError);
 
             return data;

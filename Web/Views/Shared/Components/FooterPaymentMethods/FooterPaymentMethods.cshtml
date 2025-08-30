@@ -5,9 +5,8 @@
 {
     foreach (var item in Model.Take(1).ToList() ?? new List<ClientSideBannerViewModel>())
     {
-        <h5 class="mt-30">روش های پرداخت</h5>
-        <a href="@item.Url">
-            <img src="@SiteTools.Banner@item.FileName" alt="@item.Title">
+        <a href="@item.Url" target="_blank">
+            <img src="@SiteTools.Banner@item.FileName" alt="@item.Title" class="e-nemad">
         </a>
     }
 }

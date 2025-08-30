@@ -1,5 +1,6 @@
 ﻿using Application.Mediator;
 using Application.Services.Interfaces;
+using Application.Static;
 using Application.ViewModels.PaymentData;
 using Data.Context;
 using Domain.Events.SiteInfo;
@@ -15,15 +16,18 @@ namespace Application.Services.Implementaions
         private readonly TrendicatorDbContext _context;
         private protected DbSet<PaymentData> _dbSet;
         private readonly IMediatorHandler _mediator;
+        private readonly ICacheManager _cacheManager;
         #endregion
 
         #region Ctor
         public PaymentDataService(TrendicatorDbContext context,
-            IMediatorHandler mediator)
+            IMediatorHandler mediator,
+            ICacheManager cacheManager)
         {
             _context = context;
             _dbSet = _context.Set<PaymentData>();
             _mediator = mediator;
+            _cacheManager = cacheManager;
         }
         #endregion
 
@@ -64,18 +68,28 @@ namespace Application.Services.Implementaions
 
         public async Task<Result<int>> GetTaxRate()
         {
-            var taxRate = await _dbSet.Where(n => n.Id == 1).Select(n => n.Tax).FirstOrDefaultAsync();
-            if (taxRate < 1) return Result.Failure<int>(Messages.OperationFailedError);
+            var data = await _cacheManager.GetAsync(CacheKeys.PaymentDataCacheKey, async () =>
+            {
+                return await _dbSet.Where(n => n.Id == 1).FirstOrDefaultAsync();
+            });
+            if (data is null) return Result.Failure<int>(Messages.OperationFailedError);
 
-            return taxRate;
+            if (data.Tax < 0) return Result.Failure<int>(Messages.OperationFailedError);
+
+            return data.Tax;
         }
 
         public async Task<Result<string>> GetPin()
         {
-            var pin = await _dbSet.Where(n => n.Id == 1).Select(n => n.PaymentGatewayPin).FirstOrDefaultAsync();
-            if (string.IsNullOrWhiteSpace(pin)) return Result.Failure<string>(Messages.OperationFailedError);
+            var data = await _cacheManager.GetAsync(CacheKeys.PaymentDataCacheKey, async () =>
+            {
+                return await _dbSet.Where(n => n.Id == 1).FirstOrDefaultAsync();
+            });
+            if (data is null) return Result.Failure<string>(Messages.OperationFailedError);
 
-            return pin;
+            if (string.IsNullOrWhiteSpace(data.PaymentGatewayPin)) return Result.Failure<string>(Messages.OperationFailedError);
+
+            return data.PaymentGatewayPin;
         }
     }
 }

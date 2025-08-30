@@ -19,7 +19,7 @@
 
         #region Cache
 
-        public const int CachesDefaultExpirationTimeInMinutes = 60;
+        public const int CachesDefaultExpirationTimeInMinutes = 180;
 
         #endregion
 

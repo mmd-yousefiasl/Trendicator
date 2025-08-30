@@ -1,5 +1,6 @@
 ﻿using Application.Mediator;
 using Application.Services.Interfaces;
+using Application.Static;
 using Application.Tools;
 using Application.ViewModels.OurFeature.AdminSide;
 using Application.ViewModels.OurFeature.ClientSide;
@@ -18,15 +19,18 @@ namespace Application.Services.Implementaions
         private readonly TrendicatorDbContext _context;
         private protected DbSet<OurFeature> _dbSet;
         private readonly IMediatorHandler _mediator;
+        private readonly ICacheManager _cacheManager;
         #endregion
 
         #region Ctor
         public OurFeaturesService(TrendicatorDbContext context,
-            IMediatorHandler mediator)
+            IMediatorHandler mediator,
+            ICacheManager cacheManager)
         {
             _context = context;
             _dbSet = _context.Set<OurFeature>();
             _mediator = mediator;
+            _cacheManager = cacheManager;
         }
         #endregion
 
@@ -119,16 +123,19 @@ namespace Application.Services.Implementaions
 
         public async Task<Result<List<ClientSideOurFeatureViewModel>>> GetOurFeatures()
         {
-            var features = await _dbSet.Where(n => n.IsPublished).OrderBy(n => n.Priority)
-                .Select(n => new ClientSideOurFeatureViewModel()
-                {
-                    Title = n.Title,
-                    FileName = n.FileName,
-                    Description = n.Description,
-                }).AsNoTracking().Take(4).ToListAsync();
+            var features = await _cacheManager.GetAsync(CacheKeys.OurFeatureCacheKey, async () =>
+            {
+                return await _dbSet.Where(n => n.IsPublished)
+                .AsNoTracking().ToListAsync();
+            });
             if (!features?.Any() ?? true) return Result.Failure<List<ClientSideOurFeatureViewModel>>(Messages.OperationFailedError);
 
-            return features;
+            return features.OrderBy(n => n.Priority).Select(n => new ClientSideOurFeatureViewModel()
+            {
+                Title = n.Title,
+                FileName = n.FileName,
+                Description = n.Description,
+            }).Take(4).ToList();
         }
 
         public async Task<Result> SoftDeleteOurFeature(int id)

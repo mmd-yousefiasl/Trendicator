@@ -1,5 +1,6 @@
 ﻿using Application.Mediator;
 using Application.Services.Interfaces;
+using Application.Static;
 using Application.Tools;
 using Application.ViewModels.Testimonial.AdminSide;
 using Application.ViewModels.Testimonial.ClientSide;
@@ -8,8 +9,6 @@ using Domain.Events.SiteInfo.Testimonial;
 using Domain.Models.SiteInfo;
 using Domain.Shared;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using System.Net.WebSockets;
 
 namespace Application.Services.Implementaions
 {
@@ -19,15 +18,18 @@ namespace Application.Services.Implementaions
         private readonly TrendicatorDbContext _context;
         private protected DbSet<Testimonial> _dbSet;
         private readonly IMediatorHandler _mediator;
+        private readonly ICacheManager _cacheManager;
         #endregion
 
         #region Ctor
         public TestimonialService(TrendicatorDbContext context,
-            IMediatorHandler mediator)
+            IMediatorHandler mediator,
+            ICacheManager cacheManager)
         {
             _context = context;
             _dbSet = _context.Set<Testimonial>();
             _mediator = mediator;
+            _cacheManager = cacheManager;
         }
         #endregion
 
@@ -164,16 +166,20 @@ namespace Application.Services.Implementaions
 
         public async Task<Result<List<ClientSideTestimonialViewModel>>> ClientSideGetTestimonials()
         {
-            var testimonials = await _dbSet.Where(n => n.IsPublished).OrderBy(n => n.Priority)
+            var testimonials = await _cacheManager.GetAsync(CacheKeys.TestimonialCacheKey, async () =>
+            {
+                return await _dbSet.Where(n => n.IsPublished)
+                .AsNoTracking().ToListAsync();
+            });
+            if (!testimonials?.Any() ?? true) return Result.Failure<List<ClientSideTestimonialViewModel>>(Messages.OperationFailedError);
+
+            return testimonials.OrderBy(n => n.Priority)
                 .Select(n => new ClientSideTestimonialViewModel()
                 {
+                    Position = n.Position,
                     Content = n.Content,
-                    Writer = n.Writer,
-                    Position = n.Position
-                }).AsNoTracking().ToListAsync();
-            if (!testimonials.Any()) return Result.Failure<List<ClientSideTestimonialViewModel>>(Messages.OperationFailedError);
-
-            return testimonials;
+                    Writer = n.Writer
+                }).ToList();
         }
     }
 }
