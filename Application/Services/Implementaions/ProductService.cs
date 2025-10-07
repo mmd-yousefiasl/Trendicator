@@ -190,7 +190,7 @@ namespace Application.Services.Implementaions
                 Priority = n.Priority,
                 Category = n.Category.Title,
                 ViewsCount = n.Views.Count(),
-                Type = n.Type,
+                Type = n.Type
             }));
 
             return filter;
