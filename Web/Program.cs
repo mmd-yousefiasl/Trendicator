@@ -52,7 +52,11 @@ try
     lc.ReadFrom.Configuration(ctx.Configuration));
     #endregion
 
+    builder.Services.AddResponseCompression();
+
     var app = builder.Build();
+
+    app.UseResponseCompression();
 
     // Configure the HTTP request pipeline.
     if (!app.Environment.IsDevelopment())
@@ -72,6 +76,14 @@ try
         });
         app.UseHsts();
     }
+
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        OnPrepareResponse = ctx =>
+        {
+            ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=31536000,immutable");
+        }
+    });
 
     app.Use(async (context, next) =>
     {

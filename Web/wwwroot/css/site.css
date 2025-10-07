@@ -1,6 +1,7 @@
 ﻿@font-face {
-    font-family: VazirFont;
-    src: url(/fonts/Vazir-Thin-FD.ttf);
+    font-family: 'VazirFont';
+    src: url('/fonts/Vazir-Thin-FD.woff2') format('woff2'), url('/fonts/Vazir-Thin-FD.ttf') format('truetype');
+    font-display: swap;
 }
 
 h1, h2, h3, h4, h5, h6, h7, p, div, a, button, li, span, label, input, textarea, select {
