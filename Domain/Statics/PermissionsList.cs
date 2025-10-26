@@ -497,7 +497,7 @@ namespace Domain.Statics
                 Id = 64,
                 ParentId = 1,
                 Title = "مدیریت ایمیل های ارسال شده",
-                UniqueName = "ManageNewsLetters"
+                UniqueName = "ManageSentLetters"
             },
             new Permission
             {

@@ -36,6 +36,14 @@
                         </div>
                     </div>
 
+                    <div class="mb-3 row">
+                        <label asp-for="PaymentGatewayPin" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" asp-for="PaymentGatewayPin">
+                            <span asp-validation-for="PaymentGatewayPin" class="text-danger"></span>
+                        </div>
+                    </div>
+
                     <div class="col-12 text-end mt-5">
                         <button class="btn btn-primary btn-submit" type="submit">ویرایش</button>
                     </div>

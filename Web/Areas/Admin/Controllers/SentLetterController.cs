@@ -6,7 +6,7 @@ using Web.Attributes;
 
 namespace Web.Areas.Admin.Controllers
 {
-    [Permission("ManageNewsLetters")]
+    [Permission("ManageSentLetters")]
     public class SentLetterController : BaseAdminController
     {
         #region Fields
