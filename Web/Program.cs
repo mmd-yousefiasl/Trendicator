@@ -22,10 +22,10 @@ try
 
     #region Data protection
 
-    builder.Services.AddDataProtection()
+/*    builder.Services.AddDataProtection()
         .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/KeyDirectory/")))
         .SetApplicationName(SiteTools.SiteName)
-        .SetDefaultKeyLifetime(TimeSpan.FromMinutes(int.Parse(builder.Configuration.GetSection("MachineKeyLifetime").Value)));
+        .SetDefaultKeyLifetime(TimeSpan.FromMinutes(int.Parse(builder.Configuration.GetSection("MachineKeyLifetime").Value)));*/
 
     #endregion
 
