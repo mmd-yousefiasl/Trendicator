@@ -1,7 +1,6 @@
 using Application.Mediator;
 using Domain.Statics;
 using IOC;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics;
 using Serilog;
 using Web.Configuration;

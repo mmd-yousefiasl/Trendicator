@@ -14,17 +14,5 @@
       "wwwroot/assets/css/responsive.css"
     ],
     "minify": { "enabled": true }
-  },
-  {
-    "outputFileName": "wwwroot/js/site.bundle.min.js",
-    "inputFiles": [
-      "wwwroot/lib/jquery/dist/jquery.min.js",
-      "wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
-      "wwwroot/assets/js/plugins.js",
-      "wwwroot/assets/js/main.js",
-      "wwwroot/lib/sweetAlert.js",
-      "wwwroot/js/site.js"
-    ],
-    "minify": { "enabled": true }
   }
 ]
