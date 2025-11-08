@@ -45,7 +45,7 @@ namespace Application.Services.Implementaions
             if (model.File.Length > SiteTools.MaxImageFileLength.CalculateMB()) return Result.Failure(Messages.FileLengthError);
 
             string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
-            model.File.UplaodFileToServer(fileName, SiteTools.ProductGallery);
+            model.File.UploadFileToServer(fileName, SiteTools.ProductGallery);
 
             ProductGallery gallery = new ProductGallery()
             {

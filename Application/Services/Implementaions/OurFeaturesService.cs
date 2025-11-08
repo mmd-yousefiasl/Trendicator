@@ -42,7 +42,7 @@ namespace Application.Services.Implementaions
             if (model.File.Length > SiteTools.MaxImageFileLength.CalculateMB()) return Result.Failure(Messages.FileLengthError);
 
             string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
-            model.File.UplaodFileToServer(fileName, SiteTools.OurFeature);
+            model.File.UploadFileToServer(fileName, SiteTools.OurFeature);
 
             var ourFeature = new OurFeature()
             {
@@ -171,7 +171,7 @@ namespace Application.Services.Implementaions
                 if (model.File.Length > SiteTools.MaxImageFileLength.CalculateMB()) return Result.Failure(Messages.OperationFailedError);
 
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
-                model.File.UplaodFileToServer(fileName, SiteTools.OurFeature);
+                model.File.UploadFileToServer(fileName, SiteTools.OurFeature);
                 feature.FileName.RemoveFileFromServer(SiteTools.OurFeature);
 
                 feature.FileName = fileName;

@@ -86,7 +86,7 @@ namespace Application.Services.Implementaions
 
             string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
 
-            model.File.UplaodFileToServer(fileName, SiteTools.Banner);
+            model.File.UploadFileToServer(fileName, SiteTools.Banner);
 
             Banner banner = new Banner()
             {
@@ -146,7 +146,7 @@ namespace Application.Services.Implementaions
 
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
 
-                model.File.UplaodFileToServer(fileName, SiteTools.Banner);
+                model.File.UploadFileToServer(fileName, SiteTools.Banner);
                 banner.FileName.RemoveFileFromServer(SiteTools.Banner);
 
                 banner.FileName = fileName;

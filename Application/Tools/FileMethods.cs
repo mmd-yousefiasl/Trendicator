@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
-using MimeKit.Cryptography;
 
 namespace Application.Tools
 {
     public static class FileMethods
     {
-        public static void UplaodFileToServer(this IFormFile file, string name, string path)
+        public static void UploadFileToServer(this IFormFile file, string name, string path)
         {
             string saveFoler = Directory.GetCurrentDirectory() + "/wwwroot" + path;
             string savePath = Path.Combine(saveFoler, name);
@@ -77,11 +76,11 @@ namespace Application.Tools
                 //  Check the image mime types
                 //-------------------------------------------
                 if (postedFile.ContentType.ToLower() != "image/jpg" &&
-                            postedFile.ContentType.ToLower() != "image/jpeg" &&
-                            postedFile.ContentType.ToLower() != "image/x-png" &&
-                            postedFile.ContentType.ToLower() != "image/png" &&
-                            postedFile.ContentType.ToLower() != "image/svg+xml")
-
+                    postedFile.ContentType.ToLower() != "image/jpeg" &&
+                    postedFile.ContentType.ToLower() != "image/x-png" &&
+                    postedFile.ContentType.ToLower() != "image/png" &&
+                    postedFile.ContentType.ToLower() != "image/svg+xml" &&
+                    postedFile.ContentType.ToLower() != "image/webp")
                 {
                     return false;
                 }
@@ -89,10 +88,12 @@ namespace Application.Tools
                 //-------------------------------------------
                 //  Check the image extension
                 //-------------------------------------------
-                if (Path.GetExtension(postedFile.FileName).ToLower() != ".jpg"
-                    && Path.GetExtension(postedFile.FileName).ToLower() != ".png"
-                    && Path.GetExtension(postedFile.FileName).ToLower() != ".jpeg"
-                    && Path.GetExtension(postedFile.FileName).ToLower() != ".svg")
+                string extension = Path.GetExtension(postedFile.FileName).ToLower();
+                if (extension != ".jpg" &&
+                    extension != ".jpeg" &&
+                    extension != ".png" &&
+                    extension != ".svg" &&
+                    extension != ".webp")
                 {
                     return false;
                 }

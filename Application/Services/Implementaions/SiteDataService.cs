@@ -69,7 +69,7 @@ namespace Application.Services.Implementaions
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.DarkBgLogoFile.FileName);
                 siteData.DarkBgLogo?.RemoveFileFromServer(SiteTools.SiteLogo);
 
-                model.DarkBgLogoFile.UplaodFileToServer(fileName, SiteTools.SiteLogo);
+                model.DarkBgLogoFile.UploadFileToServer(fileName, SiteTools.SiteLogo);
                 siteData.DarkBgLogo = fileName;
             }
 
@@ -81,7 +81,7 @@ namespace Application.Services.Implementaions
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.LightBgLogoFile.FileName);
                 siteData.LightBgLogo?.RemoveFileFromServer(SiteTools.SiteLogo);
 
-                model.LightBgLogoFile.UplaodFileToServer(fileName, SiteTools.SiteLogo);
+                model.LightBgLogoFile.UploadFileToServer(fileName, SiteTools.SiteLogo);
 
                 siteData.LightBgLogo = fileName;
             }

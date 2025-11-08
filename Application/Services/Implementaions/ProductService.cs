@@ -86,7 +86,7 @@ namespace Application.Services.Implementaions
             }
 
             var bannerFileName = Guid.NewGuid() + Path.GetExtension(model.BannerFile.FileName);
-            model.BannerFile.UplaodFileToServer(bannerFileName, SiteTools.ProductBanner);
+            model.BannerFile.UploadFileToServer(bannerFileName, SiteTools.ProductBanner);
             product.BannerFileName = bannerFileName;
 
             await _dbSet.AddAsync(product);
@@ -248,7 +248,7 @@ namespace Application.Services.Implementaions
                     return Result.Failure(Messages.FileLengthError);
 
                 var bannerFileName = Guid.NewGuid() + Path.GetExtension(model.BannerFile.FileName);
-                model.BannerFile.UplaodFileToServer(bannerFileName, SiteTools.ProductBanner);
+                model.BannerFile.UploadFileToServer(bannerFileName, SiteTools.ProductBanner);
                 product.BannerFileName.RemoveFileFromServer(SiteTools.ProductBanner);
                 product.BannerFileName = bannerFileName;
             }

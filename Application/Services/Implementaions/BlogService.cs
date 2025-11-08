@@ -129,7 +129,7 @@ namespace Application.Services.Implementaions
             if (model.File.FileName.Length > SiteTools.MaxImageFileLength.CalculateMB()) return Result.Failure(Messages.FileLengthError);
 
             string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
-            model.File.UplaodFileToServer(fileName, SiteTools.BlogBanner);
+            model.File.UploadFileToServer(fileName, SiteTools.BlogBanner);
 
             Blog blog = new Blog()
             {
@@ -182,7 +182,7 @@ namespace Application.Services.Implementaions
                 if (model.File.Length > SiteTools.MaxImageFileLength.CalculateMB()) return Result.Failure(Messages.FileLengthError);
 
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
-                model.File.UplaodFileToServer(fileName, SiteTools.BlogBanner);
+                model.File.UploadFileToServer(fileName, SiteTools.BlogBanner);
                 blog.FileName.RemoveFileFromServer(SiteTools.BlogBanner);
                 blog.FileName = fileName;
             }

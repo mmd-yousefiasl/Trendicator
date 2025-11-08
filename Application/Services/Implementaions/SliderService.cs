@@ -81,7 +81,7 @@ namespace Application.Services.Implementaions
             if (model.BannerFile.Length > SiteTools.MaxImageFileLength.CalculateMB()) return Result.Failure(Messages.FileLengthError);
 
             string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.BannerFile.FileName);
-            model.BannerFile.UplaodFileToServer(fileName, SiteTools.SliderBanner);
+            model.BannerFile.UploadFileToServer(fileName, SiteTools.SliderBanner);
 
             Slider slider = new Slider()
             {
@@ -145,7 +145,7 @@ namespace Application.Services.Implementaions
                 if (model.BannerFile.Length > SiteTools.MaxImageFileLength.CalculateMB()) return Result.Failure(Messages.FileLengthError);
 
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.BannerFile.FileName);
-                model.BannerFile.UplaodFileToServer(fileName, SiteTools.SliderBanner);
+                model.BannerFile.UploadFileToServer(fileName, SiteTools.SliderBanner);
 
                 slider.Banner.RemoveFileFromServer(SiteTools.SliderBanner);
 

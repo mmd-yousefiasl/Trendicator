@@ -125,7 +125,7 @@ namespace Application.Services.Implementaions
 
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.AvatarFile.FileName);
 
-                model.AvatarFile.UplaodFileToServer(fileName, SiteTools.UserAvatarFile);
+                model.AvatarFile.UploadFileToServer(fileName, SiteTools.UserAvatarFile);
 
                 user.Avatar = fileName;
             }
@@ -179,7 +179,7 @@ namespace Application.Services.Implementaions
 
                 user.Avatar?.RemoveFileFromServer(SiteTools.UserAvatarFile);
 
-                model.AvatarFile.UplaodFileToServer(fileName, SiteTools.UserAvatarFile);
+                model.AvatarFile.UploadFileToServer(fileName, SiteTools.UserAvatarFile);
 
                 user.Avatar = fileName;
             }
@@ -292,7 +292,7 @@ namespace Application.Services.Implementaions
                 if (model.AvatarFile.Length > SiteTools.MaxImageFileLength.CalculateMB()) return Result.Failure(Messages.FileLengthError);
 
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.AvatarFile.FileName);
-                model.AvatarFile.UplaodFileToServer(fileName, SiteTools.UserAvatarFile);
+                model.AvatarFile.UploadFileToServer(fileName, SiteTools.UserAvatarFile);
                 user.Avatar?.RemoveFileFromServer(SiteTools.UserAvatarFile);
 
                 user.Avatar = fileName;
