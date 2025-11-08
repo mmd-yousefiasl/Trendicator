@@ -3,15 +3,9 @@
     "outputFileName": "wwwroot/css/site.min.css",
     "inputFiles": [
       "wwwroot/assets/css/plugins.css",
-      "wwwroot/css/site.css"
-    ],
-    "minify": { "enabled": true }
-  },
-  {
-    "outputFileName": "wwwroot/css/main.min.css",
-    "inputFiles": [
       "wwwroot/assets/css/style.css",
-      "wwwroot/assets/css/responsive.css"
+      "wwwroot/assets/css/responsive.css",
+      "wwwroot/css/site.css"
     ],
     "minify": { "enabled": true }
   },
@@ -20,7 +14,6 @@
     "inputFiles": [
       "wwwroot/lib/jquery/dist/jquery.min.js",
       "wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
-      "wwwroot/assets/js/main.js",
       "wwwroot/lib/sweetAlert.js",
       "wwwroot/js/site.js"
     ],

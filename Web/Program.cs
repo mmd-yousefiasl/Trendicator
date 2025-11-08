@@ -1,6 +1,7 @@
 using Application.Mediator;
 using Domain.Statics;
 using IOC;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics;
 using Serilog;
 using Web.Configuration;
@@ -21,10 +22,12 @@ try
 
     #region Data protection
 
-/*    builder.Services.AddDataProtection()
-        .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/KeyDirectory/")))
+    builder.Services.AddDataProtection()
+        .PersistKeysToFileSystem(new DirectoryInfo(
+            Path.Combine(builder.Environment.ContentRootPath, "KeyDirectory")))
         .SetApplicationName(SiteTools.SiteName)
-        .SetDefaultKeyLifetime(TimeSpan.FromMinutes(int.Parse(builder.Configuration.GetSection("MachineKeyLifetime").Value)));*/
+        .SetDefaultKeyLifetime(TimeSpan.FromMinutes(
+            int.Parse(builder.Configuration.GetSection("MachineKeyLifetime").Value)));
 
     #endregion
 

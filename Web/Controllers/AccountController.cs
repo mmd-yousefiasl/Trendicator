@@ -40,7 +40,7 @@ namespace Web.Controllers
                 TempData[TemporaryErrorMessage] = result.Message;
                 return View(model);
             }
-            TempData[TemporarySuccessMessage] = result.Message;
+            TempData[TemporarySuccessMessage] = Messages.LoginCodeSentSuccessfully;
 
             return RedirectToAction(nameof(LoginCode), new
             {
