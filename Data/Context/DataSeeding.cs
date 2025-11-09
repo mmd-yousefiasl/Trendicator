@@ -91,6 +91,16 @@ namespace Data.Context
 
             modelBuilder.Entity<EmailData>().HasData(emailData);
             #endregion
+
+            #region SmsData
+            SmsData smsData = new SmsData()
+            {
+                Id = 1,
+                IsDeleted = false
+            };
+
+            modelBuilder.Entity<SmsData>().HasData(smsData);
+            #endregion
         }
     }
 }

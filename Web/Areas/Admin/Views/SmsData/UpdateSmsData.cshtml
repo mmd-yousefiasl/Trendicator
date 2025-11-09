@@ -1,0 +1,54 @@
+﻿@using Application.ViewModels.SmsData.AdminSide
+@model AdminSideUpdateSmsDataViewModel
+
+@{
+    ViewData["Title"] = "ویرایش اطلاعات پنل اس ام اس";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <h4>مدیریت اطلاعات پنل اس ام اس</h4>
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="Home" asp-action="Index">صفحه نخست</a>
+                    </li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <form class="card-body" asp-area="Admin" asp-controller="SmsData" asp-action="UpdateSmsData" autocomplete="off" onsubmit="submitAnimation()" method="post">
+
+                    <h4 class="card-title">@ViewData["Title"]</h4>
+
+                    <div class="mb-3 row">
+                        <label asp-for="SmsPanelAPIKey" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" asp-for="SmsPanelAPIKey">
+                            <span asp-validation-for="SmsPanelAPIKey" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="SmsPatternIdForLoginCode" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="number" asp-for="SmsPatternIdForLoginCode">
+                            <span asp-validation-for="SmsPatternIdForLoginCode" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 text-end mt-5">
+                        <button class="btn btn-primary btn-submit" type="submit">ویرایش</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -900,9 +900,26 @@ namespace Domain.Statics
                 UniqueName = "NotificationsList"
             },
             #endregion
+
+            #region SmsData
+            new Permission
+            {
+                Id = 117,
+                ParentId = 1,
+                Title = "مدیریت اطلاعات پنل اس ام اس",
+                UniqueName = "ManageSmsData"
+            },
+            new Permission
+            {
+                Id = 118,
+                ParentId = 117,
+                Title = "ویرایش اطلاعات پنل اس ام اس",
+                UniqueName = "UpdateSmsData"
+            },
+            #endregion
         };
 
-        //Last used id ==> 116
+        //Last used id ==> 118
         public static List<Permission> Permissions = _permissions;
     }
 }

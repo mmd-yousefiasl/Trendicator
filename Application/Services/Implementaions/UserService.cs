@@ -19,17 +19,20 @@ namespace Application.Services.Implementaions
         private readonly TrendicatorDbContext _context;
         private protected DbSet<User> _dbSet;
         private readonly IUserValidationService _userValidationService;
+        private readonly ISendSmsService _sendSmsService;
         #endregion
 
         #region Ctor
         public UserService(IHttpContextAccessor httpContextAccessor,
             TrendicatorDbContext context,
-            IUserValidationService userValidationService)
+            IUserValidationService userValidationService,
+            ISendSmsService sendSmsService)
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
             _dbSet = context.Set<User>();
             _userValidationService = userValidationService;
+            _sendSmsService = sendSmsService;
         }
         #endregion
 
@@ -338,9 +341,8 @@ namespace Application.Services.Implementaions
             var validationResult = await _userValidationService.GenerateUserValidationCode(model.PhoneNumber);
             if (validationResult.IsFailure) return Result.Failure<string>(validationResult.Message);
 
-            Console.WriteLine("Login Code: " + validationResult.Value);
-
-            //await _smsServiec.SendLoginCode(validationResult.Value, loginUser.Mobile);
+            //comment in development
+            await _sendSmsService.SendLoginCode(validationResult.Value, loginUser.PhoneNumber);
 
             return validationResult.Value;
         }
