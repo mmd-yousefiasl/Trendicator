@@ -18,6 +18,16 @@
 
 @await Component.InvokeAsync("Testimonial")
 
+<div class="ltn__small-product-list-area pt-80 pb-85">
+    <div class="container">
+        <div class="row justify-content-center">
+            @await Component.InvokeAsync("MainPageDiscountedProducts")
+            @await Component.InvokeAsync("MostViewedProducts")
+            @await Component.InvokeAsync("MostPurchasedProducts")
+        </div>
+    </div>
+</div>
+
 @await Component.InvokeAsync("LatestBlogs")
 
 @await Component.InvokeAsync("OurFeatures")

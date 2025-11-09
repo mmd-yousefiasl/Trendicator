@@ -309,7 +309,7 @@ namespace Application.Services.Implementaions
         public async Task<Result<List<ClientSideProductViewModel>>> ClientSideGetLatestProducts()
         {
             var products = await _dbSet.Where(n => n.IsPublished).OrderByDescending(n => n.Id)
-                .Take(16)
+                .Take(8)
                 .Select(n => new ClientSideProductViewModel()
                 {
                     Id = n.Id,
@@ -570,6 +570,111 @@ namespace Application.Services.Implementaions
             if (productId < 1) return Result.Failure<int>(Messages.OperationFailedError);
 
             return productId;
+        }
+
+        public async Task<Result<List<ClientSideProductViewModel>>> ClientSideGetDiscountedProducts()
+        {
+            var products = await _dbSet.Where(n => n.IsPublished && n.DisplayOrderPrice != null).OrderByDescending(n => n.Id)
+                .Take(6)
+                .Select(n => new ClientSideProductViewModel()
+                {
+                    Id = n.Id,
+                    BannerFileName = n.BannerFileName,
+                    Title = n.Title,
+                    Slug = n.Slug,
+                    ShortDescription = n.ShortDescription,
+                    Price = n.DisplayPrice,
+                    HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
+                    OrderPrice = n.DisplayOrderPrice,
+                    Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
+                    IsAvailable = n.IsAvailable,
+                }).AsNoTracking().ToListAsync();
+            if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
+
+            var productIds = products.Select(n => n.Id).ToList();
+
+            var reviewsResult = await _reviewService.GetProductsReviewRate(productIds);
+
+            foreach (var item in products ?? new List<ClientSideProductViewModel>())
+            {
+                if (reviewsResult.IsSuccess)
+                {
+                    var review = reviewsResult.Value.FirstOrDefault(n => n.ProductId == item.Id);
+                    if (review is not null) item.ReviewRate = review.RoundedAvrage;
+                }
+            }
+
+            return products;
+        }
+
+        public async Task<Result<List<ClientSideProductViewModel>>> ClientSideGetMostViewedProducts()
+        {
+            var products = await _dbSet.Where(n => n.IsPublished).OrderBy(n => n.Views.Count())
+                .Take(6)
+                .Select(n => new ClientSideProductViewModel()
+                {
+                    Id = n.Id,
+                    BannerFileName = n.BannerFileName,
+                    Title = n.Title,
+                    Slug = n.Slug,
+                    ShortDescription = n.ShortDescription,
+                    Price = n.DisplayPrice,
+                    HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
+                    OrderPrice = n.DisplayOrderPrice,
+                    Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
+                    IsAvailable = n.IsAvailable,
+                }).AsNoTracking().ToListAsync();
+            if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
+
+            var productIds = products.Select(n => n.Id).ToList();
+
+            var reviewsResult = await _reviewService.GetProductsReviewRate(productIds);
+
+            foreach (var item in products ?? new List<ClientSideProductViewModel>())
+            {
+                if (reviewsResult.IsSuccess)
+                {
+                    var review = reviewsResult.Value.FirstOrDefault(n => n.ProductId == item.Id);
+                    if (review is not null) item.ReviewRate = review.RoundedAvrage;
+                }
+            }
+
+            return products;
+        }
+
+        public async Task<Result<List<ClientSideProductViewModel>>> ClientSideGetMostPurchasedProducts()
+        {
+            var products = await _dbSet.Where(n => n.IsPublished).OrderBy(n => n.CartItems.Count())
+                   .Take(6)
+                   .Select(n => new ClientSideProductViewModel()
+                   {
+                       Id = n.Id,
+                       BannerFileName = n.BannerFileName,
+                       Title = n.Title,
+                       Slug = n.Slug,
+                       ShortDescription = n.ShortDescription,
+                       Price = n.DisplayPrice,
+                       HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
+                       OrderPrice = n.DisplayOrderPrice,
+                       Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
+                       IsAvailable = n.IsAvailable,
+                   }).AsNoTracking().ToListAsync();
+            if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
+
+            var productIds = products.Select(n => n.Id).ToList();
+
+            var reviewsResult = await _reviewService.GetProductsReviewRate(productIds);
+
+            foreach (var item in products ?? new List<ClientSideProductViewModel>())
+            {
+                if (reviewsResult.IsSuccess)
+                {
+                    var review = reviewsResult.Value.FirstOrDefault(n => n.ProductId == item.Id);
+                    if (review is not null) item.ReviewRate = review.RoundedAvrage;
+                }
+            }
+
+            return products;
         }
     }
 }

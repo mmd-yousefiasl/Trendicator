@@ -27,5 +27,11 @@ namespace Application.Services.Interfaces
         Task<Result<List<ClientSideProductViewModel>>> ClientSideGetRelatedProducts(int id, int categoryId);
 
         Task<Result<int>> ClientSideGetProductIdByOptionId(int optionId);
+
+        Task<Result<List<ClientSideProductViewModel>>> ClientSideGetDiscountedProducts();
+
+        Task<Result<List<ClientSideProductViewModel>>> ClientSideGetMostViewedProducts();
+
+        Task<Result<List<ClientSideProductViewModel>>> ClientSideGetMostPurchasedProducts();
     }
 }
