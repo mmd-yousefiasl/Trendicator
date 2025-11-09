@@ -96,7 +96,9 @@ namespace Data.Context
             SmsData smsData = new SmsData()
             {
                 Id = 1,
-                IsDeleted = false
+                IsDeleted = false,
+                SmsPanelAPIKey = "70C2f6O6S8XtW52ue9G83hRL3Fsz2YqIZ02Gm2eUMZjXkPSP",
+                SmsPatternIdForLoginCode = 409943
             };
 
             modelBuilder.Entity<SmsData>().HasData(smsData);
