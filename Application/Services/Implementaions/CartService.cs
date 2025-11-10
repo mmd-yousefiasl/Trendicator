@@ -313,17 +313,17 @@ namespace Application.Services.Implementaions
 
             var paymentResult = await _paymentService.Request(new PaymentRequestViewModel
             {
-                Amount = payAmount,
+                Amount = payAmount * 10,
                 CallBackUrl = SiteTools.SiteUrl + SiteTools.CallBackURL
             });
 
-            if (paymentResult.IsFailure)
+            if (paymentResult.IsFailure || paymentResult.Value.result != 100)
                 return Result.Failure<ClientSideProceedToCheckoutViewModel>(paymentResult.Message);
 
             var transactionResult = await _transactionService.AddUnVerifiedTransaction(new ClientSideCreateNewTransactionViewModel()
             {
                 Amount = payAmount,
-                TransId = paymentResult.Value.TransId,
+                TransId = paymentResult.Value.trackId.ToString(),
                 IsSuccess = false,
                 Type = BalanceTransactionTypeEnum.Credit,
                 Description = "افزایش موجودی کیف پول از طریق درگاه پرداخت به منظور پردازش سفارش"
@@ -334,7 +334,7 @@ namespace Application.Services.Implementaions
             return Result.Success(new ClientSideProceedToCheckoutViewModel
             {
                 IsDone = false,
-                TransId = paymentResult.Value.TransId
+                TransId = paymentResult.Value.trackId.ToString()
             });
         }
 
@@ -343,24 +343,19 @@ namespace Application.Services.Implementaions
             if (model is null)
                 return Result.Failure(Messages.OperationFailedError);
 
-            if (model.status != PaymentResultStatusEnum.Succeed)
+            if (model.success != 1 || model.status != PaymentResultStatusEnum.PaidNotVerified)
                 return Result.Failure(Messages.PaymentFailedError);
-
-            var amountResult = await _transactionService.GetTransactionAmountByTransId(model.transid);
-            if (amountResult.IsFailure)
-                return Result.Failure(amountResult.Message);
 
             var verifyModel = new VerifyPaymentViewModel
             {
-                TransId = model.transid,
-                Amount = amountResult.Value
+                TrackId = model.trackId,
             };
 
             var paymentResult = await _paymentService.VerifyPayment(verifyModel);
-            if (paymentResult.IsFailure || paymentResult.Value.Code != VerifyPaymentResultStatusEnum.Success)
+            if (paymentResult.IsFailure || paymentResult.Value.status != VerifyPaymentResultStatusEnum.PaidAndVerified)
                 return Result.Failure(Messages.PaymentFailedError);
 
-            var verifyTransaction = await _transactionService.VerifyTransaction(model.transid);
+            var verifyTransaction = await _transactionService.VerifyTransaction(model.trackId.ToString());
             if (verifyTransaction.IsFailure)
                 return Result.Failure(Messages.PaymentFailedError);
 

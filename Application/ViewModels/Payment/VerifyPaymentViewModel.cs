@@ -2,7 +2,6 @@
 {
     public class VerifyPaymentViewModel
     {
-        public long Amount { get; set; }
-        public string TransId { get; set; }
+        public long TrackId { get; set; }
     }
 }

@@ -2,7 +2,8 @@
 {
     public class PaymentRequestResultViewModel
     {
-        public string Status { get; set; }
-        public string TransId { get; set; }
+        public long trackId { get; set; }
+        public int result { get; set; }
+        public string message { get; set; }
     }
 }

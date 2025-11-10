@@ -28,9 +28,9 @@ namespace Application.Services.Implementaions
 
             var requestData = new
             {
-                pin = pinResult.Value,
+                merchant = pinResult.Value,
                 amount = model.Amount,
-                callback = model.CallBackUrl
+                callbackUrl = model.CallBackUrl
             };
 
             using var client = new HttpClient();
@@ -64,9 +64,8 @@ namespace Application.Services.Implementaions
 
             var requestData = new
             {
-                pin = pinResult.Value,
-                amount = model.Amount,
-                transid = model.TransId
+                merchant = pinResult.Value,
+                trackId = model.TrackId
             };
 
             using var client = new HttpClient();

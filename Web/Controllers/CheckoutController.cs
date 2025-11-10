@@ -114,7 +114,7 @@ namespace Web.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("/payment-result")]
+        [HttpGet("/payment-result")]
         public async Task<IActionResult> PaymentResult(PaymentResultViewModel model)
         {
             if (!ModelState.IsValid)
