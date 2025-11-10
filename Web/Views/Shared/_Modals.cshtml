@@ -1,44 +1,36 @@
-﻿<div class="modal fade" id="custom-modal" tabindex="-1" aria-labelledby="custom-modal-label" aria-hidden="true">
+﻿<!-- Custom Modal -->
+<div class="modal fade" id="custom-modal" tabindex="-1"
+     role="dialog" aria-labelledby="custom-modal-label" aria-modal="true">
     <div class="modal-dialog max-w-lg">
         <div class="modal-content">
 
             <div class="modal-header">
                 <h5 class="modal-title" id="custom-modal-label"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         viewBox="0 0 24 24"
-                         width="24"
-                         height="24"
-                         class="h-6 w-6 fill-jacarta-700 dark:fill-white">
-                        <path fill="none" d="M0 0h24v24H0z" />
-                        <path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z" />
-                    </svg>
-                </button>
             </div>
 
             <div class="modal-body p-6 text-center" id="custom-modal-body">
             </div>
-
         </div>
     </div>
 </div>
 
-<div class="ltn__modal-area ltn__quick-view-modal-area">
-    <div class="modal fade" id="Product_Quick_View_Model" tabindex="-1">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="Product_Quick_View_Model_Body">
-                </div>
+<!-- Product Quick View Modal -->
+<div class="modal fade" id="Product_Quick_View_Model" tabindex="-1"
+     role="dialog" aria-modal="true" aria-labelledby="Product_Quick_View_Model_Label">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="Product_Quick_View_Model_Label"></h5>
             </div>
+            <div class="modal-body" id="Product_Quick_View_Model_Body">
+            </div>
+
         </div>
     </div>
 </div>
 
+<!-- Cart Menu (not a modal, so no aria-modal) -->
 <div id="ltn__utilize-cart-menu" class="ltn__utilize ltn__utilize-cart-menu">
     <div class="ltn__utilize-menu-inner ltn__scrollbar" id="Cart-Menu">
     </div>

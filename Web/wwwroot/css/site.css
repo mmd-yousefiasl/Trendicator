@@ -108,3 +108,53 @@ h1, h2, h3, h4, h5, h6, h7, p, div, a, button, li, span, label, input, textarea,
 .sticky-header-background {
     background-color: var(--section-bg-2) !important;
 }
+
+/* HTML: <div class="loader-custom"></div> */
+/* Container that covers the entire screen and blurs the background */
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    backdrop-filter: blur(8px); /* Blurs the background */
+    background-color: rgba(0, 0, 0, 0.2); /* Optional: semi-transparent overlay */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999; /* Ensure it's on top */
+}
+
+    /* Loader animation */
+    .loader-overlay div {
+        width: 50px;
+        aspect-ratio: 1;
+        display: grid;
+        -webkit-mask: conic-gradient(from 15deg, #0000, #000);
+        animation: l26 1s infinite steps(12);
+        background: #000; /* Add a background color to make the mask visible */
+    }
+
+
+        .loader-overlay div,
+        .loader-overlay div:before,
+        .loader-overlay div:after {
+            background: radial-gradient(closest-side at 50% 12.5%, #f03355 96%,#0000) 50% 0/20% 80% repeat-y, radial-gradient(closest-side at 12.5% 50%, #f03355 96%,#0000) 0 50%/80% 20% repeat-x;
+        }
+
+            .loader-overlay div:before,
+            .loader-overlay div:after {
+                content: "";
+                grid-area: 1/1;
+                transform: rotate(30deg);
+            }
+
+            .loader-overlay div:after {
+                transform: rotate(60deg);
+            }
+
+@keyframes l26 {
+    100% {
+        transform: rotate(1turn)
+    }
+}

@@ -1,4 +1,6 @@
-﻿function FillPageId(id) {
+﻿let loaderOverlay = document.getElementById("loading-anim");
+
+function FillPageId(id) {
     $("#Page").val(id);
 
     searchForm();
@@ -8,13 +10,21 @@ function searchForm() {
     document.getElementById("search-form").submit();
 }
 
-function showCustomModal(title, url) {
-
+async function showCustomModal(title, url) {
+    loaderOverlay.classList.add("loader-overlay");
     document.querySelector("#custom-modal-label").innerText = title;
 
-    $("#custom-modal-body").load(url);
+    try {
+        const response = await fetch(url);
+        const html = await response.text();
+        document.querySelector("#custom-modal-body").innerHTML = html;
 
-    $("#custom-modal").modal("show");
+        $("#custom-modal").modal("show");
+    } catch (err) {
+        console.error("Failed to load modal content:", err);
+    } finally {
+        loaderOverlay.classList.remove("loader-overlay");
+    }
 }
 
 function ConfirmDelete(element) {
@@ -86,6 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const isInWishlist = icon.classList.contains("fa");
             const action = isInWishlist ? "Remove" : "Add";
 
+            loaderOverlay.classList.add("loader-overlay");
             // Update UI optimistically
             if (action === "Add") {
                 icon.classList.replace("far", "fa");
@@ -122,6 +133,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
                 .catch(error => {
                     console.error("Error:", error);
+                })
+                .finally(() => {
+                    // Code here will run regardless of success or error
+                    loaderOverlay.classList.remove("loader-overlay");
                 });
         });
     });
@@ -136,6 +151,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const isInCompare = currentTitle?.includes("حذف");
             const action = isInCompare ? "Remove" : "Add";
+
+            loaderOverlay.classList.add("loader-overlay");
 
             // Update UI optimistically
             if (action === "Add") {
@@ -170,42 +187,56 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
                 .catch(error => {
                     console.error("Error:", error);
+                })
+                .finally(() => {
+                    loaderOverlay.classList.remove("loader-overlay");
                 });
         });
     });
 });
 
-function ShowQuickViewModel(url) {
-    $("#Product_Quick_View_Model_Body").load(url);
+async function ShowQuickViewModel(url) {
+    loaderOverlay.classList.add("loader-overlay");
 
-    $("#Product_Quick_View_Model").modal("show");
+    try {
+        const response = await fetch(url);
+        const html = await response.text();
+        document.querySelector("#Product_Quick_View_Model_Body").innerHTML = html;
+
+        $("#Product_Quick_View_Model").modal("show");
+    } catch (err) {
+        console.error("Quick view load failed:", err);
+    } finally {
+        loaderOverlay.classList.remove("loader-overlay");
+    }
 }
 
 let isWorking = false;
 
-function AddToCart() {
-    if (isWorking == false) {
+async function AddToCart() {
+    if (isWorking === false) {
         isWorking = true;
         toggleSubmitAnimation();
+        loaderOverlay.classList.add("loader-overlay");
 
-        let optionId = document.getElementById("Product-Option-Id").value;
+        try {
+            let optionId = document.getElementById("Product-Option-Id").value;
 
-        fetch('/add-to-cart/' + optionId)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showSuccessMessage(data.message);
-                } else {
-                    showErrorMessage(data.message);
-                }
+            const response = await fetch('/add-to-cart/' + optionId);
+            const data = await response.json();
 
-                isWorking = false;
-                toggleSubmitAnimation()
-            })
-            .catch(error => {
-                isWorking = false;
-                toggleSubmitAnimation()
-            });
+            if (data.success) {
+                showSuccessMessage(data.message);
+            } else {
+                showErrorMessage(data.message);
+            }
+        } catch (error) {
+            console.error("Error adding to cart:", error);
+        } finally {
+            isWorking = false;
+            toggleSubmitAnimation();
+            loaderOverlay.classList.remove("loader-overlay");
+        }
     }
 }
 
@@ -243,24 +274,35 @@ function toggleSubmitAnimation() {
     }
 }
 
-function LoadCartModal() {
-    // Clear the Cart-Menu content
-    $("#Cart-Menu").html("");
+async function LoadCartModal() {
+    loaderOverlay.classList.add("loader-overlay");
 
-    // Then load the cart modal
-    $("#Cart-Menu").load("/cart-modal");
+    try {
+        const response = await fetch("/cart-modal");
+        const html = await response.text();
+        document.querySelector("#Cart-Menu").innerHTML = html;
+    } catch (err) {
+        console.error("Cart modal load failed:", err);
+    } finally {
+        loaderOverlay.classList.remove("loader-overlay");
+    }
 }
 
-function RemoveItemFromCart(itemId) {
-    fetch('/remove-cart-modal-item/' + itemId)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                LoadCartModal();
-            } else {
-                showErrorMessage(data.message);
-            }
-        })
-        .catch(error => {
-        });
+async function RemoveItemFromCart(itemId) {
+    loaderOverlay.classList.add("loader-overlay");
+
+    try {
+        const response = await fetch('/remove-cart-modal-item/' + itemId);
+        const data = await response.json();
+
+        if (data.success) {
+            LoadCartModal();
+        } else {
+            showErrorMessage(data.message);
+        }
+    } catch (error) {
+        console.error("Error removing item:", error);
+    } finally {
+        loaderOverlay.classList.remove("loader-overlay");
+    }
 }
