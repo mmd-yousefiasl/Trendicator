@@ -31,6 +31,7 @@
         public const string PaymentFailedError = "پرداخت با شکست مواجه شد";
         public const string TransactionAlreadyVerified = "تراکنش قبلاً تأیید شده است";
         public const string InSufficentBalanceError = "موجودی کافی برای انجام تراکنش وجود ندارد";
+        public const string CheckTermsAndConditionsError = "پذیرش قوانین و شرایط برای ادامه الزامی است";
 
         #endregion
 

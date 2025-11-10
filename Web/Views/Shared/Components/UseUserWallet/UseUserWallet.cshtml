@@ -12,4 +12,20 @@
             @Model.Balance.ToToman())
         </span>
     </label>
+
+    <br />
+    <br />
 }
+
+<label class="checkbox-inline">
+    <input type="checkbox" asp-for="PrivacyPolicy">
+    <span>
+        با
+        <a asp-area="" asp-controller="TermsAndConditions" asp-action="PrivacyPolicy" target="_blank">سیاست حفظ حریم خصوصی</a>
+        و
+        <a asp-area="" asp-controller="TermsAndConditions" asp-action="TermsAndConditions" target="_blank">شرایط و ضوابط</a>
+        موافقت می‌کنم.
+    </span>
+</label>
+<br />
+<span class="text-danger" asp-validation-for="PrivacyPolicy"></span>

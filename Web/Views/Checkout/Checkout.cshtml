@@ -48,7 +48,7 @@
                     <div class="ltn__payment-note mt-30 mb-30">
                         <p>
                             اطلاعات شخصی شما برای پردازش سفارش شما، پشتیبانی از تجربه شما در سراسر این وب‌سایت و سایر اهدافی که در
-                            <a asp-area="" asp-controller="TermsAndConditions" asp-action="PrivacyPolicy">
+                            <a asp-area="" asp-controller="TermsAndConditions" asp-action="PrivacyPolicy" target="_blank">
                                 <strong>
                                     سیاست حفظ حریم خصوصی
                                 </strong>
@@ -65,3 +65,7 @@
         </div>
     </div>
 </div>
+
+@section FooterReferences {
+    <script asp-append-version="true" src="/js/disableEnter.js"></script>
+}

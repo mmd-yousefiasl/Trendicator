@@ -26,7 +26,7 @@
         <div class="row">
             <div class="col-lg-6 offset-lg-3">
                 <div class="account-login-inner">
-                    <form asp-area="" asp-controller="Account" asp-action="VerifyLoginCode" method="post" class="ltn__form-box contact-form-box" onsubmit="submitAnimation()">
+                    <form asp-area="" asp-controller="Account" asp-action="VerifyLoginCode" method="post" class="ltn__form-box contact-form-box" onsubmit="submitAnimation()" autocomplete="off">
                         <input asp-for="ReturnUrl" type="hidden" />
                         <input asp-for="PhoneNumber" type="hidden" />
 
@@ -55,9 +55,9 @@
                             :
                         </p>
                         <p>
-                            <a asp-area="" asp-controller="TermsAndConditions" asp-action="TermsAndConditions">شرایط و ضوابط</a>
+                            <a asp-area="" asp-controller="TermsAndConditions" asp-action="TermsAndConditions" target="_blank">شرایط و ضوابط</a>
                             &nbsp; &nbsp; | &nbsp; &nbsp;
-                            <a asp-area="" asp-controller="TermsAndConditions" asp-action="PrivacyPolicy">سیاست حفظ حریم خصوصی</a>
+                            <a asp-area="" asp-controller="TermsAndConditions" asp-action="PrivacyPolicy" target="_blank">سیاست حفظ حریم خصوصی</a>
                         </p>
                     </div>
                 </div>
@@ -67,5 +67,5 @@
 </div>
 
 @section FooterReferences {
-    <script asp-append-version="true" src="/js/account.js"></script>
+    <script asp-append-version="true" src="/js/disableEnter.js"></script>
 }

@@ -43,6 +43,12 @@ namespace Web.Controllers
         [HttpPost("/checkout"), ValidateAntiForgeryToken]
         public async Task<IActionResult> Checkout(ClientSideCheckoutViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                TempData[TemporaryErrorMessage] = Messages.CheckTermsAndConditionsError;
+                return RedirectToAction(nameof(Checkout));
+            }
+
             var itemsResult = await _itemService.CheckIfCartItemsIsAvailable();
             if (itemsResult.IsFailure)
             {

@@ -35,7 +35,11 @@
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         <label class="checkbox-inline">
                             <input type="checkbox" asp-for="PrivacyPolicy">
-                            با کلیک روی «ورود»، با سیاست حفظ حریم خصوصی موافقت می‌کنم.
+                            با کلیک روی «ورود»، با
+                            <a asp-area="" asp-controller="TermsAndConditions" asp-action="PrivacyPolicy" target="_blank">سیاست حفظ حریم خصوصی</a>
+                            و
+                            <a asp-area="" asp-controller="TermsAndConditions" asp-action="TermsAndConditions" target="_blank">شرایط و ضوابط</a>
+                            موافقت می‌کنم.
                         </label>
                         <br />
                         <span asp-validation-for="PrivacyPolicy" class="text-danger"></span>
@@ -49,9 +53,9 @@
                             :
                         </p>
                         <p>
-                            <a asp-area="" asp-controller="TermsAndConditions" asp-action="TermsAndConditions">شرایط و ضوابط</a>
+                            <a asp-area="" asp-controller="TermsAndConditions" asp-action="TermsAndConditions" target="_blank">شرایط و ضوابط</a>
                             &nbsp; &nbsp; | &nbsp; &nbsp;
-                            <a asp-area="" asp-controller="TermsAndConditions" asp-action="PrivacyPolicy">سیاست حفظ حریم خصوصی</a>
+                            <a asp-area="" asp-controller="TermsAndConditions" asp-action="PrivacyPolicy" target="_blank">سیاست حفظ حریم خصوصی</a>
                         </p>
                     </div>
                 </div>
@@ -61,5 +65,5 @@
 </div>
 
 @section FooterReferences {
-    <script asp-append-version="true" src="/js/account.js"></script>
+    <script asp-append-version="true" src="/js/disableEnter.js"></script>
 }

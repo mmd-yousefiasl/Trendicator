@@ -342,7 +342,6 @@ namespace Application.Services.Implementaions
             if (validationResult.IsFailure) return Result.Failure<string>(validationResult.Message);
 
             //comment in development
-
             var codeResult = await _sendSmsService.SendLoginCode(validationResult.Value, loginUser.PhoneNumber);
             if (codeResult.IsFailure)
                 return Result.Failure<string>(codeResult.Message);

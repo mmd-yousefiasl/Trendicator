@@ -14,7 +14,7 @@ namespace Application.ViewModels.User.ClientSide
         [RegularExpression("^09\\d{9}$", ErrorMessage = Messages.MobileFormatError)]
         public string PhoneNumber { get; set; }
 
-        [Display(Name = "سیاست حفظ حریم خصوصی")]
+        [Display(Name = "سیاست حفظ حریم خصوصی و شرایط و ظوابط")]
         [MustBeTrue(ErrorMessage = Messages.RequiredError)]
         public bool PrivacyPolicy { get; set; }
     }
