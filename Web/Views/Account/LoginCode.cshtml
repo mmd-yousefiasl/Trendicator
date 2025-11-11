@@ -27,6 +27,7 @@
             <div class="col-lg-6 offset-lg-3">
                 <div class="account-login-inner">
                     <form asp-area="" asp-controller="Account" asp-action="VerifyLoginCode" method="post" class="ltn__form-box contact-form-box" onsubmit="submitAnimation()" autocomplete="off">
+                        <partial name="_CaptchaInput" />
                         <input asp-for="ReturnUrl" type="hidden" />
                         <input asp-for="PhoneNumber" type="hidden" />
 
@@ -68,4 +69,5 @@
 
 @section FooterReferences {
     <script asp-append-version="true" src="/js/disableEnter.js"></script>
+    <partial name="_CaptchaScripts" />
 }

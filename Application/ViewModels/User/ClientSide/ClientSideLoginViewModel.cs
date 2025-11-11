@@ -17,5 +17,9 @@ namespace Application.ViewModels.User.ClientSide
         [Display(Name = "سیاست حفظ حریم خصوصی و شرایط و ظوابط")]
         [MustBeTrue(ErrorMessage = Messages.RequiredError)]
         public bool PrivacyPolicy { get; set; }
+
+        [Display(Name = "من ربات نیستم")]
+        [Required(ErrorMessage = Messages.RequiredError)]
+        public string Captcha { get; set; }
     }
 }

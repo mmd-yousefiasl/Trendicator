@@ -1,6 +1,7 @@
 ﻿using Application.Services.Interfaces;
 using Application.ViewModels.User.ClientSide;
 using Domain.Shared;
+using GoogleReCaptcha.V3.Interface;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +13,15 @@ namespace Web.Controllers
     {
         #region Fields
         private readonly IUserService _userService;
+        private readonly ICaptchaValidator _captchaValidator;
         #endregion
 
         #region Ctor
-        public AccountController(IUserService userService)
+        public AccountController(IUserService userService,
+            ICaptchaValidator captchaValidator)
         {
             _userService = userService;
+            _captchaValidator = captchaValidator;
         }
         #endregion
 
@@ -31,6 +35,11 @@ namespace Web.Controllers
         [HttpPost("/login"), ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(ClientSideLoginViewModel model)
         {
+            if (!await _captchaValidator.IsCaptchaPassedAsync(model.Captcha))
+            {
+                TempData[TemporaryErrorMessage] = Messages.CaptchaFailedError;
+                return View(model);
+            }
             if (User?.Identity?.IsAuthenticated ?? false) return Redirect("/");
             if (!ModelState.IsValid) return View(model);
 
@@ -63,6 +72,11 @@ namespace Web.Controllers
         [HttpPost("/login-code")]
         public async Task<IActionResult> VerifyLoginCode(ClientSideLoginCodeViewModel model)
         {
+            if (!await _captchaValidator.IsCaptchaPassedAsync(model.Captcha))
+            {
+                TempData[TemporaryErrorMessage] = Messages.CaptchaFailedError;
+                return View(model);
+            }
             if (!ModelState.IsValid) return View("LoginCode", model);
 
             var result = await _userService.VerifyLoginCode(model);

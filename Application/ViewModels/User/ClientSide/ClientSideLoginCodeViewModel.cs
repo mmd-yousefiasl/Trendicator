@@ -18,5 +18,9 @@ namespace Application.ViewModels.User.ClientSide
         [MaxLength(4, ErrorMessage = Messages.InvalidLoginCodeError)]
         [MinLength(4, ErrorMessage = Messages.InvalidLoginCodeError)]
         public string LoginCode { get; set; }
+
+        [Display(Name = "من ربات نیستم")]
+        [Required(ErrorMessage = Messages.RequiredError)]
+        public string Captcha { get; set; }
     }
 }
