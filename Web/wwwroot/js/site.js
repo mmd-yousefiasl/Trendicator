@@ -306,3 +306,31 @@ async function RemoveItemFromCart(itemId) {
         loaderOverlay.classList.remove("loader-overlay");
     }
 }
+
+function updateProductPrice(selectElement) {
+    if (!selectElement) return;
+
+    const selected = selectElement.options[selectElement.selectedIndex];
+    if (!selected) return;
+
+    const orderPrice = selected.getAttribute("data-order-price-field");
+    const price = selected.getAttribute("data-price-field");
+
+    // Update main price field
+    const priceField = document.getElementById("price-field");
+    if (priceField) {
+        priceField.textContent = orderPrice && orderPrice.trim() !== ""
+            ? orderPrice
+            : (price ?? "");
+    }
+
+    // Update original (struck-through) price field
+    const orderPriceField = document.getElementById("order-price-field");
+    if (orderPriceField) {
+        if (orderPrice && orderPrice.trim() !== "") {
+            orderPriceField.textContent = price ?? "";
+        } else {
+            orderPriceField.textContent = "";
+        }
+    }
+}

@@ -29,12 +29,13 @@
                     <div class="product-price">
                         @if (Model.HaveDiscount)
                         {
-                            <span>@Model.OrderPrice?.ToToman()</span>
-                            <del>@Model.Price.ToTomanFormat()</del>
+                            <span id="price-field">@Model.OrderPrice?.ToToman()</span>
+                            <del id="order-price-field">@Model.Price.ToTomanFormat()</del>
                         }
                         else
                         {
-                            <span>@Model.Price.ToToman()</span>
+                            <span id="price-field">@Model.Price.ToToman()</span>
+                            <del id="order-price-field"></del>
                         }
                     </div>
                     <div class="modal-product-meta ltn__product-details-menu-1">
@@ -53,10 +54,17 @@
                             @if (Model.IsAvailable)
                             {
                                 <li>
-                                    <select class="form-control" id="Product-Option-Id">
+                                    <select class="form-control" id="Product-Option-Id" onchange="updateProductPrice(this)">
                                         @foreach (var item in Model.Options ?? new List<ClientSideProductOptionViewModel>())
                                         {
-                                            <option value="@item.Id">@item.Title</option>
+                                            @if (item.OrderPrice > 0)
+                                            {
+                                                <option value="@item.Id" data-price-field="@item.Price.ToToman()" data-order-price-field="@item.OrderPrice?.ToToman()">@item.Title</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Id" data-price-field="@item.Price.ToToman()">@item.Title</option>
+                                            }
                                         }
                                     </select>
                                 </li>
