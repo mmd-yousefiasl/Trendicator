@@ -28,6 +28,7 @@ namespace Web.Controllers
         [HttpGet("/login")]
         public IActionResult Login(string ReturnUrl)
         {
+            ViewData["NoIndex"] = true;
             if (User?.Identity?.IsAuthenticated ?? false) return Redirect("/");
             return View(new ClientSideLoginViewModel() { ReturnUrl = ReturnUrl });
         }
@@ -61,6 +62,7 @@ namespace Web.Controllers
         [HttpGet("/login-code")]
         public IActionResult LoginCode(ClientSideLoginCodeViewModel model)
         {
+            ViewData["NoIndex"] = true;
             if (model is null)
             {
                 TempData[TemporaryErrorMessage] = Messages.LoginFailedError;

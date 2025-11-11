@@ -21,6 +21,7 @@ namespace Web.Controllers
         [HttpGet("/product/compare")]
         public async Task<IActionResult> Compare(ClientSideFilterProductComareViewModel filter)
         {
+            ViewData["NoIndex"] = true;
             filter.TakeEntity = 4;
             var result = await _compareService.ClientSideFilterProductCompare(filter);
             if (result.IsFailure) return View(new ClientSideFilterProductComareViewModel());

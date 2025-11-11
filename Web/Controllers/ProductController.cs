@@ -24,6 +24,7 @@ namespace Web.Controllers
         [HttpGet("/products")]
         public async Task<IActionResult> ProductsList(ClientSideFilterProductsViewModel filter)
         {
+            ViewData["NoIndex"] = true;
             var result = await _productService.ClientSideFilterProducts(filter);
             if (result.IsFailure) return View(new ClientSideFilterProductsViewModel());
 
@@ -54,6 +55,8 @@ namespace Web.Controllers
         [HttpGet("/product/quick-view/{slug}")]
         public async Task<IActionResult> ProductQuickView(string slug)
         {
+            ViewData["NoIndex"] = true;
+
             var result = await _productService.ClientSideGetProductDetails(slug);
             if (result.IsFailure) return PartialView("_ProductQuickView", new ClientSideProductDetailsViewModel());
 

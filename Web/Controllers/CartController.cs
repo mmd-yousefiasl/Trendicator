@@ -35,6 +35,7 @@ namespace Web.Controllers
         [HttpGet("/cart-modal")]
         public async Task<IActionResult> CartModal()
         {
+            ViewData["NoIndex"] = true;
             var result = await _cartService.ClientSideGetCart();
             if (result.IsFailure) return PartialView("_CartModal", new List<ClientSideCartViewModel>());
 
@@ -55,6 +56,7 @@ namespace Web.Controllers
         [HttpGet("/cart")]
         public async Task<IActionResult> Cart()
         {
+            ViewData["NoIndex"] = true;
             var result = await _cartService.ClientSideGetCart();
             if (result.IsFailure) return View(new List<ClientSideCartViewModel>());
 
@@ -64,6 +66,7 @@ namespace Web.Controllers
         [HttpGet("/cart/remove/{id}")]
         public async Task<IActionResult> RemoveCartItem(int id)
         {
+            ViewData["NoIndex"] = true;
             if (id < 1)
             {
                 TempData[TemporaryErrorMessage] = Messages.OperationFailedError;

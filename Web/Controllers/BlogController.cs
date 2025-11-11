@@ -21,6 +21,7 @@ namespace Web.Controllers
         [HttpGet("/blogs")]
         public async Task<IActionResult> BlogsList(ClientSideFilterBlogsViewModel filter)
         {
+            ViewData["NoIndex"] = true;
             filter.TakeEntity = 9;
             var result = await _blogService.ClientSideFilterBlogs(filter);
             if (result.IsFailure) return View(new ClientSideFilterBlogsViewModel());

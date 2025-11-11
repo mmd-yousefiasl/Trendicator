@@ -28,6 +28,7 @@ namespace Web.Controllers
         [HttpGet("/checkout")]
         public async Task<IActionResult> Checkout()
         {
+            ViewData["NoIndex"] = true;
             await _cartService.ClientSideAddUserIdToCurrentUserCart();
 
             var itemsResult = await _itemService.CheckIfCartItemsIsAvailable();
@@ -149,12 +150,14 @@ namespace Web.Controllers
         [HttpGet("/payment/success/{orderId}")]
         public IActionResult PaymentSuccess(int orderId)
         {
+            ViewData["NoIndex"] = true;
             return View(orderId);
         }
 
         [HttpGet("/payment/failed")]
         public IActionResult PaymentFailed()
         {
+            ViewData["NoIndex"] = true;
             return View();
         }
     }

@@ -41,6 +41,7 @@ namespace Web.Controllers
         [HttpGet("/product/wishlist")]
         public async Task<IActionResult> WishList(ClientSideFilterProductWishListViewModel filter)
         {
+            ViewData["NoIndex"] = true;
             var result = await _wishListService.ClientSideFilterWishList(filter);
             if (result.IsFailure) return View(new ClientSideFilterProductWishListViewModel());
 
