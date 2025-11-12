@@ -334,3 +334,14 @@ function updateProductPrice(selectElement) {
         }
     }
 }
+
+function CopyUrlToClipboard(inputUrl) {
+    const url = inputUrl;
+    navigator.clipboard.writeText(url)
+        .then(() => {
+            showSuccessMessage("کپی شد!");
+        })
+        .catch(err => {
+            console.error("خطا در کپی کردن:", err);
+        });
+}
