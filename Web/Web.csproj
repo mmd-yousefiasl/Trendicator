@@ -21,6 +21,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+    <PackageReference Include="WebMarkupMin.AspNetCoreLatest" Version="2.19.0" />
   </ItemGroup>
 
   <ItemGroup>

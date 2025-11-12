@@ -7,68 +7,82 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics;
 using Serilog;
 using Web.Configuration;
-
+using WebMarkupMin.AspNetCoreLatest;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .CreateBootstrapLogger();
+
 try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    // Add services to the container.
+    // MVC
     builder.Services.AddControllersWithViews();
 
     // SiteTools
     builder.Configuration.GetSection("SiteTools").Get<SiteTools>();
 
     #region ReCaptcha
-
     builder.Services.AddHttpClient<ICaptchaValidator, GoogleReCaptchaValidator>();
-
     #endregion
 
     #region Data protection
-
     builder.Services.AddDataProtection()
         .PersistKeysToFileSystem(new DirectoryInfo(
             Path.Combine(builder.Environment.ContentRootPath, "KeyDirectory")))
         .SetApplicationName(SiteTools.SiteName)
         .SetDefaultKeyLifetime(TimeSpan.FromMinutes(
             int.Parse(builder.Configuration.GetSection("MachineKeyLifetime").Value)));
-
     #endregion
 
+    // Authentication
     builder.ConfigAuthentication();
 
+    // Dependencies
     var connectionString = builder.Configuration.GetConnectionString("LocalConnectionString");
     DependencyContainer.RegisterDependencies(builder.Services, connectionString);
 
-    //mediatR
+    // MediatR
     builder.Services.AddMediatR(config =>
     {
         config.RegisterServicesFromAssembly(typeof(IMediatorHandler).Assembly);
     });
 
+    // Caching
     builder.Services.AddEasyCaching(options =>
     {
         options.UseInMemory();
     });
 
+    // Logging
     builder.Logging.ClearProviders();
+    builder.Host.UseSerilog((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration));
 
-    #region Logger 
-    builder.Host.UseSerilog((ctx, lc) =>
-    lc.ReadFrom.Configuration(ctx.Configuration));
-    #endregion
-
+    // Compression
     builder.Services.AddResponseCompression();
+
+    // HTML Minification
+    builder.Services.AddWebMarkupMin(options =>
+    {
+        options.AllowMinificationInDevelopmentEnvironment = true;
+        options.DisablePoweredByHttpHeaders = true;
+    })
+    .AddHtmlMinification(options =>
+    {
+        options.MinificationSettings.RemoveRedundantAttributes = false; // keep type="text", etc.
+        options.MinificationSettings.RemoveOptionalEndTags = false;     // safer for <input>, <textarea>
+        options.MinificationSettings.WhitespaceMinificationMode =
+            WebMarkupMin.Core.WhitespaceMinificationMode.Safe;          // less aggressive
+    });
 
     var app = builder.Build();
 
+    // Compression + Minification
     app.UseResponseCompression();
+    app.UseWebMarkupMin();
 
-    // Configure the HTTP request pipeline.
+    // Error handling
     if (!app.Environment.IsDevelopment())
     {
         app.UseExceptionHandler(errorApp =>
@@ -78,7 +92,6 @@ try
                 var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
                 if (exceptionHandlerPathFeature?.Error != null)
                 {
-                    // Log the error
                     Log.Error(exceptionHandlerPathFeature.Error.Message);
                 }
                 context.Response.Redirect("/500");
@@ -87,6 +100,10 @@ try
         app.UseHsts();
     }
 
+    // HTTPS first
+    app.UseHttpsRedirection();
+
+    // Static files with cache headers
     app.UseStaticFiles(new StaticFileOptions
     {
         OnPrepareResponse = ctx =>
@@ -95,44 +112,28 @@ try
         }
     });
 
-    app.Use(async (context, next) =>
-    {
-        await next();
-        switch (context.Response.StatusCode)
-        {
-            case 404:
-                context.Request.Path = "/404";
-                await next();
-                break;
+    // Status code handling
+    app.UseStatusCodePagesWithReExecute("/{0}");
 
-            case 403:
-                context.Request.Path = "/403";
-                await next();
-                break;
-
-            default:
-                break;
-        }
-    });
-
-    app.UseHttpsRedirection();
-    app.UseStaticFiles();
-
+    // Routing
     app.UseRouting();
 
+    // Auth
     app.UseAuthentication();
     app.UseAuthorization();
 
+    // Routes
     app.MapControllerRoute(
-      name: "areas",
-      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+        name: "areas",
+        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
     app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
 
     app.Run();
 }
-catch (Exception? ex)
+catch (Exception ex)
 {
     Log.Error(ex.Message);
 }
