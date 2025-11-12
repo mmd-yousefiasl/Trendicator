@@ -51,13 +51,13 @@
                                                 </a>
                                             </td>
                                             <td class="cart-product-image">
-                                                <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-slug="@item.Slug">
+                                                <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@item.Id" asp-route-slug="@item.Slug">
                                                     <img src="@SiteTools.ProductBanner@item.FileName" alt="@item.Title">
                                                 </a>
                                             </td>
                                             <td class="cart-product-info">
                                                 <h4>
-                                                    <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-slug="@item.Slug">
+                                                    <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@item.Id" asp-route-slug="@item.Slug">
                                                         @item.Title
                                                     </a>
                                                 </h4>

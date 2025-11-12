@@ -31,16 +31,37 @@ namespace Web.Controllers
             return View(result.Value);
         }
 
-        [HttpGet("/product/{slug}")]
-        public async Task<IActionResult> ProductDetails(string slug)
+        [HttpGet("/p/{id}/{slug}")]
+        public async Task<IActionResult> ProductDetails(int id, string slug)
         {
-            if (string.IsNullOrWhiteSpace(slug))
+            if (id < 1)
             {
                 TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
                 return RedirectToAction(nameof(ProductsList));
             }
 
-            var result = await _productService.ClientSideGetProductDetails(slug);
+            var result = await _productService.ClientSideGetProductDetails(id);
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+                return RedirectToAction(nameof(ProductsList));
+            }
+
+            await _viewService.AddProductView(result.Value.Id);
+
+            return View(result.Value);
+        }
+
+        [HttpGet("/p/{id}")]
+        public async Task<IActionResult> ProductDetails(int id)
+        {
+            if (id < 1)
+            {
+                TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
+                return RedirectToAction(nameof(ProductsList));
+            }
+
+            var result = await _productService.ClientSideGetProductDetails(id);
             if (result.IsFailure)
             {
                 TempData[TemporaryErrorMessage] = result.Message;

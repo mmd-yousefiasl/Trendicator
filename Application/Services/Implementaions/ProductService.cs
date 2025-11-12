@@ -478,9 +478,48 @@ namespace Application.Services.Implementaions
             return products;
         }
 
+        public async Task<Result<ClientSideProductDetailsViewModel>> ClientSideGetProductDetails(int Id)
+        {
+            if (Id < 1) return Result.Failure<ClientSideProductDetailsViewModel>(Messages.OperationFailedError);
+
+            var product = await _dbSet.Where(n => n.Id == Id && n.IsPublished)
+                .Select(n => new ClientSideProductDetailsViewModel()
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Slug = n.Slug,
+                    IsAvailable = n.IsAvailable,
+                    ShortDescription = n.ShortDescription,
+                    Description = n.Description,
+                    BannerFileName = n.BannerFileName,
+                    Gallery = n.Gallery.Select(n => n.FileName).ToList(),
+                    HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
+                    OrderPrice = n.DisplayOrderPrice,
+                    Price = n.DisplayPrice,
+                    Category = n.Category.Title,
+                    CategoryId = n.CategoryId,
+                    Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
+                    Options = n.Options.Select(o => new ClientSideProductOptionViewModel()
+                    {
+                        Id = o.Id,
+                        Title = o.Title,
+                        Price = o.Price,
+                        OrderPrice = o.OrderPrice
+                    }).ToList(),
+                    ReviewsCount = n.Reviews.Where(n => n.IsConfirmed).Count(),
+                }).AsNoTracking().FirstOrDefaultAsync();
+            if (product is null) return Result.Failure<ClientSideProductDetailsViewModel>(Messages.OperationFailedError);
+
+            product.IsInUserWishList = await _wishListService.IsInUserWishList(product.Id);
+            product.IsInUserCompare = await _compareService.IsInUserCompare(product.Id);
+
+            return product;
+        }
+
         public async Task<Result<ClientSideProductDetailsViewModel>> ClientSideGetProductDetails(string slug)
         {
-            if (string.IsNullOrWhiteSpace(slug)) return Result.Failure<ClientSideProductDetailsViewModel>(Messages.OperationFailedError);
+            if (string.IsNullOrWhiteSpace(slug))
+                return Result.Failure<ClientSideProductDetailsViewModel>(Messages.OperationFailedError);
 
             var product = await _dbSet.Where(n => n.Slug == slug && n.IsPublished)
                 .Select(n => new ClientSideProductDetailsViewModel()

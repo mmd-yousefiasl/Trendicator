@@ -12,7 +12,7 @@
         {
             <div class="mini-cart-item clearfix">
                 <div class="mini-cart-img">
-                    <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-slug="@item.Slug">
+                    <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@item.Id" asp-route-slug="@item.Slug">
                         <img src="@SiteTools.ProductBanner@item.FileName" alt="@item.Title">
                     </a>
 
@@ -20,7 +20,7 @@
                 </div>
                 <div class="mini-cart-info">
                     <h6>
-                        <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-slug="@item.Slug">
+                        <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@item.Id" asp-route-slug="@item.Slug">
                             @item.Title
                             (@item.OptionTitle)
                         </a>
