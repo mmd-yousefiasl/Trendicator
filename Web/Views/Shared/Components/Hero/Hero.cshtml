@@ -1,0 +1,25 @@
+﻿@using Application.ViewModels.Hero.ClientSide
+@model ClientSideHeroViewModel
+
+@if (Model is not null)
+{
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>@Model.Title</h1>
+            <p>@Model.Description</p>
+            <a asp-area="" asp-controller="Product" asp-action="ProductsList" class="hero-btn">مشاهده محصولات</a>
+        </div>
+
+        <!-- LCP Image -->
+        <picture>
+            <source srcset="@SiteTools.Banner@Model.FileName" type="image/webp">
+            <img src="@SiteTools.Banner@Model.FileName"
+                 alt="@Model.Title"
+                 title="@Model.Title"
+                 class="hero-img"
+                 loading="eager"
+                 fetchpriority="high" />
+        </picture>
+    </section>
+}

@@ -91,44 +91,6 @@ namespace Domain.Statics
             },
             #endregion
 
-            #region Slider
-            new Permission
-            {
-                Id = 12,
-                ParentId = 1,
-                Title = "مدیریت لغزنده ها",
-                UniqueName = "ManageSlider"
-            },
-            new Permission
-            {
-                Id = 13,
-                ParentId = 12,
-                Title = "لیست لغزنده ها",
-                UniqueName = "SlidersList"
-            },
-            new Permission
-            {
-                Id = 14,
-                ParentId = 12,
-                Title = "افزودن لغزنده جدید",
-                UniqueName = "CreateNewSlider"
-            },
-            new Permission
-            {
-                Id = 15,
-                ParentId = 12,
-                Title = "ویرایش لغزنده",
-                UniqueName = "UpdateSlider"
-            },
-            new Permission
-            {
-                Id = 16,
-                ParentId = 12,
-                Title = "حذف لغزنده",
-                UniqueName = "DeleteSlider"
-            },
-            #endregion
-
             #region Banner
             new Permission
             {
@@ -917,9 +879,26 @@ namespace Domain.Statics
                 UniqueName = "UpdateSmsData"
             },
             #endregion
+
+            #region Hero    
+            new Permission
+            {
+                Id = 119,
+                ParentId = 1,
+                Title = "مدیریت بنر قهرمان",
+                UniqueName = "ManageHero"
+            },
+            new Permission
+            {
+                Id = 120,
+                ParentId = 119,
+                Title = "ویرایش بنر قهرمان",
+                UniqueName = "UpdateHero"
+            },
+            #endregion
         };
 
-        //Last used id ==> 118
+        //Last used id ==> 120
         public static List<Permission> Permissions = _permissions;
     }
 }

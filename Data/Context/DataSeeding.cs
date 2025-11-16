@@ -103,6 +103,17 @@ namespace Data.Context
 
             modelBuilder.Entity<SmsData>().HasData(smsData);
             #endregion
+
+            #region Hero
+            Hero hero = new Hero()
+            {
+                Id = 1,
+                IsDeleted = false,
+            };
+
+            modelBuilder.Entity<Hero>().HasData(hero);
+
+            #endregion
         }
     }
 }

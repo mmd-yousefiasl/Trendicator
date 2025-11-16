@@ -27,7 +27,6 @@ namespace IOC
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IPermissionService, PermissionService>();
             services.AddScoped<IUserValidationService, UserValidationService>();
-            services.AddScoped<ISliderService, SliderService>();
             services.AddScoped<IBannerService, BannerService>();
             services.AddScoped<IFaqService, FaqService>();
             services.AddScoped<IOurFeaturesService, OurFeaturesService>();
@@ -62,6 +61,7 @@ namespace IOC
             services.AddScoped<ISiteNotificationService, SiteNotificationService>();
             services.AddScoped<ISmsDataService, SmsDataService>();
             services.AddScoped<ISendSmsService, SendSmsService>();
+            services.AddScoped<IHeroService, HeroService>();
 
             #endregion
 

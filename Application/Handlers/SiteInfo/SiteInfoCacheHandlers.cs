@@ -3,7 +3,6 @@ using Application.Static;
 using Domain.Events.SiteInfo;
 using Domain.Events.SiteInfo.Banner;
 using Domain.Events.SiteInfo.OurFeature;
-using Domain.Events.SiteInfo.Slider;
 using Domain.Events.SiteInfo.SocialMedia;
 using Domain.Events.SiteInfo.Testimonial;
 using MediatR;
@@ -19,16 +18,14 @@ namespace Application.Handlers.SiteInfo
         INotificationHandler<OurFeatureDeletedEvent>,
         INotificationHandler<PaymentDataUpdatedEvent>,
         INotificationHandler<SiteDataUpdatedEvent>,
-        INotificationHandler<SliderCreatedEvent>,
-        INotificationHandler<SliderUpdatedEvent>,
-        INotificationHandler<SliderDeletedEvent>,
         INotificationHandler<SocialMediaCreatedEvent>,
         INotificationHandler<SocialMediaUpdatedEvent>,
         INotificationHandler<SocialMediaDeletedEvent>,
         INotificationHandler<TestimonialCreatedEvent>,
         INotificationHandler<TestimonialUpdatedEvent>,
         INotificationHandler<TestimonialDeletedEvent>,
-        INotificationHandler<SmsDataUpdatedEvent>
+        INotificationHandler<SmsDataUpdatedEvent>,
+        INotificationHandler<HeroUpdatedEvent>
     {
         private readonly ICacheManager _cacheManager;
         public SiteInfoCacheHandlers(ICacheManager cacheManager)
@@ -81,21 +78,6 @@ namespace Application.Handlers.SiteInfo
             return _cacheManager.RemoveByKeyAsync(CacheKeys.SiteDataCacheKey);
         }
 
-        public Task Handle(SliderCreatedEvent notification, CancellationToken cancellationToken)
-        {
-            return _cacheManager.RemoveByKeyAsync(CacheKeys.SliderCacheKey);
-        }
-
-        public Task Handle(SliderUpdatedEvent notification, CancellationToken cancellationToken)
-        {
-            return _cacheManager.RemoveByKeyAsync(CacheKeys.SliderCacheKey);
-        }
-
-        public Task Handle(SliderDeletedEvent notification, CancellationToken cancellationToken)
-        {
-            return _cacheManager.RemoveByKeyAsync(CacheKeys.SliderCacheKey);
-        }
-
         public Task Handle(SocialMediaCreatedEvent notification, CancellationToken cancellationToken)
         {
             return _cacheManager.RemoveByKeyAsync(CacheKeys.SocialMediaCacheKey);
@@ -129,6 +111,11 @@ namespace Application.Handlers.SiteInfo
         public Task Handle(SmsDataUpdatedEvent notification, CancellationToken cancellationToken)
         {
             return _cacheManager.RemoveByKeyAsync(CacheKeys.SmsDataCacheKey);
+        }
+
+        public Task Handle(HeroUpdatedEvent notification, CancellationToken cancellationToken)
+        {
+            return _cacheManager.RemoveByKeyAsync(CacheKeys.HeroCacheKey);
         }
     }
 }

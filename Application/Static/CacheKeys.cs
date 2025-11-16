@@ -7,7 +7,7 @@
         public const string OurFeatureCacheKey = "OurFeature";
         public const string PaymentDataCacheKey = "PaymentData";
         public const string SiteDataCacheKey = "SiteData";
-        public const string SliderCacheKey = "Slider";
+        public const string HeroCacheKey = "Hero";
         public const string SocialMediaCacheKey = "SocialMedia";
         public const string TestimonialCacheKey = "Testimonial";
         public const string FaqCacheKey = "Faq";
