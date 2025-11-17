@@ -418,3 +418,7 @@
 .icon-shopping-cart:before {
     content: "\e933";
 }
+
+.fa-eye:before {
+    content: "\f06e"
+}

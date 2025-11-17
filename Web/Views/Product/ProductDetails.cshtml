@@ -72,10 +72,10 @@
                                     <ul>
                                         @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id })
                                         <li class="review-total">
-                                            <a href="javascript:void(0)">
+                                            <span>
                                                 ( @Model.ReviewsCount
                                                 بازخورد )
-                                            </a>
+                                            </span>
                                         </li>
                                     </ul>
                                 </div>
@@ -125,18 +125,18 @@
                                                 </select>
                                             </li>
                                             <li>
-                                                <a href="javascript:void(0)" class="theme-btn-1 btn btn-effect-1 btn-submit" onclick="AddToCart()">
+                                                <button type="button" title="افزودن به سبد خرید" class="theme-btn-1 btn btn-effect-1 btn-submit" onclick="AddToCart()">
                                                     <i class="fas fa-shopping-cart"></i>
                                                     <span>افزودن به سبد خرید</span>
-                                                </a>
+                                                </button>
                                             </li>
                                         }
                                         else
                                         {
                                             <li>
-                                                <a href="javascript:void(0)" class="btn btn-outline-danger">
+                                                <div class="btn btn-outline-danger">
                                                     <span>ناموجود</span>
-                                                </a>
+                                                </div>
                                             </li>
                                         }
                                     </ul>
@@ -144,17 +144,17 @@
                                 <div class="ltn__product-details-menu-3">
                                     <ul>
                                         <li>
-                                            <a href="javascript:void(0)" class="wishlist-toggle" data-product-id="@Model.Id">
+                                            <button type="button" title="علاقه مندی ها" class="wishlist-toggle" data-product-id="@Model.Id">
                                                 <i class="@((Model.IsInUserWishList) ? "fa" : "far") fa-heart"></i>
                                                 <span>@((Model.IsInUserWishList) ? "حذف از علاقه مندی ها" : "افزودن به علاقمندی ها")</span>
-                                            </a>
+                                            </button>
                                         </li>
                                         <li>
-                                            <a href="javascript:void(0)" class="compare-toggle" data-product-id="@Model.Id"
-                                               title="@(Model.IsInUserCompare ? "حذف از لیست مقایسه" : "اضافه کردن به لیست مقایسه")">
+                                            <button type="button" title="مقایسه" class="compare-toggle" data-product-id="@Model.Id"
+                                                    title="@(Model.IsInUserCompare ? "حذف از لیست مقایسه" : "اضافه کردن به لیست مقایسه")">
                                                 <i class="fas fa-exchange-alt"></i>
                                                 <span>@(Model.IsInUserCompare ? "حذف از لیست مقایسه" : "اضافه کردن به لیست مقایسه")</span>
-                                            </a>
+                                            </button>
                                         </li>
                                     </ul>
                                 </div>

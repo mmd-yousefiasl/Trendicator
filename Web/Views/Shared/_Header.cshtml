@@ -9,7 +9,7 @@
                         <div class="header-search-2">
                             <form asp-area="" asp-controller="Product" asp-action="ProductsList" method="get">
                                 <input type="text" name="Search" value="" placeholder="جستجو کنید ..." />
-                                <button type="submit">
+                                <button type="submit" title="جست و جو">
                                     <span><i class="icon-search"></i></span>
                                 </button>
                             </form>
@@ -32,7 +32,7 @@
                                     <div class="header-search-1-form">
                                         <form asp-area="" asp-controller="Product" asp-action="ProductsList" method="get">
                                             <input type="text" name="Search" value="" placeholder="جستجو کنید ..." />
-                                            <button type="submit">
+                                            <button type="submit" title="جست و جو">
                                                 <span><i class="icon-search"></i></span>
                                             </button>
                                         </form>
@@ -44,7 +44,9 @@
                                 <div class="ltn__drop-menu user-menu">
                                     <ul>
                                         <li>
-                                            <a href="javascript:void(0)"><i class="icon-user"></i></a>
+                                            <a href="javascript:void(0)" title="حساب کاربری">
+                                                <i class="icon-user"></i>
+                                            </a>
                                             <ul>
                                                 <li><a asp-area="" asp-controller="ProductWishList" asp-action="WishList">علاقه مندی ها</a></li>
                                                 <li><a asp-area="" asp-controller="ProductCompare" asp-action="Compare">مقایسه</a></li>
@@ -67,7 +69,7 @@
                             <li>
                                 <!-- mini-cart 2 -->
                                 <div class="mini-cart-icon mini-cart-icon-2">
-                                    <a href="#ltn__utilize-cart-menu" class="ltn__utilize-toggle" onclick="LoadCartModal()">
+                                    <a href="#ltn__utilize-cart-menu" title="سبد خرید" class="ltn__utilize-toggle" onclick="LoadCartModal()">
                                         <span class="mini-cart-icon">
                                             <i class="icon-shopping-cart"></i>
                                         </span>

@@ -16,10 +16,10 @@
                         <ul>
                             @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id })
                             <li class="review-total">
-                                <a href="javascript:void(0)">
+                                <span>
                                     ( @Model.ReviewsCount
                                     بازخورد )
-                                </a>
+                                </span>
                             </li>
                         </ul>
                     </div>
@@ -69,18 +69,18 @@
                                     </select>
                                 </li>
                                 <li>
-                                    <a href="javascript:void(0)" class="theme-btn-1 btn btn-effect-1 btn-submit" onclick="AddToCart()">
+                                    <button type="button" title="افزودن به سبد خرید" class="theme-btn-1 btn btn-effect-1 btn-submit" onclick="AddToCart()">
                                         <i class="fas fa-shopping-cart"></i>
                                         <span>افزودن به سبد خرید</span>
-                                    </a>
+                                    </button>
                                 </li>
                             }
                             else
                             {
                                 <li>
-                                    <a href="javascript:void(0)" class="btn btn-outline-danger">
+                                    <div class="btn btn-outline-danger">
                                         <span>ناموجود</span>
-                                    </a>
+                                    </div>
                                 </li>
                             }
                         </ul>
