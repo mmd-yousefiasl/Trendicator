@@ -2,6 +2,8 @@
     {
         "outputFileName": "wwwroot/css/website.min.css",
         "inputFiles": [
+            "wwwroot/assets/css/plugins.css",
+            "wwwroot/assets/css/style.css",
             "wwwroot/assets/css/responsive.css",
             "wwwroot/css/site.css"
         ],
@@ -11,20 +13,6 @@
         "outputFileName": "wwwroot/assets/css/used-icons.min.css",
         "inputFiles": [
             "wwwroot/assets/css/used-icons.css"
-        ],
-        "minify": { "enabled": true }
-    },
-    {
-        "outputFileName": "wwwroot/css/plugins.min.css",
-        "inputFiles": [
-            "wwwroot/assets/css/plugins.css"
-        ],
-        "minify": { "enabled": true }
-    },
-    {
-        "outputFileName": "wwwroot/css/styles.min.css",
-        "inputFiles": [
-            "wwwroot/assets/css/style.css"
         ],
         "minify": { "enabled": true }
     },

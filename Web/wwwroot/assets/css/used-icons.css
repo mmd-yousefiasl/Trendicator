@@ -422,3 +422,7 @@
 .fa-eye:before {
     content: "\f06e"
 }
+
+.fa-angle-up:before {
+    content: "\f106"
+}
