@@ -7,16 +7,16 @@
     <div class="ltn__blog-item ltn__blog-item-3">
         <div class="ltn__blog-img">
             <a asp-area="" asp-controller="Blog" asp-action="BlogDetails" asp-route-slug="@Model.Slug">
-                <img src="@SiteTools.BlogBanner@Model.FileName" alt="@Model.Title">
+                <img src="@SiteTools.BlogBanner@Model.FileName" alt="@Model.Title" title="@Model.Title">
             </a>
         </div>
         <div class="ltn__blog-brief">
             <div class="ltn__blog-meta">
                 <ul>
                     <li class="ltn__blog-author">
-                            <i class="far fa-user"></i>
-                            نویسنده:
-                            @Model.Writer
+                        <i class="far fa-user"></i>
+                        نویسنده:
+                        @Model.Writer
                     </li>
                     <li class="ltn__blog-tags">
                         <a asp-area="" asp-controller="Blog" asp-action="BlogsList" asp-route-CategoryId="@Model.CategoryId">
