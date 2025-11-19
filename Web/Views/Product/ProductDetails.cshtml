@@ -40,29 +40,10 @@
                             <div class="ltn__shop-details-img-gallery">
                                 <div class="ltn__shop-details-large-img">
                                     <div class="single-large-img">
-                                        <a href="@SiteTools.ProductBanner@Model.BannerFileName" data-rel="lightcase:myCollection">
+                                        <a href="@SiteTools.ProductBanner@Model.BannerFileName" target="_blank">
                                             <img src="@SiteTools.ProductBanner@Model.BannerFileName" alt="@Model.Title">
                                         </a>
                                     </div>
-                                    @foreach (var item in Model.Gallery ?? new List<string>())
-                                    {
-                                        <div class="single-large-img">
-                                            <a href="@SiteTools.ProductGallery@item" data-rel="lightcase:myCollection">
-                                                <img src="@SiteTools.ProductGallery@item" alt="@Model.Title">
-                                            </a>
-                                        </div>
-                                    }
-                                </div>
-                                <div class="ltn__shop-details-small-img slick-arrow-2">
-                                    <div class="single-small-img">
-                                        <img src="@SiteTools.ProductBanner@Model.BannerFileName" alt="@Model.Title">
-                                    </div>
-                                    @foreach (var item in Model.Gallery ?? new List<string>())
-                                    {
-                                        <div class="single-small-img">
-                                            <img src="@SiteTools.ProductGallery@item" alt="@Model.Title">
-                                        </div>
-                                    }
                                 </div>
                             </div>
                         </div>
@@ -144,13 +125,13 @@
                                 <div class="ltn__product-details-menu-3">
                                     <ul>
                                         <li>
-                                            <button type="button" title="علاقه مندی ها" class="wishlist-toggle" data-product-id="@Model.Id">
+                                            <button type="button" title="علاقه مندی ها" class="wishlist-toggle bg-none" data-product-id="@Model.Id">
                                                 <i class="@((Model.IsInUserWishList) ? "fa" : "far") fa-heart"></i>
                                                 <span>@((Model.IsInUserWishList) ? "حذف از علاقه مندی ها" : "افزودن به علاقمندی ها")</span>
                                             </button>
                                         </li>
                                         <li>
-                                            <button type="button" title="مقایسه" class="compare-toggle" data-product-id="@Model.Id"
+                                            <button type="button" class="compare-toggle bg-none" data-product-id="@Model.Id"
                                                     title="@(Model.IsInUserCompare ? "حذف از لیست مقایسه" : "اضافه کردن به لیست مقایسه")">
                                                 <i class="fas fa-exchange-alt"></i>
                                                 <span>@(Model.IsInUserCompare ? "حذف از لیست مقایسه" : "اضافه کردن به لیست مقایسه")</span>
