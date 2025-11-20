@@ -3,6 +3,7 @@
 namespace Domain.Events.Products.ProductCategory
 {
     public record ProductCategoryCreatedEvent(
-        string Title
+        string Title,
+        string Slug
         ) : INotification;
 }

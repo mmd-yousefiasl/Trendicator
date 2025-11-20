@@ -37,13 +37,15 @@ namespace Application.Services.Implementaions
             {
                 Title = model.Title,
                 ParentCategoryId = model.ParentCategoryId,
+                Slug = model.Slug.Replace(" ", "-")
             };
 
             await _dbSet.AddAsync(category);
             await _context.SaveChangesAsync();
 
             ProductCategoryCreatedEvent ProductCategoryCreatedEvent = new ProductCategoryCreatedEvent(
-                category.Title);
+                category.Title,
+                category.Slug);
 
             await _mediator.PublishEvent(ProductCategoryCreatedEvent);
 
@@ -79,7 +81,8 @@ namespace Application.Services.Implementaions
             if (!string.IsNullOrWhiteSpace(filter.Search))
             {
                 conditions.Add(n => n.Title.Contains(filter.Search) ||
-                n.ParentCategory.Title.Contains(filter.Search));
+                n.ParentCategory.Title.Contains(filter.Search) ||
+                n.Slug.Contains(filter.Search));
             }
 
             IQueryable<ProductCategory> query = _dbSet;
@@ -94,6 +97,7 @@ namespace Application.Services.Implementaions
             {
                 Id = n.Id,
                 Title = n.Title,
+                Slug = n.Slug,
                 ParentCategoryTitle = n.ParentCategory.Title
             }));
 
@@ -108,7 +112,8 @@ namespace Application.Services.Implementaions
             {
                 Id = n.Id,
                 ParentCategoryId = n.ParentCategoryId,
-                Title = n.Title
+                Title = n.Title,
+                Slug = n.Slug,
             }).AsNoTracking().FirstOrDefaultAsync();
             if (category is null) return Result.Failure<AdminSideUpdateProductCategoryViewModel>(Messages.OperationFailedError);
 
@@ -139,13 +144,15 @@ namespace Application.Services.Implementaions
 
             category.Title = model.Title;
             category.ParentCategoryId = model.ParentCategoryId;
+            category.Slug = model.Slug.Replace(" ", "-");
 
             _dbSet.Update(category);
             await _context.SaveChangesAsync();
 
             ProductCategoryUpdatedEvent ProductCategoryUpdatedEvent = new ProductCategoryUpdatedEvent(
                 category.Id,
-                category.Title);
+                category.Title,
+                category.Slug);
 
             await _mediator.PublishEvent(ProductCategoryUpdatedEvent);
 
@@ -164,6 +171,7 @@ namespace Application.Services.Implementaions
                 {
                     Id = item.Id,
                     Title = item.Title,
+                    Slug = item.Slug,
                     ParentId = null,
                     Categories = new List<ClientSideProductCategoryViewModel>()
                 };
@@ -173,6 +181,7 @@ namespace Application.Services.Implementaions
                     {
                         Id = item2.Id,
                         Title = item2.Title,
+                        Slug = item2.Slug,
                         ParentId = item.Id,
                         Categories = new List<ClientSideProductCategoryViewModel>()
                     };
@@ -182,6 +191,7 @@ namespace Application.Services.Implementaions
                         {
                             Id = item3.Id,
                             Title = item3.Title,
+                            Slug = item3.Slug,
                             ParentId = item2.Id,
                         };
 

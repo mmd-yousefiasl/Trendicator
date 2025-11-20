@@ -365,11 +365,11 @@ namespace Application.Services.Implementaions
                 n.Category.Title.Contains(filter.Search));
             }
 
-            if (filter.CategoryId is not null)
+            if (!string.IsNullOrWhiteSpace(filter.Category))
             {
-                conditions.Add(n => n.CategoryId == filter.CategoryId ||
-                n.Category.ParentCategoryId == filter.CategoryId ||
-                n.Category.ParentCategory.ParentCategoryId == filter.CategoryId);
+                conditions.Add(n => n.Category.Slug == filter.Category ||
+                n.Category.ParentCategory.Slug == filter.Category ||
+                n.Category.ParentCategory.ParentCategory.Slug == filter.Category);
             }
 
             IQueryable<Product> query = _dbSet;

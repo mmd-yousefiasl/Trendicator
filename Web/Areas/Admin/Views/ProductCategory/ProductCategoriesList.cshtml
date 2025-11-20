@@ -69,7 +69,7 @@
 
                                             <tr>
                                                 <th scope="row">@counter</th>
-                                                <td>@item.Title</td>
+                                                <td title="@item.Slug">@item.Title</td>
                                                 <td>@item.ParentCategoryTitle</td>
                                                 <td>
                                                     <a permission="UpdateProductCategory" asp-area="Admin" asp-controller="ProductCategory" asp-action="UpdateProductCategory" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm edit" title="ویرایش">

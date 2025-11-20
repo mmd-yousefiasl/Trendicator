@@ -12,6 +12,7 @@ namespace Data.Context.Configurations.Products
             builder.HasQueryFilter(n => !n.IsDeleted);
 
             builder.Property(n => n.Title).HasMaxLength(100);
+            builder.Property(n => n.Slug).HasMaxLength(200);
 
             builder.HasOne(n => n.ParentCategory)
                 .WithMany(n => n.SubCategories)

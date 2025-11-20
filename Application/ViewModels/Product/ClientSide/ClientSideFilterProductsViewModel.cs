@@ -11,7 +11,7 @@ namespace Application.ViewModels.Product.ClientSide
         [MaxLength(100, ErrorMessage = Messages.MaxLengthError)]
         public string? Search { get; set; }
 
-        public int? CategoryId { get; set; }
+        public string? Category { get; set; }
 
         public ProductSortTypeEnum? Sort { get; set; }
     }

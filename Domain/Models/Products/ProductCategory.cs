@@ -3,6 +3,7 @@
     public class ProductCategory : BaseEntity<int>
     {
         public string Title { get; set; }
+        public string Slug { get; set; }
 
         #region Realtions
         public ICollection<Product>? Products { get; set; }

@@ -10,7 +10,7 @@
             @foreach (var item in Model ?? new List<ClientSideProductCategoryViewModel>())
             {
                 <li>
-                    <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-CategoryId="@item.Id">
+                    <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@item.Slug">
                         @item.Title
                     </a>
                 </li>
@@ -18,7 +18,7 @@
                 @foreach (var item2 in item.Categories ?? new List<ClientSideProductCategoryViewModel>())
                 {
                     <li class="mr-20">
-                        <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-CategoryId="@item2.Id">
+                        <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@item2.Slug">
                             @item2.Title
                         </a>
                     </li>
@@ -26,7 +26,7 @@
                     @foreach (var item3 in item2.Categories ?? new List<ClientSideProductCategoryViewModel>())
                     {
                         <li class="mr-40">
-                            <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-CategoryId="@item3.Id">
+                            <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@item3.Slug">
                                 @item3.Title
                             </a>
                         </li>

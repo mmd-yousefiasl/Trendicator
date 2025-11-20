@@ -21,10 +21,19 @@ namespace Web.Controllers
         }
         #endregion
 
-        [HttpGet("/products")]
-        public async Task<IActionResult> ProductsList(ClientSideFilterProductsViewModel filter)
+        [HttpGet("/products/{category?}")]
+        public async Task<IActionResult> ProductsList(string? category, ClientSideFilterProductsViewModel filter)
         {
-            ViewData["NoIndex"] = true;
+            if (!string.IsNullOrWhiteSpace(category) && string.IsNullOrWhiteSpace(filter.Search) && filter.Sort is null)
+            {
+                ViewData["NoIndex"] = false;
+            }
+            else
+            {
+                ViewData["NoIndex"] = true;
+            }
+
+            filter.Category = category;
             var result = await _productService.ClientSideFilterProducts(filter);
             if (result.IsFailure) return View(new ClientSideFilterProductsViewModel());
 
