@@ -9,9 +9,9 @@
                 @if (Model.StartPage < Model.Page)
                 {
                     <li>
-                        <a href="javascript:void(0);" data-page="@(Model.Page - 1)" onclick="FillPageId(@(Model.Page - 1))">
+                        <button type="button" class="bg-none" data-page="@(Model.Page - 1)" onclick="FillPageId(@(Model.Page - 1))">
                             <i class="fas fa-angle-double-right"></i>
-                        </a>
+                        </button>
                     </li>
                 }
                 @for (int i = Model.StartPage; i <= Model.EndPage; i++)
@@ -19,22 +19,22 @@
                     if (Model.Page == i)
                     {
                         <li class="active">
-                            <a href="javascript:void(0);" data-page="0">@i</a>
+                            <button type="button" class="bg-none" data-page="0">@i</button>
                         </li>
                     }
                     else
                     {
                         <li>
-                            <a href="javascript:void(0);" data-page="@i" onclick="FillPageId(@i)">@i</a>
+                            <button type="button" class="bg-none" data-page="@i" onclick="FillPageId(@i)">@i</button>
                         </li>
                     }
                 }
                 @if (Model.EndPage > Model.Page)
                 {
                     <li>
-                        <a href="javascript:void(0);" data-page="@(Model.Page + 1)" onclick="FillPageId(@(Model.Page + 1))">
+                        <button type="button" class="bg-none" data-page="@(Model.Page + 1)" onclick="FillPageId(@(Model.Page + 1))">
                             <i class="fas fa-angle-double-left"></i>
-                        </a>
+                        </button>
                     </li>
                 }
             </ul>

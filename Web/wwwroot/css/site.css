@@ -162,3 +162,78 @@ h1, h2, h3, h4, h5, h6, h7, p, div, a, button, li, span, label, input, textarea,
 .bg-none {
     background-color: transparent;
 }
+
+.circle-button {
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    padding: 0;
+    cursor: pointer;
+    /* Green gradient background */
+    background: linear-gradient(135deg, #43cea2, #185a9d);
+    border: none;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    /* Depth with shadow */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    /* Smooth transitions */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    /* Hover effect */
+    .circle-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25);
+        background: linear-gradient(135deg, #56ab2f, #a8e063); /* lighter green hover */
+    }
+
+    /* Active (click) effect */
+    .circle-button:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        background: linear-gradient(135deg, #2c7744, #11998e); /* deeper green press */
+    }
+
+.sale-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    /* Green tones */
+    background: linear-gradient(135deg, #56ab2f, #a8e063);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    /* Depth */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    /* Smooth transitions */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    /* Hover effect */
+    .sale-badge:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
+        background: linear-gradient(135deg, #43cea2, #185a9d); /* green-teal shift */
+    }
+
+/* Optional: pulse animation for attention */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.sale-badge.pulse {
+    animation: pulse 1.5s infinite;
+}
