@@ -1,5 +1,4 @@
 ﻿using Domain.Models.Identity;
-using System.Net.Http.Headers;
 
 namespace Domain.Statics
 {
@@ -896,9 +895,47 @@ namespace Domain.Statics
                 UniqueName = "UpdateHero"
             },
             #endregion
+
+            #region SiteMap
+            new Permission
+            {
+                Id = 121,
+                ParentId = 1,
+                Title = "مدیریت نقشه سایت",
+                UniqueName = "ManageSiteMap"
+            },
+            new Permission
+            {
+                Id = 122,
+                ParentId = 121,
+                Title = "لیست نقشه سایت",
+                UniqueName = "SiteMapList"
+            },
+            new Permission
+            {
+                Id = 123,
+                ParentId = 121,
+                Title = "افزودن نقشه سایت جدید",
+                UniqueName = "CreateNewSiteMap"
+            },
+            new Permission
+            {
+                Id = 124,
+                ParentId = 121,
+                Title = "ویرایش نقشه سایت",
+                UniqueName = "UpdateSiteMap"
+            },
+            new Permission
+            {
+                Id =  125,
+                ParentId = 121,
+                Title = "حذف نقشه سایت",
+                UniqueName = "DeleteSiteMap"
+            },
+            #endregion
         };
 
-        //Last used id ==> 120
+        //Last used id ==> 125
         public static List<Permission> Permissions = _permissions;
     }
 }

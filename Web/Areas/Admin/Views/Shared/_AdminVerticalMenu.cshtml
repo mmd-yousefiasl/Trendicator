@@ -251,6 +251,17 @@
                         <span>اطلاعات پنل اس ام اس</span>
                     </a>
                 </li>
+
+                <li permission="ManageSiteMap">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-card-text-outline"></i>
+                        <span>نقشه سایت</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="SiteMapList"><a asp-area="Admin" asp-controller="SiteMap" asp-action="SiteMapList">لیست نقشه سایت</a></li>
+                        <li permission="CreateNewSiteMap"><a asp-area="Admin" asp-controller="SiteMap" asp-action="CreateNewSiteMap">افزودن نقشه سایت جدید</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->

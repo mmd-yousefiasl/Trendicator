@@ -62,6 +62,7 @@ namespace IOC
             services.AddScoped<ISmsDataService, SmsDataService>();
             services.AddScoped<ISendSmsService, SendSmsService>();
             services.AddScoped<IHeroService, HeroService>();
+            services.AddScoped<ISiteMapService, SiteMapService>();
 
             #endregion
 
