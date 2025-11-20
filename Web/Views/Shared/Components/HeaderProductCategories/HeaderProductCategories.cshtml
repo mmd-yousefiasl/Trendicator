@@ -1,0 +1,27 @@
+﻿@using Application.ViewModels.ProductCategory.ClientSide
+@model List<ClientSideProductCategoryViewModel>
+
+@if (Model?.Any() ?? false)
+{
+    <ul>
+        @foreach (var item in Model ?? new List<ClientSideProductCategoryViewModel>())
+        {
+            <li>
+                <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@item.Slug">@item.Title</a>
+                @if (item.Categories?.Any() ?? false)
+                {
+                    <ul>
+                        @foreach (var item2 in item.Categories ?? new List<ClientSideProductCategoryViewModel>())
+                        {
+                            <li><a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@item2.Slug">@item2.Title</a></li>
+                            @foreach (var item3 in item2.Categories ?? new List<ClientSideProductCategoryViewModel>())
+                            {
+                                <li><a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@item3.Slug">@item3.Title</a></li>
+                            }
+                        }
+                    </ul>
+                }
+            </li>
+        }
+    </ul>
+}

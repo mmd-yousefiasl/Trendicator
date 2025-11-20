@@ -1,5 +1,6 @@
 ﻿using Application.Mediator;
 using Application.Services.Interfaces;
+using Application.Static;
 using Application.Tools;
 using Application.ViewModels.ProductCategory.AdminSide;
 using Application.ViewModels.ProductCategory.ClientSide;
@@ -17,15 +18,18 @@ namespace Application.Services.Implementaions
         private readonly TrendicatorDbContext _context;
         private protected DbSet<ProductCategory> _dbSet;
         private readonly IMediatorHandler _mediator;
+        private readonly ICacheManager _cacheManager;
         #endregion
 
         #region Ctor
         public ProductCategoryService(TrendicatorDbContext context,
-            IMediatorHandler mediator)
+            IMediatorHandler mediator,
+            ICacheManager cacheManager)
         {
             _context = context;
             _dbSet = _context.Set<ProductCategory>();
             _mediator = mediator;
+            _cacheManager = cacheManager;
         }
         #endregion
 
@@ -161,8 +165,12 @@ namespace Application.Services.Implementaions
 
         public async Task<Result<List<ClientSideProductCategoryViewModel>>> ClientSideGetProductCategories()
         {
-            var categories = await _dbSet.AsNoTracking().ToListAsync();
-            if (!categories.Any()) return Result.Failure<List<ClientSideProductCategoryViewModel>>(Messages.OperationFailedError);
+            var categories = await _cacheManager.GetAsync(CacheKeys.ProductCategoriesCacheKey, async () =>
+            {
+                return await _dbSet.AsNoTracking().ToListAsync();
+            });
+            if (!categories?.Any() ?? true)
+                return Result.Failure<List<ClientSideProductCategoryViewModel>>(Messages.OperationFailedError);
 
             var firstParents = new List<ClientSideProductCategoryViewModel>();
             foreach (var item in categories.Where(n => n.ParentCategoryId == null).ToList() ?? new List<ProductCategory>())
