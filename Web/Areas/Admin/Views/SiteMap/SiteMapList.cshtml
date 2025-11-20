@@ -39,8 +39,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label" asp-for="ChagneFreq"></label>
-                                    <select type="text" class="form-control" asp-for="ChagneFreq" asp-items="@Html.GetEnumSelectList<ChangeFreqEnum>()">
+                                    <label class="form-label" asp-for="ChangeFreq"></label>
+                                    <select type="text" class="form-control" asp-for="ChangeFreq" asp-items="@Html.GetEnumSelectList<ChangeFreqEnum>()">
                                         <option>همه</option>
                                     </select>
                                 </div>
@@ -71,6 +71,37 @@
         </div>
     </div>
 
+    <div permission="UpdateSiteMap">
+        <div class="btn-group" role="group">
+            <button id="btnGroupVerticalDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                عملیات
+                <i class="mdi mdi-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" style="">
+                <form class="dropdown-item btn" method="post" onclick="ConfirmDelete(this)" asp-area="Admin" asp-controller="SiteMap" asp-action="UpdateAllLinks" title="حذف">
+                    به روز رسانی همه
+                </form>
+                <form class="dropdown-item btn" method="post" onclick="ConfirmDelete(this)" asp-area="Admin" asp-controller="SiteMap" asp-action="DeleteAllLinks" title="حذف">
+                    حذف همه
+                </form>
+                <form class="dropdown-item btn" method="post" onclick="ConfirmDelete(this)" asp-area="Admin" asp-controller="SiteMap" asp-action="DeleteAllExceptOtherPagesLinks" title="حذف">
+                    حذف همه به جز سایر صفحات
+                </form>
+                <a asp-area="Admin" asp-controller="SiteMap" asp-action="UpdateProductLinks" class="dropdown-item">
+                    تازه سازی محصولات
+                </a>
+                <a asp-area="Admin" asp-controller="SiteMap" asp-action="UpdateProductCategoryLinks" class="dropdown-item">
+                    تازه سازی دسته بندی محصولات
+                </a>
+                <a asp-area="Admin" asp-controller="SiteMap" asp-action="UpdateBlogLinks" class="dropdown-item">
+                    تازه سازی مقالات
+                </a>
+                <a asp-area="Admin" asp-controller="SiteMap" asp-action="UpdateBlogCategoryLinks" class="dropdown-item">
+                    تازه سازی دسته بندی مقالات
+                </a>
+            </div>
+        </div>
+    </div>
     @if (Model?.Entities?.Any() ?? false)
     {
         <div class="row">
@@ -101,7 +132,7 @@
                                             <tr>
                                                 <th scope="row">@counter</th>
                                                 <td>@item.Url</td>
-                                                <td>@item.ChagneFreq.GetDisplayName()</td>
+                                                <td>@item.ChangeFreq.GetDisplayName()</td>
                                                 <td>@item.Priority</td>
                                                 <td>
                                                     @if (item.IsPublished)

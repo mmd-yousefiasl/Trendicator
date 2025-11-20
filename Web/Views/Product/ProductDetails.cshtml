@@ -154,7 +154,7 @@
                                     <ul>
                                         <li>لینک کوتاه: </li>
                                         <li>
-                                            <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@Model.Id" title="لینک کوتاه">
+                                            <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@Model.Id" asp-route-slug="" title="لینک کوتاه">
                                                 @(SiteTools.SiteUrl + "p/" + Model.Id)
                                             </a>
                                         </li>
@@ -191,10 +191,10 @@
                                         @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id })
 
                                         <li class="review-total">
-                                            <a href="javascript:void(0)">
+                                            <span>
                                                 ( @Model.ReviewsCount
-                                                بازخورد ها )
-                                            </a>
+                                                بازخورد )
+                                            </span>
                                         </li>
                                     </ul>
                                 </div>

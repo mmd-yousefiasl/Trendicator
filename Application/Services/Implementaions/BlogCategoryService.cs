@@ -117,7 +117,8 @@ namespace Application.Services.Implementaions
                 .Select(n => new AdminSideBlogCategoryAsOptionViewModel()
                 {
                     Id = n.Id,
-                    Title = n.Title
+                    Title = n.Title,
+                    Slug = n.Slug
                 }).AsNoTracking().ToListAsync();
             if (!categories?.Any() ?? true) return Result.Failure<List<AdminSideBlogCategoryAsOptionViewModel>>(Messages.OperationFailedError);
 

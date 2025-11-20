@@ -35,5 +35,7 @@ namespace Application.Services.Interfaces
         Task<Result<List<ClientSideProductViewModel>>> ClientSideGetMostViewedProducts();
 
         Task<Result<List<ClientSideProductViewModel>>> ClientSideGetMostPurchasedProducts();
+
+        Task<Result<List<int>>> AdminSideGetProductIdsForSiteMap();
     }
 }

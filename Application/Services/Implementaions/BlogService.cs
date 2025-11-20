@@ -356,5 +356,14 @@ namespace Application.Services.Implementaions
 
             return filter;
         }
+
+        public async Task<Result<List<int>>> AdminSideGetBlogIdsForSiteMap()
+        {
+            var ids = await _dbSet.Where(n => n.IsPublished)
+                .Select(n => n.Id).ToListAsync();
+            if (!ids.Any()) return Result.Failure<List<int>>(Messages.OperationFailedError);
+
+            return ids;
+        }
     }
 }

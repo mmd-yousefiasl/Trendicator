@@ -13,7 +13,7 @@ namespace Application.ViewModels.SiteMap.AdminSide
 
         [Display(Name = "تغییر")]
         [Required(ErrorMessage = Messages.RequiredError)]
-        public ChangeFreqEnum ChagneFreq { get; set; }
+        public ChangeFreqEnum ChangeFreq { get; set; }
 
         [Display(Name = "اولویت")]
         [Required(ErrorMessage = Messages.RequiredError)]

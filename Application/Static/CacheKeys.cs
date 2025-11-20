@@ -13,5 +13,6 @@
         public const string FaqCacheKey = "Faq";
         public const string SmsDataCacheKey = "SmsData";
         public const string ProductCategoriesCacheKey = "ProductCategory";
+        public const string SiteMapCacheKey = "SiteMap";
     }
 }

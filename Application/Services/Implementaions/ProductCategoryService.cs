@@ -134,7 +134,8 @@ namespace Application.Services.Implementaions
             var categories = await query.Select(n => new AdminSideProductCategoryAsOptionViewModel()
             {
                 Id = n.Id,
-                Title = n.Title
+                Title = n.Title,
+                Slug = n.Slug,
             }).AsNoTracking().ToListAsync();
             if (!categories.Any()) return Result.Failure<List<AdminSideProductCategoryAsOptionViewModel>>(Messages.OperationFailedError);
 
@@ -218,6 +219,19 @@ namespace Application.Services.Implementaions
             if (!firstParents.Any()) return Result.Failure<List<ClientSideProductCategoryViewModel>>(Messages.OperationFailedError);
 
             return firstParents;
+        }
+
+        public async Task<Result<List<AdminSideProductCategoryAsOptionViewModel>>> AdminSideGetCategoriesForSiteMap()
+        {
+            var categories = await _dbSet.Select(n => new AdminSideProductCategoryAsOptionViewModel()
+            {
+                Id = n.Id,
+                Title = n.Title,
+                Slug = n.Slug,
+            }).AsNoTracking().ToListAsync();
+            if (!categories.Any()) return Result.Failure<List<AdminSideProductCategoryAsOptionViewModel>>(Messages.OperationFailedError);
+
+            return categories;
         }
     }
 }

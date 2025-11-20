@@ -10,7 +10,7 @@ namespace Application.ViewModels.SiteMap.AdminSide
         public string? Search { get; set; }
 
         [Display(Name = "تغییر")]
-        public ChangeFreqEnum? ChagneFreq { get; set; }
+        public ChangeFreqEnum? ChangeFreq { get; set; }
 
         [Display(Name = "وضعیت انتشار")]
         public bool? IsPublished { get; set; }

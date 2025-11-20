@@ -23,5 +23,7 @@ namespace Application.Services.Interfaces
         Task<Result<ClientSideFilterBlogsViewModel>> ClientSideGetLatestBlogs();
 
         Task<Result<ClientSideFilterBlogsViewModel>> ClientSideGetRelatedBlogs(int id, int categoryId);
+
+        Task<Result<List<int>>> AdminSideGetBlogIdsForSiteMap();
     }
 }

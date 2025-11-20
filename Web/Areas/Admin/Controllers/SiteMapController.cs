@@ -111,5 +111,130 @@ namespace Web.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(SiteMapList));
         }
+
+        [Permission("UpdateSiteMap")]
+        [HttpPost("/admin/edit-all-links"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateAllLinks()
+        {
+            var result = await _mapService.UpdateAllSiteMap();
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+            }
+            else
+            {
+                TempData[TemporarySuccessMessage] = result.Message;
+            }
+
+            return RedirectToAction(nameof(SiteMapList));
+        }
+
+        #region Bulk Delete
+        [Permission("UpdateSiteMap")]
+        [HttpPost("/admin/remove-all-links"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAllLinks()
+        {
+            var result = await _mapService.AdminSideDeleteAllLinks();
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+            }
+            else
+            {
+                TempData[TemporarySuccessMessage] = result.Message;
+            }
+
+            return RedirectToAction(nameof(SiteMapList));
+        }
+
+        [Permission("UpdateSiteMap")]
+        [HttpPost("/admin/remove-all-except-other-links"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAllExceptOtherPagesLinks()
+        {
+            var result = await _mapService.AdminSideDeleteAllExceptOtherPages();
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+            }
+            else
+            {
+                TempData[TemporarySuccessMessage] = result.Message;
+            }
+
+            return RedirectToAction(nameof(SiteMapList));
+        }
+        #endregion
+
+        #region Bulk Update Blog
+        [Permission("UpdateSiteMap")]
+        [HttpGet("/admin/edit-blog-links")]
+        public async Task<IActionResult> UpdateBlogLinks()
+        {
+            var result = await _mapService.UpdateBlogsSiteMap();
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+            }
+            else
+            {
+                TempData[TemporarySuccessMessage] = result.Message;
+            }
+
+            return RedirectToAction(nameof(SiteMapList));
+        }
+
+        [Permission("UpdateSiteMap")]
+        [HttpGet("/admin/edit-blog-category-links")]
+        public async Task<IActionResult> UpdateBlogCategoryLinks()
+        {
+            var result = await _mapService.UpdateBlogCategoriesSiteMap();
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+            }
+            else
+            {
+                TempData[TemporarySuccessMessage] = result.Message;
+            }
+
+            return RedirectToAction(nameof(SiteMapList));
+        }
+        #endregion
+
+        #region Bulk Update Product
+        [Permission("UpdateSiteMap")]
+        [HttpGet("/admin/edit-products-links")]
+        public async Task<IActionResult> UpdateProductLinks()
+        {
+            var result = await _mapService.UpdateProductsSiteMap();
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+            }
+            else
+            {
+                TempData[TemporarySuccessMessage] = result.Message;
+            }
+
+            return RedirectToAction(nameof(SiteMapList));
+        }
+
+        [Permission("UpdateSiteMap")]
+        [HttpGet("/admin/edit-product-category-links")]
+        public async Task<IActionResult> UpdateProductCategoryLinks()
+        {
+            var result = await _mapService.UpdateProductCategoriesSiteMap();
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+            }
+            else
+            {
+                TempData[TemporarySuccessMessage] = result.Message;
+            }
+
+            return RedirectToAction(nameof(SiteMapList));
+        }
+        #endregion
     }
 }

@@ -5,7 +5,7 @@ namespace Domain.Events.SiteInfo.SiteMap
 {
     public record SiteMapCreatedEvent(
     string Url,
-    ChangeFreqEnum ChagneFreq,
+    ChangeFreqEnum ChangeFreq,
     decimal Priority,
     bool IsPublished,
     SiteMapTypeEnum Type

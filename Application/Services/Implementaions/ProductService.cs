@@ -715,5 +715,14 @@ namespace Application.Services.Implementaions
 
             return products;
         }
+
+        public async Task<Result<List<int>>> AdminSideGetProductIdsForSiteMap()
+        {
+            var ids = await _dbSet.Where(n => n.IsPublished)
+                .Select(n => n.Id).ToListAsync();
+            if (!ids.Any()) return Result.Failure<List<int>>(Messages.OperationFailedError);
+
+            return ids;
+        }
     }
 }

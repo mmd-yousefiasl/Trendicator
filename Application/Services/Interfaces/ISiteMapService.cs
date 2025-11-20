@@ -1,4 +1,5 @@
 ﻿using Application.ViewModels.SiteMap.AdminSide;
+using Application.ViewModels.SiteMap.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces
@@ -14,5 +15,21 @@ namespace Application.Services.Interfaces
         Task<Result> AdminSideUpdateSiteMap(AdminSideUpdateSiteMapViewModel model);
 
         Task<Result> AdminSideDeleteSiteMap(int id);
+
+        Task<Result> UpdateProductCategoriesSiteMap();
+
+        Task<Result> AdminSideDeleteAllLinks();
+
+        Task<Result> AdminSideDeleteAllExceptOtherPages();
+
+        Task<Result> UpdateBlogCategoriesSiteMap();
+
+        Task<Result> UpdateProductsSiteMap();
+
+        Task<Result> UpdateBlogsSiteMap();
+
+        Task<Result> UpdateAllSiteMap();
+
+        Task<Result<List<ClientSideSiteMapViewModel>>> ClientSideGetSiteMap();
     }
 }
