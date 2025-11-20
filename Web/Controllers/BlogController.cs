@@ -29,15 +29,33 @@ namespace Web.Controllers
             return View(result.Value);
         }
 
-        [HttpGet("/blog/{slug}")]
-        public async Task<IActionResult> BlogDetails(string slug)
+        [HttpGet("/b/{id}/{slug}")]
+        public async Task<IActionResult> BlogDetails(int id, string slug)
         {
-            if (string.IsNullOrWhiteSpace(slug))
+            if (string.IsNullOrWhiteSpace(slug) || id < 1)
             {
                 TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
                 return RedirectToAction(nameof(BlogsList));
             }
-            var result = await _blogService.ClientSideGetBlogDetails(slug);
+            var result = await _blogService.ClientSideGetBlogDetails(id);
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+                return RedirectToAction(nameof(BlogsList));
+            }
+
+            return View(result.Value);
+        }
+
+        [HttpGet("/b/{id}")]
+        public async Task<IActionResult> BlogDetails(int id)
+        {
+            if (id < 1)
+            {
+                TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
+                return RedirectToAction(nameof(BlogsList));
+            }
+            var result = await _blogService.ClientSideGetBlogDetails(id);
             if (result.IsFailure)
             {
                 TempData[TemporaryErrorMessage] = result.Message;

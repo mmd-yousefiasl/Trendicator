@@ -6,7 +6,7 @@
 {
     <div class="ltn__blog-item ltn__blog-item-3">
         <div class="ltn__blog-img">
-            <a asp-area="" asp-controller="Blog" asp-action="BlogDetails" asp-route-slug="@Model.Slug">
+            <a asp-area="" asp-controller="Blog" asp-action="BlogDetails" asp-route-id="@Model.Id" asp-route-slug="@Model.Slug">
                 <img src="@SiteTools.BlogBanner@Model.FileName" alt="@Model.Title" title="@Model.Title">
             </a>
         </div>
@@ -19,14 +19,14 @@
                         @Model.Writer
                     </li>
                     <li class="ltn__blog-tags">
-                        <a asp-area="" asp-controller="Blog" asp-action="BlogsList" asp-route-CategoryId="@Model.CategoryId">
+                        <a asp-area="" asp-controller="Blog" asp-action="BlogsList" asp-route-id="@Model.Id" asp-route-CategoryId="@Model.CategoryId">
                             <i class="fas fa-tags"></i>@Model.Category
                         </a>
                     </li>
                 </ul>
             </div>
             <h3 class="ltn__blog-title blog-title">
-                <a asp-area="" asp-controller="Blog" asp-action="BlogDetails" asp-route-slug="@Model.Slug">@Model.Title</a>
+                <a asp-area="" asp-controller="Blog" asp-action="BlogDetails" asp-route-id="@Model.Id" asp-route-slug="@Model.Slug">@Model.Title</a>
             </h3>
             <div class="ltn__blog-meta-btn">
                 <div class="ltn__blog-meta">
@@ -35,7 +35,7 @@
                     </ul>
                 </div>
                 <div class="ltn__blog-btn">
-                    <a asp-area="" asp-controller="Blog" asp-action="BlogDetails" asp-route-slug="@Model.Slug">ادامه مطلب</a>
+                    <a asp-area="" asp-controller="Blog" asp-action="BlogDetails" asp-route-id="@Model.Id" asp-route-slug="@Model.Slug">ادامه مطلب</a>
                 </div>
             </div>
         </div>

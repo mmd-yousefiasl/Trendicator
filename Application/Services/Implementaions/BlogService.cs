@@ -252,6 +252,7 @@ namespace Application.Services.Implementaions
 
             await filter.Paging(query.Select(n => new ClientSideBlogViewModel()
             {
+                Id = n.Id,
                 Title = n.Title,
                 Slug = n.Slug,
                 FileName = n.FileName,
@@ -264,11 +265,12 @@ namespace Application.Services.Implementaions
             return filter;
         }
 
-        public async Task<Result<ClientSideBlogDetailsViewModel>> ClientSideGetBlogDetails(string slug)
+        public async Task<Result<ClientSideBlogDetailsViewModel>> ClientSideGetBlogDetails(int id)
         {
-            if (string.IsNullOrWhiteSpace(slug)) return Result.Failure<ClientSideBlogDetailsViewModel>(Messages.OperationFailedError);
+            if (id < 1)
+                return Result.Failure<ClientSideBlogDetailsViewModel>(Messages.OperationFailedError);
 
-            var blog = await _dbSet.Where(n => n.IsPublished && n.Slug == slug)
+            var blog = await _dbSet.Where(n => n.IsPublished && n.Id == id)
                 .Select(n => new ClientSideBlogDetailsViewModel()
                 {
                     Id = n.Id,
@@ -307,6 +309,7 @@ namespace Application.Services.Implementaions
 
             await filter.Paging(query.Select(n => new ClientSideBlogViewModel()
             {
+                Id = n.Id,
                 Title = n.Title,
                 Slug = n.Slug,
                 FileName = n.FileName,
@@ -338,6 +341,7 @@ namespace Application.Services.Implementaions
 
             await filter.Paging(query.Select(n => new ClientSideBlogViewModel()
             {
+                Id = n.Id,
                 Title = n.Title,
                 Slug = n.Slug,
                 FileName = n.FileName,
