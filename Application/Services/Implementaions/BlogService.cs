@@ -319,6 +319,7 @@ namespace Application.Services.Implementaions
                 CreatedDate = n.CreatedDate,
                 Writer = n.Writer,
                 CategoryId = n.BlogCategoryId,
+                CategorySlug = n.Category.Slug
             }));
 
             return filter;
