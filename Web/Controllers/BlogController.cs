@@ -18,10 +18,20 @@ namespace Web.Controllers
         }
         #endregion
 
-        [HttpGet("/blogs")]
-        public async Task<IActionResult> BlogsList(ClientSideFilterBlogsViewModel filter)
+        [HttpGet("/blogs/{category?}")]
+        public async Task<IActionResult> BlogsList(string? category, ClientSideFilterBlogsViewModel filter)
         {
-            ViewData["NoIndex"] = true;
+            if (!string.IsNullOrWhiteSpace(category) && filter.TagId is null && filter.Page == 1)
+            {
+                ViewData["NoIndex"] = false;
+            }
+            else
+            {
+                ViewData["NoIndex"] = true;
+            }
+
+            filter.Category = category;
+
             filter.TakeEntity = 9;
             var result = await _blogService.ClientSideFilterBlogs(filter);
             if (result.IsFailure) return View(new ClientSideFilterBlogsViewModel());

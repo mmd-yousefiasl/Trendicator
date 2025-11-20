@@ -11,6 +11,7 @@ namespace Application.ViewModels.Blog.ClientSide
         public string Body { get; set; }
         public string Category { get; set; }
         public int CategoryId { get; set; }
+        public string CategorySlug { get; set; }
         public List<ClientSideBlogTagViewModel>? Tags { get; set; }
     }
 }

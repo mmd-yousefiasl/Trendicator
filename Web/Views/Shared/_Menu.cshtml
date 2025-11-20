@@ -18,9 +18,9 @@
                     <a href="#">دسته بندی ها</a>
                     @await Component.InvokeAsync("MobileHeaderProductCategories")
                 </li>
-                <li><a asp-area="" asp-controller="Product" asp-action="ProductsList">محصولات</a></li>
+                <li><a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="">محصولات</a></li>
                 <li permission="AdminPanel"><a asp-area="Admin" asp-controller="Home" asp-action="Index">پنل ادمین</a></li>
-                <li><a asp-area="" asp-controller="Blog" asp-action="BlogsList">بلاگ</a></li>
+                <li><a asp-area="" asp-controller="Blog" asp-action="BlogsList" asp-route-category="">بلاگ</a></li>
             </ul>
         </div>
         <div class="ltn__utilize-buttons ltn__utilize-buttons-2">

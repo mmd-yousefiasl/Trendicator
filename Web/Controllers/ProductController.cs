@@ -24,7 +24,7 @@ namespace Web.Controllers
         [HttpGet("/products/{category?}")]
         public async Task<IActionResult> ProductsList(string? category, ClientSideFilterProductsViewModel filter)
         {
-            if (!string.IsNullOrWhiteSpace(category) && string.IsNullOrWhiteSpace(filter.Search) && filter.Sort is null)
+            if (!string.IsNullOrWhiteSpace(category) && string.IsNullOrWhiteSpace(filter.Search) && filter.Sort is null && filter.Page == 1)
             {
                 ViewData["NoIndex"] = false;
             }

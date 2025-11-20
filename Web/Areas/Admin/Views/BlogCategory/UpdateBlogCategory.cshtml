@@ -34,8 +34,16 @@
                     <div class="mb-3 row">
                         <label asp-for="Title" class="col-md-2 col-form-label"></label>
                         <div class="col-md-10">
-                            <input class="form-control" type="text" asp-for="Title">
+                            <input class="form-control" type="text" asp-for="Title" id="title">
                             <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Slug" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" asp-for="Slug" id="slug">
+                            <span asp-validation-for="Slug" class="text-danger"></span>
                         </div>
                     </div>
 
@@ -65,3 +73,7 @@
         </div>
     </div>
 </div>
+
+@section FooterReferences {
+    <script asp-append-version="true" src="/js/Admin/slug.js"></script>
+}

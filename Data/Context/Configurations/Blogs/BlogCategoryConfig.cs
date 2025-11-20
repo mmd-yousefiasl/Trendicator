@@ -12,6 +12,7 @@ namespace Data.Context.Configurations.Blogs
             builder.HasQueryFilter(n => !n.IsDeleted);
 
             builder.Property(n => n.Title).HasMaxLength(50);
+            builder.Property(n => n.Slug).HasMaxLength(100);
         }
     }
 }

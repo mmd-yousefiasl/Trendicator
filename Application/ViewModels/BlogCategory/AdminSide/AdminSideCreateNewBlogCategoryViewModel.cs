@@ -10,6 +10,11 @@ namespace Application.ViewModels.BlogCategory.AdminSide
         [MaxLength(50, ErrorMessage = Messages.MaxLengthError)]
         public string Title { get; set; }
 
+        [Display(Name = "عنوان در مرورگر")]
+        [Required(ErrorMessage = Messages.RequiredError)]
+        [MaxLength(100, ErrorMessage = Messages.MaxLengthError)]
+        public string Slug { get; set; }
+
         [Display(Name = "اولویت")]
         [Required(ErrorMessage = Messages.RequiredError)]
         [Range(1, 100, ErrorMessage = Messages.RangeError)]

@@ -36,6 +36,8 @@ namespace Application.Services.Implementaions
         public async Task<Result> AdminSideCreateNewProductCategory(AdminSideCreateNewProductCategoryViewModel model)
         {
             if (model is null) return Result.Failure(Messages.OperationFailedError);
+            if (await _dbSet.AnyAsync(n => n.Slug == model.Slug.Replace(" ", "-")))
+                return Result.Failure(Messages.DuplicateSlugError);
 
             var category = new ProductCategory()
             {
@@ -142,6 +144,8 @@ namespace Application.Services.Implementaions
         public async Task<Result> AdminSideUpdateProductCategory(AdminSideUpdateProductCategoryViewModel model)
         {
             if (model is null) return Result.Failure(Messages.OperationFailedError);
+            if (await _dbSet.AnyAsync(n => n.Slug == model.Slug.Replace(" ", "-") && n.Id != model.Id))
+                return Result.Failure(Messages.DuplicateSlugError);
 
             var category = await _dbSet.FindAsync(model.Id);
             if (category is null) return Result.Failure(Messages.OperationFailedError);

@@ -237,9 +237,9 @@ namespace Application.Services.Implementaions
                 conditions.Add(n => n.Tags.Any(n => n.TagId == filter.TagId));
             }
 
-            if (filter.CategoryId is not null)
+            if (!string.IsNullOrWhiteSpace(filter.Category))
             {
-                conditions.Add(n => n.BlogCategoryId == filter.CategoryId);
+                conditions.Add(n => n.Category.Slug == filter.Category);
             }
 
             IQueryable<Blog> query = _dbSet;
@@ -259,7 +259,8 @@ namespace Application.Services.Implementaions
                 CreatedDate = n.CreatedDate,
                 Writer = n.Writer,
                 CategoryId = n.BlogCategoryId,
-                Category = n.Category.Title
+                Category = n.Category.Title,
+                CategorySlug = n.Category.Slug
             }));
 
             return filter;
@@ -281,6 +282,7 @@ namespace Application.Services.Implementaions
                     Writer = n.Writer,
                     Category = n.Category.Title,
                     CategoryId = n.BlogCategoryId,
+                    CategorySlug = n.Category.Slug,
                     Tags = n.Tags.Select(n => new ClientSideBlogTagViewModel()
                     {
                         Id = n.TagId,

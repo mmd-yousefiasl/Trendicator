@@ -9,7 +9,7 @@
             @foreach (var item in Model ?? new List<ClientSideBlogCategoryViewModel>())
             {
                 <li>
-                    <a asp-area="" asp-controller="Blog" asp-action="BlogsList" asp-route-CategoryId="@item.Id">
+                    <a asp-area="" asp-controller="Blog" asp-action="BlogsList" asp-route-category="@item.Slug">
                         @item.Title
                         <span>@item.BlogsCount</span>
                     </a>

@@ -84,7 +84,7 @@ namespace Application.Services.Implementaions
             var tag = await _dbSet.Where(n => n.Id == id).Select(n => new AdminSideUpdateBlogTagViewModel()
             {
                 Id = n.Id,
-                Title = n.Title
+                Title = n.Title,
             }).AsNoTracking().FirstOrDefaultAsync();
             if (tag is null) return Result.Failure<AdminSideUpdateBlogTagViewModel>(Messages.OperationFailedError);
 
@@ -151,7 +151,7 @@ namespace Application.Services.Implementaions
             var tags = await _dbSet.Select(n => new ClientSideBlogTagViewModel()
             {
                 Id = n.Id,
-                Title = n.Title
+                Title = n.Title,
             }).AsNoTracking().ToListAsync();
             if (!tags?.Any() ?? true) return Result.Failure<List<ClientSideBlogTagViewModel>>(Messages.OperationFailedError);
 

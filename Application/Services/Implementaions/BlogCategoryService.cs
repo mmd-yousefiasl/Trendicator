@@ -32,12 +32,15 @@ namespace Application.Services.Implementaions
         public async Task<Result> CreateNewBlogCategory(AdminSideCreateNewBlogCategoryViewModel model)
         {
             if (model is null) return Result.Failure(Messages.OperationFailedError);
+            if (await _dbSet.AnyAsync(n => n.Slug == model.Slug.Replace(" ", "-")))
+                return Result.Failure(Messages.DuplicateSlugError);
 
             var category = new BlogCategory()
             {
                 Title = model.Title,
                 IsPublished = model.IsPublished,
-                Priority = model.Priority
+                Priority = model.Priority,
+                Slug = model.Slug.Replace(" ", "-")
             };
 
             await _dbSet.AddAsync(category);
@@ -45,6 +48,7 @@ namespace Application.Services.Implementaions
 
             BlogCategoryCreatedEvent BlogCategoryCreatedEvent = new BlogCategoryCreatedEvent(
                 category.Title,
+                category.Slug,
                 category.Priority,
                 category.IsPublished);
 
@@ -61,7 +65,8 @@ namespace Application.Services.Implementaions
 
             if (!string.IsNullOrWhiteSpace(filter.Search))
             {
-                conditions.Add(n => n.Title.Contains(filter.Search));
+                conditions.Add(n => n.Title.Contains(filter.Search) ||
+                n.Slug.Contains(filter.Search));
             }
 
             if (filter.IsPublished is not null)
@@ -82,7 +87,8 @@ namespace Application.Services.Implementaions
                 Id = n.Id,
                 IsPublished = n.IsPublished,
                 Priority = n.Priority,
-                Title = n.Title
+                Title = n.Title,
+                Slug = n.Slug
             }));
 
             return filter;
@@ -97,7 +103,8 @@ namespace Application.Services.Implementaions
                 Id = n.Id,
                 IsPublished = n.IsPublished,
                 Priority = n.Priority,
-                Title = n.Title
+                Title = n.Title,
+                Slug = n.Slug
             }).AsNoTracking().FirstOrDefaultAsync();
             if (category is null) return Result.Failure<AdminSideUpdateBlogCategoryViewModel>(Messages.OperationFailedError);
 
@@ -142,6 +149,8 @@ namespace Application.Services.Implementaions
         public async Task<Result> UpdateBlogCategory(AdminSideUpdateBlogCategoryViewModel model)
         {
             if (model is null) return Result.Failure(Messages.OperationFailedError);
+            if (await _dbSet.AnyAsync(n => n.Slug == model.Slug.Replace(" ", "-") && n.Id != model.Id))
+                return Result.Failure(Messages.DuplicateSlugError);
 
             var category = await _dbSet.FindAsync(model.Id);
             if (category is null) return Result.Failure(Messages.OperationFailedError);
@@ -149,6 +158,7 @@ namespace Application.Services.Implementaions
             category.Title = model.Title;
             category.IsPublished = model.IsPublished;
             category.Priority = model.Priority;
+            category.Slug = model.Slug.Replace(" ", "-");
 
             _dbSet.Update(category);
             await _context.SaveChangesAsync();
@@ -156,6 +166,7 @@ namespace Application.Services.Implementaions
             BlogCategoryUpdatedEvent BlogCategoryUpdatedEvent = new BlogCategoryUpdatedEvent(
             category.Id,
             category.Title,
+            category.Slug,
             category.Priority,
             category.IsPublished);
 
@@ -171,6 +182,7 @@ namespace Application.Services.Implementaions
                 {
                     Id = n.Id,
                     Title = n.Title,
+                    Slug = n.Slug,
                     BlogsCount = n.Blogs.Count()
                 }).AsNoTracking().ToListAsync();
             if (!categories?.Any() ?? true) return Result.Failure<List<ClientSideBlogCategoryViewModel>>(Messages.OperationFailedError);
