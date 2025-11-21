@@ -1,0 +1,23 @@
+User-agent: *
+
+Disallow: /admin/
+Disallow: /user/
+Disallow: /login/
+Disallow: /cart/
+Disallow: /checkout/
+
+Disallow: /products/*?Page=
+Disallow: /products/*?Sort=
+Disallow: /products/*?Search=
+
+Disallow: /blogs/*?TagId=
+Disallow: /blogs/*?page=
+
+Disallow: /product/wishlist
+Disallow: /product/compare
+
+Allow: /blogs/
+Allow: /products/
+Allow: /sitemap.xml
+
+Sitemap: https://trendicator.ir/sitemap.xml
