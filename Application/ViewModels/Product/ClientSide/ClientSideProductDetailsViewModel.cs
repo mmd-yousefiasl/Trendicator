@@ -9,6 +9,7 @@
         public string Description { get; set; }
         public bool IsAvailable { get; set; }
         public string Category { get; set; }
+        public string CategorySlug { get; set; }
         public int CategoryId { get; set; }
         public int ReviewsCount { get; set; }
         public bool IsInUserWishList { get; set; }

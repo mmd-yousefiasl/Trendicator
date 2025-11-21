@@ -15,12 +15,18 @@
             <div class="col-lg-12">
                 <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
                     <div class="section-title-area ltn__section-title-2">
-                        <h1 class="section-title white-color">جزئیات محصول</h1>
+                        <h2 class="section-title white-color">@ViewData["Title"]</h2>
                     </div>
                     <div class="ltn__breadcrumb-list">
                         <ul>
                             <li><a asp-area="" asp-controller="Home" asp-action="Index">صفحه اصلی</a></li>
-                            <li>جزئیات محصول</li>
+                            <li><a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="">محصولات</a></li>
+                            <li>
+                                <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@Model.CategorySlug">
+                                    @Model.Category
+                                </a>
+                            </li>
+                            <li>@ViewData["Title"]</li>
                         </ul>
                     </div>
                 </div>
@@ -60,7 +66,7 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <h3>@Model.Title</h3>
+                                <h1>@Model.Title</h1>
                                 <div class="product-price">
                                     @if (Model.HaveDiscount)
                                     {
@@ -78,7 +84,7 @@
                                         <li>
                                             <strong>دسته بندی: </strong>
                                             <span>
-                                                <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-CategoryId="@Model.CategoryId">
+                                                <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@Model.CategorySlug">
                                                     @Model.Category
                                                 </a>
                                             </span>
@@ -141,12 +147,47 @@
                                 </div>
                                 <hr>
                                 <div class="ltn__social-media">
+                                    @{
+                                        string pageUrl = (SiteTools.SiteUrl + "p/" + Model.Id);
+                                    }
                                     <ul>
                                         <li>اشتراک گذاری: </li>
-                                        <li><a href="javascript:void(0)" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-                                        <li><a href="javascript:void(0)" title="Twitter"><i class="fab fa-twitter"></i></a></li>
-                                        <li><a href="javascript:void(0)" title="Linkedin"><i class="fab fa-linkedin"></i></a></li>
-                                        <li><a href="javascript:void(0)" title="Instagram"><i class="fab fa-instagram"></i></a></li>
+                                        <li>
+                                            <a href="@("https://www.facebook.com/sharer/sharer.php?u=" + pageUrl)"
+                                               target="_blank" rel="noopener" title="Facebook">
+                                                <i class="fab fa-facebook-f"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="@("https://twitter.com/intent/tweet?url=" + pageUrl)"
+                                               target="_blank" rel="noopener" title="Twitter">
+                                                <i class="fab fa-twitter"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="@("https://www.linkedin.com/shareArticle?mini=true&url=" + pageUrl)"
+                                               target="_blank" rel="noopener" title="LinkedIn">
+                                                <i class="fab fa-linkedin"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="@("https://api.whatsapp.com/send?text=" + pageUrl)"
+                                               target="_blank" rel="noopener" title="WhatsApp">
+                                                <i class="fab fa-whatsapp"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="@("https://t.me/share/url?url=" + pageUrl)"
+                                               target="_blank" rel="noopener" title="Telegram">
+                                                <i class="fab fa-telegram"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="@("https://www.instagram.com/?url=" + pageUrl)"
+                                               target="_blank" rel="noopener" title="Instagram">
+                                                <i class="fab fa-instagram"></i>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                                 <hr>
@@ -155,11 +196,11 @@
                                         <li>لینک کوتاه: </li>
                                         <li>
                                             <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@Model.Id" asp-route-slug="" title="لینک کوتاه">
-                                                @(SiteTools.SiteUrl + "p/" + Model.Id)
+                                                @pageUrl
                                             </a>
                                         </li>
                                         <li>
-                                            <button class="bg-transparent" type="button" title="کپی لینک کوتاه" onclick="CopyUrlToClipboard('@(SiteTools.SiteUrl + "p/" + Model.Id)')">
+                                            <button class="bg-transparent" type="button" title="کپی لینک کوتاه" onclick="CopyUrlToClipboard('@pageUrl')">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 408 480"><path fill="#000000" d="M299 5v43H43v299H0V48q0-18 12.5-30.5T43 5h256zm64 86q17 0 29.5 12.5T405 133v299q0 18-12.5 30.5T363 475H128q-18 0-30.5-12.5T85 432V133q0-17 12.5-29.5T128 91h235zm0 341V133H128v299h235z" /></svg>
                                             </button>
                                         </li>

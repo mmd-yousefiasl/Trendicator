@@ -433,3 +433,7 @@
 .fa-arrow-right:before {
     content: "\f061"
 }
+
+.fa-whatsapp:before {
+    content: "\f232"
+}

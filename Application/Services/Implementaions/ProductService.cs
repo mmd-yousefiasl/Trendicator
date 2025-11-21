@@ -497,6 +497,7 @@ namespace Application.Services.Implementaions
                     OrderPrice = n.DisplayOrderPrice,
                     Price = n.DisplayPrice,
                     Category = n.Category.Title,
+                    CategorySlug = n.Category.Slug,
                     CategoryId = n.CategoryId,
                     Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
                     Options = n.Options.Select(o => new ClientSideProductOptionViewModel()
@@ -536,6 +537,7 @@ namespace Application.Services.Implementaions
                     OrderPrice = n.DisplayOrderPrice,
                     Price = n.DisplayPrice,
                     Category = n.Category.Title,
+                    CategorySlug = n.Category.Slug,
                     CategoryId = n.CategoryId,
                     Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
                     Options = n.Options.Select(o => new ClientSideProductOptionViewModel()
