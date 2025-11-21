@@ -3,9 +3,12 @@
 @model ClientSideFilterProductsViewModel
 
 @{
-    ViewData["Title"] = "محصولات";
+    ViewData["Title"] = ((!string.IsNullOrWhiteSpace(Model.Category)) ? Model.Category : "محصولات");
+    if (!string.IsNullOrWhiteSpace(Model.Category))
+    {
+        ViewData["CanonicalOverride"] = (SiteTools.SiteUrl + "products/" + Model.Category);
+    }
 }
-
 
 <!-- BREADCRUMB AREA START -->
 <div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-70 bg-image plr--9---"
@@ -20,6 +23,10 @@
                     <div class="ltn__breadcrumb-list">
                         <ul>
                             <li><a asp-area="" asp-controller="Home" asp-action="Index">صفحه اصلی</a></li>
+                            @if (!string.IsNullOrWhiteSpace(Model.Category))
+                            {
+                                <li><a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="">محصولات</a></li>
+                            }
                             <li>@ViewData["Title"]</li>
                         </ul>
                     </div>

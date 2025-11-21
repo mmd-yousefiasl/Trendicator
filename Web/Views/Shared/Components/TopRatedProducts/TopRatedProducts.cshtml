@@ -12,7 +12,7 @@
                 <li>
                     <div class="top-rated-product-item clearfix">
                         <div class="top-rated-product-img">
-                            <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-slug="@item.Slug">
+                            <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@item.Id" asp-route-slug="@item.Slug">
                                 <img src="@SiteTools.ProductBanner@item.BannerFileName" alt="@item.Title">
                             </a>
                         </div>
@@ -23,7 +23,7 @@
                                 </ul>
                             </div>
                             <h3>
-                                <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-slug="@item.Slug">
+                                <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@item.Id" asp-route-slug="@item.Slug">
                                     @item.Title
                                 </a>
                             </h3>

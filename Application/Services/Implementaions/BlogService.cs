@@ -276,6 +276,7 @@ namespace Application.Services.Implementaions
                 {
                     Id = n.Id,
                     Title = n.Title,
+                    Slug = n.Slug,
                     Body = n.Body,
                     FileName = n.FileName,
                     CreatedDate = n.CreatedDate,

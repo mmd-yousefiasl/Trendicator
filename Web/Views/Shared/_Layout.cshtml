@@ -8,6 +8,15 @@
     <partial name="_HeaderReferences" />
 
     @await RenderSectionAsync("HeaderReferences", required: false)
+
+    @if (ViewData["CanonicalOverride"] != null)
+    {
+        <link rel="canonical" href="@ViewData["CanonicalOverride"]" />
+    }
+    else if (ViewData["NoIndex"] == null || !(bool)ViewData["NoIndex"])
+    {
+        <link rel="canonical" href="@($"{SiteTools.SiteUrl.TrimEnd('/')}{Context.Request.Path}")" />
+    }
 </head>
 <body>
     <div id="loading-anim">

@@ -5,6 +5,7 @@
 
 @{
     ViewData["Title"] = Model.Title;
+    ViewData["CanonicalOverride"] = (SiteTools.SiteUrl + "p/" + Model.Id + "/" + Model.Slug);
 }
 
 <!-- BREADCRUMB AREA START -->
