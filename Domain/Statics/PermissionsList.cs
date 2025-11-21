@@ -583,37 +583,6 @@ namespace Domain.Statics
             },
             #endregion
 
-            #region ProductGallery
-            new Permission
-            {
-                Id = 81,
-                ParentId = 1,
-                Title = "مدیریت گالری محصول",
-                UniqueName = "ManageProductGallery"
-            },
-            new Permission
-            {
-                Id = 82,
-                ParentId = 81,
-                Title = "لیست گالری محصول",
-                UniqueName = "ProductGalleryList"
-            },
-            new Permission
-            {
-                Id = 83,
-                ParentId = 81,
-                Title = "افزودن تصویر جدید",
-                UniqueName = "CreateNewProductGallery"
-            },
-            new Permission
-            {
-                Id = 84,
-                ParentId = 81,
-                Title = "حذف تصویر",
-                UniqueName = "DeleteProductGallery"
-            },
-            #endregion
-
             #region ProductOption
             new Permission
             {
@@ -933,9 +902,33 @@ namespace Domain.Statics
                 UniqueName = "DeleteSiteMap"
             },
             #endregion
+
+            #region Media
+            new Permission
+            {
+                Id = 126,
+                ParentId = 1,
+                Title = "مدیریت رسانه ها",
+                UniqueName = "ManageMedia"
+            },
+            new Permission
+            {
+                Id = 127,
+                ParentId = 126,
+                Title = "لیست رسانه ها",
+                UniqueName = "MediaList"
+            },
+            new Permission
+            {
+                Id = 128,
+                ParentId = 126,
+                Title = "حذف رسانه",
+                UniqueName = "DeleteMedia"
+            },
+            #endregion
         };
 
-        //Last used id ==> 125
+        //Last used id ==> 128
         public static List<Permission> Permissions = _permissions;
     }
 }

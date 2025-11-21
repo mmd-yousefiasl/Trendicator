@@ -62,30 +62,6 @@ function ReloadProductGallery() {
     $("#LargeModalBody").load("/admin/product-gallery-list?id=" + productId);
 }
 
-function showErrorMessage(message) {
-    Swal.fire({
-        toast: true,
-        position: 'top-start',
-        icon: 'error',
-        title: message,
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true
-    })
-}
-
-function showSuccessMessage(message) {
-    Swal.fire({
-        toast: true,
-        position: 'top-start',
-        icon: 'success',
-        title: message,
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true
-    })
-}
-
 function submitProductOptionForm(event) {
     event.preventDefault();
 

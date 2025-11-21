@@ -120,15 +120,28 @@ $(document).ready(function () {
 document.addEventListener('DOMContentLoaded', function () {
     tinymce.init({
         selector: 'textarea.ck-editor',
-        plugins: 'anchor autolink charmap codesample emoticons link lists media searchreplace table visualblocks wordcount',
-        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+        plugins: 'anchor autolink charmap codesample emoticons link lists media searchreplace table visualblocks wordcount image',
+        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
         language_url: '/adminAssets/tinymce/js/tinymce/langs/fa.js',
         language: "fa",
-
-        spellchecker_languages: "Arabic=ar,Azerbaijani=az,Bulgarian=bg,Bengali=bn,Bosnian=bs,Catalan=ca,Czech=cs,Welsh=cy,Danish=da,German=de,Greek=el,+English / British English=en,Esperanto=eo,Spanish / Argentinian Spanish / Mexican Spanish / Nicaraguan Spanish=es,Estonian=et,Basque=eu,Persian=fa,Finnish=fi,French=fr,Frisian=fy,Irish=ga,Galician=gl,Hebrew=he,Hindi=hi,Croatian=hr,Hungarian=hu,Indonesian=id,Icelandic=is,Italian=it,Japanese=ja,Georgian=ka,Kazakh=kk,Khmer=km,Kannada=kn,Korean=ko,Lithuanian=lt,Latvian=lv,Macedonian=mk,Malayalam=ml,Mongolian=mn,Norwegian Bokmal=nb,Nepali=ne,Dutch=nl,Norwegian Nynorsk=nn,Punjabi=pa,Polish=pl,Portuguese / Brazilian Portuguese=pt,Romanian=ro,Russian=ru,Slovak=sk,Slovenian=sl,Albanian=sq,Serbian / Serbian Latin=sr,Swedish=sv,Swahili=sw,Tamil=ta,Telugu=te,Thai=th,Turkish=tr,Tatar=tt,Ukrainian=uk,Urdu=ur,Vietnamese=vi,Simplified Chinese / Traditional Chinese=zh",
         directionality: "rtl",
+
+        // Optional: allow inserting external images by URL
+        image_title: true,
+        automatic_uploads: false,
+        file_picker_types: 'image',
+        file_picker_callback: function (cb, value, meta) {
+            if (meta.filetype === 'image') {
+                // Prompt user for an image URL
+                var url = prompt('Enter image URL:');
+                if (url) {
+                    cb(url, { title: 'User provided image' });
+                }
+            }
+        }
     });
 });
+
 
 $(document).ready(function () {
     jalaliDatepicker.startWatch({
@@ -145,3 +158,107 @@ $(document).ready(function () {
         jalaliDatepicker.show(elm);
     }, 1000);
 });
+
+function showErrorMessage(message) {
+    Swal.fire({
+        toast: true,
+        position: 'top-start',
+        icon: 'error',
+        title: message,
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true
+    })
+}
+
+function showSuccessMessage(message) {
+    Swal.fire({
+        toast: true,
+        position: 'top-start',
+        icon: 'success',
+        title: message,
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true
+    })
+}
+
+function handleMediaUpload() {
+    const form = document.getElementById('imageForm');
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+        method: form.method,
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                ReloadMediaList();
+                showSuccessMessage(data.message);
+            } else {
+                showErrorMessage(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showErrorMessage('An unexpected error occurred.');
+        });
+}
+
+function ReloadMediaList() {
+    const page = document.getElementById("media-page").value;
+    $("#LargeModalBody").load("/admin/media-list?page=" + page);
+}
+
+function remoMedia(formElement) {
+    event.preventDefault();
+
+    Swal.fire({
+        title: 'آیا از انجام این عملیات مطمئن هستید؟',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'آره، مطمئنم',
+        cancelButtonText: 'نه، منصرف شدم',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const formData = new FormData(formElement);
+
+            fetch(formElement.action, {
+                method: formElement.method,
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        ReloadMediaList(); // optionally pass productId if needed
+                        showSuccessMessage(data.message);
+                    } else {
+                        showErrorMessage(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Deletion Error:', error);
+                });
+        }
+    });
+}
+
+function CopyUrlToClipboard(inputUrl) {
+    const url = inputUrl;
+    navigator.clipboard.writeText(url)
+        .then(() => {
+            showSuccessMessage("کپی شد!");
+        })
+        .catch(err => {
+            console.error("خطا در کپی کردن:", err);
+        });
+}
+
+function CustomFillPageId(id) {
+    $("#media-page").val(id);
+
+    ReloadMediaList();
+}

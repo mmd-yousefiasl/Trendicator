@@ -29,6 +29,7 @@
         public static string OurFeature { get; set; }
         public static string SiteLogo { get; set; }
         public static string BreadcrumbBanner { get; set; }
+        public static string Media { get; set; }
 
         #endregion
 

@@ -1,0 +1,50 @@
+﻿@using Application.ViewModels.Media
+@model AdminSideFilterMediaViewModel
+
+<div class="container">
+    <div class="row g-3">
+        <input type="hidden" asp-for="Page" id="media-page" />
+        <!-- Keep your original upload form via partial -->
+        <partial name="_CreateNewMedia" model="@(new AdminSideCreateNewMediaViewModel())" />
+
+        <!-- Media list -->
+        @if (Model?.Entities?.Any() ?? false)
+        {
+            <partial name="_CustomPaging" model="@Model.GetCurrentPaging()" />
+            @foreach (var item in Model.Entities ?? new List<AdminSideMediaViewModel>())
+            {
+                <form class="col-12 d-flex align-items-center justify-content-between border rounded p-2"
+                      permission="DeleteMedia"
+                      asp-area="Admin"
+                      asp-controller="Media"
+                      asp-action="DeleteMedia"
+                      asp-route-id="@item.Id"
+                      onsubmit="remoMedia(this)">
+
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="@SiteTools.Media@item.FileName"
+                             class="img-thumbnail"
+                             style="max-width: 120px;"
+                             alt="product-images">
+                        <span class="text-truncate">@item.FileName</span>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                            حذف
+                        </button>
+                        <button type="button" class="btn btn-outline-success btn-sm copy-url-btn"
+                                onclick="CopyUrlToClipboard('@(SiteTools.SiteUrl.TrimEnd('/') + SiteTools.Media + item.FileName)')">
+                            کپی آدرس
+                        </button>
+                    </div>
+                </form>
+            }
+        }
+
+        else
+        {
+            <p class="alert alert-info">موردی برای نمایش وجود ندارد</p>
+        }
+    </div>
+</div>

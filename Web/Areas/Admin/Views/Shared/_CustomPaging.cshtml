@@ -1,0 +1,51 @@
+﻿@using Domain.Models
+@model PagingViewModel
+
+@if (Model.PageCount > 1)
+{
+    <div class="row my-3">
+        <div class="col-sm-12 col-md-5">
+            <div class="dataTables_info" id="datatable_info" role="status" aria-live="polite">
+                @Model.ShownEntitesTitle
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-7">
+            <div class="dataTables_paginate paging_simple_numbers" id="datatable_paginate">
+                <ul class="pagination">
+                    @if (Model.StartPage < Model.Page)
+                    {
+                        <li class="paginate_button page-item previous">
+                            <a href="javascript:void(0);" data-page="@(Model.Page - 1)" onclick="CustomFillPageId(@(Model.Page - 1))" tabindex="-1" class="page-link">قبلی</a>
+                        </li>
+                    }
+                    @for (int i = Model.StartPage; i <= Model.EndPage; i++)
+                    {
+                        if (Model.Page == i)
+                        {
+                            <li class="paginate_button page-item active">
+                                <a href="javascript:void(0);" data-page="0" class="page-link">@i</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="paginate_button page-item ">
+                                <a href="javascript:void(0);" data-page="@i" class="page-link" onclick="CustomFillPageId(@i)">
+                                    @i
+                                </a>
+                            </li>
+                        }
+                    }
+                    @if (Model.EndPage > Model.Page)
+                    {
+                        <li class="paginate_button page-item next">
+                            <a href="javascript:void(0);" data-page="@(Model.Page + 1)" onclick="CustomFillPageId(@(Model.Page + 1))" class="page-link">
+                                بعدی
+                            </a>
+                        </li>
+                    }
+
+                </ul>
+            </div>
+        </div>
+    </div>
+}

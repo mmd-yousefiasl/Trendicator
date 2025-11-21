@@ -1,0 +1,25 @@
+﻿@using Application.ViewModels.Media
+@model AdminSideCreateNewMediaViewModel
+
+<form id="imageForm" class="col-12 d-flex align-items-center justify-content-between border rounded p-2"
+      asp-area="Admin"
+      asp-controller="Media"
+      asp-action="CreateNewMedia"
+      method="post"
+      enctype="multipart/form-data">
+
+    <!-- Left side: icon + label -->
+    <div class="d-flex align-items-center gap-3">
+        <i class="fa fa-plus fs-3 text-secondary"></i>
+        <span class="text-muted">افزودن تصویر جدید</span>
+    </div>
+
+    <!-- Right side: trigger upload -->
+    <div>
+        <label for="imageInput" class="btn btn-outline-primary btn-sm mb-0">
+            انتخاب فایل
+        </label>
+        <input type="file" id="imageInput" asp-for="File" accept="image/*" class="d-none"
+               onchange="handleMediaUpload()">
+    </div>
+</form>
