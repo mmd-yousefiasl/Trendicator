@@ -85,7 +85,7 @@
                             <div class="modal-product-info shop-details-info pl-0">
                                 <div class="product-ratting">
                                     <ul>
-                                        @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id, productTitle = Model.Title })
+                                        @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id})
                                         <li class="review-total">
                                             <span>
                                                 ( @Model.ReviewsCount
@@ -257,7 +257,7 @@
                                 <h4 class="title-2">بازخورد مشتریان</h4>
                                 <div class="product-ratting">
                                     <ul>
-                                        @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id, productTitle = Model.Title })
+                                        @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id})
 
                                         <li class="review-total">
                                             <span>

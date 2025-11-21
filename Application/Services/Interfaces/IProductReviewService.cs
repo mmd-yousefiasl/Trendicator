@@ -16,7 +16,7 @@ namespace Application.Services.Interfaces
 
         Task<Result> ClientSideWriteProductReview(ClientSideWriteProductReviewViewModel model);
 
-        Task<Result<ClientSideProductReviewRateDataViewModel>> GetProductReviewRate(int productId, string productTitle);
+        Task<Result<ClientSideProductReviewRateDataViewModel>> GetProductReviewRate(int productId);
 
         Task<Result<List<ClientSideProductReviewRateDataViewModel>>> GetProductsReviewRate(List<int> productIds);
 

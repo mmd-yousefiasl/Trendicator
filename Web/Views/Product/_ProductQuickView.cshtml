@@ -14,7 +14,7 @@
                 <div class="modal-product-info">
                     <div class="product-ratting">
                         <ul>
-                            @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id, productTitle = Model.Title })
+                            @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id })
                             <li class="review-total">
                                 <span>
                                     ( @Model.ReviewsCount
