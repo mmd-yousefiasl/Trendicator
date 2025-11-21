@@ -12,9 +12,9 @@ namespace Web.Components
             _reviewService = reviewService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(int productId)
+        public async Task<IViewComponentResult> InvokeAsync(int productId, string productTitle)
         {
-            var result = await _reviewService.GetProductReviewRate(productId);
+            var result = await _reviewService.GetProductReviewRate(productId, productTitle);
             if (result.IsFailure) return View("ProductReviewsRate", new ClientSideProductReviewRateDataViewModel());
 
             return View("ProductReviewsRate", result.Value);

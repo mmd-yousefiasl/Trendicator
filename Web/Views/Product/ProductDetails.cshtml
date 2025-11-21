@@ -8,6 +8,33 @@
     ViewData["CanonicalOverride"] = (SiteTools.SiteUrl + "p/" + Model.Id + "/" + Model.Slug);
 }
 
+@section HeaderReferences {
+    <script type="application/ld+json">
+        {
+          "@@context": "https://schema.org/",
+          "@@type": "Product",
+          "name": "@Model.Title",
+          "image": [
+            "@(SiteTools.SiteUrl.TrimEnd('/') + SiteTools.ProductBanner + Model.BannerFileName)"
+          ],
+          "description": "@Model.ShortDescription",
+          "sku": "@Model.Id",
+          "brand": {
+            "@@type": "Brand",
+            "name": "Trendicator"
+          },
+          "offers": {
+            "@@type": "Offer",
+            "url": "@(SiteTools.SiteUrl + "p/" + Model.Id + "/" + Model.Slug)",
+            "priceCurrency": "IRR",
+            "price": "@(Model.Price * 10)",
+            "availability": "https://schema.org/InStock",
+            "itemCondition": "https://schema.org/NewCondition"
+          }
+        }
+    </script>
+}
+
 <!-- BREADCRUMB AREA START -->
 <div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-70 bg-image"
      data-bg="@SiteTools.BreadcrumbBanner">
@@ -58,7 +85,7 @@
                             <div class="modal-product-info shop-details-info pl-0">
                                 <div class="product-ratting">
                                     <ul>
-                                        @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id })
+                                        @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id, productTitle = Model.Title })
                                         <li class="review-total">
                                             <span>
                                                 ( @Model.ReviewsCount
@@ -230,7 +257,7 @@
                                 <h4 class="title-2">بازخورد مشتریان</h4>
                                 <div class="product-ratting">
                                     <ul>
-                                        @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id })
+                                        @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id, productTitle = Model.Title })
 
                                         <li class="review-total">
                                             <span>

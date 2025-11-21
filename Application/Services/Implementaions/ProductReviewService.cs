@@ -196,7 +196,7 @@ namespace Application.Services.Implementaions
             return Result.Success();
         }
 
-        public async Task<Result<ClientSideProductReviewRateDataViewModel>> GetProductReviewRate(int productId)
+        public async Task<Result<ClientSideProductReviewRateDataViewModel>> GetProductReviewRate(int productId, string productTitle)
         {
             if (productId < 1) Result.Failure<ClientSideProductReviewRateDataViewModel>(Messages.OperationFailedError);
 
@@ -209,6 +209,7 @@ namespace Application.Services.Implementaions
             {
                 TotalCount = reviews.Count(),
                 ProductId = productId,
+                ProductTitle = productTitle
             };
             if (rateData.TotalCount < 1) return Result.Failure<ClientSideProductReviewRateDataViewModel>(Messages.OperationFailedError);
             rateData.Avrage = sum.GetRateAvrage(rateData.TotalCount);

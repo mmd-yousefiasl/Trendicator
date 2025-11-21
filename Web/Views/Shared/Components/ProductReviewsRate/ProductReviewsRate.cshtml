@@ -2,3 +2,17 @@
 @model ClientSideProductReviewRateDataViewModel
 
 <partial name="_ProductReviewStars" model="@Model.RoundedAvrage" />
+
+<script type="application/ld+json">
+    {
+      "@@context": "https://schema.org/",
+      "@@type": "AggregateRating",
+      "itemReviewed": {
+        "@@type": "Product",
+        "name": "@Model.ProductTitle",
+        "sku": "@Model.ProductId"
+      },
+      "ratingValue": "@Model.Avrage",
+      "reviewCount": "@Model.TotalCount"
+    }
+</script>
