@@ -718,11 +718,18 @@ namespace Application.Services.Implementaions
             return products;
         }
 
-        public async Task<Result<List<int>>> AdminSideGetProductIdsForSiteMap()
+        public async Task<Result<List<AdminSideProductForSiteMapViewModel>>> AdminSideGetProductIdsForSiteMap()
         {
             var ids = await _dbSet.Where(n => n.IsPublished)
-                .Select(n => n.Id).ToListAsync();
-            if (!ids.Any()) return Result.Failure<List<int>>(Messages.OperationFailedError);
+                .Select(n => new AdminSideProductForSiteMapViewModel()
+                {
+                    Id = n.Id,
+                    Slug = n.Slug
+                })
+                .AsNoTracking()
+                .ToListAsync();
+            if (!ids.Any())
+                return Result.Failure<List<AdminSideProductForSiteMapViewModel>>(Messages.OperationFailedError);
 
             return ids;
         }

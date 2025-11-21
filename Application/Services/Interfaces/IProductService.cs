@@ -36,6 +36,6 @@ namespace Application.Services.Interfaces
 
         Task<Result<List<ClientSideProductViewModel>>> ClientSideGetMostPurchasedProducts();
 
-        Task<Result<List<int>>> AdminSideGetProductIdsForSiteMap();
+        Task<Result<List<AdminSideProductForSiteMapViewModel>>> AdminSideGetProductIdsForSiteMap();
     }
 }

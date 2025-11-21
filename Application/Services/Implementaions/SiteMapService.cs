@@ -312,7 +312,7 @@ namespace Application.Services.Implementaions
             var newMaps = Ids.Select(n => new SiteMap
             {
                 ChangeFreq = ChangeFreqEnum.Weekly,
-                Url = $"{SiteTools.SiteUrl}p/{n}",
+                Url = $"{SiteTools.SiteUrl}p/{n.Id}/{n.Slug}",
                 IsPublished = true,
                 Type = SiteMapTypeEnum.Product,
                 Priority = 0.9m
@@ -350,7 +350,7 @@ namespace Application.Services.Implementaions
             var newMaps = Ids.Select(n => new SiteMap
             {
                 ChangeFreq = ChangeFreqEnum.Monthly,
-                Url = $"{SiteTools.SiteUrl}b/{n}",
+                Url = $"{SiteTools.SiteUrl}b/{n.Id}/{n.Slug}",
                 IsPublished = true,
                 Type = SiteMapTypeEnum.Blog,
                 Priority = 0.9m

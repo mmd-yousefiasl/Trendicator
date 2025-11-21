@@ -358,11 +358,18 @@ namespace Application.Services.Implementaions
             return filter;
         }
 
-        public async Task<Result<List<int>>> AdminSideGetBlogIdsForSiteMap()
+        public async Task<Result<List<AdminSideBlogForSiteMapViewModel>>> AdminSideGetBlogIdsForSiteMap()
         {
             var ids = await _dbSet.Where(n => n.IsPublished)
-                .Select(n => n.Id).ToListAsync();
-            if (!ids.Any()) return Result.Failure<List<int>>(Messages.OperationFailedError);
+                .Select(n => new AdminSideBlogForSiteMapViewModel()
+                {
+                    Id = n.Id,
+                    Slug = n.Slug
+                })
+                .AsNoTracking()
+                .ToListAsync();
+            if (!ids.Any())
+                return Result.Failure<List<AdminSideBlogForSiteMapViewModel>>(Messages.OperationFailedError);
 
             return ids;
         }
