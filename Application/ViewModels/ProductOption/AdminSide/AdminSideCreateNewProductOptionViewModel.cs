@@ -19,7 +19,6 @@ namespace Application.ViewModels.ProductOption.AdminSide
         public long Price { get; set; }
 
         [Display(Name = "قیمت سفارش")]
-        [Required(ErrorMessage = Messages.RequiredError)]
-        public long OrderPrice { get; set; }
+        public long? OrderPrice { get; set; }
     }
 }
