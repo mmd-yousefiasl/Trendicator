@@ -16,6 +16,5 @@
         public bool IsInUserCompare { get; set; }
 
         public List<ClientSideProductOptionViewModel>? Options { get; set; }
-        public List<string>? Gallery { get; set; }
     }
 }

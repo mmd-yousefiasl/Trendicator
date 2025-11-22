@@ -115,7 +115,7 @@ namespace Application.Services.Implementaions
         {
             if (id < 1) return Result.Failure(Messages.OperationFailedError);
 
-            var product = await _dbSet.Where(n => n.Id == id).Include(n => n.Gallery).FirstOrDefaultAsync();
+            var product = await _dbSet.Where(n => n.Id == id).FirstOrDefaultAsync();
             if (product is null) return Result.Failure(Messages.OperationFailedError);
 
             product.IsDeleted = true;
@@ -126,11 +126,6 @@ namespace Application.Services.Implementaions
 
             product.BannerFileName.RemoveFileFromServer(SiteTools.ProductBanner);
             product.IndicatorFileName?.RemoveSensitiveFileFromServer(SiteTools.ProductIndicator);
-
-            foreach (var item in product.Gallery ?? new List<ProductGallery>())
-            {
-                item.FileName.RemoveFileFromServer(SiteTools.ProductGallery);
-            }
 
             ProductDeletedEvent ProductDeletedEvent = new ProductDeletedEvent(
                 product.Id);
@@ -492,7 +487,6 @@ namespace Application.Services.Implementaions
                     ShortDescription = n.ShortDescription,
                     Description = n.Description,
                     BannerFileName = n.BannerFileName,
-                    Gallery = n.Gallery.Select(n => n.FileName).ToList(),
                     HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
                     OrderPrice = n.DisplayOrderPrice,
                     Price = n.DisplayPrice,
@@ -532,7 +526,6 @@ namespace Application.Services.Implementaions
                     ShortDescription = n.ShortDescription,
                     Description = n.Description,
                     BannerFileName = n.BannerFileName,
-                    Gallery = n.Gallery.Select(n => n.FileName).ToList(),
                     HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
                     OrderPrice = n.DisplayOrderPrice,
                     Price = n.DisplayPrice,

@@ -14,7 +14,7 @@ namespace Web.Areas.Admin.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int id)
         {
-            var result = await _optionService.AdminSideFilterProductOptions(new AdminSideFilterProductOptionsViewModel() { ProductId = id });
+            var result = await _optionService.AdminSideFilterProductOptions(new AdminSideFilterProductOptionsViewModel() { ProductId = id, TakeEntity = 50 });
             if (result.IsFailure) return View("ProductOptions", new AdminSideFilterProductOptionsViewModel() { ProductId = id });
 
             return View("ProductOptions", result.Value);

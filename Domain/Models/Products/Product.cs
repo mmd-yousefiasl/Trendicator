@@ -23,8 +23,6 @@ namespace Domain.Models.Products
 
         public int CategoryId { get; set; }
         public ProductCategory Category { get; set; }
-
-        public ICollection<ProductGallery>? Gallery { get; set; }
         public ICollection<ProductReview>? Reviews { get; set; }
         public ICollection<ProductWishList>? WishList { get; set; }
         public ICollection<ProductCompare>? Compare { get; set; }

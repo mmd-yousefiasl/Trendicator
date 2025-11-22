@@ -40,13 +40,8 @@
         #endregion
 
         #region Product
-
         public static string ProductBanner { get; set; }
-
-        public static string ProductGallery { get; set; }
-
         public static string ProductIndicator { get; set; }
-
         #endregion
 
         #region Payment
