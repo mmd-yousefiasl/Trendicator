@@ -29,7 +29,7 @@ namespace Domain.Models.Products
         public ICollection<ProductView>? Views { get; set; }
         public ICollection<ProductOption>? Options { get; set; }
         public ICollection<CartItem>? CartItems { get; set; }
-
+        public ICollection<ProductFaq>? Faqs { get; set; }
         #endregion
     }
 }

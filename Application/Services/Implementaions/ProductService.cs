@@ -3,6 +3,7 @@ using Application.Services.Interfaces;
 using Application.Tools;
 using Application.ViewModels.Product.AdminSide;
 using Application.ViewModels.Product.ClientSide;
+using Application.ViewModels.ProductFaq.ClientSide;
 using Data.Context;
 using Domain.Enums.Products;
 using Domain.Events.Products.Product;
@@ -494,6 +495,12 @@ namespace Application.Services.Implementaions
                     CategorySlug = n.Category.Slug,
                     CategoryId = n.CategoryId,
                     Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
+                    Faqs = n.Faqs.Where(f => f.IsPublished).OrderBy(f => f.Priority)
+                    .Select(f => new ClientSideProductFaqViewModel()
+                    {
+                        Question = f.Question,
+                        Answer = f.Answer
+                    }).ToList(),
                     Options = n.Options.Select(o => new ClientSideProductOptionViewModel()
                     {
                         Id = o.Id,
@@ -533,6 +540,12 @@ namespace Application.Services.Implementaions
                     CategorySlug = n.Category.Slug,
                     CategoryId = n.CategoryId,
                     Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
+                    Faqs = n.Faqs.Where(f => f.IsPublished).OrderBy(f => f.Priority)
+                    .Select(f => new ClientSideProductFaqViewModel()
+                    {
+                        Question = f.Question,
+                        Answer = f.Answer
+                    }).ToList(),
                     Options = n.Options.Select(o => new ClientSideProductOptionViewModel()
                     {
                         Id = o.Id,

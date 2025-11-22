@@ -1,4 +1,6 @@
-﻿namespace Application.ViewModels.Product.ClientSide
+﻿using Application.ViewModels.ProductFaq.ClientSide;
+
+namespace Application.ViewModels.Product.ClientSide
 {
     public class ClientSideProductDetailsViewModel : BaseDiscountViewModel
     {
@@ -16,5 +18,6 @@
         public bool IsInUserCompare { get; set; }
 
         public List<ClientSideProductOptionViewModel>? Options { get; set; }
+        public List<ClientSideProductFaqViewModel>? Faqs { get; set; }
     }
 }

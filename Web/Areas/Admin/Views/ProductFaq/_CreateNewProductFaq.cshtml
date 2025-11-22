@@ -1,0 +1,62 @@
+﻿@using Application.ViewModels.ProductFaq.AdminSide
+@model AdminSideCreateNewProductFaqViewModel
+
+<div id="ProductFaqs">
+    <input type="hidden" asp-for="ProductId" id="ProductFaqProductId" />
+    @await Component.InvokeAsync("ProductFaqs", Model.ProductId)
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <form class="card-body" id="createFaqForm" asp-area="Admin" asp-controller="ProductFaq" asp-action="CreateNewProductFaq" autocomplete="off" onsubmit="submitProductFaqForm(event)">
+                    <input type="hidden" asp-for="ProductId" />
+
+                    <h4 class="card-title">@ViewData["Title"]</h4>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Question" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" asp-for="Question">
+                            <span asp-validation-for="Question" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Answer" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" asp-for="Answer">
+                            <span asp-validation-for="Answer" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Priority" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" asp-for="Priority">
+                            <span asp-validation-for="Priority" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="IsPublished" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <select class="form-control" asp-for="IsPublished">
+                                <option value="true">منتشر شده</option>
+                                <option value="false">منتشر نشده</option>
+                            </select>
+                            <span asp-validation-for="IsPublished" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div asp-validation-summary="All" class="text-danger validation-summary"></div>
+
+                    <div class="col-12 text-end mt-5">
+                        <button class="btn btn-primary btn-submit" type="submit">ثبت</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <partial name="_ValidationScriptsPartial" />
+</div>

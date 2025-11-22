@@ -1,5 +1,6 @@
 ﻿@using Application.Tools
 @using Application.ViewModels.Product.ClientSide
+@using Application.ViewModels.ProductFaq.ClientSide
 @using Application.ViewModels.ProductReview.ClientSide
 @model ClientSideProductDetailsViewModel
 
@@ -31,6 +32,29 @@
             "availability": "https://schema.org/InStock",
             "itemCondition": "https://schema.org/NewCondition"
           }
+        }
+    </script>
+}
+
+@if (Model?.Faqs?.Any() ?? false)
+{
+    <script type="application/ld+json">
+        {
+          "@@context": "https://schema.org",
+          "@@type": "FAQPage",
+          "mainEntity": [
+            @foreach (var faq in Model.Faqs ?? new List<ClientSideProductFaqViewModel>())
+            {
+                    @: {
+                    @:   "@@type": "Question",
+                    @:   "name": "@faq.Question",
+                    @:   "acceptedAnswer": {
+                    @:     "@@type": "Answer",
+                    @:     "text": "@faq.Answer"
+                    @:   }
+                    @: }@(faq != Model?.Faqs?.Last() ? "," : "")
+            }
+          ]
         }
     </script>
 }
@@ -85,7 +109,7 @@
                             <div class="modal-product-info shop-details-info pl-0">
                                 <div class="product-ratting">
                                     <ul>
-                                        @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id})
+                                        @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id })
                                         <li class="review-total">
                                             <span>
                                                 ( @Model.ReviewsCount
@@ -250,6 +274,33 @@
                         <div class="tab-pane fade active show" id="liton_tab_details_1_1">
                             <div class="ltn__shop-details-tab-content-inner">
                                 @Html.Raw(Model.Description)
+
+                                @if (Model?.Faqs?.Any() ?? false)
+                                {
+                                    <div class="col-lg-12">
+                                        <div class="ltn__faq-inner ltn__faq-inner-2">
+                                            <div id="accordion_2">
+                                                @{
+                                                    int faqCounter = 0;
+                                                    foreach (var item in Model.Faqs ?? new List<ClientSideProductFaqViewModel>())
+                                                    {
+                                                        faqCounter++;
+                                                        <div class="card">
+                                                            <h6 class="collapsed ltn__card-title" data-toggle="collapse" data-target="#faq-item-2-@faqCounter" aria-expanded="false">
+                                                                @item.Question
+                                                            </h6>
+                                                            <div id="faq-item-2-@faqCounter" class="collapse" data-parent="#accordion_2">
+                                                                <div class="card-body">
+                                                                    <p>@item.Answer</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
                             </div>
                         </div>
                         <div class="tab-pane fade" id="liton_tab_details_1_2">
@@ -257,7 +308,7 @@
                                 <h4 class="title-2">بازخورد مشتریان</h4>
                                 <div class="product-ratting">
                                     <ul>
-                                        @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id})
+                                        @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id })
 
                                         <li class="review-total">
                                             <span>

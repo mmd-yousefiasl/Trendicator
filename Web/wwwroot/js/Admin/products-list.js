@@ -1,4 +1,5 @@
-﻿function submitProductOptionForm(event) {
+﻿// Product Option
+function submitProductOptionForm(event) {
     event.preventDefault();
 
     const $form = $('#createOptionForm');
@@ -63,6 +64,84 @@ function RemoveProductOption(formElement) {
                 .then(data => {
                     if (data.success) {
                         ReloadProductOption(); // optionally pass productId if needed
+                        showSuccessMessage(data.message);
+                    } else {
+                        showErrorMessage(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Deletion Error:', error);
+                });
+        }
+    });
+}
+
+//Product Faq
+function submitProductFaqForm(event) {
+    event.preventDefault();
+
+    const $form = $('#createFaqForm');
+
+    // Trigger client-side validation
+    if (!$form.valid()) {
+        return;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: $form.attr('action'),
+        data: $form.serialize(),
+        headers: {
+            'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+        },
+        success: function (data) {
+            if (data.success) {
+
+                showSuccessMessage(data.message);
+                ReloadProductFaq();
+
+            } else {
+                showErrorMessage(data.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error submitting form:", error);
+        }
+    });
+}
+
+function ReloadProductFaq() {
+    const productId = document.getElementById("ProductFaqProductId").value;
+    $("#ProductFaqs").load("/admin/add-new-product-faq?id=" + productId);
+}
+
+function UpdateProductFaq(stockId) {
+    $("#ProductFaqs").load("/admin/edit-product-faq?id=" + stockId);
+}
+
+function RemoveProductFaq(formElement) {
+    event.preventDefault();
+
+    Swal.fire({
+        title: 'آیا از انجام این عملیات مطمئن هستید؟',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'آره، مطمئنم',
+        cancelButtonText: 'نه، منصرف شدم',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const formData = new FormData(formElement);
+
+            fetch(formElement.action, {
+                method: formElement.method,
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        ReloadProductFaq(); // optionally pass productId if needed
                         showSuccessMessage(data.message);
                     } else {
                         showErrorMessage(data.message);

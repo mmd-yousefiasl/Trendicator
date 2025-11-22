@@ -127,6 +127,10 @@
                                                         <i class="fas fa-cog"></i>
                                                     </a>
 
+                                                    <a permission="CreateNewProductFaq" href="javascript:void(0)" onclick="showLargeModal('سوالات متداول محصول', '/admin/add-new-product-faq?id=@item.Id')" class="btn btn-outline-secondary btn-sm edit" title="سوالات متداول محصول">
+                                                        <i class="mdi mdi-head-question-outline"></i>
+                                                    </a>
+
                                                     <form permission="DeleteProduct" class="btn btn-outline-secondary btn-sm" method="post" onclick="ConfirmDelete(this)" asp-route-id="@item.Id" asp-area="Admin" asp-controller="Product" asp-action="DeleteProduct" title="حذف">
                                                         <i class="mdi mdi-delete"></i>
                                                     </form>

@@ -1,0 +1,53 @@
+﻿@using Application.Tools
+@using Application.ViewModels.ProductFaq.AdminSide
+@model AdminSideFilterProductFaqsViewModel
+
+@if (Model.Entities?.Any() ?? false)
+{
+    <div class="col-sm-12">
+        <div class="table-responsive table-desi">
+            <table class="table all-package table-category " id="editableTable">
+                <thead>
+                    <tr>
+                        <th>سوال</th>
+                        <th>اولویت</th>
+                        <th>وضعیت انتشار</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.Entities ?? new List<AdminSideProductFaqViewModel>())
+                    {
+                        <tr>
+                            <td title="@item.Answer">@item.Question</td>
+                            <td>@item.Priority</td>
+                            <td>
+                                @if (item.IsPublished)
+                                {
+                                    <span class="text-success">منتشر شده</span>
+                                }
+                                else
+                                {
+                                    <span class="text-danger">منتشر نشده</span>
+                                }
+                            </td>
+                            <td>
+                                <a permission="UpdateProductFaq" href="javascript:void(0)" onclick="UpdateProductFaq('@item.Id')">
+                                    <i class="fa fa-edit" title="Edit"></i>
+                                </a>
+                                <form permission="DeleteProductFaq" method="post" onclick="RemoveProductFaq(this)" asp-route-id="@item.Id" asp-area="Admin" asp-controller="ProductFaq" asp-action="DeleteProductFaq" title="Delete" class="list-delete-button">
+                                    <i class="fa fa-trash" title="Delete"></i>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <partial name="_NotFoundPartial" />
+}
