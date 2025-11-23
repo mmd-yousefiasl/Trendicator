@@ -1,10 +1,8 @@
 ﻿@using Application.ViewModels.User.ClientSide
 @model ClientSideLoginCodeViewModel
-@inject IConfiguration configuration
 
 @{
     ViewData["Title"] = "ورود";
-    var siteKey = configuration["googleReCaptcha:SiteKey"];
 }
 
 <div class="ltn__login-area pb-110 mt-5">
@@ -28,10 +26,9 @@
         <div class="row">
             <div class="col-lg-6 offset-lg-3">
                 <div class="account-login-inner">
-                    <form id="account-form" asp-area="" asp-controller="Account" asp-action="VerifyLoginCode" method="post" class="ltn__form-box contact-form-box" onsubmit="submitAnimation()" autocomplete="off">
+                    <form asp-area="" asp-controller="Account" asp-action="VerifyLoginCode" method="post" class="ltn__form-box contact-form-box" onsubmit="submitAnimation()" autocomplete="off">
                         <input asp-for="ReturnUrl" type="hidden" />
                         <input asp-for="PhoneNumber" type="hidden" />
-                        <input type="hidden" asp-for="Captcha" id="recaptchaTokenInputId" />
 
                         <span class="mb-6 text-lg leading-normal dark:text-jacarta-300">
                             کد تایید به شماره
@@ -49,9 +46,6 @@
                         <input type="text" asp-for="LoginCode" class="text-center login-code m-0" />
                         <span asp-validation-for="LoginCode" class="text-danger"></span>
 
-                        <div id="html_element" class="col-12 mt-3"></div>
-                        <span asp-validation-for="Captcha" class="text-danger"></span>
-                        <br />
                         <div class="btn-wrapper">
                             <button class="theme-btn-1 btn reverse-color btn-block btn-submit" type="submit">ورود</button>
                         </div>
@@ -75,20 +69,4 @@
 
 @section FooterReferences {
     <script asp-append-version="true" src="/js/disableEnter.js"></script>
-    <script type="text/javascript">
-        var onloadCallback = function() {
-            grecaptcha.render('html_element', {
-                'sitekey': '@siteKey'
-            });
-        };
-
-        document.getElementById("account-form").addEventListener("submit", function(e) {
-            var token = grecaptcha.getResponse();
-            document.getElementById("recaptchaTokenInputId").value = token;
-        });
-    </script>
-
-    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
-            async defer>
-    </script>
 }
