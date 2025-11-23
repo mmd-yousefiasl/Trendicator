@@ -52,5 +52,9 @@
         public static string VerifyPaymentURL { get; set; }
 
         #endregion
+
+        #region Recaptcha
+        public static string RecaptchaVerifyUrl { get; set; }
+        #endregion
     }
 }

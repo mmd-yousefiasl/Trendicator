@@ -32,7 +32,7 @@
         public const string TransactionAlreadyVerified = "تراکنش قبلاً تأیید شده است";
         public const string InSufficentBalanceError = "موجودی کافی برای انجام تراکنش وجود ندارد";
         public const string CheckTermsAndConditionsError = "پذیرش قوانین و شرایط برای ادامه الزامی است";
-        public const string CaptchaFailedError = "کد امنیتی به درستی وارد نشده است";
+        public const string CaptchaFailedError = "خطای کد امنیتی، لطفا دوباره امتحان کنید";
 
         #endregion
 

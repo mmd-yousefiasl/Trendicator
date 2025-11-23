@@ -1,7 +1,5 @@
 using Application.Mediator;
 using Domain.Statics;
-using GoogleReCaptcha.V3;
-using GoogleReCaptcha.V3.Interface;
 using IOC;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics;
@@ -22,10 +20,6 @@ try
 
     // SiteTools
     builder.Configuration.GetSection("SiteTools").Get<SiteTools>();
-
-    #region ReCaptcha
-    builder.Services.AddHttpClient<ICaptchaValidator, GoogleReCaptchaValidator>();
-    #endregion
 
     #region Data protection
     builder.Services.AddDataProtection()

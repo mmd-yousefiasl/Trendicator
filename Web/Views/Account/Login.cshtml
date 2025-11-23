@@ -1,9 +1,12 @@
 ﻿@using Application.ViewModels.User.ClientSide
 @model ClientSideLoginViewModel
+@inject IConfiguration configuration
 
 @{
     ViewData["Title"] = "ورود";
+    var siteKey = configuration["googleReCaptcha:SiteKey"];
 }
+
 
 <!-- LOGIN AREA START (Register) -->
 <div class="ltn__login-area pb-110 mt-5">
@@ -27,13 +30,18 @@
         <div class="row">
             <div class="col-lg-6 offset-lg-3">
                 <div class="account-login-inner">
-                    <form asp-area="" asp-controller="Account" asp-action="Login" method="post" class="ltn__form-box contact-form-box" onsubmit="submitAnimation()">
-                        <partial name="_CaptchaInput" />
+                    <form id="account-form" asp-area="" asp-controller="Account" asp-action="Login" method="post" class="ltn__form-box contact-form-box" onsubmit="submitAnimation()">
                         <input asp-for="ReturnUrl" type="hidden" />
+                        <input type="hidden" asp-for="Captcha" id="recaptchaTokenInputId" />
 
                         <label asp-for="PhoneNumber"></label>
                         <input type="text" asp-for="PhoneNumber" dir="ltr" />
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+
+                        <div id="html_element" class="col-12"></div>
+                        <span asp-validation-for="Captcha" class="text-danger"></span>
+                        <br />
+
                         <label class="checkbox-inline">
                             <input type="checkbox" asp-for="PrivacyPolicy">
                             با کلیک روی «ورود»، با
@@ -42,8 +50,9 @@
                             <a asp-area="" asp-controller="TermsAndConditions" asp-action="TermsAndConditions" target="_blank">شرایط و ضوابط</a>
                             موافقت می‌کنم.
                         </label>
-                        <br />
                         <span asp-validation-for="PrivacyPolicy" class="text-danger"></span>
+                        <br />
+
                         <div class="btn-wrapper">
                             <button class="theme-btn-1 btn reverse-color btn-block btn-submit" type="submit">ارسال کد تایید</button>
                         </div>
@@ -67,5 +76,20 @@
 
 @section FooterReferences {
     <script asp-append-version="true" src="/js/disableEnter.js"></script>
-    <partial name="_CaptchaScripts" />
+    <script type="text/javascript">
+        var onloadCallback = function() {
+            grecaptcha.render('html_element', {
+                'sitekey': '@siteKey'
+            });
+        };
+
+        document.getElementById("account-form").addEventListener("submit", function(e) {
+            var token = grecaptcha.getResponse();
+            document.getElementById("recaptchaTokenInputId").value = token;
+        });
+    </script>
+
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+            async defer>
+    </script>
 }

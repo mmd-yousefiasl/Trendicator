@@ -1,7 +1,6 @@
 ﻿using Application.Services.Interfaces;
 using Application.ViewModels.User.ClientSide;
 using Domain.Shared;
-using GoogleReCaptcha.V3.Interface;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -13,15 +12,15 @@ namespace Web.Controllers
     {
         #region Fields
         private readonly IUserService _userService;
-        private readonly ICaptchaValidator _captchaValidator;
+        private readonly IRecaptchaService _recaptchaService;
         #endregion
 
         #region Ctor
         public AccountController(IUserService userService,
-            ICaptchaValidator captchaValidator)
+            IRecaptchaService recaptchaService)
         {
             _userService = userService;
-            _captchaValidator = captchaValidator;
+            _recaptchaService = recaptchaService;
         }
         #endregion
 
@@ -36,13 +35,15 @@ namespace Web.Controllers
         [HttpPost("/login"), ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(ClientSideLoginViewModel model)
         {
-            if (!await _captchaValidator.IsCaptchaPassedAsync(model.Captcha))
-            {
-                TempData[TemporaryErrorMessage] = Messages.CaptchaFailedError;
-                return View(model);
-            }
             if (User?.Identity?.IsAuthenticated ?? false) return Redirect("/");
             if (!ModelState.IsValid) return View(model);
+
+            var recaptchaResult = await _recaptchaService.VerifyRecaptchaV2(model.Captcha);
+            if (recaptchaResult.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = recaptchaResult.Message;
+                return View(model);
+            }
 
             var result = await _userService.SendUserLoginCode(model);
             if (result.IsFailure)
@@ -63,6 +64,7 @@ namespace Web.Controllers
         public IActionResult LoginCode(ClientSideLoginCodeViewModel model)
         {
             ViewData["NoIndex"] = true;
+            if (User?.Identity?.IsAuthenticated ?? false) return Redirect("/");
             if (model is null)
             {
                 TempData[TemporaryErrorMessage] = Messages.LoginFailedError;
@@ -74,11 +76,6 @@ namespace Web.Controllers
         [HttpPost("/login-code")]
         public async Task<IActionResult> VerifyLoginCode(ClientSideLoginCodeViewModel model)
         {
-            if (!await _captchaValidator.IsCaptchaPassedAsync(model.Captcha))
-            {
-                TempData[TemporaryErrorMessage] = Messages.CaptchaFailedError;
-                return View(model);
-            }
             if (!ModelState.IsValid) return View("LoginCode", model);
 
             var result = await _userService.VerifyLoginCode(model);

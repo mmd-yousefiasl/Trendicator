@@ -64,6 +64,7 @@ namespace IOC
             services.AddScoped<ISiteMapService, SiteMapService>();
             services.AddScoped<IMediaService, MediaService>();
             services.AddScoped<IProductFaqService, ProductFaqService>();
+            services.AddScoped<IRecaptchaService, RecaptchaService>();
 
             #endregion
 
