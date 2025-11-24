@@ -18,45 +18,75 @@
         padding: 60px 20px;
         max-width: 1200px;
         margin: 0 auto;
-        background: linear-gradient(135deg, #f0fff4, #e6f9e6); /* soft green background */
+        background: linear-gradient(135deg, #000000, #0d47a1); /* black to deep blue */
         margin-top: 50px;
         border-radius: 12px;
+        color: #e0e0e0; /* light gray for readability */
+        box-shadow: 0 8px 24px rgba(13, 71, 161, 0.4);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(13, 71, 161, 0.1), transparent 70%);
+            animation: pulseGlow 6s infinite ease-in-out;
+            z-index: 0;
+        }
+
+    @@keyframes pulseGlow {
+        0%, 100% {
+            opacity: 0.2;
+        }
+
+        50% {
+            opacity: 0.5;
+        }
     }
 
     .hero-content {
         flex: 1 1 400px;
         max-width: 500px;
         padding: 20px;
+        position: relative;
+        z-index: 1;
     }
 
     .hero h1 {
         font-size: clamp(2rem, 4vw, 3rem);
         margin-bottom: 20px;
-        color: #1b5e20; /* deep green */
+        color: #90caf9; /* soft blue */
     }
 
     .hero p {
         font-size: clamp(1rem, 2vw, 1.25rem);
         margin-bottom: 30px;
-        color: #2e7d32; /* medium green */
+        color: #b0bec5; /* muted gray-blue */
     }
 
     .hero-btn {
         display: inline-block;
         padding: 12px 24px;
-        background: linear-gradient(135deg, #43cea2, #185a9d); /* green-teal gradient */
+        background: linear-gradient(135deg, #1e88e5, #0d47a1); /* dark blue gradient */
         color: #fff;
         text-decoration: none;
         font-weight: bold;
         border-radius: 6px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 6px rgba(33, 150, 243, 0.4);
         transition: transform 0.2s ease, background 0.3s ease;
+        position: relative;
+        z-index: 1;
     }
 
         .hero-btn:hover {
-            background: linear-gradient(135deg, #56ab2f, #a8e063); /* lighter green hover */
+            background: linear-gradient(135deg, #64b5f6, #1e88e5); /* lighter blue hover */
             transform: scale(1.05);
-            color: black;
+            color: #fff;
         }
 
     .hero-img {
@@ -66,7 +96,9 @@
         height: auto;
         object-fit: cover;
         border-radius: 12px;
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 6px 12px rgba(13, 71, 161, 0.5);
+        position: relative;
+        z-index: 1;
     }
 
 </style>
