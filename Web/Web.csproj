@@ -29,8 +29,7 @@
 
   <ItemGroup>
     <Folder Include="Logs\" />
-    <Folder Include="wwwroot\files\blog\" />
-    <Folder Include="wwwroot\files\our-feature\" />
+    <Folder Include="wwwroot\files\media\" />
   </ItemGroup>
 
 </Project>
