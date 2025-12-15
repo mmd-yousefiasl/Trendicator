@@ -8,6 +8,7 @@
         public static int MaxImageFileLength { get; set; }
         public static string DefaultImages { get; set; }
         public static string SiteUrl { get; set; }
+        public static string SiteMediaUrl { get; set; }
 
         #endregion
 
