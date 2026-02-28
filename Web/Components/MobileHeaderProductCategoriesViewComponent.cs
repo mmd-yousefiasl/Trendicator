@@ -1,5 +1,6 @@
 ﻿using Application.Services.Interfaces;
 using Application.ViewModels.Product.ClientSide;
+using Application.ViewModels.ProductCategory.ClientSide;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Components
@@ -15,7 +16,7 @@ namespace Web.Components
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var result = await _categoryServce.ClientSideGetProductCategories();
-            if (result.IsFailure) return View("MobileHeaderProductCategories", new List<ClientSideProductViewModel>());
+            if (result.IsFailure) return View("MobileHeaderProductCategories", new List<ClientSideProductCategoryViewModel>());
 
             return View("MobileHeaderProductCategories", result.Value);
         }
