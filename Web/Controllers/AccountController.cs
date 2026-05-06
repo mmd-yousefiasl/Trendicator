@@ -38,13 +38,6 @@ namespace Web.Controllers
             if (User?.Identity?.IsAuthenticated ?? false) return Redirect("/");
             if (!ModelState.IsValid) return View(model);
 
-            var recaptchaResult = await _recaptchaService.VerifyRecaptchaV2(model.Captcha);
-            if (recaptchaResult.IsFailure)
-            {
-                TempData[TemporaryErrorMessage] = recaptchaResult.Message;
-                return View(model);
-            }
-
             var result = await _userService.SendUserLoginCode(model);
             if (result.IsFailure)
             {

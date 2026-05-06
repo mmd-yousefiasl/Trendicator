@@ -1,10 +1,8 @@
 ﻿@using Application.ViewModels.User.ClientSide
 @model ClientSideLoginViewModel
-@inject IConfiguration configuration
 
 @{
     ViewData["Title"] = "ورود";
-    var siteKey = configuration["googleReCaptcha:SiteKey"];
 }
 
 
@@ -32,15 +30,10 @@
                 <div class="account-login-inner">
                     <form id="account-form" asp-area="" asp-controller="Account" asp-action="Login" method="post" class="ltn__form-box contact-form-box" onsubmit="submitAnimation()">
                         <input asp-for="ReturnUrl" type="hidden" />
-                        <input type="hidden" asp-for="Captcha" id="recaptchaTokenInputId" />
 
                         <label asp-for="PhoneNumber"></label>
                         <input type="text" asp-for="PhoneNumber" dir="ltr" />
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-
-                        <div id="html_element" class="col-12"></div>
-                        <span asp-validation-for="Captcha" class="text-danger"></span>
-                        <br />
 
                         <label class="checkbox-inline">
                             <input type="checkbox" asp-for="PrivacyPolicy">
@@ -73,23 +66,3 @@
         </div>
     </div>
 </div>
-
-@section FooterReferences {
-    <script asp-append-version="true" src="/js/disableEnter.js"></script>
-    <script type="text/javascript">
-        var onloadCallback = function() {
-            grecaptcha.render('html_element', {
-                'sitekey': '@siteKey'
-            });
-        };
-
-        document.getElementById("account-form").addEventListener("submit", function(e) {
-            var token = grecaptcha.getResponse();
-            document.getElementById("recaptchaTokenInputId").value = token;
-        });
-    </script>
-
-    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
-            async defer>
-    </script>
-}
