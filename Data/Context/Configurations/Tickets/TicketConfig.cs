@@ -13,9 +13,9 @@ namespace Data.Context.Configurations.Tickets
 
             builder.Property(n => n.Subject).HasMaxLength(200);
 
-            // Configure Id to start from 1000
             builder.Property(n => n.Id)
-                   .UseIdentityColumn(seed: 1000, increment: 1);
+                .UseIdentityColumn()
+                .HasIdentityOptions(startValue: 10000, incrementBy: 1);
         }
     }
 }

@@ -15,9 +15,9 @@ namespace Data.Context.Configurations.Shopping
             builder.Property(n => n.DiscountCode).HasMaxLength(200);
             builder.Property(n => n.TradingViewAccountName).HasMaxLength(500);
 
-            // Configure Id to start from 10000
             builder.Property(n => n.Id)
-                   .UseIdentityColumn(seed: 10000, increment: 1);
+                   .UseIdentityColumn()
+                   .HasIdentityOptions(startValue: 10000, incrementBy: 1);
         }
     }
 }

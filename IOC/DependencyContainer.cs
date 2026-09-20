@@ -4,6 +4,7 @@ using Application.Services.Interfaces;
 using Data.Context;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IOC
@@ -12,13 +13,24 @@ namespace IOC
     {
         public static void RegisterDependencies(IServiceCollection services, string connectionString)
         {
-            #region DataBase
 
-            services.AddDbContext<TrendicatorDbContext>(options =>
+            #region Config DataBase
+            services.AddDbContextPool<TrendicatorDbContext>(options =>
             {
-                options.UseSqlServer(connectionString);
-            });
+                options.UseNpgsql(
+                    connectionString,
+                    npgsqlOptions =>
+                    {
+                        npgsqlOptions.EnableRetryOnFailure(
+                            maxRetryCount: 5,
+                            maxRetryDelay: TimeSpan.FromSeconds(5),
+                            errorCodesToAdd: null);
+                    }
+                );
 
+                options.ConfigureWarnings(warnings =>
+                    warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
+            });
             #endregion
 
             #region Services
