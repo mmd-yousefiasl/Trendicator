@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.Identity
     {
         public void Configure(EntityTypeBuilder<Role> builder)
         {
+            builder.ToTable("Roles");
+
             builder.HasKey(n => n.Id);
 
             builder.HasQueryFilter(n => !n.IsDeleted);

@@ -14,7 +14,7 @@ namespace Web.Areas.UserPanel.Components
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var result = await _userService.GetMySignInDate();
-            if (result.IsFailure) return View("MySignInDate", DateTime.Now);
+            if (result.IsFailure) return View("MySignInDate", DateTime.UtcNow);
 
             return View("MySignInDate", result.Value);
         }

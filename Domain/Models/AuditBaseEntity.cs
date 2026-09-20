@@ -4,8 +4,8 @@
     {
         public AuditBaseEntity()
         {
-            CreatedDate = DateTime.Now;
-            LastUpdatedDate = DateTime.Now;
+            CreatedDate = DateTime.UtcNow;
+            LastUpdatedDate = DateTime.UtcNow;
         }
         public DateTime CreatedDate { get; set; }
         public DateTime LastUpdatedDate { get; set; }

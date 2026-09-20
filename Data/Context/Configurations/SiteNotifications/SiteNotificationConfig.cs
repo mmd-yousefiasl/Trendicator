@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.SiteNotifications
     {
         public void Configure(EntityTypeBuilder<SiteNotification> builder)
         {
+            builder.ToTable("SiteNotifications");
+
             builder.HasKey(n => n.Id);
             builder.HasQueryFilter(n => !n.IsDeleted);
 

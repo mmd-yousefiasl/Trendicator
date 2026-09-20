@@ -124,7 +124,7 @@ namespace Application.Services.Implementaions
             if (transaction is null) return Result.Failure<int>(Messages.OperationFailedError);
 
             transaction.IsDeleted = true;
-            transaction.LastUpdatedDate = DateTime.Now;
+            transaction.LastUpdatedDate = DateTime.UtcNow;
 
             _dbSet.Update(transaction);
             await _context.SaveChangesAsync();

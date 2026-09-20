@@ -99,7 +99,7 @@ namespace Application.Services.Implementaions
             var letter = await _dbSet.FindAsync(id);
             if (letter is null) return Result.Failure(Messages.OperationFailedError);
 
-            letter.LastUpdatedDate = DateTime.Now;
+            letter.LastUpdatedDate = DateTime.UtcNow;
             letter.IsDeleted = true;
 
             _dbSet.Update(letter);

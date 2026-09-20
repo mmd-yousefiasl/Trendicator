@@ -104,7 +104,7 @@ namespace Application.Services.Implementaions
 
             blog.IsDeleted = true;
             blog.Tags = new List<BlogTagMapping>();
-            blog.LastUpdatedDate = DateTime.Now;
+            blog.LastUpdatedDate = DateTime.UtcNow;
 
             blog.FileName.RemoveFileFromServer(SiteTools.BlogBanner);
 

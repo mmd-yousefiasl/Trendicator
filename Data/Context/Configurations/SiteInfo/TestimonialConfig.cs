@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.SiteInfo
     {
         public void Configure(EntityTypeBuilder<Testimonial> builder)
         {
+            builder.ToTable("Testimonials");
+
             builder.HasKey(n => n.Id);
             builder.HasQueryFilter(n => !n.IsDeleted);
 

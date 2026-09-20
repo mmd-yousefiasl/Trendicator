@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.Users
     {
         public void Configure(EntityTypeBuilder<BalanceTransaction> builder)
         {
+            builder.ToTable("BalanceTransactions");
+
             builder.HasKey(n => n.Id);
             builder.HasQueryFilter(n => !n.IsDeleted);
 

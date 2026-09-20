@@ -136,7 +136,7 @@ namespace Application.Services.Implementaions
             if (ticket is null) return Result.Failure(Messages.OperationFailedError);
 
             ticket.Status = TicketStatusEnum.Sent;
-            ticket.LastUpdatedDate = DateTime.Now;
+            ticket.LastUpdatedDate = DateTime.UtcNow;
             ticket.Messages.Add(new TicketMessage()
             {
                 Message = model.Message,
@@ -226,7 +226,7 @@ namespace Application.Services.Implementaions
                 .FirstOrDefaultAsync();
             if (ticket is null) return Result.Failure(Messages.OperationFailedError);
 
-            ticket.LastUpdatedDate = DateTime.Now;
+            ticket.LastUpdatedDate = DateTime.UtcNow;
             ticket.Status = TicketStatusEnum.Answered;
             ticket.Messages.Add(new TicketMessage()
             {
@@ -255,7 +255,7 @@ namespace Application.Services.Implementaions
             if (ticket is null) return Result.Failure(Messages.OperationFailedError);
 
             ticket.IsDeleted = true;
-            ticket.LastUpdatedDate = DateTime.Now;
+            ticket.LastUpdatedDate = DateTime.UtcNow;
 
             _dbSet.Update(ticket);
             await _context.SaveChangesAsync();
@@ -276,7 +276,7 @@ namespace Application.Services.Implementaions
             if (ticket is null) return Result.Failure(Messages.OperationFailedError);
 
             ticket.Status = TicketStatusEnum.Closed;
-            ticket.LastUpdatedDate = DateTime.Now;
+            ticket.LastUpdatedDate = DateTime.UtcNow;
 
             _dbSet.Update(ticket);
             await _context.SaveChangesAsync();
@@ -303,7 +303,7 @@ namespace Application.Services.Implementaions
             if (ticket is null) return Result.Failure(Messages.OperationFailedError);
 
             ticket.Status = TicketStatusEnum.Closed;
-            ticket.LastUpdatedDate = DateTime.Now;
+            ticket.LastUpdatedDate = DateTime.UtcNow;
 
             _dbSet.Update(ticket);
             await _context.SaveChangesAsync();

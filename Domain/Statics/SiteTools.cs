@@ -24,6 +24,10 @@
 
         #endregion
 
+        #region Mediator
+        public static string MediatorLicenceKey { get; set; }
+        #endregion
+
         #region SiteInfo
 
         public static string Banner { get; set; }
@@ -54,8 +58,13 @@
 
         #endregion
 
-        #region Recaptcha
-        public static string RecaptchaVerifyUrl { get; set; }
+        #region Telegram
+
+        public static long TelegramErrorChannelId { get; set; }
+        public static bool TelegramErrorAlertingEnabled { get; set; }
+        public static string AdminTelegramWorkerKey { get; set; }
+        public static string AdminTelegramWorkerSendUrl { get; set; }
+
         #endregion
     }
 }

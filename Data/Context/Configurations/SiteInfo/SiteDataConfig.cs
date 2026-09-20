@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.SiteInfo
     {
         public void Configure(EntityTypeBuilder<SiteData> builder)
         {
+            builder.ToTable("SiteData");
+
             builder.HasKey(n => n.Id);
 
             builder.Property(n => n.SiteName).HasMaxLength(200);

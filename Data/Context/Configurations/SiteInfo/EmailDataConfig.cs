@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.SiteInfo
     {
         public void Configure(EntityTypeBuilder<EmailData> builder)
         {
+            builder.ToTable("EmailData");
+
             builder.HasKey(n => n.Id);
             builder.HasQueryFilter(n => !n.IsDeleted);
 

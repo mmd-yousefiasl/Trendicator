@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.Products
     {
         public void Configure(EntityTypeBuilder<ProductWishList> builder)
         {
+            builder.ToTable("ProductWishLists");
+
             builder.HasKey(n => n.Id);
             builder.HasQueryFilter(n => !n.IsDeleted);
 

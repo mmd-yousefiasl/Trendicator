@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.SiteInfo
     {
         public void Configure(EntityTypeBuilder<Media> builder)
         {
+            builder.ToTable("Media");
+
             builder.HasKey(n => n.Id);
 
             builder.Property(n => n.FileName).HasMaxLength(50);

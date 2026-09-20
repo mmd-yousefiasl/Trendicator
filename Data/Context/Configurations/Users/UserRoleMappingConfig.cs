@@ -8,11 +8,15 @@ namespace Data.Context.Configurations.Users
     {
         public void Configure(EntityTypeBuilder<UserRoleMapping> builder)
         {
+            builder.ToTable("UserRoleMappings");
+
             builder.HasKey(n => new { n.UserId, n.RoleId });
 
             builder.HasOne(n => n.User)
                 .WithMany(n => n.UserRoleMapping)
-                .HasForeignKey(n => n.UserId);
+                .HasForeignKey(n => n.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(false);
         }
     }
 }

@@ -120,7 +120,7 @@ namespace Application.Services.Implementaions
             if (product is null) return Result.Failure(Messages.OperationFailedError);
 
             product.IsDeleted = true;
-            product.LastUpdatedDate = DateTime.Now;
+            product.LastUpdatedDate = DateTime.UtcNow;
 
             _dbSet.Update(product);
             await _context.SaveChangesAsync();

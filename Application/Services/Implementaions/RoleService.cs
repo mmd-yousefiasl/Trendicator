@@ -133,7 +133,7 @@ namespace Application.Services.Implementaions
             if (role is null) return Result.Failure(Messages.OperationFailedError);
 
             role.IsDeleted = true;
-            role.LastUpdatedDate = DateTime.Now;
+            role.LastUpdatedDate = DateTime.UtcNow;
 
             _dbSet.Update(role);
             await _context.SaveChangesAsync();
@@ -178,7 +178,7 @@ namespace Application.Services.Implementaions
 
             role.Title = model.Title;
             role.UniqueName = model.UniqueName;
-            role.LastUpdatedDate = DateTime.Now;
+            role.LastUpdatedDate = DateTime.UtcNow;
 
             foreach (var item in model.PermissionIds ?? new List<int>())
             {

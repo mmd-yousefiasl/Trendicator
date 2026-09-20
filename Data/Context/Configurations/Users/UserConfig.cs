@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.Users
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
+            builder.ToTable("Users");
+
             builder.HasKey(n => n.Id);
 
             builder.HasQueryFilter(n => !n.IsDeleted);

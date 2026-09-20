@@ -166,7 +166,7 @@ namespace Application.Services.Implementaions
             var user = await _dbSet.Include(n => n.UserRoleMapping).FirstOrDefaultAsync(n => n.Id == model.Id);
             if (user is null) return Result.Failure(Messages.OperationFailedError);
 
-            user.LastUpdatedDate = DateTime.Now;
+            user.LastUpdatedDate = DateTime.UtcNow;
             user.Email = model.Email;
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
@@ -216,7 +216,7 @@ namespace Application.Services.Implementaions
             if (user is null) return Result.Failure(Messages.OperationFailedError);
 
             user.IsDeleted = true;
-            user.LastUpdatedDate = DateTime.Now;
+            user.LastUpdatedDate = DateTime.UtcNow;
 
             user.Avatar?.RemoveFileFromServer(SiteTools.UserAvatarFile);
 

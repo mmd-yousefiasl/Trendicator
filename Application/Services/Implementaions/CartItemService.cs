@@ -122,7 +122,7 @@ namespace Application.Services.Implementaions
             await filter.Paging(query.Select(n => new ClientSideBoughtFileViewModel()
             {
                 Id = n.Id,
-                PaidDate = n.Cart.PaidDate ?? DateTime.Now,
+                PaidDate = n.Cart.PaidDate ?? DateTime.UtcNow,
                 ProductTitle = n.Product.Title,
                 Type = n.Product.Type,
                 OptionTitle = n.Product.Options.Where(o => o.Id == n.StockOptionId).Select(o => o.Title).FirstOrDefault() ?? "",

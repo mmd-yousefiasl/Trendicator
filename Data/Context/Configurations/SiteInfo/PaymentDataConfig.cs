@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.SiteInfo
     {
         public void Configure(EntityTypeBuilder<PaymentData> builder)
         {
+            builder.ToTable("PaymentData");
+
             builder.HasKey(n => n.Id);
             builder.HasQueryFilter(n => !n.IsDeleted);
 

@@ -114,7 +114,7 @@ namespace Application.Services.Implementaions
             if (newsLetter is null) return Result.Failure(Messages.OperationFailedError);
 
             newsLetter.IsDeleted = true;
-            newsLetter.LastUpdatedDate = DateTime.Now;
+            newsLetter.LastUpdatedDate = DateTime.UtcNow;
 
             _dbSet.Update(newsLetter);
             await _context.SaveChangesAsync();

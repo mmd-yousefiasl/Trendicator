@@ -130,7 +130,7 @@ namespace Application.Services.Implementaions
             if (coupon is null) return Result.Failure(Messages.OperationFailedError);
 
             coupon.IsDeleted = true;
-            coupon.LastUpdatedDate = DateTime.Now;
+            coupon.LastUpdatedDate = DateTime.UtcNow;
 
             _dbSet.Update(coupon);
             await _context.SaveChangesAsync();
@@ -197,7 +197,7 @@ namespace Application.Services.Implementaions
             if (userId < 1)
                 return Result.Failure(Messages.InvalidCouponCodeError);
 
-            var currentDateTime = DateTime.Now;
+            var currentDateTime = DateTime.UtcNow;
 
             bool isValid = await _dbSet.AnyAsync(coupon =>
                 coupon.Code == code && coupon.FromDate <= currentDateTime && coupon.ToDate > currentDateTime &&

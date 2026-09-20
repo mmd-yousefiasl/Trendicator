@@ -1,11 +1,11 @@
 using Application.Mediator;
 using Domain.Statics;
-using IOC;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics;
 using Serilog;
+using Web;
 using Web.Configuration;
-using WebMarkupMin.AspNetCoreLatest;
+using Web.Logging;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -15,66 +15,60 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    // MVC
     builder.Services.AddControllersWithViews();
 
-    // SiteTools
+    #region SiteTools
     builder.Configuration.GetSection("SiteTools").Get<SiteTools>();
+    #endregion
 
     #region Data protection
     builder.Services.AddDataProtection()
         .PersistKeysToFileSystem(new DirectoryInfo(
             Path.Combine(builder.Environment.ContentRootPath, "KeyDirectory")))
         .SetApplicationName(SiteTools.SiteName)
-        .SetDefaultKeyLifetime(TimeSpan.FromMinutes(
+        .SetDefaultKeyLifetime(TimeSpan.FromDays(
             int.Parse(builder.Configuration.GetSection("MachineKeyLifetime").Value)));
     #endregion
 
-    // Authentication
+    #region Authentication
     builder.ConfigAuthentication();
+    #endregion
 
-    // Dependencies
-    var connectionString = builder.Configuration.GetConnectionString("LocalConnectionString");
+    #region Dependencies
+    var connectionString = builder.Configuration.GetConnectionString("ConnectionString");
     DependencyContainer.RegisterDependencies(builder.Services, connectionString);
+    #endregion
 
-    // MediatR
+    #region MediatR
     builder.Services.AddMediatR(config =>
     {
         config.RegisterServicesFromAssembly(typeof(IMediatorHandler).Assembly);
+        config.LicenseKey = SiteTools.MediatorLicenceKey;
     });
+    #endregion
 
-    // Caching
+    #region Caching
     builder.Services.AddEasyCaching(options =>
     {
         options.UseInMemory();
     });
+    #endregion
 
-    // Logging
+    #region Logging
     builder.Logging.ClearProviders();
-    builder.Host.UseSerilog((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration));
+    builder.Host.UseSerilog((ctx, lc) => lc
+        .ReadFrom.Configuration(ctx.Configuration)
+    .WriteTo.Sink(new TelegramErrorSink()));
+    #endregion
 
-    // Compression
+    #region Compression
     builder.Services.AddResponseCompression();
-
-    // HTML Minification
-    builder.Services.AddWebMarkupMin(options =>
-    {
-        options.AllowMinificationInDevelopmentEnvironment = true;
-        options.DisablePoweredByHttpHeaders = true;
-    })
-    .AddHtmlMinification(options =>
-    {
-        options.MinificationSettings.RemoveRedundantAttributes = false; // keep type="text", etc.
-        options.MinificationSettings.RemoveOptionalEndTags = false;     // safer for <input>, <textarea>
-        options.MinificationSettings.WhitespaceMinificationMode =
-            WebMarkupMin.Core.WhitespaceMinificationMode.Safe;          // less aggressive
-    });
+    #endregion
 
     var app = builder.Build();
 
     // Compression + Minification
     app.UseResponseCompression();
-    app.UseWebMarkupMin();
 
     // Error handling
     if (!app.Environment.IsDevelopment())

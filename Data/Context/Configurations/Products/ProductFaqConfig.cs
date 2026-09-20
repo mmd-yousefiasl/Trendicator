@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.Products
     {
         public void Configure(EntityTypeBuilder<ProductFaq> builder)
         {
+            builder.ToTable("ProductFaqs");
+
             builder.HasKey(n => n.Id);
 
             builder.Property(n => n.Question).HasMaxLength(200);
@@ -15,7 +17,9 @@ namespace Data.Context.Configurations.Products
 
             builder.HasOne(n => n.Product)
                 .WithMany(n => n.Faqs)
-                .HasForeignKey(n => n.ProductId);
+                .HasForeignKey(n => n.ProductId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(false);
         }
     }
 }

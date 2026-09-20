@@ -88,7 +88,7 @@ namespace Application.Services.Implementaions
             if (review is null) return Result.Failure(Messages.OperationFailedError);
 
             review.IsConfirmed = true;
-            review.LastUpdatedDate = DateTime.Now;
+            review.LastUpdatedDate = DateTime.UtcNow;
 
             _dbSet.Update(review);
             await _context.SaveChangesAsync();
@@ -117,7 +117,7 @@ namespace Application.Services.Implementaions
             if (review is null) return Result.Failure(Messages.OperationFailedError);
 
             review.IsConfirmed = false;
-            review.LastUpdatedDate = DateTime.Now;
+            review.LastUpdatedDate = DateTime.UtcNow;
 
             _dbSet.Update(review);
             await _context.SaveChangesAsync();
@@ -146,7 +146,7 @@ namespace Application.Services.Implementaions
             if (review is null) return Result.Failure(Messages.OperationFailedError);
 
             review.IsDeleted = true;
-            review.LastUpdatedDate = DateTime.Now;
+            review.LastUpdatedDate = DateTime.UtcNow;
 
             _dbSet.Update(review);
             await _context.SaveChangesAsync();

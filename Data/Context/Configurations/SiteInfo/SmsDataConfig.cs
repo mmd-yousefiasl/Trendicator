@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.SiteInfo
     {
         public void Configure(EntityTypeBuilder<SmsData> builder)
         {
+            builder.ToTable("SmsData");
+
             builder.HasKey(n => n.Id);
 
             builder.Property(n => n.SmsPanelAPIKey).HasMaxLength(500);

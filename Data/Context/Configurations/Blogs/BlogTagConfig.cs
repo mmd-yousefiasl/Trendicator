@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.Blogs
     {
         public void Configure(EntityTypeBuilder<BlogTag> builder)
         {
+            builder.ToTable("BlogTags");
+
             builder.HasKey(n => n.Id);
             builder.HasQueryFilter(n => !n.IsDeleted);
 

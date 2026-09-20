@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.Shopping
     {
         public void Configure(EntityTypeBuilder<Cart> builder)
         {
+            builder.ToTable("Carts");
+
             builder.HasKey(n => n.Id);
             builder.HasQueryFilter(n => !n.IsDeleted);
 

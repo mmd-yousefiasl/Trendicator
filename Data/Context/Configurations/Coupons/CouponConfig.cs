@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.Coupons
     {
         public void Configure(EntityTypeBuilder<Coupon> builder)
         {
+            builder.ToTable("Coupons");
+
             builder.HasKey(n => n.Id);
             builder.HasQueryFilter(n => !n.IsDeleted);
 

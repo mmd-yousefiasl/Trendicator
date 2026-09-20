@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.NewsLetters
     {
         public void Configure(EntityTypeBuilder<SentLetter> builder)
         {
+            builder.ToTable("SentLetters");
+
             builder.HasKey(n => n.Id);
 
             builder.HasQueryFilter(n => !n.IsDeleted);

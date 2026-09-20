@@ -167,7 +167,7 @@ namespace Application.Services.Implementaions
             map.Priority = model.Priority;
             map.IsPublished = model.IsPublished;
             map.Type = model.Type;
-            map.LastUpdatedDate = DateTime.Now;
+            map.LastUpdatedDate = DateTime.UtcNow;
 
             _dbSet.Update(map);
             await _context.SaveChangesAsync();

@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36310.24 d17.14
+# Visual Studio Version 18
+VisualStudioVersion = 18.10.12210.168 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{4D39C617-3335-4360-AA75-9A74674C7EEE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOC", "IOC\IOC.csproj", "{0CC95203-74C4-41F3-B63D-D9DF7D47824D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{22CE3732-B9C0-49EC-8283-342E4ADE5AD2}"
 EndProject
@@ -23,10 +21,6 @@ Global
 		{4D39C617-3335-4360-AA75-9A74674C7EEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D39C617-3335-4360-AA75-9A74674C7EEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D39C617-3335-4360-AA75-9A74674C7EEE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0CC95203-74C4-41F3-B63D-D9DF7D47824D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0CC95203-74C4-41F3-B63D-D9DF7D47824D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0CC95203-74C4-41F3-B63D-D9DF7D47824D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0CC95203-74C4-41F3-B63D-D9DF7D47824D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{22CE3732-B9C0-49EC-8283-342E4ADE5AD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{22CE3732-B9C0-49EC-8283-342E4ADE5AD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22CE3732-B9C0-49EC-8283-342E4ADE5AD2}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -1,5 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
+﻿using Domain.Models.Blogs;
+using Domain.Models.ContactUs;
+using Domain.Models.Coupons;
+using Domain.Models.Faqs;
+using Domain.Models.Identity;
+using Domain.Models.NewsLetters;
+using Domain.Models.Products;
+using Domain.Models.Shopping;
+using Domain.Models.SiteInfo;
+using Domain.Models.SiteNotifications;
+using Domain.Models.Tickets;
+using Domain.Models.Users;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.Context
 {
@@ -15,12 +26,58 @@ namespace Data.Context
             modelBuilder.Seed();
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder
-                .ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
+        public DbSet<Blog> Blogs => Set<Blog>();
+        public DbSet<BlogCategory> BlogCategories => Set<BlogCategory>();
+        public DbSet<BlogTag> BlogTags => Set<BlogTag>();
+        public DbSet<BlogView> BlogViews => Set<BlogView>();
+        public DbSet<BlogTagMapping> BlogTagMappings => Set<BlogTagMapping>();
 
-            base.OnConfiguring(optionsBuilder);
-        }
+        public DbSet<ContactUsForm> ContactUsForms => Set<ContactUsForm>();
+
+        public DbSet<Coupon> Coupons => Set<Coupon>();
+        public DbSet<CouponUserMapping> CouponUserMappings => Set<CouponUserMapping>();
+
+        public DbSet<Faq> Faqs => Set<Faq>();
+
+        public DbSet<Permission> Permissions => Set<Permission>();
+        public DbSet<Role> Roles => Set<Role>();
+        public DbSet<RolePermissionMapping> RolePermissionMappings => Set<RolePermissionMapping>();
+
+        public DbSet<NewsLetter> NewsLetters => Set<NewsLetter>();
+        public DbSet<SentLetter> SentLetters => Set<SentLetter>();
+
+        public DbSet<ProductCategory> ProductCategories => Set<ProductCategory>();
+        public DbSet<ProductCompare> ProductCompare => Set<ProductCompare>();
+        public DbSet<Product> Product => Set<Product>();
+        public DbSet<ProductFaq> ProductFaqs => Set<ProductFaq>();
+        public DbSet<ProductOption> ProductOptions => Set<ProductOption>();
+        public DbSet<ProductReview> ProductReviews => Set<ProductReview>();
+        public DbSet<ProductView> ProductViews => Set<ProductView>();
+        public DbSet<ProductWishList> ProductWishList => Set<ProductWishList>();
+
+        public DbSet<Cart> Carts => Set<Cart>();
+        public DbSet<CartItem> CartItems => Set<CartItem>();
+
+        public DbSet<Banner> Banners => Set<Banner>();
+        public DbSet<EmailData> EmailData => Set<EmailData>();
+        public DbSet<Hero> Heroes => Set<Hero>();
+        public DbSet<Media> Media => Set<Media>();
+        public DbSet<OurFeature> OurFeatures => Set<OurFeature>();
+        public DbSet<PaymentData> PaymentData => Set<PaymentData>();
+        public DbSet<SiteData> SiteData => Set<SiteData>();
+        public DbSet<SiteMap> SiteMap => Set<SiteMap>();
+        public DbSet<SmsData> SmsData => Set<SmsData>();
+        public DbSet<SocialMedia> SocialMedia => Set<SocialMedia>();
+        public DbSet<Testimonial> Testimonials => Set<Testimonial>();
+
+        public DbSet<SiteNotification> SiteNotifications => Set<SiteNotification>();
+
+        public DbSet<Ticket> Tickets => Set<Ticket>();
+        public DbSet<TicketMessage> TicketMessages => Set<TicketMessage>();
+
+        public DbSet<BalanceTransaction> BalanceTransactions => Set<BalanceTransaction>();
+        public DbSet<User> Users => Set<User>();
+        public DbSet<UserRoleMapping> UserRoleMappings => Set<UserRoleMapping>();
+        public DbSet<UserValidation> UserValidations => Set<UserValidation>();
     }
 }

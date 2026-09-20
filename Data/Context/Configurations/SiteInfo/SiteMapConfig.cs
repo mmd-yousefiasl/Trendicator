@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.SiteInfo
     {
         public void Configure(EntityTypeBuilder<SiteMap> builder)
         {
+            builder.ToTable("SiteMap");
+
             builder.HasKey(n => n.Id);
 
             builder.Property(n => n.Url).HasMaxLength(500);

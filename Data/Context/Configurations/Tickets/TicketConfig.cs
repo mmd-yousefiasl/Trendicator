@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.Tickets
     {
         public void Configure(EntityTypeBuilder<Ticket> builder)
         {
+            builder.ToTable("Tickets");
+
             builder.HasKey(n => n.Id);
             builder.HasQueryFilter(n => !n.IsDeleted);
 

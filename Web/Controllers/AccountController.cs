@@ -12,15 +12,12 @@ namespace Web.Controllers
     {
         #region Fields
         private readonly IUserService _userService;
-        private readonly IRecaptchaService _recaptchaService;
         #endregion
 
         #region Ctor
-        public AccountController(IUserService userService,
-            IRecaptchaService recaptchaService)
+        public AccountController(IUserService userService)
         {
             _userService = userService;
-            _recaptchaService = recaptchaService;
         }
         #endregion
 
@@ -114,8 +111,7 @@ namespace Web.Controllers
             var principal = new ClaimsPrincipal(identity);
             var properties = new AuthenticationProperties
             {
-                IsPersistent = rememberMe,
-                ExpiresUtc = DateTime.Now.AddDays(1)
+                IsPersistent = rememberMe
             };
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);

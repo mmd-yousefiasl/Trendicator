@@ -100,7 +100,7 @@ namespace Application.Tools
 
         public static DateTime ConvertToShamsi(this DateTime? value)
         {
-            if (value is null) value = DateTime.Now;
+            if (value is null) value = DateTime.UtcNow;
 
             PersianCalendar pc = new PersianCalendar();
             int year = pc.GetYear(value.Value);

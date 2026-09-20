@@ -1,7 +1,6 @@
 ﻿using Application.Services.Interfaces;
 using Application.ViewModels.Faq.ClientSide;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Common;
 
 namespace Web.Controllers
 {

@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.Faqs
     {
         public void Configure(EntityTypeBuilder<Faq> builder)
         {
+            builder.ToTable("Faqs");
+
             builder.HasKey(n => n.Id);
             builder.HasQueryFilter(n => !n.IsDeleted);
 

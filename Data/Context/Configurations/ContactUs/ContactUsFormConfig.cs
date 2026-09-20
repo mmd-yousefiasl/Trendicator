@@ -8,6 +8,8 @@ namespace Data.Context.Configurations.ContactUs
     {
         public void Configure(EntityTypeBuilder<ContactUsForm> builder)
         {
+            builder.ToTable("ContactUsForms");
+
             builder.HasKey(n => n.Id);
             builder.HasQueryFilter(n => !n.IsDeleted);
 

@@ -8,15 +8,21 @@ namespace Data.Context.Configurations.Identity
     {
         public void Configure(EntityTypeBuilder<RolePermissionMapping> builder)
         {
+            builder.ToTable("RolePermissionMappings");
+
             builder.HasKey(n => new { n.RoleId, n.PermissionId });
 
             builder.HasOne(n => n.Role)
                 .WithMany(n => n.RolePermissionMapping)
-                .HasForeignKey(n => n.RoleId);
+                .HasForeignKey(n => n.RoleId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(false);
 
             builder.HasOne(n => n.Permission)
                 .WithMany(n => n.RolePermissionMapping)
-                .HasForeignKey(n => n.PermissionId);
+                .HasForeignKey(n => n.PermissionId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(false);
         }
     }
 }

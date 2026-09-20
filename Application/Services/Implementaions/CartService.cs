@@ -389,7 +389,7 @@ namespace Application.Services.Implementaions
             cart.TotalDiscount = (order.TotalDiscount ?? 0) + (order.DiscountCodeAmount ?? 0);
             cart.SubTotal = order.SubTotal;
             cart.Tax = order.Tax ?? 0;
-            cart.PaidDate = DateTime.Now;
+            cart.PaidDate = DateTime.UtcNow;
 
             _dbSet.Update(cart);
             await _context.SaveChangesAsync();
@@ -499,7 +499,7 @@ namespace Application.Services.Implementaions
             {
                 Id = cartEntity.Id,
                 TradingViewAccountName = cartEntity.TradingViewAccountName,
-                PaidDate = cartEntity.PaidDate ?? DateTime.Now,
+                PaidDate = cartEntity.PaidDate ?? DateTime.UtcNow,
                 SubTotal = cartEntity.SubTotal ?? 0,
                 Tax = cartEntity.Tax ?? 0,
                 TotalDiscount = cartEntity.TotalDiscount ?? 0,
@@ -577,7 +577,7 @@ namespace Application.Services.Implementaions
             {
                 Id = cartEntity.Id,
                 TradingViewAccountName = cartEntity.TradingViewAccountName,
-                PaidDate = cartEntity.PaidDate ?? DateTime.Now,
+                PaidDate = cartEntity.PaidDate ?? DateTime.UtcNow,
                 SubTotal = cartEntity.SubTotal ?? 0,
                 Tax = cartEntity.Tax ?? 0,
                 TotalDiscount = cartEntity.TotalDiscount ?? 0,
