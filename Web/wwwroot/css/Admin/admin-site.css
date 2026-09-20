@@ -1,4 +1,27 @@
-﻿.list-delete-button {
+﻿/* 1. Map "the one with nothing" as your standard Regular text (Weight: 400) */
+@font-face {
+    font-family: 'VazirmatnFD';
+    src: url('/fonts/Vazir-FD-WOL.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* 2. Map the Bold file for headings and strong text (Weight: 700) */
+@font-face {
+    font-family: 'VazirmatnFD';
+    src: url('/fonts/Vazir-Bold-FD-WOL.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+html, body {
+    font-family: 'VazirmatnFD', Tahoma, sans-serif !important;
+    font-variant-numeric: normal !important;
+}
+
+.list-delete-button {
     cursor: pointer;
     display: contents;
 }
@@ -26,3 +49,85 @@
 .fs-medium {
     font-size: medium;
 }
+
+.product-title-list {
+    max-width: 200px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}
+
+.options-nowrap {
+    white-space: nowrap;
+}
+
+.admin-vertical-menu {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: #000 transparent;
+}
+
+    /* Chrome / Edge / Safari */
+    .admin-vertical-menu::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .admin-vertical-menu::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .admin-vertical-menu::-webkit-scrollbar-thumb {
+        background: #000;
+        border-radius: 10px;
+    }
+
+        .admin-vertical-menu::-webkit-scrollbar-thumb:hover {
+            background: #111;
+        }
+
+    /* Hide up/down buttons */
+    .admin-vertical-menu::-webkit-scrollbar-button {
+        display: none;
+        width: 0;
+        height: 0;
+    }
+
+    /* Optional */
+    .admin-vertical-menu::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.transaction-description {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background-color: #f8f9fa;
+}
+
+/* انیمیشن باز شدن توضیحات */
+.desc-collapse {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease-out;
+}
+/* استایل اختصاصی کارت‌های موبایل برای تم مونوکروم */
+.tr-card {
+    border: 1px solid #e9ecef;
+    border-right: 4px solid #000000;
+    border-radius: 4px;
+    background: #ffffff;
+}
+
+    .tr-card.failed {
+        border-right-color: #dee2e6;
+    }
+
+    .fs-30 {
+        font-size: 30px;
+    }

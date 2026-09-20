@@ -1,76 +1,45 @@
-﻿@using Application.ViewModels.NewsLetter.ClientSide
-
-<footer class="ltn__footer-area  ">
-    <div class="footer-top-area  section-bg-1 plr--5">
-        <div class="container-fluid">
-            <div class="row">
-                @await Component.InvokeAsync("FooterSiteData")
-                <div class="col-xl-2 col-md-6 col-sm-6 col-12">
-                    <div class="footer-widget footer-menu-widget clearfix">
-                        <h4 class="footer-title">شرکت</h4>
-                        <div class="footer-menu">
-                            <ul>
-                                <li><a asp-area="" asp-controller="Blog" asp-action="BlogsList" asp-route-category="">بلاگ</a></li>
-                                <li><a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="">محصولات</a></li>
-                                <li><a asp-area="" asp-controller="Faq" asp-action="Faqs">سوالات متداول</a></li>
-                                <li><a asp-area="" asp-controller="ContactUs" asp-action="ContactUs">تماس باما</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-2 col-md-6 col-sm-6 col-12">
-                    <div class="footer-widget footer-menu-widget clearfix">
-                        <h4 class="footer-title">خدمات</h4>
-                        <div class="footer-menu">
-                            <ul>
-                                <li><a asp-area="" asp-controller="ProductCompare" asp-action="Compare">مقایسه</a></li>
-                                <li><a asp-area="" asp-controller="ProductWishList" asp-action="WishList">علاقه مندی ها</a></li>
-                                <li><a asp-area="" asp-controller="Account" asp-action="Login">ورود</a></li>
-                                <li><a asp-area="" asp-controller="TermsAndConditions" asp-action="TermsAndConditions">شرایط و ضوابط</a></li>
-                                <li><a asp-area="" asp-controller="TermsAndConditions" asp-action="PrivacyPolicy">سیاست حفظ حریم خصوصی</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-2 col-md-6 col-sm-6 col-12">
-                    <div class="footer-widget footer-menu-widget clearfix">
-                        <h4 class="footer-title">مراقبت از مشتری</h4>
-                        <div class="footer-menu">
-                            <ul>
-                                <li><a asp-area="" asp-controller="Account" asp-action="Login">ورود</a></li>
-                                <li><a asp-area="UserPanel" asp-controller="Home" asp-action="Index">حساب من</a></li>
-                                <li><a asp-area="UserPanel" asp-controller="Cart" asp-action="MyOrders">سفارش های من</a></li>
-                                <li><a asp-area="" asp-controller="Faq" asp-action="Faqs">سوالات متداول</a></li>
-                                <li><a asp-area="" asp-controller="ContactUs" asp-action="ContactUs">تماس باما</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-6 col-sm-12 col-12">
-                    <div class="footer-widget footer-newsletter-widget">
-                        <h4 class="footer-title">خبرنامه</h4>
-                        <p>در خبرنامه هفتگی ما عضو شوید و از طریق ایمیل، مطالب جدید را دریافت کنید.</p>
-                        <div class="footer-newsletter">
-                            <partial name="_SignInNewsLetters" model="@(new ClientSideSignInNewsLettersViewModel())" />
-                        </div>
-                        @await Component.InvokeAsync("FooterPaymentMethods")
-                    </div>
-                </div>
+﻿<footer class="site-footer">
+    <div class="container">
+        <div class="site-footer__grid">
+            <div class="site-footer__about">
+                <a href="index.html" class="logo mb-2">
+                    <img src="assets/img/logo.svg" alt="" width="30" height="30">
+                    <span>ترند<b>یکیتور</b></span>
+                </a>
+                <p>مرجع تخصصی اندیکاتور و اکسپرت معاملاتی برای معامگران ایرانی — ساخته‌شده با دقت، پشتیبانی‌شده با تعهد.</p>
+            </div>
+            <div>
+                <h4>فروشگاه</h4>
+                <ul>
+                    <li><a href="products.html">همه اندیکاتورها</a></li>
+                    <li><a href="products.html">اکسپرت‌ها</a></li>
+                    <li><a href="index.html">اشتراک ویژه</a></li>
+                    <li><a href="cart.html">سبد خرید</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>راهنما</h4>
+                <ul>
+                    <li><a href="guide.html">اندیکاتور چیست؟</a></li>
+                    <li><a href="faq.html">سوالات متداول</a></li>
+                    <li><a href="blog.html">وبلاگ آموزشی</a></li>
+                    <li><a href="contact.html">تماس با ما</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>قوانین</h4>
+                <ul>
+                    <li><a href="terms.html">قوانین و مقررات</a></li>
+                    <li><a href="privacy.html">حریم خصوصی</a></li>
+                    <li><a href="refund.html">سیاست بازگشت وجه</a></li>
+                </ul>
             </div>
         </div>
-    </div>
-    <div class="ltn__copyright-area ltn__copyright-2 section-bg-2  ltn__border-top-2--- plr--5">
-        <div class="container-fluid">
-            <div class="row">
-                @await Component.InvokeAsync("FooterContent")
-                <div class="col-md-6 col-12 align-self-center">
-                    <div class="ltn__copyright-menu text-right">
-                        <ul>
-                            <li><a asp-area="" asp-controller="TermsAndConditions" asp-action="TermsAndConditions">شرایط و ضوابط</a></li>
-                            <li><a asp-area="" asp-controller="TermsAndConditions" asp-action="PrivacyPolicy">سیاست حفظ حریم خصوصی</a></li>
-                        </ul>
-                    </div>
-                </div>
+        <div class="site-footer__bar">
+            <span>© ۱۴۰۵ ترندیکیتور — تمامی حقوق محفوظ است.</span>
+            <div class="trust-badges">
+                <span class="badge">پرداخت امن</span>
+                <span class="badge badge--brand">۷ روز ضمانت بازگشت</span>
             </div>
         </div>
     </div>

@@ -62,29 +62,6 @@ if (imageInput3) {
     });
 }
 
-function submitAnimation() {
-    var element = document.querySelector(".btn-submit");
-    var spinner = document.createElement('div');
-    const innerText = element.innerText;
-
-    element.innerText = "";
-    // Add a spinner element to the button
-    spinner.classList.add('spinner');
-
-    element.appendChild(spinner);
-
-    // Disable the button and start the animation
-    element.disabled = true;
-    spinner.style.display = 'inline-block';
-
-    setTimeout(function () {
-        // Enable the button and stop the animation after 3 seconds
-        element.disabled = false;
-        spinner.style.display = 'none';
-        element.innerText = innerText;
-    }, 3000);
-}
-
 function FillPageId(id) {
     $("#Page").val(id);
 
@@ -120,19 +97,23 @@ $(document).ready(function () {
 document.addEventListener('DOMContentLoaded', function () {
     tinymce.init({
         selector: 'textarea.ck-editor',
-        plugins: 'anchor autolink charmap codesample emoticons link lists media searchreplace table visualblocks wordcount image',
-        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-        language_url: '/adminAssets/tinymce/js/tinymce/langs/fa.js',
+        // Added 'code' to plugins
+        plugins: 'anchor autolink charmap codesample emoticons link lists media searchreplace table visualblocks wordcount image code',
+        // Added 'code' to the toolbar (placed it near undo/redo)
+        toolbar: 'code undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+
+        relative_urls: false,
+        remove_script_host: false,
+
+        language_url: '/lexaAssets/tinymce/js/tinymce/langs/fa.js',
         language: "fa",
         directionality: "rtl",
 
-        // Optional: allow inserting external images by URL
         image_title: true,
         automatic_uploads: false,
         file_picker_types: 'image',
         file_picker_callback: function (cb, value, meta) {
             if (meta.filetype === 'image') {
-                // Prompt user for an image URL
                 var url = prompt('Enter image URL:');
                 if (url) {
                     cb(url, { title: 'User provided image' });
@@ -142,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
 $(document).ready(function () {
     jalaliDatepicker.startWatch({
         minDate: "attr",
@@ -150,13 +130,6 @@ $(document).ready(function () {
         time: false,
         // date:false
     });
-    /* Below is a js demo | you don't need to use */
-    setTimeout(function () {
-        var elm = document.getElementsByTagName("input[data-jdp]")[0];
-        elm.focus();
-        jalaliDatepicker.hide();
-        jalaliDatepicker.show(elm);
-    }, 1000);
 });
 
 function showErrorMessage(message) {
@@ -183,7 +156,7 @@ function showSuccessMessage(message) {
     })
 }
 
-function handleMediaUpload() {
+function handleMediumUpload() {
     const form = document.getElementById('imageForm');
     const formData = new FormData(form);
 
@@ -194,7 +167,7 @@ function handleMediaUpload() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                ReloadMediaList();
+                ReloadMedia();
                 showSuccessMessage(data.message);
             } else {
                 showErrorMessage(data.message);
@@ -206,12 +179,12 @@ function handleMediaUpload() {
         });
 }
 
-function ReloadMediaList() {
+function ReloadMedia() {
     const page = document.getElementById("media-page").value;
     $("#LargeModalBody").load("/admin/media-list?page=" + page);
 }
 
-function remoMedia(formElement) {
+function removeMedium(formElement) {
     event.preventDefault();
 
     Swal.fire({
@@ -233,7 +206,7 @@ function remoMedia(formElement) {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        ReloadMediaList(); // optionally pass productId if needed
+                        ReloadMedia(); // optionally pass productId if needed
                         showSuccessMessage(data.message);
                     } else {
                         showErrorMessage(data.message);
@@ -260,5 +233,94 @@ function CopyUrlToClipboard(inputUrl) {
 function CustomFillPageId(id) {
     $("#media-page").val(id);
 
-    ReloadMediaList();
+    ReloadMedia();
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const menu = document.querySelector('.admin-vertical-menu');
+    const activeLink = menu?.querySelector('.active');
+
+    if (menu && activeLink) {
+        const scrollTop =
+            activeLink.offsetTop -
+            (menu.clientHeight / 2) +
+            (activeLink.clientHeight / 2);
+
+        menu.scrollTo({
+            top: scrollTop,
+            behavior: 'smooth'
+        });
+    }
+});
+
+function toggleRow(id) {
+    var element = document.getElementById(id);
+    if (!element) return;
+
+    if (element.style.maxHeight === "0px" || element.style.maxHeight === "") {
+        element.style.maxHeight = element.scrollHeight + "px";
+    } else {
+        element.style.maxHeight = "0px";
+    }
+}
+
+function submitFormOnChange(form) {
+    if (form) {
+        form.submit();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Listen for 'submit' on ALL forms on the page
+    document.querySelectorAll('form').forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+
+            // Find the submit button inside this specific form
+            // This handles both <button> and <input type="submit">
+            const button = form.querySelector('button[type="submit"], input[type="submit"], button:not([type])');
+
+            if (!button) return;
+
+            // If already loading, cancel the submission!
+            if (button.classList.contains('is-loading')) {
+                event.preventDefault();
+                return false;
+            }
+
+            // Save original text (works for both <button> and <input>)
+            const isInputTag = button.tagName === 'INPUT';
+            const innerText = isInputTag ? button.value : button.innerText;
+
+            // Apply loading state
+            button.classList.add('is-loading');
+            button.style.pointerEvents = 'none'; // Stops iOS double-taps
+
+            if (isInputTag) {
+                // <input type="submit"> can't have child elements like a spinner
+                button.value = "⏳ Loading...";
+            } else {
+                // <button> can have a spinner
+                button.innerText = "";
+                const spinner = document.createElement('span');
+                spinner.classList.add('spinner');
+                spinner.style.display = 'inline-block';
+                button.appendChild(spinner);
+            }
+
+            setTimeout(function () {
+                button.classList.remove('is-loading');
+                button.style.pointerEvents = 'auto';
+
+                if (isInputTag) {
+                    button.value = innerText;
+                } else {
+                    const existingSpinner = button.querySelector('.spinner');
+                    if (existingSpinner) existingSpinner.remove();
+                    button.innerText = innerText;
+                }
+            }, 3000);
+        });
+    });
+
+});

@@ -1,35 +1,8 @@
 [
-    {
-        "outputFileName": "wwwroot/css/website.min.css",
-        "inputFiles": [
-            "wwwroot/assets/css/plugins.css",
-            "wwwroot/assets/css/style.css",
-            "wwwroot/assets/css/responsive.css",
-            "wwwroot/css/site.css"
-        ],
-        "minify": { "enabled": true }
-    },
-    {
-        "outputFileName": "wwwroot/assets/css/used-icons.min.css",
-        "inputFiles": [
-            "wwwroot/assets/css/used-icons.css"
-        ],
-        "minify": { "enabled": true }
-    },
-    {
-        "outputFileName": "wwwroot/js/jquery.min.js",
-        "inputFiles": [
-            "wwwroot/lib/jquery/dist/jquery.js",
-            "wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
-        ],
-        "minify": { "enabled": true }
-    },
-    {
-        "outputFileName": "wwwroot/js/website.min.js",
-        "inputFiles": [
-            "wwwroot/lib/sweetAlert.js",
-            "wwwroot/js/site.js"
-        ],
-        "minify": { "enabled": true }
-    }
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/css/site.css"
+    ]
+  }
 ]

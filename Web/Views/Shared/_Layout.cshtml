@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html class="no-js" lang="fa">
+<html lang="fa" dir="rtl" data-theme="dark">
 <head>
 
     <partial name="_Meta" />
@@ -19,23 +19,13 @@
     }
 </head>
 <body>
-    <div id="loading-anim">
-        <div></div>
-    </div>
+    <partial name="_Header" />
 
-    <div class="body-wrapper">
+    @RenderBody()
 
-        <partial name="_Header" />
-        <partial name="_Menu" />
+    <partial name="_Footer" />
 
-        @RenderBody()
-
-        <partial name="_Footer" />
-
-        <partial name="_Modals" />
-    </div>
-
-    <partial name="_Loader" />
+    <partial name="_Modals" />
 
     <partial name="_FooterReferences" />
     <partial name="_Notification" />

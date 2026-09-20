@@ -341,6 +341,8 @@ namespace Application.Services.Implementaions
             var validationResult = await _userValidationService.GenerateUserValidationCode(model.PhoneNumber);
             if (validationResult.IsFailure) return Result.Failure<string>(validationResult.Message);
 
+            Console.WriteLine(validationResult.Value);
+
             //comment in development
             var codeResult = await _sendSmsService.SendLoginCode(validationResult.Value, loginUser.PhoneNumber);
             if (codeResult.IsFailure)

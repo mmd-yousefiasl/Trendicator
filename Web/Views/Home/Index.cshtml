@@ -2,32 +2,341 @@
     ViewData["Title"] = "صفحه اصلی";
 }
 
-@await Component.InvokeAsync("Hero")
-
-<!-- BANNER AREA START -->
-<div class="ltn__banner-area mt-120">
-    <div class="container">
-        <div class="row ltn__custom-gutter--- justify-content-center">
-            @await Component.InvokeAsync("RightBanner")
-            @await Component.InvokeAsync("LeftBanner")
+  <main>
+    <!-- ============ Hero ============ -->
+    <section class="hero">
+      <div class="container hero__grid">
+        <div>
+          <span class="kicker"><svg class="ic" aria-hidden="true"><use href="#i-graph-up-arrow"/></svg> بیش از ۱۲٬۰۰۰ معامگر فعال</span>
+          <h1>معامله با <em>اندیکاتورهای حرفه‌ای</em>، بدون حدس و گمان</h1>
+          <p class="hero__lead">
+            اندیکاتورها و اکسپرت‌های اختصاصی ترندیکیتور برای متاتریدر ۴ و ۵ و تریدینگ‌ویو،
+            با سیگنال‌های دقیق ورود و خروج — ساخته‌شده توسط معامگران، تست‌شده روی دیتای واقعی.
+          </p>
+          <div class="hero__cta">
+            <a href="products.html" class="btn btn--primary btn--lg">مشاهده فروشگاه</a>
+            <a href="guide.html" class="btn btn--ghost btn--lg">اندیکاتور چیست؟</a>
+          </div>
+          <div class="hero__stats">
+            <div><b class="num" data-count="12000">۰</b><span>معامگر فعال</span></div>
+            <div><b class="num" data-count="35">۰</b><span>اندیکاتور تخصصی</span></div>
+            <div><b class="num" data-count="98">۰</b><span>٪ رضایت مشتری</span></div>
+          </div>
         </div>
-    </div>
-</div>
 
-@await Component.InvokeAsync("LatestProducts")
-
-@await Component.InvokeAsync("Testimonial")
-
-<div class="ltn__small-product-list-area pt-80 pb-85">
-    <div class="container">
-        <div class="row justify-content-center">
-            @await Component.InvokeAsync("MainPageDiscountedProducts")
-            @await Component.InvokeAsync("MostViewedProducts")
-            @await Component.InvokeAsync("MostPurchasedProducts")
+        <div class="hero__panel">
+          <div class="hero__glow" aria-hidden="true"></div>
+          <div class="card card-pad">
+            <div class="flex flex--between mb-2">
+              <b>EUR/USD · تایم‌فریم H1</b>
+              <span class="badge badge--up">▲ سیگنال خرید</span>
+            </div>
+            <div data-chart="7" data-chart-count="30" aria-hidden="true"></div>
+            <div class="flex flex--between mt-2 text-dim" style="font-size:.78rem">
+              <span>RSI: ۴۲٫۶</span><span>MACD: مثبت</span><span>EMA 50: تأیید روند</span>
+            </div>
+          </div>
         </div>
+      </div>
+    </section>
+
+    <!-- ============ Ticker ============ -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker__track">
+        <span class="ticker__item"><b>EURUSD</b> <span class="text-up">۱٫۰۸۴۲ +۰٫۳٪</span></span>
+        <span class="ticker__item"><b>XAUUSD</b> <span class="text-up">۲٬۳۹۲ +۰٫۸٪</span></span>
+        <span class="ticker__item"><b>BTCUSD</b> <span class="text-down">۶۷٬۲۱۰ −۱٫۲٪</span></span>
+        <span class="ticker__item"><b>GBPJPY</b> <span class="text-up">۱۹۲٫۴۴ +۰٫۲٪</span></span>
+        <span class="ticker__item"><b>USOIL</b> <span class="text-down">۷۸٫۳ −۰٫۵٪</span></span>
+        <span class="ticker__item"><b>NAS100</b> <span class="text-up">۱۸٬۴۲۰ +۰٫۶٪</span></span>
+        <span class="ticker__item"><b>USDCHF</b> <span class="text-down">۰٫۸۸۴ −۰٫۱٪</span></span>
+        <span class="ticker__item"><b>ETHUSD</b> <span class="text-up">۳٬۴۸۰ +۲٫۱٪</span></span>
+        <!-- duplicated for seamless loop -->
+        <span class="ticker__item"><b>EURUSD</b> <span class="text-up">۱٫۰۸۴۲ +۰٫۳٪</span></span>
+        <span class="ticker__item"><b>XAUUSD</b> <span class="text-up">۲٬۳۹۲ +۰٫۸٪</span></span>
+        <span class="ticker__item"><b>BTCUSD</b> <span class="text-down">۶۷٬۲۱۰ −۱٫۲٪</span></span>
+        <span class="ticker__item"><b>GBPJPY</b> <span class="text-up">۱۹۲٫۴۴ +۰٫۲٪</span></span>
+        <span class="ticker__item"><b>USOIL</b> <span class="text-down">۷۸٫۳ −۰٫۵٪</span></span>
+        <span class="ticker__item"><b>NAS100</b> <span class="text-up">۱۸٬۴۲۰ +۰٫۶٪</span></span>
+        <span class="ticker__item"><b>USDCHF</b> <span class="text-down">۰٫۸۸۴ −۰٫۱٪</span></span>
+        <span class="ticker__item"><b>ETHUSD</b> <span class="text-up">۳٬۴۸۰ +۲٫۱٪</span></span>
+      </div>
     </div>
-</div>
 
-@await Component.InvokeAsync("LatestBlogs")
+    <!-- ============ Featured products ============ -->
+    <section class="section">
+      <div class="container">
+        <div class="flex flex--between flex--wrap mb-3">
+          <div class="section-head" style="margin-bottom:0">
+            <span class="kicker">پرفروش‌ترین‌ها</span>
+            <h2 class="mt-1">اندیکاتورهای منتخب</h2>
+          </div>
+          <a href="products.html" class="btn btn--ghost btn--sm">مشاهده همه ←</a>
+        </div>
 
-@await Component.InvokeAsync("OurFeatures")
+        <div class="grid grid--4">
+          <!-- Product card -->
+          <article class="product-card" data-product data-product-id="p1" data-product-name="ترند اسکالپر پرو">
+            <div class="product-card__media">
+              <div class="product-card__tags"><span class="badge badge--brand">پرفروش</span></div>
+              <img src="assets/img/products/p1-dark.webp" data-src-light="assets/img/products/p1-light.webp" width="800" height="450" loading="lazy" data-src-dark="assets/img/products/p1-dark.webp" decoding="async" alt="">
+            </div>
+            <div class="product-card__body">
+              <h3 class="product-card__title"><a href="product.html">ترند اسکالپر پرو</a></h3>
+              <div class="product-card__meta"><span>MT4 / MT5</span><span>· اسکالپ</span><span>· ۴٫۹ ★</span></div>
+              <p class="text-muted" style="font-size:.85rem;margin:0">سیگنال‌گیری لحظه‌ای برای اسکالپ با فیلتر جریان سفارشات.</p>
+              <div class="product-card__foot">
+                <div class="price"><small>تومان</small> ۲٬۴۸۰٬۰۰۰</div>
+                <button class="btn btn--soft btn--sm" data-add-to-cart data-id="p1" data-name="ترند اسکالپر پرو" data-price="2480000">افزودن</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card" data-product data-product-id="p2" data-product-name="سوپر ترند دارچین">
+            <div class="product-card__media">
+              <div class="product-card__tags"><span class="badge">جدید</span></div>
+              <img src="assets/img/products/p2-dark.webp" data-src-light="assets/img/products/p2-light.webp" width="800" height="450" loading="lazy" data-src-dark="assets/img/products/p2-dark.webp" decoding="async" alt="">
+            </div>
+            <div class="product-card__body">
+              <h3 class="product-card__title"><a href="product.html">سوپر ترند دارچین</a></h3>
+              <div class="product-card__meta"><span>TradingView</span><span>· سوئینگ</span><span>· ۴٫۸ ★</span></div>
+              <p class="text-muted" style="font-size:.85rem;margin:0">تشخیص جهت روند با پاین‌های رنگی و آلارم تلگرام.</p>
+              <div class="product-card__foot">
+                <div class="price"><small>تومان</small> ۱٬۸۹۰٬۰۰۰</div>
+                <button class="btn btn--soft btn--sm" data-add-to-cart data-id="p2" data-name="سوپر ترند دارچین" data-price="1890000">افزودن</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card" data-product data-product-id="p3" data-product-name="اسمارت مانی فلو">
+            <div class="product-card__media">
+              <div class="product-card__tags"><span class="badge badge--up">٪۱۵ تخفیف</span></div>
+              <img src="assets/img/products/p3-dark.webp" data-src-light="assets/img/products/p3-light.webp" width="800" height="450" loading="lazy" data-src-dark="assets/img/products/p3-dark.webp" decoding="async" alt="">
+            </div>
+            <div class="product-card__body">
+              <h3 class="product-card__title"><a href="product.html">اسمارت مانی فلو</a></h3>
+              <div class="product-card__meta"><span>MT5</span><span>· پرایس اکشن</span><span>· ۴٫۹ ★</span></div>
+              <p class="text-muted" style="font-size:.85rem;margin:0">شناسایی نواحی خرید و فروش پول هوشمند روی چارت.</p>
+              <div class="product-card__foot">
+                <div class="price"><del>۲٬۹۰۰٬۰۰۰</del><small>تومان</small> ۲٬۴۶۰٬۰۰۰</div>
+                <button class="btn btn--soft btn--sm" data-add-to-cart data-id="p3" data-name="اسمارت مانی فلو" data-price="2460000">افزودن</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card" data-product data-product-id="p4" data-product-name="ایکسپرت گاردین">
+            <div class="product-card__media">
+              <img src="assets/img/products/p4-dark.webp" data-src-light="assets/img/products/p4-light.webp" width="800" height="450" loading="lazy" data-src-dark="assets/img/products/p4-dark.webp" decoding="async" alt="">
+            </div>
+            <div class="product-card__body">
+              <h3 class="product-card__title"><a href="product.html">ایکسپرت گاردین</a></h3>
+              <div class="product-card__meta"><span>MT4 / MT5</span><span>· ربات معامله‌گر</span><span>· ۴٫۷ ★</span></div>
+              <p class="text-muted" style="font-size:.85rem;margin:0">مدیریت خودکار معاملات با حد ضرر متحرک و پوزیشن سایزینگ.</p>
+              <div class="product-card__foot">
+                <div class="price"><small>تومان</small> ۴٬۹۰۰٬۰۰۰</div>
+                <button class="btn btn--soft btn--sm" data-add-to-cart data-id="p4" data-name="ایکسپرت گاردین" data-price="4900000">افزودن</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Plans ============ -->
+    <section class="section section--soft">
+      <div class="container">
+        <div class="section-head section-head--center">
+          <span class="kicker">اشتراک ویژه</span>
+          <h2 class="mt-1">همه اندیکاتورها با یک اشتراک</h2>
+          <p>به‌جای خرید تکی، به اشتراک ویژه بپیوندید و به تمام اندیکاتورها و به‌روزرسانی‌های آینده دسترسی داشته باشید.</p>
+        </div>
+
+        <div class="grid grid--3">
+          <div class="card card-pad plan">
+            <h3>پایه</h3>
+            <p class="text-muted" style="font-size:.85rem">برای شروع معامله‌گری</p>
+            <div class="plan__price"><b class="num">۴۹۰٬۰۰۰</b><span>تومان / ماهانه</span></div>
+            <ul>
+              <li>دسترسی به ۵ اندیکاتور منتخب</li>
+              <li>پشتیبانی ایمیل</li>
+              <li>به‌روزرسانی ماهانه</li>
+              <li class="is-off">آلارم تلگرام</li>
+              <li class="is-off">دسترسی به اکسپرت‌ها</li>
+            </ul>
+            <a href="checkout.html" class="btn btn--ghost btn--block">انتخاب پلن پایه</a>
+          </div>
+
+          <div class="card card-pad plan plan--featured">
+            <span class="plan__flag">پیشنهاد ویژه</span>
+            <h3>حرفه‌ای</h3>
+            <p class="text-muted" style="font-size:.85rem">محبوب‌ترین انتخاب معامگران</p>
+            <div class="plan__price"><b class="num">۹۹۰٬۰۰۰</b><span>تومان / ماهانه</span></div>
+            <ul>
+              <li>دسترسی به همه ۳۵ اندیکاتور</li>
+              <li>آلارم تلگرام و موبایل</li>
+              <li>به‌روزرسانی هفتگی</li>
+              <li>پشتیبانی اولویت‌دار تلگرام</li>
+              <li class="is-off">دسترسی به اکسپرت‌ها</li>
+            </ul>
+            <a href="checkout.html" class="btn btn--primary btn--block">انتخاب پلن حرفه‌ای</a>
+          </div>
+
+          <div class="card card-pad plan">
+            <h3>ویژه</h3>
+            <p class="text-muted" style="font-size:.85rem">برای تیم‌ها و پروپفرم‌ها</p>
+            <div class="plan__price"><b class="num">۲٬۴۹۰٬۰۰۰</b><span>تومان / ماهانه</span></div>
+            <ul>
+              <li>همه امکانات پلن حرفه‌ای</li>
+              <li>دسترسی کامل به اکسپرت‌ها</li>
+              <li>نصب و راه‌اندازی رایگان</li>
+              <li>اندیکاتور سفارشی اختصاصی</li>
+              <li>پشتیبانی ۲۴ ساعته</li>
+            </ul>
+            <a href="checkout.html" class="btn btn--ghost btn--block">انتخاب پلن ویژه</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ How it works ============ -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head section-head--center">
+          <span class="kicker">شروع آسان</span>
+          <h2 class="mt-1">در ۳ قدم معامله خودکار خود را بسازید</h2>
+        </div>
+        <div class="grid grid--3 steps">
+          <div class="step">
+            <h3>انتخاب اندیکاتور</h3>
+            <p class="text-muted">از فروشگاه، اندیکاتور متناسب با سبک معاملاتی‌تان (اسکالپ، سوئینگ یا روزانه) را انتخاب کنید.</p>
+          </div>
+          <div class="step">
+            <h3>پرداخت و دانلود</h3>
+            <p class="text-muted">پرداخت امن از طریق درگاه بانکی و دانلود فوری فایل‌ها همراه با آموزش نصب تصویری.</p>
+          </div>
+          <div class="step">
+            <h3>نصب و معامله</h3>
+            <p class="text-muted">چند دقیقه‌ای روی متاتریدر یا تریدینگ‌ویو نصب کنید و سیگنال‌ها را دریافت کنید.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Testimonials ============ -->
+    <section class="section section--soft">
+      <div class="container">
+        <div class="section-head section-head--center">
+          <span class="kicker">نظر معامگران</span>
+          <h2 class="mt-1">تجربه کاربران ترندیکیتور</h2>
+        </div>
+        <div class="grid grid--3">
+          <div class="card card-pad testimonial">
+            <div class="testimonial__stars">★★★★★</div>
+            <p class="text-muted">«ترند اسکالپر پرو واقعاً ورودهای تمیز می‌ده. بعد از دو ماه استفاده، وین‌ریت من از ۵۰ به ۶۵ درصد رسید.»</p>
+            <div class="testimonial__author">
+              <span class="testimonial__avatar">ا.م</span>
+              <div><b>امیر محمدی</b><span>معامگر فارکس · ۳ سال سابقه</span></div>
+            </div>
+          </div>
+          <div class="card card-pad testimonial">
+            <div class="testimonial__stars">★★★★★</div>
+            <p class="text-muted">«پشتیبانی فوق‌العاده سریعه. مشکل نصب داشتم که نیم ساعت حل شد. اسمارت مانی فلو هم دقیقاً همون چیزیه که تو ویدیوها می‌بینید.»</p>
+            <div class="testimonial__author">
+              <span class="testimonial__avatar">س.ر</span>
+              <div><b>سارا رضایی</b><span>معامگر طلا و ارز دیجیتال</span></div>
+            </div>
+          </div>
+          <div class="card card-pad testimonial">
+            <div class="testimonial__stars">★★★★☆</div>
+            <p class="text-muted">«اشتراک حرفه‌ای ارزشش رو داره، مخصوصاً که هر هفته آپدیت می‌شن. کاش نسخه تریدینگ‌ویو زودتر منتشر می‌شد.»</p>
+            <div class="testimonial__author">
+              <span class="testimonial__avatar">ح.ک</span>
+              <div><b>حسین کریمی</b><span>سوئینگ تریدر</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Blog preview ============ -->
+    <section class="section">
+      <div class="container">
+        <div class="flex flex--between flex--wrap mb-3">
+          <div class="section-head" style="margin-bottom:0">
+            <span class="kicker">آموزش</span>
+            <h2 class="mt-1">آخرین مقالات</h2>
+          </div>
+          <a href="blog.html" class="btn btn--ghost btn--sm">همه مقالات ←</a>
+        </div>
+        <div class="grid grid--3">
+          <a href="blog-post.html" class="card post-card">
+            <img src="assets/img/blog/b2-dark.webp" data-src-light="assets/img/blog/b2-light.webp" width="800" height="450" loading="lazy" data-src-dark="assets/img/blog/b2-dark.webp" decoding="async" alt="">
+            <div class="post-card__body">
+              <div class="post-meta"><span>۵ مرداد ۱۴۰۵</span><span>· ۷ دقیقه مطالعه</span></div>
+              <h3>۵ اشتباه رایج در استفاده از اندیکاتور RSI</h3>
+              <p>چرا سیگنال اشباع فروش RSI همیشه یعنی خرید نیست؟ یک نگاه عمیق‌تر به نوسان‌سنج محبوب بازار.</p>
+            </div>
+          </a>
+          <a href="blog-post.html" class="card post-card">
+            <img src="assets/img/blog/b3-dark.webp" data-src-light="assets/img/blog/b3-light.webp" width="800" height="450" loading="lazy" data-src-dark="assets/img/blog/b3-dark.webp" decoding="async" alt="">
+            <div class="post-card__body">
+              <div class="post-meta"><span>۲۸ تیر ۱۴۰۵</span><span>· ۵ دقیقه مطالعه</span></div>
+              <h3>ترکیب اندیکاتورها؛ فرمول استراتژی شخصی شما</h3>
+              <p>چطور دو یا سه اندیکاتور بدون تکرار سیگنال ترکیب کنیم تا یک سیستم معاملاتی منسجم بسازیم.</p>
+            </div>
+          </a>
+          <a href="blog-post.html" class="card post-card">
+            <img src="assets/img/blog/b4-dark.webp" data-src-light="assets/img/blog/b4-light.webp" width="800" height="450" loading="lazy" data-src-dark="assets/img/blog/b4-dark.webp" decoding="async" alt="">
+            <div class="post-card__body">
+              <div class="post-meta"><span>۱۵ تیر ۱۴۰۵</span><span>· ۹ دقیقه مطالعه</span></div>
+              <h3>پس‌تست کردن اکسپرت‌ها در متاتریدر ۵</h3>
+              <p>قبل از اعتماد به هر ربات معامله‌گر، این روش استاندارد بک‌تست را روی دیتای تیک‌به‌تیک اجرا کنید.</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="section section--soft">
+      <div class="container" style="max-width:820px">
+        <div class="section-head section-head--center">
+          <span class="kicker">سوالات متداول</span>
+          <h2 class="mt-1">هر آنچه باید بدانید</h2>
+        </div>
+        <div class="faq">
+          <details>
+            <summary>اندیکاتورها روی چه پلتفرم‌هایی کار می‌کنند؟</summary>
+            <div class="faq__a">اندیکاتورهای ما برای متاتریدر ۴، متاتریدر ۵ و تریدینگ‌ویو عرضه می‌شوند. پلتفرم پشتیبانی‌شده روی صفحه هر محصول مشخص شده است.</div>
+          </details>
+          <details>
+            <summary>بعد از پرداخت، محصول را چطور دریافت می‌کنم؟</summary>
+            <div class="faq__a">بلافاصله بعد از پرداخت موفق، لینک دانلود در پنل کاربری شما فعال می‌شود و همزمان فایل‌ها به ایمیل‌تان ارسال می‌گردد.</div>
+          </details>
+          <details>
+            <summary>اگر از محصول راضی نبودم می‌توانم پس بگیرم؟</summary>
+            <div class="faq__a">بله — تا ۷ روز پس از خرید، در صورت عدم رضایت مبلغ به‌طور کامل بازگردانده می‌شود. جزئیات در صفحه سیاست بازگشت وجه آمده است.</div>
+          </details>
+          <details>
+            <summary>آیا اندیکاتورها روی حساب واقعی تست شده‌اند؟</summary>
+            <div class="faq__a">تمام محصولات قبل از انتشار حداقل ۶ ماه روی حساب دمو و واقعی بک‌تست و فورواردتست می‌شوند و گزارش نتایج در صفحه محصول قرار می‌گیرد.</div>
+          </details>
+        </div>
+        <p class="text-center mt-3"><a href="faq.html" class="btn btn--ghost">مشاهده همه سوالات</a></p>
+      </div>
+    </section>
+
+    <!-- ============ CTA ============ -->
+    <section class="section">
+      <div class="container">
+        <div class="card card-pad text-center" style="background:linear-gradient(135deg, var(--brand-soft), transparent 60%); border-color:var(--brand-line); padding-block:48px">
+          <h2>آماده‌اید معامله حرفه‌ای‌تر را شروع کنید؟</h2>
+          <p class="text-muted" style="max-width:48ch;margin-inline:auto">همین حالا اولین اندیکاتور خود را انتخاب کنید یا با اشتراک حرفه‌ای به همه محصولات دسترسی داشته باشید.</p>
+          <div class="flex flex--center flex--wrap mt-3">
+            <a href="products.html" class="btn btn--primary btn--lg">ورود به فروشگاه</a>
+            <a href="contact.html" class="btn btn--ghost btn--lg">مشاوره رایگان</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
