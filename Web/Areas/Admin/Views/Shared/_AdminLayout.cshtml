@@ -1,4 +1,11 @@
-﻿<!doctype html>
+﻿@using Application.Services.Interfaces
+@inject ISiteNotificationService _notificationService;
+
+@{
+    ViewData["NotificationCount"] = await _notificationService.AdminSideGetUnreadNotificationsCount();
+}
+
+<!doctype html>
 <html lang="fa" dir="rtl">
 
 <head>

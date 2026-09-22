@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels.ContactUsForm.AdminSide
 {
-    public class AdminSideContactUsFormViewModel : CommonViewModel
+    public class AdminSideContactUsFormViewModel : CommonDto
     {
         public string FullName { get; set; }
         public string Email { get; set; }

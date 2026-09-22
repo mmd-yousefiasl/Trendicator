@@ -25,12 +25,12 @@ namespace Application.Handlers.Ticket
         {
             var content = "تیکت پشتیبانی جدید ثبت شد";
 
-            await _notificationService.AdminSideCreateNewNotification(new AdminSideCreateNewNotificationViewModel()
+            await _notificationService.AdminSideCreateNewNotification(new AdminSideCreateNewNotificationDto()
             {
                 Content = content,
             });
 
-            await _notificationService.ClientSideCreateNewNotification(new ClientSideCreateNewNotificationViewModel()
+            await _notificationService.ClientSideCreateNewNotification(new ClientSideCreateNewNotificationDto()
             {
                 UserId = notification.UserId,
                 Content = content
@@ -42,7 +42,7 @@ namespace Application.Handlers.Ticket
 
             var content = $"تیکت با شناسه {notification.id} به {notification.Status.GetDisplayName()} به روزرسانی شد";
 
-            await _notificationService.ClientSideCreateNewNotification(new ClientSideCreateNewNotificationViewModel()
+            await _notificationService.ClientSideCreateNewNotification(new ClientSideCreateNewNotificationDto()
             {
                 UserId = notification.UserId,
                 Content = content

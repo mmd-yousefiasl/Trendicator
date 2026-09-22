@@ -66,7 +66,7 @@ namespace Data.Context
         public DbSet<PaymentData> PaymentData => Set<PaymentData>();
         public DbSet<SiteData> SiteData => Set<SiteData>();
         public DbSet<SiteMap> SiteMap => Set<SiteMap>();
-        public DbSet<SmsData> SmsData => Set<SmsData>();
+        public DbSet<SmsPanel> SmsPanels => Set<SmsPanel>();
         public DbSet<SocialMedia> SocialMedia => Set<SocialMedia>();
         public DbSet<Testimonial> Testimonials => Set<Testimonial>();
 
@@ -78,6 +78,6 @@ namespace Data.Context
         public DbSet<BalanceTransaction> BalanceTransactions => Set<BalanceTransaction>();
         public DbSet<User> Users => Set<User>();
         public DbSet<UserRoleMapping> UserRoleMappings => Set<UserRoleMapping>();
-        public DbSet<UserValidation> UserValidations => Set<UserValidation>();
+        public DbSet<UserValidation> UserValidation => Set<UserValidation>();
     }
 }

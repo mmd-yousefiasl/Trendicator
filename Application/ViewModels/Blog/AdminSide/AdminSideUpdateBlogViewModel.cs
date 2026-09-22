@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModels.Blog.AdminSide
 {
-    public class AdminSideUpdateBlogViewModel : CommonViewModel
+    public class AdminSideUpdateBlogViewModel : CommonDto
     {
         [Display(Name = "تصویر")]
         [Required(ErrorMessage = Messages.RequiredError)]

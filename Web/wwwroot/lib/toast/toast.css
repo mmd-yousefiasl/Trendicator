@@ -1,0 +1,187 @@
+﻿:root {
+    --toast-bg: #ffffff;
+    --toast-fg: #1f2937;
+    --toast-radius: 14px;
+    --toast-shadow: 0 10px 30px -10px rgba(0,0,0,.25), 0 4px 12px rgba(0,0,0,.08);
+    --toast-accent-success: #10b981;
+    --toast-accent-error: #ef4444;
+    --toast-accent-warning: #f59e0b;
+    --toast-accent-info: #3b82f6;
+    --toast-accent-loading: #8b5cf6;
+    --toast-duration: 4000ms;
+    --toast-gap: 12px;
+    --toast-enter-ms: 350ms;
+    --toast-leave-ms: 300ms;
+    --toast-enter-from: translateX(-120%);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --toast-bg: #1e293b;
+        --toast-fg: #e2e8f0;
+        --toast-shadow: 0 10px 30px -10px rgba(0,0,0,.6), 0 4px 12px rgba(0,0,0,.4);
+    }
+}
+
+#toast-container {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    pointer-events: none;
+    max-width: min(380px, calc(100vw - 40px));
+}
+
+@media (max-width: 480px) {
+    :root {
+        --toast-enter-from: translateY(-120%); /* mobile: drop in from top */
+    }
+
+    #toast-container {
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: calc(100vw - 24px);
+        width: 100%;
+        align-items: center;
+    }
+}
+
+.toast {
+    --accent: var(--toast-accent-info);
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px 14px 18px;
+    margin-bottom: var(--toast-gap);
+    background: var(--toast-bg);
+    color: var(--toast-fg);
+    border-radius: var(--toast-radius);
+    box-shadow: var(--toast-shadow);
+    border: 1px solid rgba(0,0,0,.05);
+    overflow: hidden;
+    pointer-events: auto;
+    cursor: pointer;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+    opacity: 0;
+    transform: translateX(var(--toast-enter-from-x));
+    will-change: transform, opacity, height;
+    transition: transform var(--toast-enter-ms) cubic-bezier(.21,1.02,.73,1), opacity 300ms ease, height var(--toast-leave-ms) ease, margin-bottom var(--toast-leave-ms) ease, padding-top var(--toast-leave-ms) ease, padding-bottom var(--toast-leave-ms) ease, border-width var(--toast-leave-ms) ease;
+}
+
+    .toast.toast-visible {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+@media (prefers-color-scheme: dark) {
+    .toast {
+        border-color: rgba(255,255,255,.06);
+    }
+}
+
+.toast.toast-success {
+    --accent: var(--toast-accent-success);
+}
+
+.toast.toast-error {
+    --accent: var(--toast-accent-error);
+}
+
+.toast.toast-warning {
+    --accent: var(--toast-accent-warning);
+}
+
+.toast.toast-info {
+    --accent: var(--toast-accent-info);
+}
+
+.toast.toast-loading {
+    --accent: var(--toast-accent-loading);
+}
+
+.toast-icon {
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    color: var(--accent);
+    margin-top: 1px;
+}
+
+    .toast-icon svg {
+        width: 100%;
+        height: 100%;
+    }
+
+.toast-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.toast-message {
+    font-size: 13px;
+    opacity: .85;
+    word-wrap: break-word;
+}
+
+.toast-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background: var(--accent);
+    transform-origin: left center;
+    opacity: .55;
+    animation: toast-progress var(--toast-duration) linear forwards;
+}
+
+.toast-loading .toast-progress {
+    animation: toast-indeterminate 1.4s ease-in-out infinite;
+}
+
+.toast-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+}
+
+@keyframes toast-progress {
+    from {
+        transform: scaleX(1);
+    }
+
+    to {
+        transform: scaleX(0);
+    }
+}
+
+@keyframes toast-indeterminate {
+    0% {
+        transform: translateX(-100%) scaleX(.35);
+    }
+
+    50% {
+        transform: translateX(0%) scaleX(.5);
+    }
+
+    100% {
+        transform: translateX(100%) scaleX(.35);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

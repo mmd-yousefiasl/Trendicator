@@ -2,7 +2,7 @@
 
 namespace Application.ViewModels.Banner.AdminSide
 {
-    public class AdminSideBannerViewModel : CommonViewModel
+    public class AdminSideBannerViewModel : CommonDto
     {
         public string Title { get; set; }
         public int Priority { get; set; }

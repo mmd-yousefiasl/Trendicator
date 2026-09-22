@@ -2,7 +2,7 @@
 
 namespace Application.ViewModels.Cart.ClientSide
 {
-    public class ClientSideOrderViewModel : CommonViewModel
+    public class ClientSideOrderViewModel : CommonDto
     {
         public CartStatusEnum Status { get; set; }
         public long? TotalPaid { get; set; }

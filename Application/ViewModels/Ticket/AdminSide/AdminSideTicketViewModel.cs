@@ -2,7 +2,7 @@
 
 namespace Application.ViewModels.Ticket.AdminSide
 {
-    public class AdminSideTicketViewModel : CommonViewModel
+    public class AdminSideTicketViewModel : CommonDto
     {
         public DateTime CreatedDate { get; set; }
         public DateTime LastUpdatedDate { get; set; }

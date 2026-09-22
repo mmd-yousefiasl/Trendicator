@@ -4,6 +4,7 @@ using Application.Services.Interfaces;
 using Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Web.BackgroundServices;
 
 namespace Web
 {
@@ -30,12 +31,21 @@ namespace Web
             });
             #endregion
 
-            #region Services
+            #region Singleton Services
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<ICacheManager, CacheManager>();
+            services.AddSingleton<ISmsQueue, SmsQueue>();
+            #endregion
 
+            #region HttpClient Services
+            services.AddHttpClient<ITelegramService, TelegramService>();
+            #endregion
+
+            #region Scoped Services
+            services.AddScoped<IMediatorHandler, MediatorHandler>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IPermissionService, PermissionService>();
-            services.AddScoped<IUserValidationService, UserValidationService>();
             services.AddScoped<IBannerService, BannerService>();
             services.AddScoped<IFaqService, FaqService>();
             services.AddScoped<IOurFeaturesService, OurFeaturesService>();
@@ -67,18 +77,17 @@ namespace Web
             services.AddScoped<IBalanceTransactionService, BalanceTransactionService>();
             services.AddScoped<ITicketService, TicketService>();
             services.AddScoped<ISiteNotificationService, SiteNotificationService>();
-            services.AddScoped<ISmsDataService, SmsDataService>();
+            services.AddScoped<ISmsPanelService, SmsDataService>();
             services.AddScoped<ISendSmsService, SendSmsService>();
             services.AddScoped<IHeroService, HeroService>();
             services.AddScoped<ISiteMapService, SiteMapService>();
             services.AddScoped<IMediaService, MediaService>();
             services.AddScoped<IProductFaqService, ProductFaqService>();
-
             #endregion
 
-            services.AddSingleton<ICacheManager, CacheManager>();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped<IMediatorHandler, MediatorHandler>();
+            #region Background Services
+            services.AddHostedService<SmsConsumerWorker>();
+            #endregion
         }
     }
 }

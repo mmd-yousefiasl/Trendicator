@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModels.Banner.AdminSide
 {
-    public class AdminSideUpdateBannerViewModel : CommonViewModel
+    public class AdminSideUpdateBannerViewModel : CommonDto
     {
         [Display(Name = "بنر")]
         [Required(ErrorMessage = Messages.RequiredError)]

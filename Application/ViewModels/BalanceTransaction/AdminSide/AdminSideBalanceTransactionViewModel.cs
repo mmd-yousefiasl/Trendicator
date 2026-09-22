@@ -2,7 +2,7 @@
 
 namespace Application.ViewModels.BalanceTransaction.AdminSide
 {
-    public class AdminSideBalanceTransactionViewModel : CommonViewModel
+    public class AdminSideBalanceTransactionViewModel : CommonDto
     {
         public DateTime CreatedDate { get; set; }
         public long Amount { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels.Cart.ClientSide
 {
-    public class ClientSideCartViewModel : CommonViewModel
+    public class ClientSideCartViewModel : CommonDto
     {
         public string FileName { get; set; }
         public string Title { get; set; }

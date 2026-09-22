@@ -1,0 +1,131 @@
+﻿@using Application.Tools
+@using Application.ViewModels.SmsData.AdminSide
+@using Domain.Enums.SiteInfo
+@model AdminSideFilterSmsPanelsDto
+
+@{
+    ViewData["Title"] = "لیست پنل های پیامکی";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <h4>مدیریت پنل های پیامکی</h4>
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="Home" asp-action="Index">صفحه نخست</a>
+                    </li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">جست و جوی پنل های پیامکی</h4>
+                    <form novalidate asp-area="Admin" asp-controller="SmsPanel" method="get" asp-action="SmsPanelsList" id="search-form">
+                        <input type="hidden" asp-for="Page" id="Page" />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label" asp-for="Type"></label>
+                                    <select class="form-control" asp-for="Type" asp-items="@Html.GetEnumSelectList<SmsPanelTypeEnum>()">
+                                        <option value="">همه</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label" asp-for="IsActive"></label>
+                                    <select class="form-control" asp-for="IsActive">
+                                        <option value="">همه</option>
+                                        <option value="true">فعال</option>
+                                        <option value="false">غیرفعال</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit">جست و جو</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>نوع</th>
+                                    <th>وضعیت</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            @if (Model?.Entities?.Any() ?? false)
+                            {
+                                <tbody>
+                                    @{
+                                        int counter = 0;
+
+                                        foreach (var item in Model.Entities ?? new List<AdminSideSmsPanelDto>())
+                                        {
+                                            counter++;
+
+                                            <tr>
+                                                <th scope="row">@counter</th>
+                                                <td>@item.Type.GetDisplayName()</td>
+                                                <td>
+                                                    @if (item.IsActive)
+                                                    {
+                                                        <span class="text-success">فعال</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-danger">غیرفعال</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <a permission="UpdateSmsPanel" asp-area="Admin" asp-controller="SmsPanel" asp-action="UpdateSmsPanel" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm edit" title="ویرایش">
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </a>
+
+                                                    <form permission="DeleteSmsPanel" class="btn btn-outline-secondary btn-sm" method="post" onclick="ConfirmDelete(this)" asp-route-id="@item.Id" asp-area="Admin" asp-controller="SmsPanel" asp-action="DeleteSmsPanel" title="حذف">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            }
+                            else
+                            {
+                                <tbody>
+                                    <tr>
+                                        <td colspan="100">
+                                            <partial name="_NotFoundPartial" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <partial name="_Paging" model="@Model.GetCurrentPaging()" />
+</div>

@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels.Product.ClientSide
 {
-    public class ClientSideProductOptionViewModel : CommonViewModel
+    public class ClientSideProductOptionViewModel : CommonDto
     {
         public string Title { get; set; }
         public long Price { get; set; }

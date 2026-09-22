@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModels.Product.AdminSide
 {
-    public class AdminSideUpdateProductViewModel : CommonViewModel
+    public class AdminSideUpdateProductViewModel : CommonDto
     {
         [Display(Name = "تصویر")]
         [Required(ErrorMessage = Messages.RequiredError)]

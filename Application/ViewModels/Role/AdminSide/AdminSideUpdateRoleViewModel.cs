@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModels.Role.AdminSide
 {
-    public class AdminSideUpdateRoleViewModel : CommonViewModel
+    public class AdminSideUpdateRoleViewModel : CommonDto
     {
         [Display(Name = "عنوان")]
         [Required]

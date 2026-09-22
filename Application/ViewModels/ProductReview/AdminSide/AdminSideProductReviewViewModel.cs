@@ -2,7 +2,7 @@
 
 namespace Application.ViewModels.ProductReview.AdminSide
 {
-    public class AdminSideProductReviewViewModel : CommonViewModel
+    public class AdminSideProductReviewViewModel : CommonDto
     {
         public string Review { get; set; }
         public ProductReviewStarsEnum Stars { get; set; }

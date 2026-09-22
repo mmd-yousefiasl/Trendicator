@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModels.BlogCategory.AdminSide
 {
-    public class AdminSideUpdateBlogCategoryViewModel : CommonViewModel
+    public class AdminSideUpdateBlogCategoryViewModel : CommonDto
     {
         [Display(Name = "عنوان")]
         [Required(ErrorMessage = Messages.RequiredError)]

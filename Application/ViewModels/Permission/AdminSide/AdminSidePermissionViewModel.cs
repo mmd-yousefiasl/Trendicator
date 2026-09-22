@@ -2,7 +2,7 @@
 
 namespace Application.ViewModels.Permission.AdminSide
 {
-    public class AdminSidePermissionViewModel : CommonViewModel
+    public class AdminSidePermissionViewModel : CommonDto
     {
         public string Title { get; set; }
         public int? ParentId { get; set; }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModels.Cart.AdminSide
 {
-    public class AdminSideUpdateCartStatusViewModel : CommonViewModel
+    public class AdminSideUpdateCartStatusViewModel : CommonDto
     {
         [Display(Name = "وضعیت سفارش")]
         [Required(ErrorMessage = Messages.RequiredError)]

@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels.Cart.AdminSide
 {
-    public class AdminSideCartDetailsViewModel : CommonViewModel
+    public class AdminSideCartDetailsViewModel : CommonDto
     {
         public DateTime PaidDate { get; set; }
         public long SubTotal { get; set; }

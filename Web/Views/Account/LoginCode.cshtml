@@ -1,72 +1,60 @@
-﻿@using Application.ViewModels.User.ClientSide
-@model ClientSideLoginCodeViewModel
+﻿@using Application.Tools
+@using Application.ViewModels.User.ClientSide
+@model ClientSideLoginCodeDto
 
 @{
     ViewData["Title"] = "ورود";
+
+    int remainingSeconds = Model.CreatedDate.GetRemainingCooldownSeconds(cooldownSeconds: 120);
 }
 
-<div class="ltn__login-area pb-110 mt-5">
+<main class="section">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="section-title-area text-center">
-                    <h1 class="section-title">
-                        ورود
-                        <br>
-                        به حساب کاربری
-                    </h1>
-                    <p>
-                        به ترندیکاتور خوش آمدید!
-                        جایی که ابزارهای نوین تحلیل و معامله در اختیار شماست.
-                        برای ورود به حساب کاربری خود، اطلاعاتتان را وارد کنید و از امکانات ویژه ما بهره‌مند شوید.
-                    </p>
+        <div class="auth-wrap">
+            <div class="card auth-card">
+                <div class="auth-logo">
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="logo" aria-label="@SiteTools.SiteName">
+                        <img src="/assets/img/logo.svg" alt="@SiteTools.SiteName" width="34" height="34">
+                        <span>ترند<b>یکاتور</b></span>
+                    </a>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6 offset-lg-3">
-                <div class="account-login-inner">
-                    <form asp-area="" asp-controller="Account" asp-action="VerifyLoginCode" method="post" class="ltn__form-box contact-form-box" onsubmit="submitAnimation()" autocomplete="off">
-                        <input asp-for="ReturnUrl" type="hidden" />
-                        <input asp-for="PhoneNumber" type="hidden" />
 
-                        <span class="mb-6 text-lg leading-normal dark:text-jacarta-300">
-                            کد تایید به شماره
-                            <span class="text-success text-sm">
-                                @Model.PhoneNumber
-                            </span>
-                            ارسال شد
-                            <br />
-                            <span class="text-warning text-sm text-underline">
-                                <a asp-area="" asp-controller="Account" asp-action="Login" asp-route-PhoneNumber="@Model.PhoneNumber">ویرایش شماره موبایل</a>
-                            </span>
-                        </span>
+                <h1 class="auth-title">کد تایید را وارد کنید</h1>
+                <p class="auth-sub">
+                    کد ۵ رقمی به شماره <b class="num">@Model.Mobile</b> پیامک شد.
+                    <a asp-area="" asp-controller="Account" asp-action="Login" asp-route-Mobile="@Model.Mobile" class="text-brand">تغییر شماره</a>
+                </p>
 
-                        <label asp-for="LoginCode"></label>
-                        <input type="text" asp-for="LoginCode" class="text-center login-code m-0" />
-                        <span asp-validation-for="LoginCode" class="text-danger"></span>
+                <form asp-area="" asp-controller="Account" asp-action="VerifyLoginCode" method="post" autocomplete="off">
+                    <input type="hidden" asp-for="Mobile" />
+                    <input type="hidden" asp-for="CreatedDate" />
 
-                        <div class="btn-wrapper">
-                            <button class="theme-btn-1 btn reverse-color btn-block btn-submit" type="submit">ورود</button>
+                    <div class="field">
+                        <div class="otp" data-otp aria-label="کد تایید ۵ رقمی">
+                            <input type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="رقم اول" name="LoginCode[0]" autofocus>
+                            <input type="text" inputmode="numeric" maxlength="1" aria-label="رقم دوم" name="LoginCode[1]">
+                            <input type="text" inputmode="numeric" maxlength="1" aria-label="رقم سوم" name="LoginCode[2]">
+                            <input type="text" inputmode="numeric" maxlength="1" aria-label="رقم چهارم" name="LoginCode[3]">
+                            <input type="text" inputmode="numeric" maxlength="1" aria-label="رقم پنجم" name="LoginCode[4]">
                         </div>
-                    </form>
-                    <div class="by-agree text-center">
-                        <p>
-                            با ورود به حساب کاربری، شما با قوانین ما موافقت می‌کنید
-                            :
-                        </p>
-                        <p>
-                            <a asp-area="" asp-controller="TermsAndConditions" asp-action="TermsAndConditions" target="_blank">شرایط و ضوابط</a>
-                            &nbsp; &nbsp; | &nbsp; &nbsp;
-                            <a asp-area="" asp-controller="TermsAndConditions" asp-action="PrivacyPolicy" target="_blank">سیاست حفظ حریم خصوصی</a>
-                        </p>
+                        <span asp-validation-for="LoginCode"></span>
                     </div>
-                </div>
+
+                    <div>
+                        <div class="otp-timer @(remainingSeconds < 1 ? "hidden" : "")" data-countdown="@remainingSeconds">
+                            <span>ارسال مجدد کد تا </span><b data-countdown-time></b>
+                        </div>
+                        <a asp-area="" asp-controller="Account" asp-action="ResendCode" asp-route-ReturnUrl="@Model.ReturnUrl" asp-route-Mobile="@Model.Mobile"
+                           class="otp-resend @(remainingSeconds < 1 ? "" : "hidden")" data-resend>ارسال مجدد کد</a>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary btn--block btn--lg mt-3">تایید و ورود</button>
+                </form>
             </div>
         </div>
     </div>
-</div>
+</main>
 
 @section FooterReferences {
-    <script asp-append-version="true" src="/js/disableEnter.js"></script>
+    <script src="/js/login.js" asp-append-version="true"></script>
 }

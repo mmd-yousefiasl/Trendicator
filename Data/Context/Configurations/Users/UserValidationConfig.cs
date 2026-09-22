@@ -8,12 +8,14 @@ namespace Data.Context.Configurations.Users
     {
         public void Configure(EntityTypeBuilder<UserValidation> builder)
         {
-            builder.ToTable("UserValidations");
+            builder.ToTable("UserValidation");
 
-            builder.HasKey(n => n.Id);
-            builder.HasQueryFilter(n => !n.IsDeleted);
+            builder.HasKey(uv => uv.Id);
+            builder.HasQueryFilter(uv => !uv.IsDeleted);
 
-            builder.Property(n => n.PhoneNumber).HasMaxLength(11);
+            builder.Property(uv => uv.Mobile).HasMaxLength(11);
+
+            builder.HasIndex(uv => uv.Mobile);
         }
     }
 }

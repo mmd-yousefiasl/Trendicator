@@ -30,9 +30,13 @@ namespace Application.Services.Interfaces
 
         Task<Result<string>> AdminSideGetAdminAvatar();
 
-        Task<Result<string>> SendUserLoginCode(ClientSideLoginViewModel model);
+        Task<Result<OtpGenerationResultDto>> GenerateUserValidationCode(string mobile);
 
-        Task<Result<ClientSideUserViewModel>> VerifyLoginCode(ClientSideLoginCodeViewModel model);
+        Task<Result> ValidateUserLoginCode(string mobile, string code);
+
+        Task<Result<DateTime>> SendUserLoginCode(ClientSideLoginDto model);
+
+        Task<Result<ClientSideUserDto>> VerifyLoginCode(ClientSideLoginCodeDto model);
 
         Task<Result<List<AdminSideUserAsOptionViewModel>>> AdminSideGetUsersForCoupon();
 

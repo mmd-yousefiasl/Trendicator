@@ -3,7 +3,7 @@ using Domain.Enums.Shopping;
 
 namespace Application.ViewModels.CartItem.ClientSide
 {
-    public class ClientSideBoughtFileViewModel : CommonViewModel
+    public class ClientSideBoughtFileViewModel : CommonDto
     {
         public string ProductTitle { get; set; }
         public string OptionTitle { get; set; }

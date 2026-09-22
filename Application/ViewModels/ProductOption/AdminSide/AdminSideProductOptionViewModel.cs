@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels.ProductOption.AdminSide
 {
-    public class AdminSideProductOptionViewModel : CommonViewModel
+    public class AdminSideProductOptionViewModel : CommonDto
     {
         public string Title { get; set; }
         public long Price { get; set; }

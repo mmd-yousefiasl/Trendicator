@@ -2,7 +2,7 @@
 
 namespace Application.ViewModels.Ticket.ClientSide
 {
-    public class ClientSideTicketViewModel : CommonViewModel
+    public class ClientSideTicketViewModel : CommonDto
     {
         public DateTime CreatedDate { get; set; }
         public DateTime LastUpdatedDate { get; set; }

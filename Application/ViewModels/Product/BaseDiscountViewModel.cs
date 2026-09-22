@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels.Product
 {
-    public class BaseDiscountViewModel : CommonViewModel
+    public class BaseDiscountViewModel : CommonDto
     {
         public bool HaveDiscount { get; set; }
         public long Price { get; set; }

@@ -1,4 +1,5 @@
-﻿using Domain.Models.Identity;
+﻿using Domain.Enums.SiteInfo;
+using Domain.Models.Identity;
 using Domain.Models.SiteInfo;
 using Domain.Models.Users;
 using Domain.Statics;
@@ -44,7 +45,7 @@ namespace Data.Context
                 LastName = "Yousefi",
                 Email = "mmdyousefi95@gmail.com",
                 IsUserBanned = false,
-                PhoneNumber = "09962144266",
+                Mobile = "09962144266",
             };
 
             modelBuilder.Entity<User>().HasData(AdminUser);
@@ -93,15 +94,17 @@ namespace Data.Context
             #endregion
 
             #region SmsData
-            SmsData smsData = new SmsData()
+            SmsPanel smsData = new SmsPanel()
             {
                 Id = 1,
                 IsDeleted = false,
-                SmsPanelAPIKey = "70C2f6O6S8XtW52ue9G83hRL3Fsz2YqIZ02Gm2eUMZjXkPSP",
-                SmsPatternIdForLoginCode = 409943
+                ApiKey = "70C2f6O6S8XtW52ue9G83hRL3Fsz2YqIZ02Gm2eUMZjXkPSP",
+                PatternId = 409943,
+                Type = SmsPanelTypeEnum.OTP,
+                IsActive = true
             };
 
-            modelBuilder.Entity<SmsData>().HasData(smsData);
+            modelBuilder.Entity<SmsPanel>().HasData(smsData);
             #endregion
 
             #region Hero

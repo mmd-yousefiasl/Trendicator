@@ -1,14 +1,18 @@
-﻿using Application.Services.Interfaces;
+﻿using Application.Mediator;
+using Application.Services.Interfaces;
 using Application.Tools;
+using Application.ViewModels.SmsData.ClientSide;
 using Application.ViewModels.User.AdminSide;
 using Application.ViewModels.User.ClientSide;
 using Data.Context;
 using Domain.Enums.Users;
+using Domain.Events.Users;
 using Domain.Models.Users;
 using Domain.Shared;
 using Domain.Statics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace Application.Services.Implementaions
 {
@@ -18,21 +22,21 @@ namespace Application.Services.Implementaions
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly TrendicatorDbContext _context;
         private protected DbSet<User> _dbSet;
-        private readonly IUserValidationService _userValidationService;
         private readonly ISendSmsService _sendSmsService;
+        private readonly IMediatorHandler _mediator;
         #endregion
 
         #region Ctor
         public UserService(IHttpContextAccessor httpContextAccessor,
             TrendicatorDbContext context,
-            IUserValidationService userValidationService,
-            ISendSmsService sendSmsService)
+            ISendSmsService sendSmsService,
+            IMediatorHandler mediator)
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
             _dbSet = context.Set<User>();
-            _userValidationService = userValidationService;
             _sendSmsService = sendSmsService;
+            _mediator = mediator;
         }
         #endregion
 
@@ -60,7 +64,7 @@ namespace Application.Services.Implementaions
 
             if (!string.IsNullOrWhiteSpace(filter.Search))
             {
-                conditions.Add(n => n.PhoneNumber.Contains(filter.Search) || n.FirstName.Contains(filter.Search) ||
+                conditions.Add(n => n.Mobile.Contains(filter.Search) || n.FirstName.Contains(filter.Search) ||
                 n.LastName.Contains(filter.Search));
             }
 
@@ -81,7 +85,7 @@ namespace Application.Services.Implementaions
             await filter.Paging(query.Select(n => new AdminSideUserViewModel()
             {
                 Id = n.Id,
-                PhoneNumber = n.PhoneNumber,
+                PhoneNumber = n.Mobile,
                 FirstName = n.FirstName,
                 LastName = n.LastName,
                 IsUserBanned = n.IsUserBanned,
@@ -95,7 +99,7 @@ namespace Application.Services.Implementaions
         {
             if (model is null) return Result.Failure(Messages.OperationFailedError);
 
-            if (await _dbSet.AnyAsync(n => n.PhoneNumber == model.PhoneNumber)) return Result.Failure(Messages.ThisPhoneNumberAlreadyRegisteredError);
+            if (await _dbSet.AnyAsync(n => n.Mobile == model.PhoneNumber)) return Result.Failure(Messages.ThisPhoneNumberAlreadyRegisteredError);
 
             User user = new User()
             {
@@ -103,7 +107,7 @@ namespace Application.Services.Implementaions
                 LastName = model.LastName,
                 Email = model.Email,
                 IsUserBanned = model.IsUserBanned,
-                PhoneNumber = model.PhoneNumber,
+                Mobile = model.PhoneNumber,
                 BirthDate = model.BirthDate,
                 UserRoleMapping = new List<UserRoleMapping>(),
             };
@@ -151,7 +155,7 @@ namespace Application.Services.Implementaions
                 FirstName = n.FirstName,
                 LastName = n.LastName,
                 IsUserBanned = n.IsUserBanned,
-                PhoneNumber = n.PhoneNumber,
+                PhoneNumber = n.Mobile,
                 RoleIds = n.UserRoleMapping.Select(n => n.RoleId).ToList()
             }).AsNoTracking().FirstOrDefaultAsync();
             if (user is null) return Result.Failure<AdminSideUpdateUserViewModel>(Messages.OperationFailedError);
@@ -172,9 +176,9 @@ namespace Application.Services.Implementaions
             user.LastName = model.LastName;
             user.IsUserBanned = model.IsUserBanned;
             user.BirthDate = model.BirthDate;
-            user.PhoneNumber = model.PhoneNumber;
+            user.Mobile = model.PhoneNumber;
 
-            if (await _dbSet.AnyAsync(n => n.Id != model.Id && n.PhoneNumber == model.PhoneNumber)) return Result.Failure(Messages.ThisPhoneNumberAlreadyRegisteredError);
+            if (await _dbSet.AnyAsync(n => n.Id != model.Id && n.Mobile == model.PhoneNumber)) return Result.Failure(Messages.ThisPhoneNumberAlreadyRegisteredError);
 
             if (model.AvatarFile is not null)
             {
@@ -238,7 +242,7 @@ namespace Application.Services.Implementaions
                 FirstName = n.FirstName,
                 IsUserBanned = n.IsUserBanned,
                 LastName = n.LastName,
-                PhoneNumber = n.PhoneNumber
+                PhoneNumber = n.Mobile
             }).AsNoTracking().FirstOrDefaultAsync();
             if (user is null) return Result.Failure<AdminSideUserDetailsViewModel>(Messages.OperationFailedError);
 
@@ -318,56 +322,187 @@ namespace Application.Services.Implementaions
             return userAvatar;
         }
 
-        public async Task<Result<string>> SendUserLoginCode(ClientSideLoginViewModel model)
+        public async Task<Result<DateTime>> SendUserLoginCode(ClientSideLoginDto model)
         {
-            if (model is null) return Result.Failure<string>(Messages.OperationFailedError);
+            if (model is null)
+                return Result.Failure<DateTime>(Messages.OperationFailedError);
 
-            User loginUser = await _dbSet.Where(n => n.PhoneNumber == model.PhoneNumber).FirstOrDefaultAsync();
+            User? loginUser = await _context.Users.Where(n => n.Mobile == model.Mobile).FirstOrDefaultAsync();
             if (loginUser is null)
             {
                 loginUser = new User();
 
-                loginUser.PhoneNumber = model.PhoneNumber;
+                loginUser.Mobile = model.Mobile;
                 loginUser.IsUserBanned = false;
 
-                await _dbSet.AddAsync(loginUser);
-                await _context.SaveChangesAsync();
+                _context.Users.Add(loginUser);
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+
+                    UserCreatedEvent UserCreatedEvent = new UserCreatedEvent(loginUser.Mobile);
+                    await _mediator.PublishEvent(UserCreatedEvent);
+                }
+                catch (DbUpdateException ex)
+                    when (ex.InnerException is PostgresException pg && pg.SqlState == "23505" && pg.ConstraintName == "IX_Users_Mobile")
+                {
+                    _context.Entry(loginUser).State = EntityState.Detached;
+                    loginUser = await _context.Users
+                        .FirstOrDefaultAsync(u => u.Mobile == model.Mobile);
+
+                    if (loginUser is null)
+                        return Result.Failure<DateTime>(Messages.OperationFailedError);
+                }
             }
             else
             {
-                if (loginUser.IsUserBanned) return Result.Failure<string>(Messages.OperationFailedError);
+                if (loginUser.IsUserBanned)
+                    return Result.Failure<DateTime>(Messages.OperationFailedError);
+
+                if (loginUser.LockoutEnd.HasValue && loginUser.LockoutEnd.Value > DateTime.UtcNow)
+                {
+                    var remainingMins = Math.Ceiling((loginUser.LockoutEnd.Value - DateTime.UtcNow).TotalMinutes);
+                    return Result.Failure<DateTime>($"بیش از حد مجاز تلاش کرده‌اید. لطفا {remainingMins} دقیقه دیگر مجددا تلاش کنید.");
+                }
+                else
+                {
+                    loginUser.AccessFailedCount = 0;
+                    loginUser.LockoutEnd = null;
+                    await _context.SaveChangesAsync();
+                }
             }
 
-            var validationResult = await _userValidationService.GenerateUserValidationCode(model.PhoneNumber);
-            if (validationResult.IsFailure) return Result.Failure<string>(validationResult.Message);
+            var validationResult = await GenerateUserValidationCode(model.Mobile);
+            if (validationResult.IsFailure)
+                return Result.Failure<DateTime>(validationResult.Message!);
 
-            Console.WriteLine(validationResult.Value);
+            var validation = validationResult.Value;
 
-            //comment in development
-            var codeResult = await _sendSmsService.SendLoginCode(validationResult.Value, loginUser.PhoneNumber);
-            if (codeResult.IsFailure)
-                return Result.Failure<string>(codeResult.Message);
+            if (validation.HasActiveCode == false && !string.IsNullOrWhiteSpace(validation.Code))
+            {
+                var smsResult = await _sendSmsService.ClientSideSendLoginCode(new ClientSideSendLoginCodeDto()
+                {
+                    Code = validation.Code,
+                    Mobile = loginUser.Mobile
+                });
+            }
 
-            return validationResult.Value;
+            return validation.CreatedDate;
         }
 
-        public async Task<Result<ClientSideUserViewModel>> VerifyLoginCode(ClientSideLoginCodeViewModel model)
+        public async Task<Result<ClientSideUserDto>> VerifyLoginCode(ClientSideLoginCodeDto model)
         {
-            if (model is null) return Result.Failure<ClientSideUserViewModel>(Messages.OperationFailedError);
+            if (model is null) return Result.Failure<ClientSideUserDto>(Messages.OperationFailedError);
 
-            var validationResult = await _userValidationService.ValidateUserLoginCode(model.PhoneNumber, model.LoginCode);
-            if (validationResult.IsFailure) return Result.Failure<ClientSideUserViewModel>(validationResult.Message);
+            string loginCode = string.Join("", model.LoginCode);
 
-            var user = await _dbSet.Where(n => n.PhoneNumber == model.PhoneNumber).Select(n => new ClientSideUserViewModel()
+            var validationResult = await ValidateUserLoginCode(model.Mobile, loginCode);
+            if (validationResult.IsFailure)
+                return Result.Failure<ClientSideUserDto>(validationResult.Message!);
+
+            var user = await _context.Users.Where(n => n.Mobile == model.Mobile).Select(n => new ClientSideUserDto()
             {
                 Id = n.Id,
-                Avatar = n.Avatar,
                 IsBanned = n.IsUserBanned,
-                Mobile = n.PhoneNumber,
+                Mobile = n.Mobile,
             }).AsNoTracking().FirstOrDefaultAsync();
-            if (user is null) return Result.Failure<ClientSideUserViewModel>(Messages.OperationFailedError);
+            if (user is null) return Result.Failure<ClientSideUserDto>(Messages.OperationFailedError);
 
             return user;
+        }
+
+        public async Task<Result<OtpGenerationResultDto>> GenerateUserValidationCode(string mobile)
+        {
+            if (string.IsNullOrWhiteSpace(mobile))
+                return Result.Failure<OtpGenerationResultDto>(Messages.OperationFailedError);
+
+            var existingValidations = await _context.UserValidation
+                .Where(uv => uv.Mobile == mobile)
+                .OrderByDescending(v => v.CreatedDate)
+                .ToListAsync();
+
+            var latestValidation = existingValidations.FirstOrDefault();
+
+            if (latestValidation != null && DateTime.UtcNow - latestValidation.CreatedDate < TimeSpan.FromMinutes(2))
+            {
+                return Result.Success(new OtpGenerationResultDto
+                {
+                    Code = null,
+                    CreatedDate = latestValidation.CreatedDate,
+                    HasActiveCode = true
+                });
+            }
+
+            if (existingValidations.Any())
+            {
+                _context.UserValidation.RemoveRange(existingValidations);
+            }
+
+            var code = Generate.UserLoginCode();
+            var hashedCode = code.HashPassword(out string salt);
+            var nowUtc = DateTime.UtcNow;
+
+            var validation = new UserValidation
+            {
+                Code = hashedCode,
+                Salt = salt,
+                Mobile = mobile,
+                CreatedDate = nowUtc,
+            };
+
+            _context.UserValidation.Add(validation);
+            await _context.SaveChangesAsync();
+
+            return Result.Success(new OtpGenerationResultDto
+            {
+                Code = code,
+                CreatedDate = nowUtc,
+                HasActiveCode = false
+            });
+        }
+
+        public async Task<Result> ValidateUserLoginCode(string mobile, string code)
+        {
+            if (string.IsNullOrWhiteSpace(mobile) || string.IsNullOrWhiteSpace(code))
+                return Result.Failure(Messages.OperationFailedError);
+
+            var user = await _context.Users.Where(u => u.Mobile == mobile).FirstOrDefaultAsync();
+            if (user is null) return Result.Failure(Messages.OperationFailedError);
+
+            if (user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTime.UtcNow)
+            {
+                var remainingMins = Math.Ceiling((user.LockoutEnd.Value - DateTime.UtcNow).TotalMinutes);
+                return Result.Failure($"حساب شما قفل شده است. {remainingMins} دقیقه دیگر تلاش کنید.");
+            }
+
+            var validation = await _context.UserValidation.Where(uv => uv.Mobile == mobile).FirstOrDefaultAsync();
+            if (validation is null || validation.CreatedDate.AddMinutes(2) < DateTime.UtcNow)
+            {
+                return Result.Failure(Messages.LoginCodeExpiredError);
+            }
+
+            if (!code.VerifyPassword(validation.Salt, validation.Code))
+            {
+                user.AccessFailedCount++;
+
+                if (user.AccessFailedCount >= 5)
+                {
+                    user.LockoutEnd = DateTime.UtcNow.AddHours(2);
+                    user.AccessFailedCount = 0;
+                }
+
+                await _context.SaveChangesAsync();
+                return Result.Failure(Messages.InvalidLoginCodeError);
+            }
+
+            user.AccessFailedCount = 0;
+            user.LockoutEnd = null;
+
+            _context.UserValidation.Remove(validation);
+            await _context.SaveChangesAsync();
+
+            return Result.Success();
         }
 
         public async Task<Result<List<AdminSideUserAsOptionViewModel>>> AdminSideGetUsersForCoupon()
@@ -375,7 +510,7 @@ namespace Application.Services.Implementaions
             var users = await _dbSet.Where(n => n.IsUserBanned == false).Select(n => new AdminSideUserAsOptionViewModel()
             {
                 Id = n.Id,
-                PhoneNumber = n.PhoneNumber,
+                PhoneNumber = n.Mobile,
                 FullName = n.FirstName + " " + n.LastName
             }).AsNoTracking().ToListAsync();
             if (!users.Any()) return Result.Failure<List<AdminSideUserAsOptionViewModel>>(Messages.OperationFailedError);

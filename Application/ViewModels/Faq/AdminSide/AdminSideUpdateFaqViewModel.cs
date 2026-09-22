@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModels.Faq.AdminSide
 {
-    public class AdminSideUpdateFaqViewModel : CommonViewModel
+    public class AdminSideUpdateFaqViewModel : CommonDto
     {
         [Display(Name = "سوال")]
         [MaxLength(300)]

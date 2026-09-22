@@ -22,7 +22,7 @@ namespace Application.Handlers.Product
         {
             var content = "یک بررسی جدید برای محصول اضافه شد";
 
-            await _notificationService.AdminSideCreateNewNotification(new AdminSideCreateNewNotificationViewModel()
+            await _notificationService.AdminSideCreateNewNotification(new AdminSideCreateNewNotificationDto()
             {
                 Content = content
             });

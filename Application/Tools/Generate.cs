@@ -7,7 +7,7 @@
             Random rnd = new Random();
             string code = "";
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
                 code += rnd.Next(0, 10);
             }

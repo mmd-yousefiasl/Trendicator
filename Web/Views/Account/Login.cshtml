@@ -1,68 +1,56 @@
 ﻿@using Application.ViewModels.User.ClientSide
-@model ClientSideLoginViewModel
+@model ClientSideLoginDto
 
 @{
     ViewData["Title"] = "ورود";
 }
 
-
-<!-- LOGIN AREA START (Register) -->
-<div class="ltn__login-area pb-110 mt-5">
+<main class="section">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="section-title-area text-center">
-                    <h1 class="section-title">
-                        ورود
-                        <br>
-                        به حساب کاربری
-                    </h1>
-                    <p>
-                        به ترندیکاتور خوش آمدید!
-                        جایی که ابزارهای نوین تحلیل و معامله در اختیار شماست.
-                        برای ورود به حساب کاربری خود، اطلاعاتتان را وارد کنید و از امکانات ویژه ما بهره‌مند شوید.
-                    </p>
+        <div class="auth-wrap">
+            <div class="card auth-card">
+                <div class="auth-logo">
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="logo" aria-label="@SiteTools.SiteName">
+                        <img src="/assets/img/logo.svg" alt="@SiteTools.SiteName" width="34" height="34">
+                        <span>ترند<b>یکاتور</b></span>
+                    </a>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6 offset-lg-3">
-                <div class="account-login-inner">
-                    <form id="account-form" asp-area="" asp-controller="Account" asp-action="Login" method="post" class="ltn__form-box contact-form-box" onsubmit="submitAnimation()">
-                        <input asp-for="ReturnUrl" type="hidden" />
 
-                        <label asp-for="PhoneNumber"></label>
-                        <input type="text" asp-for="PhoneNumber" dir="ltr" />
-                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                <h1 class="auth-title">ورود | ثبت نام</h1>
+                <p class="auth-sub">
+                    به ترندیکاتور خوش آمدید!
+                    جایی که ابزارهای نوین تحلیل و معامله در اختیار شماست.
+                    برای ورود به حساب کاربری خود، اطلاعاتتان را وارد کنید و از امکانات ویژه ما بهره‌مند شوید.
+                </p>
 
-                        <label class="checkbox-inline">
-                            <input type="checkbox" asp-for="PrivacyPolicy">
-                            با کلیک روی «ورود»، با
-                            <a asp-area="" asp-controller="TermsAndConditions" asp-action="PrivacyPolicy" target="_blank">سیاست حفظ حریم خصوصی</a>
-                            و
-                            <a asp-area="" asp-controller="TermsAndConditions" asp-action="TermsAndConditions" target="_blank">شرایط و ضوابط</a>
-                            موافقت می‌کنم.
-                        </label>
-                        <span asp-validation-for="PrivacyPolicy" class="text-danger"></span>
-                        <br />
+                <form role="tabpanel" aria-labelledby="tab-otp" asp-area="" asp-controller="Account" asp-action="Login" method="post">
+                    <input type="hidden" asp-for="ReturnUrl" />
 
-                        <div class="btn-wrapper">
-                            <button class="theme-btn-1 btn reverse-color btn-block btn-submit" type="submit">ارسال کد تایید</button>
-                        </div>
-                    </form>
-                    <div class="by-agree text-center">
-                        <p>
-                            با ورود به حساب کاربری، شما با قوانین ما موافقت می‌کنید
-                            :
-                        </p>
-                        <p>
-                            <a asp-area="" asp-controller="TermsAndConditions" asp-action="TermsAndConditions" target="_blank">شرایط و ضوابط</a>
-                            &nbsp; &nbsp; | &nbsp; &nbsp;
-                            <a asp-area="" asp-controller="TermsAndConditions" asp-action="PrivacyPolicy" target="_blank">سیاست حفظ حریم خصوصی</a>
-                        </p>
+                    <div class="field">
+                        <label for="otp-phone">شماره موبایل</label>
+                        <input class="input phone-input" asp-for="Mobile">
+                        <span asp-validation-for="Mobile"></span>
+                        <span class="hint">کد ۵ رقمی به این شماره پیامک می‌شود.</span>
                     </div>
-                </div>
+
+                    <div class="field">
+                        <label class="check">
+                            <input type="checkbox" asp-for="PrivacyPolicy">
+                            <span>
+                                <a asp-area="" asp-controller="TermsAndConditions" asp-action="TermsAndConditions"
+                                   target="_blank" class="text-brand">شرایط و ضوابط</a>
+                                و
+                                <a asp-area="" asp-controller="TermsAndConditions" asp-action="PrivacyPolicy"
+                                   target="_blank" class="text-brand">سیاست حفظ حریم خصوصی</a>
+                                ترندیکاتور را مطالعه کرده و می‌پذیرم.
+                            </span>
+                        </label>
+                        <span asp-validation-for="PrivacyPolicy"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary btn--block btn--md mt-2">ارسال کد تایید</button>
+                </form>
             </div>
         </div>
     </div>
-</div>
+</main>

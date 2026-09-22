@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModels.ProductOption.AdminSide
 {
-    public class AdminSideUpdateProductOptionViewModel : CommonViewModel
+    public class AdminSideUpdateProductOptionViewModel : CommonDto
     {
         [Display(Name = "محصول")]
         [Required(ErrorMessage = Messages.RequiredError)]

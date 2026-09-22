@@ -4,27 +4,40 @@ namespace Application.Tools
 {
     public static class HashingExtensions
     {
+        private const int SaltSize = 16;
+        private const int HashSize = 32;
+        private const int Iterations = 100_000;
+
         public static string HashPassword(this string password, out string salt)
         {
-            // Generate a 128-bit salt using a secure PRNG
-            byte[] saltBytes = RandomNumberGenerator.GetBytes(16); // 16 bytes = 128 bits
+            byte[] saltBytes = RandomNumberGenerator.GetBytes(SaltSize);
             salt = Convert.ToBase64String(saltBytes);
 
-            // Derive a 256-bit subkey (32 bytes)
-            var pbkdf2 = new Rfc2898DeriveBytes(password, saltBytes, 100_000, HashAlgorithmName.SHA256);
-            byte[] hash = pbkdf2.GetBytes(32);
+            byte[] hashBytes = Rfc2898DeriveBytes.Pbkdf2(
+                password,
+                saltBytes,
+                Iterations,
+                HashAlgorithmName.SHA256,
+                HashSize
+            );
 
-            return Convert.ToBase64String(hash);
+            return Convert.ToBase64String(hashBytes);
         }
 
         public static bool VerifyPassword(this string password, string salt, string hashToCompare)
         {
             byte[] saltBytes = Convert.FromBase64String(salt);
-            var pbkdf2 = new Rfc2898DeriveBytes(password, saltBytes, 100_000, HashAlgorithmName.SHA256);
-            byte[] hash = pbkdf2.GetBytes(32);
+            byte[] originalHashBytes = Convert.FromBase64String(hashToCompare);
 
-            string computedHash = Convert.ToBase64String(hash);
-            return computedHash == hashToCompare;
+            byte[] computedHashBytes = Rfc2898DeriveBytes.Pbkdf2(
+                password,
+                saltBytes,
+                Iterations,
+                HashAlgorithmName.SHA256,
+                HashSize
+            );
+
+            return CryptographicOperations.FixedTimeEquals(computedHashBytes, originalHashBytes);
         }
     }
 }

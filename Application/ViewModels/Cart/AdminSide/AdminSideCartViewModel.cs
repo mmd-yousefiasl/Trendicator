@@ -2,7 +2,7 @@
 
 namespace Application.ViewModels.Cart.AdminSide
 {
-    public class AdminSideCartViewModel : CommonViewModel
+    public class AdminSideCartViewModel : CommonDto
     {
         public string UserIP { get; set; }
         public int? UserId { get; set; }

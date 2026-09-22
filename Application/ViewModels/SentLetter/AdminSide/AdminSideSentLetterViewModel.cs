@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels.SentLetter.AdminSide
 {
-    public class AdminSideSentLetterViewModel : CommonViewModel
+    public class AdminSideSentLetterViewModel : CommonDto
     {
         public DateTime SentDate { get; set; }
         public string Subject { get; set; }

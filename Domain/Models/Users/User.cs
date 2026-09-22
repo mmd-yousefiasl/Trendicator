@@ -9,10 +9,11 @@ namespace Domain.Models.Users
         public string? LastName { get; set; }
         public string? Email { get; set; }
         public DateTime? BirthDate { get; set; }
-        public string? PhoneNumber { get; set; }
+        public string Mobile { get; set; }
         public bool IsUserBanned { get; set; }
         public long Balance { get; set; }
-        public bool IsActive { get; set; }
+        public int AccessFailedCount { get; set; } = 0;
+        public DateTime? LockoutEnd { get; set; }
 
         #region Relations
 

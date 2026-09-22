@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels.ProductWishList.ClientSide
 {
-    public class ClientSideProductWishListViewModel : CommonViewModel
+    public class ClientSideProductWishListViewModel : CommonDto
     {
         public int ProductId { get; set; }
         public string FileName { get; set; }

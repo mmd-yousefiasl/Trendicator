@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels.Coupon.AdminSide
 {
-    public class AdminSideCouponViewModel : CommonViewModel
+    public class AdminSideCouponViewModel : CommonDto
     {
         public string Title { get; set; }
         public DateTime FromDate { get; set; }

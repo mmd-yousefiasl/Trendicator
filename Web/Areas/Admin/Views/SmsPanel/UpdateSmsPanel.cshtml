@@ -1,0 +1,78 @@
+﻿@using Application.ViewModels.SmsData.AdminSide
+@using Domain.Enums.SiteInfo
+@model AdminSideUpdateSmsPanelDto
+
+@{
+    ViewData["Title"] = "ویرایش پنل پیامکی";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <h4>مدیریت پنل های پیامکی</h4>
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="Home" asp-action="Index">صفحه نخست</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="SmsPanel" asp-action="SmsPanelsList">لیست پنل های پیامکی</a>
+                    </li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <form class="card-body" asp-area="Admin" asp-controller="SmsPanel" asp-action="UpdateSmsPanel" autocomplete="off" >
+                    <input type="hidden" asp-for="Id" />
+
+                    <h4 class="card-title">@ViewData["Title"]</h4>
+
+                    <div class="mb-3 row">
+                        <label asp-for="ApiKey" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" asp-for="ApiKey">
+                            <span asp-validation-for="ApiKey" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="PatternId" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <input class="form-control" asp-for="PatternId">
+                            <span asp-validation-for="PatternId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-md-2 col-form-label" asp-for="Type"></label>
+                        <div class="col-md-10">
+                            <select class="form-control" asp-for="Type" asp-items="@Html.GetEnumSelectList<SmsPanelTypeEnum>()"></select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label class="col-md-2 col-form-label" asp-for="IsActive"></label>
+                        <div class="col-md-10">
+                            <select class="form-control" asp-for="IsActive">
+                                <option value="true">فعال</option>
+                                <option value="false">غیرفعال</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div asp-validation-summary="All" class="text-danger"></div>
+
+                    <div class="col-12 text-end mt-5">
+                        <button class="btn btn-primary btn-submit" type="submit">ویرایش</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

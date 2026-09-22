@@ -2,7 +2,7 @@
 
 namespace Application.ViewModels.SiteMap.AdminSide
 {
-    public class AdminSideSiteMapViewModel : CommonViewModel
+    public class AdminSideSiteMapViewModel : CommonDto
     {
         public string Url { get; set; }
         public ChangeFreqEnum ChangeFreq { get; set; }

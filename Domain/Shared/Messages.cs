@@ -33,6 +33,7 @@
         public const string InSufficentBalanceError = "موجودی کافی برای انجام تراکنش وجود ندارد";
         public const string CheckTermsAndConditionsError = "پذیرش قوانین و شرایط برای ادامه الزامی است";
         public const string CaptchaFailedError = "خطای کد امنیتی، لطفا دوباره امتحان کنید";
+        public const string LoginCodeExpiredError = "کد تایید شما منقضی شده است. لطفا مجددا درخواست کد کنید";
 
         #endregion
 

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModels.Coupon.AdminSide
 {
-    public class AdminSideUpdateCouponViewModel : CommonViewModel
+    public class AdminSideUpdateCouponViewModel : CommonDto
     {
         [Display(Name = "عنوان")]
         [Required(ErrorMessage = Messages.RequiredError)]

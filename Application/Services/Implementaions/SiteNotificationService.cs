@@ -14,65 +14,77 @@ namespace Application.Services.Implementaions
     {
         #region Fields
         private readonly TrendicatorDbContext _context;
-        private protected DbSet<SiteNotification> _dbSet;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ITelegramService _telegramService;
         #endregion
 
         #region Ctor
         public SiteNotificationService(TrendicatorDbContext context,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            ITelegramService telegramService)
         {
             _context = context;
-            _dbSet = _context.Set<SiteNotification>();
             _httpContextAccessor = httpContextAccessor;
+            _telegramService = telegramService;
         }
         #endregion
 
-        public async Task<Result<AdminSideFilterNotificationsViewModel>> AdminSideFilterNotifications(AdminSideFilterNotificationsViewModel filter)
+        public async Task<Result<AdminSideFilterNotificationsDto>> AdminSideFilterNotifications(AdminSideFilterNotificationsDto filter)
         {
-            if (filter is null) return Result.Failure<AdminSideFilterNotificationsViewModel>(Messages.OperationFailedError);
+            if (filter is null)
+                return Result.Failure<AdminSideFilterNotificationsDto>(Messages.OperationFailedError);
 
             var conditions = Filter.GenerateConditions<SiteNotification>();
 
+            if (filter.Type is not null)
+            {
+                conditions.Add(n => n.Type == filter.Type);
+            }
+
             conditions.Add(n => n.ForUserId == null);
 
-            IQueryable<SiteNotification> query = _dbSet;
-            query = query.OrderByDescending(n => n.Id);
+            IQueryable<SiteNotification> query = _context.SiteNotifications;
 
             foreach (var item in conditions ?? new FilterConditions<SiteNotification>())
             {
                 query = query.Where(item);
             }
 
-            await filter.Paging(query.Select(n => new AdminSideNotificationViewModel()
+            query = query.OrderByDescending(n => n.Id);
+
+            await filter.Paging(query.Select(n => new AdminSideNotificationDto()
             {
                 Id = n.Id,
                 Content = n.Content,
-                CreatedDate = n.CreatedDate
+                CreatedDate = n.CreatedDate,
+                IsRead = n.IsRead
             }));
 
             return filter;
         }
 
-        public async Task<Result<ClientSideFilterNotificationsViewModel>> ClientSideFilterNotifications(ClientSideFilterNotificationsViewModel filter)
+        public async Task<Result<ClientSideFilterNotificationsDto>> ClientSideFilterNotifications(ClientSideFilterNotificationsDto filter)
         {
-            if (filter is null) return Result.Failure<ClientSideFilterNotificationsViewModel>(Messages.OperationFailedError);
+            if (filter is null)
+                return Result.Failure<ClientSideFilterNotificationsDto>(Messages.OperationFailedError);
 
             var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            if (userId < 1) return Result.Failure<ClientSideFilterNotificationsViewModel>(Messages.OperationFailedError);
+            if (userId < 1)
+                return Result.Failure<ClientSideFilterNotificationsDto>(Messages.OperationFailedError);
 
             var conditions = Filter.GenerateConditions<SiteNotification>();
             conditions.Add(n => n.ForUserId == userId);
 
-            IQueryable<SiteNotification> query = _dbSet;
-            query = query.OrderByDescending(n => n.Id);
+            IQueryable<SiteNotification> query = _context.SiteNotifications;
 
             foreach (var item in conditions ?? new FilterConditions<SiteNotification>())
             {
                 query = query.Where(item);
             }
 
-            await filter.Paging(query.Select(n => new ClientSideNotificationViewModel()
+            query = query.OrderByDescending(n => n.Id);
+
+            await filter.Paging(query.Select(n => new ClientSideNotificationDto()
             {
                 Id = n.Id,
                 Content = n.Content,
@@ -82,51 +94,85 @@ namespace Application.Services.Implementaions
             return filter;
         }
 
-        public async Task<Result> AdminSideCreateNewNotification(AdminSideCreateNewNotificationViewModel model)
+        public async Task<Result> AdminSideCreateNewNotification(AdminSideCreateNewNotificationDto model)
         {
-            if (model is null) return Result.Failure(Messages.OperationFailedError);
+            if (model is null)
+                return Result.Failure(Messages.OperationFailedError);
 
             var notification = new SiteNotification()
             {
                 Content = model.Content,
                 ForUserId = null,
+                IsRead = false,
+                Type = model.Type,
             };
 
-            await _dbSet.AddAsync(notification);
+            _context.SiteNotifications.Add(notification);
             await _context.SaveChangesAsync();
+
+            // Best-effort mirror to the Telegram channel — never blocks or fails
+            // the admin request if the worker is down.
+            _ = Task.Run(() => _telegramService.SendSiteNotificationToChannelAsync(notification.Content));
 
             return Result.Success();
         }
 
-        public async Task<Result> ClientSideCreateNewNotification(ClientSideCreateNewNotificationViewModel model)
+        public async Task<Result> ClientSideCreateNewNotification(ClientSideCreateNewNotificationDto model)
         {
-            if (model is null) return Result.Failure(Messages.OperationFailedError);
+            if (model is null)
+                return Result.Failure(Messages.OperationFailedError);
 
             var notification = new SiteNotification()
             {
                 Content = model.Content,
                 ForUserId = model.UserId,
+                IsRead = false,
             };
 
-            await _dbSet.AddAsync(notification);
+            _context.Add(notification);
             await _context.SaveChangesAsync();
 
             return Result.Success();
         }
 
-        public async Task<Result<List<AdminSideNotificationViewModel>>> AdminSideGetLatestNotifications()
+        public async Task<int> AdminSideGetUnreadNotificationsCount()
         {
-            var notifications = await _dbSet.Where(n => n.ForUserId == null)
-                .OrderByDescending(n => n.Id).Take(5)
-                .Select(n => new AdminSideNotificationViewModel()
-                {
-                    Id = n.Id,
-                    Content = n.Content,
-                    CreatedDate = n.CreatedDate
-                }).AsNoTracking().ToListAsync();
-            if (!notifications.Any()) return Result.Failure<List<AdminSideNotificationViewModel>>(Messages.OperationFailedError);
+            return await _context.SiteNotifications
+                .AsNoTracking()
+                .CountAsync(n => n.ForUserId == null && n.IsRead == false);
+        }
 
-            return notifications;
+        public async Task<int> ClientSideGetUnreadNotificationsCount()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1)
+                return 0;
+
+            return await _context.SiteNotifications
+                .AsNoTracking()
+                .CountAsync(n => n.ForUserId == userId && n.IsRead == false);
+        }
+
+        public Task AdminSideSetNotificationsRead()
+        {
+            return _context.SiteNotifications
+                .Where(n => n.ForUserId == null && n.IsRead == false)
+                .ExecuteUpdateAsync(s => s
+                .SetProperty(n => n.IsRead, true)
+                .SetProperty(n => n.LastUpdatedDate, DateTime.UtcNow));
+        }
+
+        public Task ClientSideSetNotificationsRead()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1)
+                return Task.CompletedTask;
+
+            return _context.SiteNotifications
+                .Where(n => n.ForUserId == userId && n.IsRead == false)
+                .ExecuteUpdateAsync(s => s
+                .SetProperty(n => n.IsRead, true)
+                .SetProperty(n => n.LastUpdatedDate, DateTime.UtcNow));
         }
     }
 }

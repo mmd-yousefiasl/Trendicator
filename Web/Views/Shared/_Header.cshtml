@@ -1,26 +1,38 @@
 ﻿<header class="site-header">
     <div class="container site-header__inner">
-        <a href="index.html" class="logo" aria-label="ترندیکیتور">
-            <img src="assets/img/logo.svg" alt="" width="30" height="30">
-            <span>ترند<b>یکیتور</b></span>
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="logo" aria-label="@SiteTools.SiteName">
+            <img src="/assets/img/logo.svg" alt="" width="30" height="30">
+            <span>ترند<b>یکاتور</b></span>
         </a>
 
         <nav class="main-nav" id="main-nav" aria-label="منوی اصلی">
-            <a href="index.html" class="is-active">خانه</a>
+            <a asp-area="" asp-controller="Home" asp-action="Index">خانه</a>
             <a href="products.html">فروشگاه</a>
             <a href="guide.html">راهنمای اندیکاتورها</a>
             <a href="blog.html">وبلاگ</a>
             <a href="faq.html">سوالات متداول</a>
             <a href="contact.html">تماس با ما</a>
+            <a asp-area="Admin" asp-controller="Home" asp-action="Index" permission="Admin">پنل ادمین</a>
         </nav>
 
         <div class="header-actions">
             <button class="icon-btn" data-theme-toggle aria-label="تغییر تم روشن/تاریک">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4" /><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>
             </button>
-            <a href="login.html" class="icon-btn" aria-label="ورود به حساب کاربری">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6" /></svg>
-            </a>
+
+            @if (User?.Identity?.IsAuthenticated ?? false)
+            {
+                <a asp-area="UserPanel" asp-controller="Home" asp-action="Index" class="icon-btn" aria-label="حساب کاربری">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6" /></svg>
+                </a>
+            }
+            else
+            {
+                <a asp-area="" asp-controller="Account" asp-action="Login" class="icon-btn" aria-label="ورود به حساب کاربری">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6" /></svg>
+                </a>
+            }
+
             <a href="cart.html" class="icon-btn" aria-label="سبد خرید">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h2l2.6 12.4a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L22 7H6" /><circle cx="10" cy="20" r="1.4" /><circle cx="18" cy="20" r="1.4" /></svg>
                 <span class="icon-btn__count" data-cart-count hidden>۰</span>

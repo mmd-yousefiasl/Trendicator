@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels.Media
 {
-    public class AdminSideMediaViewModel : CommonViewModel
+    public class AdminSideMediaViewModel : CommonDto
     {
         public string FileName { get; set; }
     }

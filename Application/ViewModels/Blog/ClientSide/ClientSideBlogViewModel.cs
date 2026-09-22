@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels.Blog.ClientSide
 {
-    public class ClientSideBlogViewModel : CommonViewModel
+    public class ClientSideBlogViewModel : CommonDto
     {
         public DateTime CreatedDate { get; set; }
         public string FileName { get; set; }

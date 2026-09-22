@@ -38,9 +38,21 @@
                 </li>
 
                 <li permission="ManageNotifications">
-                    <a asp-area="Admin" asp-controller="Notifications" asp-action="NotificationsList" class="waves-effect">
+                    <a asp-area="Admin" asp-controller="SiteNotification" asp-action="NotificationsList" class="waves-effect">
                         <i class="mdi mdi-bell-ring-outline"></i>
-                        <span>اعلانات</span>
+                        <span>پیام ها</span>
+
+                        @if ((int)ViewData["NotificationCount"]! > 0)
+                        {
+                            if ((int)ViewData["NotificationCount"]! > 99)
+                            {
+                                <span class="badge bg-danger rounded-pill float-end">99+</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger rounded-pill float-end">@((int)ViewData["NotificationCount"]!)</span>
+                            }
+                        }
                     </a>
                 </li>
 
@@ -245,11 +257,15 @@
                     </a>
                 </li>
 
-                <li permission="ManageSmsData">
-                    <a asp-area="Admin" asp-controller="SmsData" asp-action="UpdateSmsData" class="waves-effect">
+                <li permission="ManageSmsPanels">
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="mdi mdi-card-text-outline"></i>
-                        <span>اطلاعات پنل اس ام اس</span>
+                        <span>پنل های پیامکی</span>
                     </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li permission="SmsPanelsList"><a asp-area="Admin" asp-controller="SmsPanel" asp-action="SmsPanelsList">لیست پنل های پیامکی</a></li>
+                        <li permission="CreateNewSmsPanel"><a asp-area="Admin" asp-controller="SmsPanel" asp-action="CreateNewSmsPanel">افزودن پنل پیامکی</a></li>
+                    </ul>
                 </li>
 
                 <li permission="ManageSiteMap">

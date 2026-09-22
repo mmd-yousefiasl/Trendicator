@@ -1,49 +1,54 @@
 ﻿using Application.Services.Interfaces;
+using Application.ViewModels.SmsData.ClientSide;
+using Application.ViewModels.SmsData.SmsConsumer;
+using Domain.Enums.SiteInfo;
 using Domain.Shared;
-using IPE.SmsIrClient;
-using IPE.SmsIrClient.Models.Requests;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Services.Implementaions
 {
     public class SendSmsService : ISendSmsService
     {
         #region Fields
-        private readonly ISmsDataService _smsService;
+        private readonly ISmsPanelService _smsDataService;
+        private readonly ILogger<ISendSmsService> _logger;
+        private readonly ISmsQueue _smsQueue;
         #endregion
 
         #region Ctor
-        public SendSmsService(ISmsDataService smsService)
+        public SendSmsService(ISmsPanelService smsDataService,
+            ILogger<ISendSmsService> logger,
+            ISmsQueue smsQueue)
         {
-            _smsService = smsService;
+            _smsDataService = smsDataService;
+            _logger = logger;
+            _smsQueue = smsQueue;
         }
         #endregion
 
-        public async Task<Result> SendLoginCode(string code, string mobile)
+        public async Task<Result> ClientSideSendLoginCode(ClientSideSendLoginCodeDto dto)
         {
-            try
-            {
-                var infoResult = await _smsService.AdminSideGetSmsData();
-                if (infoResult.IsFailure)
-                    return Result.Failure(Messages.OperationFailedError);
-
-                var info = infoResult.Value;
-                if (string.IsNullOrWhiteSpace(info.SmsPanelAPIKey) || info.SmsPatternIdForLoginCode < 1)
-                    return Result.Failure(Messages.OperationFailedError);
-
-                SmsIr _sms = new SmsIr(info.SmsPanelAPIKey);
-
-                var verificationSendResult = await _sms.VerifySendAsync(
-                    mobile,
-                    info.SmsPatternIdForLoginCode.Value,
-                    new VerifySendParameter[] { new("LOGINCODE", code) }
-                );
-
-                return Result.Success(Messages.SuccessfullyDone);
-            }
-            catch (Exception ex)
-            {
+            if (dto is null)
                 return Result.Failure(Messages.OperationFailedError);
-            }
+
+            var infoResult = await _smsDataService.ClientSideGetSmsPanel(SmsPanelTypeEnum.OTP);
+            if (infoResult.IsFailure)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var loginSms = new SmsQueueItem(
+                Mobile: dto.Mobile,
+                ApiKey: infoResult.Value.ApiKey,
+                PatternId: infoResult.Value.PatternId,
+                Parameters: new List<SmsParameterItem>
+                {
+                        new("LOGINCODE", dto.Code)
+                }
+            );
+
+            Console.WriteLine(dto.Code);
+            //await _smsQueue.QueueSmsAsync(loginSms);
+
+            return Result.Success();
         }
     }
 }

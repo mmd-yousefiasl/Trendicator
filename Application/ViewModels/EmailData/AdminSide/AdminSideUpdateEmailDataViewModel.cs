@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModels.EmailData.AdminSide
 {
-    public class AdminSideUpdateEmailDataViewModel : CommonViewModel
+    public class AdminSideUpdateEmailDataViewModel : CommonDto
     {
         [Display(Name = "ایمیل")]
         [Required(ErrorMessage = Messages.RequiredError)]

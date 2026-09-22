@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModels.SiteMap.AdminSide
 {
-    public class AdminSideUpdateSiteMapViewModel : CommonViewModel
+    public class AdminSideUpdateSiteMapViewModel : CommonDto
     {
         [Display(Name = "آدرس URL")]
         [Required(ErrorMessage = Messages.RequiredError)]

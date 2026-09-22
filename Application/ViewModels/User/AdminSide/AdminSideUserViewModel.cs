@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels.User.AdminSide
 {
-    public class AdminSideUserViewModel : CommonViewModel
+    public class AdminSideUserViewModel : CommonDto
     {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }

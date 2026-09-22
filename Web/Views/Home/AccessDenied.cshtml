@@ -2,23 +2,27 @@
     ViewData["Title"] = "403";
 }
 
-<!-- 404 area start -->
-<div class="ltn__404-area ltn__404-area-1 mb-120">
+<main class="section">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="error-404-inner text-center">
-                    <h1 class="error-404-title">403</h1>
-                    <h2>دسترسی ممنوع شد</h2>
-                    <div class="btn-wrapper">
-                        <a asp-area="" asp-controller="Home" asp-action="Index" class="btn btn-transparent">
-                            بازگشت به صفحه اصلی
-                            <i class="fas fa-long-arrow-alt-left"></i>
-                        </a>
-                    </div>
+        <div class="auth-wrap">
+            <div class="card auth-card text-center">
+
+                <div class="auth-logo">
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="logo" aria-label="@SiteTools.SiteName">
+                        <img src="/assets/img/logo.svg" alt="@SiteTools.SiteName" width="34" height="34">
+                        <span>ترند<b>یکاتور</b></span>
+                    </a>
                 </div>
+
+                <span class="kicker mb-2">خطای ۴۰3</span>
+                <h1 style="font-size:clamp(4rem,14vw,7rem);line-height:1;font-weight:900;color:var(--brand);margin:0 0 .15em">۴۰۳</h1>
+                <p class="auth-sub">شما اجازه دسترسی به این صفحه را ندارید.</p>
+
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="btn btn--primary btn--lg btn--block mt-3">
+                    بازگشت به صفحه اصلی
+                </a>
+
             </div>
         </div>
     </div>
-</div>
-<!-- 404 area end -->
+</main>

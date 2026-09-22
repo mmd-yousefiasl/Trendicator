@@ -109,5 +109,32 @@ namespace Application.Tools
 
             return new DateTime(year, month, day, new GregorianCalendar());
         }
+
+        public static int GetRemainingCooldownSeconds(this DateTime createdDate, int cooldownSeconds = 120)
+        {
+            var expiryTime = createdDate.AddSeconds(cooldownSeconds);
+            var remaining = (expiryTime - DateTime.UtcNow).TotalSeconds;
+
+            return remaining > 0 ? (int)Math.Ceiling(remaining) : 0;
+        }
+
+        public static string ToPersianRelativeTime(this DateTime utcDateTime)
+        {
+            var now = DateTime.UtcNow;
+
+            if (utcDateTime > now) return "لحظاتی پیش";
+
+            var timeSpan = now - utcDateTime;
+
+            string result = timeSpan.TotalSeconds switch
+            {
+                < 60 => "لحظاتی پیش",
+                < 3600 => $"{Math.Floor(timeSpan.TotalMinutes)} دقیقه قبل",
+                < 86400 => $"{Math.Floor(timeSpan.TotalHours)} ساعت قبل",
+                _ => $"{Math.Floor(timeSpan.TotalDays)} روز پیش"
+            };
+
+            return result;
+        }
     }
 }

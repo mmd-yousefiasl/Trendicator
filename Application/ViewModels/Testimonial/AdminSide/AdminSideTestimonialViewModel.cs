@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels.Testimonial.AdminSide
 {
-    public class AdminSideTestimonialViewModel : CommonViewModel
+    public class AdminSideTestimonialViewModel : CommonDto
     {
         public string Writer { get; set; }
         public string Position { get; set; }

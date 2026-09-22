@@ -2,7 +2,7 @@
 
 namespace Application.ViewModels.Blog.ClientSide
 {
-    public class ClientSideBlogDetailsViewModel : CommonViewModel
+    public class ClientSideBlogDetailsViewModel : CommonDto
     {
         public DateTime CreatedDate { get; set; }
         public string FileName { get; set; }

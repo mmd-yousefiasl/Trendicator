@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModels.Hero.AdminSide
 {
-    public class AdminSideUpdateHeroViewModel : CommonViewModel
+    public class AdminSideUpdateHeroViewModel : CommonDto
     {
         [Display(Name = "عنوان")]
         [Required(ErrorMessage = Messages.RequiredError)]

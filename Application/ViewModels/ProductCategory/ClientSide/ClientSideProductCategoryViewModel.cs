@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels.ProductCategory.ClientSide
 {
-    public class ClientSideProductCategoryViewModel : CommonViewModel
+    public class ClientSideProductCategoryViewModel : CommonDto
     {
         public string Title { get; set; }
         public string Slug { get; set; }

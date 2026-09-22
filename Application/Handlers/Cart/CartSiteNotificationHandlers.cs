@@ -24,7 +24,7 @@ namespace Application.Handlers.Cart
         {
             string content = $"سفارش با شناسه {notification.id} ثبت شد! وضعیت جدید {notification.Status.GetDisplayName()}";
 
-            var adminNotification = new AdminSideCreateNewNotificationViewModel
+            var adminNotification = new AdminSideCreateNewNotificationDto
             {
                 Content = content
             };
@@ -33,7 +33,7 @@ namespace Application.Handlers.Cart
 
             if (notification.UserId > 0)
             {
-                var userNotification = new ClientSideCreateNewNotificationViewModel()
+                var userNotification = new ClientSideCreateNewNotificationDto()
                 {
                     UserId = notification.UserId.Value,
                     Content = content

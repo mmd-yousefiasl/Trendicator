@@ -2,7 +2,7 @@
 
 namespace Application.ViewModels.SocialMedia.AdminSide
 {
-    public class AdminSideSocialMediaViewModel : CommonViewModel
+    public class AdminSideSocialMediaViewModel : CommonDto
     {
         public string Url { get; set; }
         public int Priority { get; set; }

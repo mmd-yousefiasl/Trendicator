@@ -24,7 +24,6 @@ namespace Application.Handlers.SiteInfo
         INotificationHandler<TestimonialCreatedEvent>,
         INotificationHandler<TestimonialUpdatedEvent>,
         INotificationHandler<TestimonialDeletedEvent>,
-        INotificationHandler<SmsDataUpdatedEvent>,
         INotificationHandler<HeroUpdatedEvent>
     {
         private readonly ICacheManager _cacheManager;
@@ -106,11 +105,6 @@ namespace Application.Handlers.SiteInfo
         public Task Handle(TestimonialDeletedEvent notification, CancellationToken cancellationToken)
         {
             return _cacheManager.RemoveByKeyAsync(CacheKeys.TestimonialCacheKey);
-        }
-
-        public Task Handle(SmsDataUpdatedEvent notification, CancellationToken cancellationToken)
-        {
-            return _cacheManager.RemoveByKeyAsync(CacheKeys.SmsDataCacheKey);
         }
 
         public Task Handle(HeroUpdatedEvent notification, CancellationToken cancellationToken)

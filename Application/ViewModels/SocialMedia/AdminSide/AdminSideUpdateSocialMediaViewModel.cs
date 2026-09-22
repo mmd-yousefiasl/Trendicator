@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModels.SocialMedia.AdminSide
 {
-    public class AdminSideUpdateSocialMediaViewModel : CommonViewModel
+    public class AdminSideUpdateSocialMediaViewModel : CommonDto
     {
         [Display(Name = "لینک")]
         [MaxLength(500, ErrorMessage = Messages.MaxLengthError)]

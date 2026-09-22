@@ -50,46 +50,27 @@
 
 @if (TempData["TemporarySuccessMessage"] != null)
 {
-    <script asp-append-version="true">
-        Swal.fire({
-            toast: true,
-            position: 'top-start',
-            icon: 'success',
-            title: '@TempData["TemporarySuccessMessage"]',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true
-        })
+    <script>
+        Toast.success(@Html.Raw(Json.Serialize(TempData["TemporarySuccessMessage"])), {
+            duration: 5000
+        });
     </script>
 }
-
 
 @if (TempData["TemporaryErrorMessage"] != null)
 {
-    <script asp-append-version="true">
-         Swal.fire({
-            toast: true,
-            position: 'top-start',
-            icon: 'error',
-            title: '@TempData["TemporaryErrorMessage"]',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true
-        })
+    <script>
+        Toast.error(@Html.Raw(Json.Serialize(TempData["TemporaryErrorMessage"])), {
+            duration: 5000
+        });
     </script>
 }
 
-
 @if (TempData["TemporaryMessage"] != null)
 {
-    <script asp-append-version="true">
-        Swal.fire({
-        toast: true,
-        position: 'top-start',
-        title: '@TempData["TemporaryMessage"]',
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true
-        })
+    <script>
+        Toast.info(@Html.Raw(Json.Serialize(TempData["TemporaryMessage"])), {
+            duration: 5000
+        });
     </script>
 }

@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels.ProductFaq.AdminSide
 {
-    public class AdminSideProductFaqViewModel : CommonViewModel
+    public class AdminSideProductFaqViewModel : CommonDto
     {
         public string Question { get; set; }
         public string Answer { get; set; }

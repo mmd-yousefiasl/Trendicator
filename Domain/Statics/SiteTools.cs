@@ -61,6 +61,7 @@
         #region Telegram
 
         public static long TelegramErrorChannelId { get; set; }
+        public static long TelegramNotificationChannelId { get; set; }
         public static bool TelegramErrorAlertingEnabled { get; set; }
         public static string AdminTelegramWorkerKey { get; set; }
         public static string AdminTelegramWorkerSendUrl { get; set; }

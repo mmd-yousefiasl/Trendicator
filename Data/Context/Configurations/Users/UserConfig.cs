@@ -14,11 +14,21 @@ namespace Data.Context.Configurations.Users
 
             builder.HasQueryFilter(n => !n.IsDeleted);
 
+            builder.Property(u => u.Mobile)
+                .HasMaxLength(11)
+                .IsRequired();
+
+            builder.HasIndex(u => u.Mobile)
+                .IsUnique()
+                .HasFilter("\"IsDeleted\" = 'false'");
+
+            builder.Property(u => u.Balance)
+                .HasColumnType("numeric(18,0)");
+
             builder.Property(n => n.Avatar).HasMaxLength(50);
             builder.Property(n => n.FirstName).HasMaxLength(200);
             builder.Property(n => n.LastName).HasMaxLength(200);
             builder.Property(n => n.Email).HasMaxLength(200);
-            builder.Property(n => n.PhoneNumber).HasMaxLength(11);
 
             builder.HasOne(n => n.ParentUser)
                 .WithMany(n => n.SubUsers)

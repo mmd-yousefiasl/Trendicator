@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModels.User.AdminSide
 {
-    public class AdminSideUpdateUserViewModel : CommonViewModel
+    public class AdminSideUpdateUserViewModel : CommonDto
     {
         public string? AvatarFileName { get; set; }
         public IFormFile? AvatarFile { get; set; }

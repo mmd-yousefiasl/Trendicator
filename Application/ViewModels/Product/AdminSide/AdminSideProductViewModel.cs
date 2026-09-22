@@ -2,7 +2,7 @@
 
 namespace Application.ViewModels.Product.AdminSide
 {
-    public class AdminSideProductViewModel : CommonViewModel
+    public class AdminSideProductViewModel : CommonDto
     {
         public string Title { get; set; }
         public string Slug { get; set; }

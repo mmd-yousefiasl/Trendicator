@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels.ProductCompare.ClientSide
 {
-    public class ClientSideProductCompareViewModel : CommonViewModel
+    public class ClientSideProductCompareViewModel : CommonDto
     {
         public int ProductId { get; set; }
         public string Title { get; set; }

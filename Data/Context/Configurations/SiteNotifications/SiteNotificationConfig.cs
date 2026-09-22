@@ -11,9 +11,16 @@ namespace Data.Context.Configurations.SiteNotifications
             builder.ToTable("SiteNotifications");
 
             builder.HasKey(n => n.Id);
-            builder.HasQueryFilter(n => !n.IsDeleted);
 
-            builder.Property(n => n.Content).HasMaxLength(1000);
+            builder.HasIndex(n => new { n.ForUserId, n.IsRead });
+
+            builder.Property(n => n.Content)
+                .HasMaxLength(2500)
+                .IsRequired();
+
+            builder.Property(n => n.IsRead)
+                .IsRequired()
+                .HasDefaultValue(false);
         }
     }
 }

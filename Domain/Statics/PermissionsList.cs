@@ -820,7 +820,7 @@ namespace Domain.Statics
                 Id = 115,
                 ParentId = 1,
                 Title = "مدیریت اعلانات",
-                UniqueName = "ManageNotifications"
+                UniqueName = "ManageSiteNotifications"
             },
             new Permission
             {
@@ -831,20 +831,41 @@ namespace Domain.Statics
             },
             #endregion
 
-            #region SmsData
+            #region SmsPanel
             new Permission
             {
                 Id = 117,
                 ParentId = 1,
-                Title = "مدیریت اطلاعات پنل اس ام اس",
-                UniqueName = "ManageSmsData"
+                Title = "مدیریت پنل های پیامکی",
+                UniqueName = "ManageSmsPanels"
             },
             new Permission
             {
                 Id = 118,
                 ParentId = 117,
-                Title = "ویرایش اطلاعات پنل اس ام اس",
-                UniqueName = "UpdateSmsData"
+                Title = "لیست پنل های پیامکی",
+                UniqueName = "SmsPanelsList"
+            },
+            new Permission
+            {
+                Id = 133,
+                ParentId = 117,
+                Title = "افزودن پنل پیامکی",
+                UniqueName = "CreateNewSmsPanel"
+            },
+            new Permission
+            {
+                Id = 134,
+                ParentId = 117,
+                Title = "ویرایش پنل پیامکی",
+                UniqueName = "UpdateSmsPanel"
+            },
+            new Permission
+            {
+                Id = 135,
+                ParentId = 117,
+                Title = "حذف پنل پیامکی",
+                UniqueName = "DeleteSmsPanel"
             },
             #endregion
 
@@ -959,7 +980,7 @@ namespace Domain.Statics
             #endregion
         };
 
-        //Last used id ==> 132
+        //Last used id ==> 135
         public static List<Permission> Permissions = _permissions;
     }
 }

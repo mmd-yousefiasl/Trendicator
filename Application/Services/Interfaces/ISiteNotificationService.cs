@@ -6,14 +6,20 @@ namespace Application.Services.Interfaces
 {
     public interface ISiteNotificationService
     {
-        Task<Result<AdminSideFilterNotificationsViewModel>> AdminSideFilterNotifications(AdminSideFilterNotificationsViewModel filter);
+        Task<Result<AdminSideFilterNotificationsDto>> AdminSideFilterNotifications(AdminSideFilterNotificationsDto filter);
 
-        Task<Result<ClientSideFilterNotificationsViewModel>> ClientSideFilterNotifications(ClientSideFilterNotificationsViewModel filter);
+        Task<Result<ClientSideFilterNotificationsDto>> ClientSideFilterNotifications(ClientSideFilterNotificationsDto filter);
 
-        Task<Result> AdminSideCreateNewNotification(AdminSideCreateNewNotificationViewModel model);
+        Task<Result> AdminSideCreateNewNotification(AdminSideCreateNewNotificationDto model);
 
-        Task<Result> ClientSideCreateNewNotification(ClientSideCreateNewNotificationViewModel model);
+        Task<Result> ClientSideCreateNewNotification(ClientSideCreateNewNotificationDto model);
 
-        Task<Result<List<AdminSideNotificationViewModel>>> AdminSideGetLatestNotifications();
+        Task<int> AdminSideGetUnreadNotificationsCount();
+
+        Task<int> ClientSideGetUnreadNotificationsCount();
+
+        Task AdminSideSetNotificationsRead();
+
+        Task ClientSideSetNotificationsRead();
     }
 }

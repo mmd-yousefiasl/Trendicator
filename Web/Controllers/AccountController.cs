@@ -22,15 +22,15 @@ namespace Web.Controllers
         #endregion
 
         [HttpGet("/login")]
-        public IActionResult Login(string ReturnUrl)
+        public IActionResult Login(string ReturnUrl, string? Mobile)
         {
             ViewData["NoIndex"] = true;
             if (User?.Identity?.IsAuthenticated ?? false) return Redirect("/");
-            return View(new ClientSideLoginViewModel() { ReturnUrl = ReturnUrl });
+            return View(new ClientSideLoginDto() { ReturnUrl = ReturnUrl });
         }
 
         [HttpPost("/login"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(ClientSideLoginViewModel model)
+        public async Task<IActionResult> Login(ClientSideLoginDto model)
         {
             if (User?.Identity?.IsAuthenticated ?? false) return Redirect("/");
             if (!ModelState.IsValid) return View(model);
@@ -38,33 +38,34 @@ namespace Web.Controllers
             var result = await _userService.SendUserLoginCode(model);
             if (result.IsFailure)
             {
-                TempData[TemporaryErrorMessage] = result.Message;
+                TempData[TemporaryMessage] = result.Message;
                 return View(model);
             }
-            TempData[TemporarySuccessMessage] = Messages.LoginCodeSentSuccessfully;
+            string formattedDate = result.Value.ToString("o");
 
             return RedirectToAction(nameof(LoginCode), new
             {
-                PhoneNumber = model.PhoneNumber,
-                ReturnUrl = model.ReturnUrl
+                Mobile = model.Mobile,
+                ReturnUrl = model.ReturnUrl,
+                CreatedDate = formattedDate
             });
         }
 
         [HttpGet("/login-code")]
-        public IActionResult LoginCode(ClientSideLoginCodeViewModel model)
+        public IActionResult LoginCode(ClientSideLoginCodeDto model)
         {
             ViewData["NoIndex"] = true;
-            if (User?.Identity?.IsAuthenticated ?? false) return Redirect("/");
             if (model is null)
             {
                 TempData[TemporaryErrorMessage] = Messages.LoginFailedError;
                 return RedirectToAction(nameof(Login));
             }
+
             return View(model);
         }
 
         [HttpPost("/login-code")]
-        public async Task<IActionResult> VerifyLoginCode(ClientSideLoginCodeViewModel model)
+        public async Task<IActionResult> VerifyLoginCode(ClientSideLoginCodeDto model)
         {
             if (!ModelState.IsValid) return View("LoginCode", model);
 
@@ -88,6 +89,40 @@ namespace Web.Controllers
             }
         }
 
+        [HttpGet("/resend-code")]
+        public async Task<IActionResult> ResendCode(string ReturnUrl, string Mobile)
+        {
+            if (User?.Identity?.IsAuthenticated ?? false)
+                return Redirect("/");
+
+            if (string.IsNullOrWhiteSpace(Mobile))
+            {
+                TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
+                return RedirectToAction(nameof(Login));
+            }
+
+            var result = await _userService.SendUserLoginCode(new ClientSideLoginDto()
+            {
+                Mobile = Mobile,
+                ReturnUrl = ReturnUrl,
+                PrivacyPolicy = true,
+            });
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+                return RedirectToAction(nameof(Login));
+            }
+            TempData[TemporarySuccessMessage] = Messages.LoginCodeSentSuccessfully;
+            string formattedDate = result.Value.ToString("o");
+
+            return RedirectToAction(nameof(LoginCode), new
+            {
+                Mobile = Mobile,
+                ReturnUrl = ReturnUrl,
+                CreatedDate = formattedDate
+            });
+        }
+
         [HttpGet("/logout")]
         public async Task<IActionResult> Logout()
         {
@@ -98,7 +133,7 @@ namespace Web.Controllers
             return Redirect("/");
         }
 
-        private async Task LoginUser(ClientSideUserViewModel user, bool rememberMe = true)
+        private async Task LoginUser(ClientSideUserDto user, bool rememberMe = true)
         {
             var claims = new List<Claim>()
                     {

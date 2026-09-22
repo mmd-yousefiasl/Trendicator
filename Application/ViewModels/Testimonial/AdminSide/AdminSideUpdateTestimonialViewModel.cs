@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.ViewModels.Testimonial.AdminSide
 {
-    public class AdminSideUpdateTestimonialViewModel : CommonViewModel
+    public class AdminSideUpdateTestimonialViewModel : CommonDto
     {
         [Display(Name = "گواهی")]
         [Required(ErrorMessage = Messages.RequiredError)]
