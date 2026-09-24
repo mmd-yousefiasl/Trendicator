@@ -302,52 +302,8 @@
     </div>
   </section>
 
-  <!-- ============ FAQ ============ -->
-  <section class="section section--soft">
-    <div class="container" style="max-width:820px">
-      <div class="section-head section-head--center">
-        <a href="faq.html" class="kicker">سوالات متداول</a>
-        <h2 class="mt-1">هر آنچه باید بدانید</h2>
-      </div>
-      <div class="faq">
-        <details>
-          <summary>اندیکاتورها روی چه پلتفرم‌هایی کار می‌کنند؟</summary>
-          <div class="faq__wrap">
-            <div class="faq__a">اندیکاتورهای ما برای متاتریدر ۴، متاتریدر ۵ و تریدینگ‌ویو عرضه می‌شوند. پلتفرم
-              پشتیبانی‌شده روی صفحه هر محصول مشخص شده است.
-            </div>
-          </div>
-        </details>
-        <details>
-          <summary>بعد از پرداخت، محصول را چطور دریافت می‌کنم؟</summary>
-          <div class="faq__wrap">
-            <div class="faq__a">بلافاصله بعد از پرداخت موفق، لینک دانلود در پنل کاربری شما فعال می‌شود و همزمان فایل‌ها
-              به
-              ایمیل‌تان ارسال می‌گردد.
-            </div>
-          </div>
-        </details>
-        <details>
-          <summary>اگر از محصول راضی نبودم می‌توانم پس بگیرم؟</summary>
-          <div class="faq__wrap">
-            <div class="faq__a">بله — تا ۷ روز پس از خرید، در صورت عدم رضایت مبلغ به‌طور کامل بازگردانده می‌شود. جزئیات
-              در
-              صفحه سیاست بازگشت وجه آمده است.
-            </div>
-          </div>
-        </details>
-        <details>
-          <summary>آیا اندیکاتورها روی حساب واقعی تست شده‌اند؟</summary>
-          <div class="faq__wrap">
-            <div class="faq__a">تمام محصولات قبل از انتشار حداقل ۶ ماه روی حساب دمو و واقعی بک‌تست و فورواردتست می‌شوند
-              و
-              گزارش نتایج در صفحه محصول قرار می‌گیرد.
-            </div>
-          </div>
-        </details>
-      </div>
-    </div>
-  </section>
+
+  @await Component.InvokeAsync("MainPageFaqs", new { take = 5 })
 
   <!-- ============ CTA ============ -->
   <section class="section">

@@ -1,5 +1,5 @@
-﻿using Application.Dtos.Faq.ClientSide;
-using Application.Services.Interfaces;
+﻿using Application.Services.Interfaces;
+using Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
@@ -21,7 +21,11 @@ namespace Web.Controllers
         public async Task<IActionResult> Faqs()
         {
             var result = await _faqService.GetFaqs();
-            if (result.IsFailure) return View(new List<ClientSideFaqViewModel>());
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
+                return RedirectToAction("Index", "Home", new { area = "" });
+            }
 
             return View(result.Value);
         }

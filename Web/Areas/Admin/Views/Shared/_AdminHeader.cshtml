@@ -5,10 +5,10 @@
             <div class="navbar-brand-box">
                 <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="logo logo-light">
                     <span class="logo-sm">
-                        <img src="~/adminAssets/images/logo-sm.png" alt="" height="22">
+                        <img src="/assets/img/logo.svg" alt="لوگو سایت" height="30">
                     </span>
                     <span class="logo-lg">
-                        @await Component.InvokeAsync("AdminLogo")
+                        <img src="/assets/img/logo.svg" alt="لوگو سایت" height="45">
                     </span>
                 </a>
             </div>
@@ -18,13 +18,16 @@
             </button>
             <div class="d-none d-sm-block" permission="ManageMedia">
                 <div class="dropdown dropdown-topbar pt-3 mt-1 d-inline-block">
-                    <a class="btn btn-light dropdown-toggle" href="javascript:void(0)" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="btn btn-light dropdown-toggle" href="javascript:void(0)" role="button"
+                       id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         دسترسی سریع
                         <i class="mdi mdi-chevron-down"></i>
                     </a>
 
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="">
-                        <a class="dropdown-item" href="javascript:void(0)" onclick="showLargeModal('مدیریت رسانه ها', '/admin/media-list')" title="مدیریت رسانه ها">مدیریت رسانه ها</a>
+                        <a class="dropdown-item" href="javascript:void(0)"
+                           onclick="showLargeModal('مدیریت رسانه ها', '/admin/media-list')" title="مدیریت رسانه ها">مدیریت
+                            رسانه ها</a>
                     </div>
                 </div>
             </div>
@@ -32,7 +35,8 @@
 
         <div class="d-flex">
             <div class="dropdown d-inline-block ms-1">
-                <button class="btn header-item noti-icon waves-effect" onclick="location.href='/admin/notifications-list'">
+                <button class="btn header-item noti-icon waves-effect"
+                        onclick="location.href='/admin/notifications-list'">
                     <i class="mdi mdi-bell-outline"></i>
                     @if ((int)ViewData["NotificationCount"]! > 0)
                     {
@@ -54,11 +58,13 @@
                     <i class="mdi mdi-account-circle text-muted align-middle mex-1 fs-30"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
-                    <a class="dropdown-item" asp-area="Admin" asp-controller="UserProfile" asp-action="UpdateUserProfile">
+                    <a class="dropdown-item" asp-area="Admin" asp-controller="UserProfile"
+                       asp-action="UpdateUserProfile">
                         <i class="mdi mdi-account-circle font-size-17 text-muted align-middle mex-1"></i> مشخصات
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-danger" asp-area="" asp-controller="Account" asp-action="Logout"><i class="mdi mdi-power font-size-17 text-muted align-middle mex-1 text-danger"></i> خروج</a>
+                    <a class="dropdown-item text-danger" asp-area="" asp-controller="Account" asp-action="Logout"><i
+                            class="mdi mdi-power font-size-17 text-muted align-middle mex-1 text-danger"></i> خروج</a>
                 </div>
             </div>
         </div>

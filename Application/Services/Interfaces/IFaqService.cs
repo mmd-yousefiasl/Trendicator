@@ -17,5 +17,7 @@ namespace Application.Services.Interfaces
         Task<Result> SoftDeleteFaq(int id);
 
         Task<Result<List<ClientSideFaqViewModel>>> GetFaqs();
+
+        Task<Result<List<ClientSideFaqViewModel>>> ClientSideGetFaqsForMainPage(int take);
     }
 }

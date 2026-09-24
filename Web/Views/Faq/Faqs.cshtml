@@ -5,62 +5,50 @@
     ViewData["Title"] = "سوالات متداول";
 }
 
-<div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-70 bg-image"
-     data-bg="@SiteTools.BreadcrumbBanner">
+<main>
+    <!-- ============ Breadcrumb ============ -->
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
-                    <div class="section-title-area ltn__section-title-2">
-                        <h1 class="section-title white-color">سوالات متداول</h1>
-                    </div>
-                    <div class="ltn__breadcrumb-list">
-                        <ul>
-                            <li><a asp-area="" asp-controller="Home" asp-action="Index">صفحه اصلی</a></li>
-                            <li>سوالات متداول</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <ul class="crumbs">
+            <partial name="_IndexLink" />
+            <li>سوالات متداول</li>
+        </ul>
     </div>
-</div>
 
-@if (Model?.Any() ?? false)
-{
-    <div class="ltn__faq-area mb-100">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="ltn__faq-inner ltn__faq-inner-2">
-                        <div id="accordion_2">
-                            @{
-                                int counter = 0;
-                                foreach (var item in Model ?? new List<ClientSideFaqViewModel>())
-                                {
-                                    counter++;
-                                    <!-- card -->
-                                    <div class="card">
-                                        <h6 class="collapsed ltn__card-title" data-toggle="collapse" data-target="#faq-item-2-@counter" aria-expanded="false">
-                                            @item.Question
-                                        </h6>
-                                        <div id="faq-item-2-@counter" class="collapse" data-parent="#accordion_2">
-                                            <div class="card-body">
-                                                <p>@item.Answer</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            }
+    <!-- ============ FAQ ============ -->
+    <section class="section" style="padding-block-start:8px">
+        <div class="container" style="max-width:820px">
+            <div class="section-head section-head--center">
+                <span class="kicker">پشتیبانی</span>
+                <h1 class="mt-1">سوالات متداول</h1>
+                <p>پاسخ پرتکرارترین سوالات شما درباره خرید، دانلود، لایسنس و پشتیبانی محصولات ترندیکیتور.</p>
+            </div>
+
+            <div class="faq">
+                @foreach (var item in Model ?? new List<ClientSideFaqViewModel>())
+                {
+                    <details>
+                        <summary>@item.Question</summary>
+                        <div class="faq__wrap">
+                            <div class="faq__a">
+                                @item.Answer
+                            </div>
                         </div>
-                    </div>
+                    </details>
+                }
+            </div>
+
+            <!-- CTA -->
+            <div class="card card-pad text-center mt-4" style="background:linear-gradient(135deg, var(--brand-soft), transparent 60%); border-color:var(--brand-line)">
+                <h2>پاسخ سوالتان را پیدا نکردید؟</h2>
+                <p class="text-muted" style="max-width:48ch;margin-inline:auto">
+                    تیم پشتیبانی
+                    ترندیکاتور
+                    آماده پاسخ‌گویی به سوالات فنی و خرید شماست — از طریق فرم تماس یا تیکت پشتیبانی با ما در ارتباط باشید.
+                    </p>
+                <div class="flex flex--center flex--wrap mt-3">
+                    <a asp-area="" asp-controller="ContactUs" asp-action="ContactUs" class="btn btn--primary btn--lg">تماس با پشتیبانی</a>
                 </div>
             </div>
         </div>
-    </div>
-}
-
-<!-- COUNTER UP AREA END -->
-@await Component.InvokeAsync("LatestBlogs")
-
-@await Component.InvokeAsync("OurFeatures")
+    </section>
+</main>

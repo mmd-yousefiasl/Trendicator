@@ -69,35 +69,35 @@ html, body {
     scrollbar-color: #000 transparent;
 }
 
-    /* Chrome / Edge / Safari */
-    .admin-vertical-menu::-webkit-scrollbar {
-        width: 8px;
-    }
+/* Chrome / Edge / Safari */
+.admin-vertical-menu::-webkit-scrollbar {
+    width: 8px;
+}
 
-    .admin-vertical-menu::-webkit-scrollbar-track {
-        background: transparent;
-    }
+.admin-vertical-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
 
-    .admin-vertical-menu::-webkit-scrollbar-thumb {
-        background: #000;
-        border-radius: 10px;
-    }
+.admin-vertical-menu::-webkit-scrollbar-thumb {
+    background: #000;
+    border-radius: 10px;
+}
 
-        .admin-vertical-menu::-webkit-scrollbar-thumb:hover {
-            background: #111;
-        }
+.admin-vertical-menu::-webkit-scrollbar-thumb:hover {
+    background: #111;
+}
 
-    /* Hide up/down buttons */
-    .admin-vertical-menu::-webkit-scrollbar-button {
-        display: none;
-        width: 0;
-        height: 0;
-    }
+/* Hide up/down buttons */
+.admin-vertical-menu::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+}
 
-    /* Optional */
-    .admin-vertical-menu::-webkit-scrollbar-corner {
-        background: transparent;
-    }
+/* Optional */
+.admin-vertical-menu::-webkit-scrollbar-corner {
+    background: transparent;
+}
 
 .cursor-pointer {
     cursor: pointer;
@@ -124,10 +124,10 @@ html, body {
     background: #ffffff;
 }
 
-    .tr-card.failed {
-        border-right-color: #dee2e6;
-    }
+.tr-card.failed {
+    border-right-color: #dee2e6;
+}
 
-    .fs-30 {
-        font-size: 30px;
-    }
+.fs-30 {
+    font-size: 30px;
+}
