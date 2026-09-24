@@ -1,9 +1,9 @@
-﻿using Application.Mediator;
+﻿using Application.Dtos.Hero.AdminSide;
+using Application.Dtos.Hero.ClientSide;
+using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Static;
 using Application.Tools;
-using Application.ViewModels.Hero.AdminSide;
-using Application.ViewModels.Hero.ClientSide;
 using Data.Context;
 using Domain.Events.SiteInfo;
 using Domain.Models.SiteInfo;

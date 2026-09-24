@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.SmsData.SmsConsumer;
+﻿using Application.Dtos.SmsData.SmsConsumer;
+using Application.Services.Interfaces;
 using IPE.SmsIrClient;
 using IPE.SmsIrClient.Models.Requests;
 

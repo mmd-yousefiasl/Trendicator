@@ -1,5 +1,5 @@
 ﻿using Application.Services.Interfaces;
-using Application.ViewModels.Hero.ClientSide;
+using Application.Dtos.Hero.ClientSide;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Components

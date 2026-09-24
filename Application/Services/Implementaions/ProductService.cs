@@ -1,9 +1,9 @@
-﻿using Application.Mediator;
+﻿using Application.Dtos.Product.AdminSide;
+using Application.Dtos.Product.ClientSide;
+using Application.Dtos.ProductFaq.ClientSide;
+using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Tools;
-using Application.ViewModels.Product.AdminSide;
-using Application.ViewModels.Product.ClientSide;
-using Application.ViewModels.ProductFaq.ClientSide;
 using Data.Context;
 using Domain.Enums.Products;
 using Domain.Events.Products.Product;

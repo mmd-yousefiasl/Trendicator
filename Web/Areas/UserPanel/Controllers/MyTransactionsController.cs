@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.BalanceTransaction.ClientSide;
+﻿using Application.Dtos.BalanceTransaction.ClientSide;
+using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Areas.UserPanel.Controllers

@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.Payment;
+﻿using Application.Dtos.Payment;
+using Application.Services.Interfaces;
 using Domain.Shared;
 using Domain.Statics;
 using System.Net.Http.Json;

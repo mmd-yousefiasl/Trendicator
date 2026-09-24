@@ -1,6 +1,6 @@
-﻿using Application.Services.Interfaces;
+﻿using Application.Dtos.ProductCompare.ClientSide;
+using Application.Services.Interfaces;
 using Application.Tools;
-using Application.ViewModels.ProductCompare.ClientSide;
 using Data.Context;
 using Domain.Models.Products;
 using Domain.Shared;

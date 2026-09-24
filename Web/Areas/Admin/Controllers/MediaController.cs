@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.Media;
+﻿using Application.Dtos.Media;
+using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Web.Attributes;
 

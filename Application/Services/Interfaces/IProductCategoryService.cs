@@ -1,5 +1,5 @@
-﻿using Application.ViewModels.ProductCategory.AdminSide;
-using Application.ViewModels.ProductCategory.ClientSide;
+﻿using Application.Dtos.ProductCategory.AdminSide;
+using Application.Dtos.ProductCategory.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

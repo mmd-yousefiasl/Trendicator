@@ -1,5 +1,5 @@
-﻿using Application.ViewModels.User.AdminSide;
-using Application.ViewModels.User.ClientSide;
+﻿using Application.Dtos.User.AdminSide;
+using Application.Dtos.User.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces
@@ -10,25 +10,23 @@ namespace Application.Services.Interfaces
 
         Task<bool> CheckUserRoleIds(int userId, List<int> roleIds);
 
-        Task<Result<AdminSideFilterUsersViewModel>> AdminSideFilterUsers(AdminSideFilterUsersViewModel filter);
+        Task<Result<AdminSideFilterUsersDto>> AdminSideFilterUsers(AdminSideFilterUsersDto filter);
 
-        Task<Result> CreateNewUser(AdminSideCreateNewUserViewModel model);
+        Task<Result> CreateNewUser(AdminSideCreateNewUserDto model);
 
-        Task<Result<AdminSideUpdateUserViewModel>> AdminSideGetUserForUpdate(int id);
+        Task<Result<AdminSideUpdateUserDto>> AdminSideGetUserForUpdate(int id);
 
-        Task<Result> UpdateUser(AdminSideUpdateUserViewModel model);
+        Task<Result> UpdateUser(AdminSideUpdateUserDto model);
 
         Task<Result> SoftDeleteUser(int id);
 
-        Task<Result<AdminSideUserDetailsViewModel>> AdminSideGetUserDetails(int id);
+        Task<Result<AdminSideUserDetailsDto>> AdminSideGetUserDetails(int id);
 
-        Task<long> GetCurrentUserBalance();
+        Task<Result<decimal>> GetCurrentUserBalance();
 
-        Task<Result<AdminSideUpdateUserProfileViewModel>> AdminSideGetUserProfileForUpdate();
+        Task<Result<AdminSideUpdateUserProfileDto>> AdminSideGetUserProfileForUpdate();
 
-        Task<Result> AdminSideUpdateUserProfile(AdminSideUpdateUserProfileViewModel model);
-
-        Task<Result<string>> AdminSideGetAdminAvatar();
+        Task<Result> AdminSideUpdateUserProfile(AdminSideUpdateUserProfileDto model);
 
         Task<Result<OtpGenerationResultDto>> GenerateUserValidationCode(string mobile);
 
@@ -38,9 +36,9 @@ namespace Application.Services.Interfaces
 
         Task<Result<ClientSideUserDto>> VerifyLoginCode(ClientSideLoginCodeDto model);
 
-        Task<Result<List<AdminSideUserAsOptionViewModel>>> AdminSideGetUsersForCoupon();
+        Task<Result<List<AdminSideUserAsOptionDto>>> AdminSideGetUsersForCoupon();
 
-        Task<Result> WithdrawCurrentUserCart(long amount, int orderId);
+        Task<Result> WithdrawCurrentUserCart(decimal amount, int orderId);
 
         Task<int> SiteUsersCount();
 

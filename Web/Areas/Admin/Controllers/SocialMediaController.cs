@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.SocialMedia.AdminSide;
+﻿using Application.Dtos.SocialMedia.AdminSide;
+using Application.Services.Interfaces;
 using Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Web.Attributes;

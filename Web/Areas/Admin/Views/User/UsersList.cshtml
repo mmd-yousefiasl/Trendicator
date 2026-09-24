@@ -1,6 +1,6 @@
-﻿@using Application.Tools
-@using Application.ViewModels.User.AdminSide
-@model AdminSideFilterUsersViewModel
+﻿@using Application.Dtos.User.AdminSide
+@using Application.Tools
+@model AdminSideFilterUsersDto
 
 @{
     ViewData["Title"] = "لیست کاربران";
@@ -27,8 +27,9 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">جست و جوی کاربران</h4>
-                    <form novalidate asp-area="Admin" asp-controller="User" method="get" asp-action="UsersList" id="search-form">
-                        <input type="hidden" asp-for="Page" id="Page" />
+                    <form novalidate asp-area="Admin" asp-controller="User" method="get" asp-action="UsersList"
+                          id="search-form">
+                        <input type="hidden" asp-for="Page" id="Page"/>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -63,54 +64,62 @@
                         <div class="table-responsive">
                             <table class="table mb-0">
                                 <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>موبایل</th>
-                                        <th>نام و نام خانوادگی</th>
-                                        <th>وضعیت حساب کاربری</th>
-                                        <th>کیف پول</th>
-                                        <th>عملیات</th>
-                                    </tr>
+                                <tr>
+                                    <th>#</th>
+                                    <th>موبایل</th>
+                                    <th>نام و نام خانوادگی</th>
+                                    <th>وضعیت حساب کاربری</th>
+                                    <th>کیف پول</th>
+                                    <th>عملیات</th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    @{
-                                        int counter = 0;
+                                @{
+                                    int counter = 0;
 
-                                        foreach (var item in Model.Entities ?? new List<AdminSideUserViewModel>())
-                                        {
-                                            counter++;
+                                    foreach (var item in Model.Entities ?? new List<AdminSideUserDto>())
+                                    {
+                                        counter++;
 
-                                            <tr>
-                                                <th scope="row">@counter</th>
-                                                <td>@item.PhoneNumber</td>
-                                                <td>@(item.FirstName + " " + item.LastName)</td>
-                                                <td>
-                                                    @if (!item.IsUserBanned)
-                                                    {
-                                                        <span class="text-success">فعال</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="text-danger">غیرفعال</span>
-                                                    }
-                                                </td>
-                                                <td>@item.Balance.ToToman()</td>
-                                                <td>
-                                                    <a permission="UpdateUser" asp-area="Admin" asp-controller="User" asp-action="UpdateUser" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm edit" title="ویرایش">
-                                                        <i class="fas fa-pencil-alt"></i>
-                                                    </a>
+                                        <tr>
+                                            <th scope="row">@counter</th>
+                                            <td>@item.Mobile</td>
+                                            <td>@(item.FirstName + " " + item.LastName)</td>
+                                            <td>
+                                                @if (!item.IsUserBanned)
+                                                {
+                                                    <span class="text-success">فعال</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-danger">غیرفعال</span>
+                                                }
+                                            </td>
+                                            <td>@item.Balance.ToToman()</td>
+                                            <td>
+                                                <a permission="UpdateUser" asp-area="Admin" asp-controller="User"
+                                                   asp-action="UpdateUser" asp-route-id="@item.Id"
+                                                   class="btn btn-outline-secondary btn-sm edit" title="ویرایش">
+                                                    <i class="fas fa-pencil-alt"></i>
+                                                </a>
 
-                                                    <form permission="DeleteUser" class="btn btn-outline-secondary btn-sm" method="post" onclick="ConfirmDelete(this)" asp-route-id="@item.Id" asp-area="Admin" asp-controller="User" asp-action="DeleteUser" title="حذف">
-                                                        <i class="mdi mdi-delete"></i>
-                                                    </form>
+                                                <form permission="DeleteUser" class="btn btn-outline-secondary btn-sm"
+                                                      method="post" onclick="ConfirmDelete(this)"
+                                                      asp-route-id="@item.Id" asp-area="Admin" asp-controller="User"
+                                                      asp-action="DeleteUser" title="حذف">
+                                                    <i class="mdi mdi-delete"></i>
+                                                </form>
 
-                                                    <a permission="ManageBalanceTransaction" asp-area="Admin" asp-controller="BalanceTransaction" asp-action="BalanceTransactionsList" asp-route-userId="@item.Id" class="btn btn-outline-secondary btn-sm edit" title="تراکنش ها">
-                                                        <i class="fas fa-money-check-alt"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        }
+                                                <a permission="ManageBalanceTransaction" asp-area="Admin"
+                                                   asp-controller="BalanceTransaction"
+                                                   asp-action="BalanceTransactionsList" asp-route-userId="@item.Id"
+                                                   class="btn btn-outline-secondary btn-sm edit" title="تراکنش ها">
+                                                    <i class="fas fa-money-check-alt"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
                                     }
+                                }
                                 </tbody>
                             </table>
                         </div>
@@ -120,10 +129,10 @@
             </div>
         </div>
 
-        <partial name="_Paging" model="@Model.GetCurrentPaging()" />
+        <partial name="_Paging" model="@Model.GetCurrentPaging()"/>
     }
     else
     {
-        <partial name="_NotFoundPartial" />
+        <partial name="_NotFoundPartial"/>
     }
 </div>

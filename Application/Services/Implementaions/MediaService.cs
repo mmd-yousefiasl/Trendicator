@@ -1,6 +1,6 @@
-﻿using Application.Services.Interfaces;
+﻿using Application.Dtos.Media;
+using Application.Services.Interfaces;
 using Application.Tools;
-using Application.ViewModels.Media;
 using Data.Context;
 using Domain.Models.SiteInfo;
 using Domain.Shared;

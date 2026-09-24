@@ -1,7 +1,6 @@
-﻿using Application.Services.Interfaces;
+﻿using Application.Dtos.CartItem.ClientSide;
+using Application.Services.Interfaces;
 using Application.Tools;
-using Application.ViewModels.CartItem.ClientSide;
-using Application.ViewModels.NewsLetter.AdminSide;
 using Data.Context;
 using Domain.Enums.Products;
 using Domain.Enums.Shopping;
@@ -10,7 +9,6 @@ using Domain.Shared;
 using Domain.Statics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
 
 namespace Application.Services.Implementaions
 {

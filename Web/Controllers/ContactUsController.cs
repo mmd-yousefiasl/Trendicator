@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.ContactUsForm.ClientSide;
+﻿using Application.Dtos.ContactUsForm.ClientSide;
+using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers

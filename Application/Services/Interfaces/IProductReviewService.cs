@@ -1,5 +1,5 @@
-﻿using Application.ViewModels.ProductReview.AdminSide;
-using Application.ViewModels.ProductReview.ClientSide;
+﻿using Application.Dtos.ProductReview.AdminSide;
+using Application.Dtos.ProductReview.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.User.AdminSide;
+﻿using Application.Dtos.User.AdminSide;
+using Application.Services.Interfaces;
 using Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Web.Attributes;
@@ -10,22 +10,26 @@ namespace Web.Areas.Admin.Controllers
     public class UserController : BaseAdminController
     {
         #region Fields
+
         private readonly IUserService _userService;
+
         #endregion
 
         #region Ctor
+
         public UserController(IUserService userService)
         {
             _userService = userService;
         }
+
         #endregion
 
         [Permission("UsersList")]
         [HttpGet("/admin/users-list")]
-        public async Task<IActionResult> UsersList(AdminSideFilterUsersViewModel filter)
+        public async Task<IActionResult> UsersList(AdminSideFilterUsersDto filter)
         {
             var result = await _userService.AdminSideFilterUsers(filter);
-            if (result.IsFailure) return View(new AdminSideFilterUsersViewModel());
+            if (result.IsFailure) return View(new AdminSideFilterUsersDto());
 
             return View(result.Value);
         }
@@ -39,7 +43,7 @@ namespace Web.Areas.Admin.Controllers
 
         [Permission("CreateNewUser")]
         [HttpPost("/admin/add-user"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateNewUser(AdminSideCreateNewUserViewModel model)
+        public async Task<IActionResult> CreateNewUser(AdminSideCreateNewUserDto model)
         {
             if (!ModelState.IsValid) return View(model);
 
@@ -101,7 +105,7 @@ namespace Web.Areas.Admin.Controllers
 
         [Permission("UpdateUser")]
         [HttpPost("/admin/edit-user"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateUser(AdminSideUpdateUserViewModel model)
+        public async Task<IActionResult> UpdateUser(AdminSideUpdateUserDto model)
         {
             if (!ModelState.IsValid) return View(model);
 

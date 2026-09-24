@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.ProductReview.AdminSide;
+﻿using Application.Dtos.ProductReview.AdminSide;
+using Application.Services.Interfaces;
 using Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Web.Attributes;

@@ -6,6 +6,7 @@ namespace Web.Components
     public class FooterContentViewComponent : ViewComponent
     {
         private readonly ISiteDataService _dataService;
+
         public FooterContentViewComponent(ISiteDataService dataService)
         {
             _dataService = dataService;

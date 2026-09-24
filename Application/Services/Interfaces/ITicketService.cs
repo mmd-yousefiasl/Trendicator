@@ -1,5 +1,5 @@
-﻿using Application.ViewModels.Ticket.AdminSide;
-using Application.ViewModels.Ticket.ClientSide;
+﻿using Application.Dtos.Ticket.AdminSide;
+using Application.Dtos.Ticket.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

@@ -25,14 +25,8 @@ namespace Data.Context.Configurations.Users
             builder.Property(u => u.Balance)
                 .HasColumnType("numeric(18,0)");
 
-            builder.Property(n => n.Avatar).HasMaxLength(50);
             builder.Property(n => n.FirstName).HasMaxLength(200);
             builder.Property(n => n.LastName).HasMaxLength(200);
-            builder.Property(n => n.Email).HasMaxLength(200);
-
-            builder.HasOne(n => n.ParentUser)
-                .WithMany(n => n.SubUsers)
-                .HasForeignKey(n => n.ParentUserId);
         }
     }
 }

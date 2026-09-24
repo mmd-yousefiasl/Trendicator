@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.SiteNotifications.AdminSide;
+﻿using Application.Dtos.SiteNotifications.AdminSide;
+using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Web.Attributes;
 

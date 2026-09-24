@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.Blog.ClientSide;
+﻿using Application.Dtos.Blog.ClientSide;
+using Application.Services.Interfaces;
 using Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 

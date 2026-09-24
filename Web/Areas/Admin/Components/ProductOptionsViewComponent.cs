@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.ProductOption.AdminSide;
+﻿using Application.Dtos.ProductOption.AdminSide;
+using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Areas.Admin.Components

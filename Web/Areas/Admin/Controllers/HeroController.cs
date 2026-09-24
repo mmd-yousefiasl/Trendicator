@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.Hero.AdminSide;
+﻿using Application.Dtos.Hero.AdminSide;
+using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Web.Attributes;
 

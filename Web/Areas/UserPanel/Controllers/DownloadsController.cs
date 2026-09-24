@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.CartItem.ClientSide;
+﻿using Application.Dtos.CartItem.ClientSide;
+using Application.Services.Interfaces;
 using Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 

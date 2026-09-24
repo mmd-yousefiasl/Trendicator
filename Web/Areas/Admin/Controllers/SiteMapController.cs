@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.SiteMap.AdminSide;
+﻿using Application.Dtos.SiteMap.AdminSide;
+using Application.Services.Interfaces;
 using Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Web.Attributes;

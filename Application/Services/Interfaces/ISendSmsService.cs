@@ -1,4 +1,4 @@
-﻿using Application.ViewModels.SmsData.ClientSide;
+﻿using Application.Dtos.SmsData.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

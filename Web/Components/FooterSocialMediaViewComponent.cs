@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.SocialMedia.ClientSide;
+﻿using Application.Dtos.SocialMedia.ClientSide;
+using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Components

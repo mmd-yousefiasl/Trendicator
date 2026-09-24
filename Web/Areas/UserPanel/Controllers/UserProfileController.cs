@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.User.AdminSide;
+﻿using Application.Dtos.User.AdminSide;
+using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Areas.UserPanel.Controllers
@@ -32,7 +32,7 @@ namespace Web.Areas.UserPanel.Controllers
         }
 
         [HttpPost("/user/edit-user-profile"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateUserProfile(AdminSideUpdateUserProfileViewModel model)
+        public async Task<IActionResult> UpdateUserProfile(AdminSideUpdateUserProfileDto model)
         {
             if (!ModelState.IsValid) return View(model);
 

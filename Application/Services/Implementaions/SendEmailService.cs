@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.SendEmail;
+﻿using Application.Dtos.SendEmail;
+using Application.Services.Interfaces;
 using Domain.Shared;
 using MailKit.Net.Smtp;
 using MimeKit;

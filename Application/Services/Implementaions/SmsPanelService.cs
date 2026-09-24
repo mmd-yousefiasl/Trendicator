@@ -1,7 +1,7 @@
-﻿using Application.Services.Interfaces;
+﻿using Application.Dtos.SmsData.AdminSide;
+using Application.Dtos.SmsData.ClientSide;
+using Application.Services.Interfaces;
 using Application.Tools;
-using Application.ViewModels.SmsData.AdminSide;
-using Application.ViewModels.SmsData.ClientSide;
 using Data.Context;
 using Domain.Enums.SiteInfo;
 using Domain.Models.SiteInfo;

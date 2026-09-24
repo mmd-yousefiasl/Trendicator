@@ -1,5 +1,5 @@
-﻿using Application.ViewModels.ContactUsForm.AdminSide;
-using Application.ViewModels.ContactUsForm.ClientSide;
+﻿using Application.Dtos.ContactUsForm.AdminSide;
+using Application.Dtos.ContactUsForm.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

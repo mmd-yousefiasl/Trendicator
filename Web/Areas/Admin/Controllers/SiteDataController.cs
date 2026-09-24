@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.SiteData.AdminSide;
+﻿using Application.Dtos.SiteData.AdminSide;
+using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Web.Attributes;
 

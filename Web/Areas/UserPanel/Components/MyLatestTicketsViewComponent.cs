@@ -1,5 +1,5 @@
 ﻿using Application.Services.Interfaces;
-using Application.ViewModels.Ticket.ClientSide;
+using Application.Dtos.Ticket.ClientSide;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Areas.UserPanel.Components

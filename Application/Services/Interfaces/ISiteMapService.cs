@@ -1,5 +1,5 @@
-﻿using Application.ViewModels.SiteMap.AdminSide;
-using Application.ViewModels.SiteMap.ClientSide;
+﻿using Application.Dtos.SiteMap.AdminSide;
+using Application.Dtos.SiteMap.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

@@ -1,7 +1,7 @@
-﻿using Application.Mediator;
+﻿using Application.Dtos.EmailData.AdminSide;
+using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Static;
-using Application.ViewModels.EmailData.AdminSide;
 using Data.Context;
 using Domain.Events.SiteInfo;
 using Domain.Models.SiteInfo;

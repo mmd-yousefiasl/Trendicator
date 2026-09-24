@@ -1,5 +1,5 @@
-﻿using Application.ViewModels.BlogTag.AdminSide;
-using Application.ViewModels.BlogTag.ClientSide;
+﻿using Application.Dtos.BlogTag.AdminSide;
+using Application.Dtos.BlogTag.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

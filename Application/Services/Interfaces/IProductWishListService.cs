@@ -1,4 +1,4 @@
-﻿using Application.ViewModels.ProductWishList.ClientSide;
+﻿using Application.Dtos.ProductWishList.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

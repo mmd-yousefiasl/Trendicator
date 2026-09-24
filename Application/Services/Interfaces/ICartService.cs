@@ -1,6 +1,6 @@
-﻿using Application.ViewModels.Cart.AdminSide;
-using Application.ViewModels.Cart.ClientSide;
-using Application.ViewModels.Payment;
+﻿using Application.Dtos.Cart.AdminSide;
+using Application.Dtos.Cart.ClientSide;
+using Application.Dtos.Payment;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces
@@ -43,10 +43,10 @@ namespace Application.Services.Interfaces
 
         Task<int> OrdersCount();
 
-        Task<long> OrdersValue();
+        Task<decimal> OrdersValue();
 
         Task<int> MyOrdersCount();
 
-        Task<long> MyTotalPurchesAmount();
+        Task<decimal> MyTotalPurchesAmount();
     }
 }

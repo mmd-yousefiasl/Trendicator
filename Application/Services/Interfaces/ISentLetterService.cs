@@ -1,4 +1,4 @@
-﻿using Application.ViewModels.SentLetter.AdminSide;
+﻿using Application.Dtos.SentLetter.AdminSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

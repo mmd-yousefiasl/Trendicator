@@ -1,5 +1,5 @@
-﻿using Application.ViewModels.SiteNotifications.AdminSide;
-using Application.ViewModels.SiteNotifications.ClientSide;
+﻿using Application.Dtos.SiteNotifications.AdminSide;
+using Application.Dtos.SiteNotifications.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

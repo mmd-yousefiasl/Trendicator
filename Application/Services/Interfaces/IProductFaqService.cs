@@ -1,4 +1,4 @@
-﻿using Application.ViewModels.ProductFaq.AdminSide;
+﻿using Application.Dtos.ProductFaq.AdminSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

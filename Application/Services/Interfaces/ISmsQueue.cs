@@ -1,4 +1,4 @@
-﻿using Application.ViewModels.SmsData.SmsConsumer;
+﻿using Application.Dtos.SmsData.SmsConsumer;
 
 namespace Application.Services.Interfaces
 {

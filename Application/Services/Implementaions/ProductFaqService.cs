@@ -1,6 +1,6 @@
-﻿using Application.Services.Interfaces;
+﻿using Application.Dtos.ProductFaq.AdminSide;
+using Application.Services.Interfaces;
 using Application.Tools;
-using Application.ViewModels.ProductFaq.AdminSide;
 using Data.Context;
 using Domain.Models.Products;
 using Domain.Shared;

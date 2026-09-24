@@ -1,4 +1,4 @@
-﻿using Application.ViewModels.ProductCompare.ClientSide;
+﻿using Application.Dtos.ProductCompare.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

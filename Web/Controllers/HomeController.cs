@@ -1,6 +1,6 @@
+using Application.Dtos.NewsLetter.ClientSide;
 using Application.Services.Interfaces;
 using Application.Tools;
-using Application.ViewModels.NewsLetter.ClientSide;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using System.Xml.Linq;

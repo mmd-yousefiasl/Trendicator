@@ -1,5 +1,5 @@
-﻿using Application.ViewModels.Banner.AdminSide;
-using Application.ViewModels.Banner.ClientSide;
+﻿using Application.Dtos.Banner.AdminSide;
+using Application.Dtos.Banner.ClientSide;
 using Domain.Enums.Banner;
 using Domain.Shared;
 

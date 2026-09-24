@@ -1,4 +1,4 @@
-﻿using Application.ViewModels.Payment;
+﻿using Application.Dtos.Payment;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

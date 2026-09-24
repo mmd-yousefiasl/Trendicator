@@ -1,4 +1,4 @@
-﻿using Application.ViewModels.CartItem.ClientSide;
+﻿using Application.Dtos.CartItem.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

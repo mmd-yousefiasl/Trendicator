@@ -1,6 +1,6 @@
 ﻿@using Application.Services.Interfaces
-@using Application.ViewModels.Coupon.AdminSide
-@using Application.ViewModels.User.AdminSide
+@using Application.Dtos.Coupon.AdminSide
+@using Application.Dtos.User.AdminSide
 @model AdminSideCreateNewCouponViewModel
 
 @inject IUserService _userService;
@@ -89,9 +89,9 @@
                             <select class="form-control select2" asp-for="UserIds" multiple="multiple">
                                 @if (usersResult.IsSuccess)
                                 {
-                                    foreach (var item in usersResult.Value ?? new List<AdminSideUserAsOptionViewModel>())
+                                    foreach (var item in usersResult.Value ?? new List<AdminSideUserAsOptionDto>())
                                     {
-                                        <option value="@item.Id">@($"{item.PhoneNumber} {item.FullName}")</option>
+                                        <option value="@item.Id">@($"{item.Mobile} {item.FullName}")</option>
                                     }
                                 }
                             </select>

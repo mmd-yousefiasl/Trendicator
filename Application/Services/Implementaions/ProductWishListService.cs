@@ -1,6 +1,6 @@
-﻿using Application.Services.Interfaces;
+﻿using Application.Dtos.ProductWishList.ClientSide;
+using Application.Services.Interfaces;
 using Application.Tools;
-using Application.ViewModels.ProductWishList.ClientSide;
 using Data.Context;
 using Domain.Models.Products;
 using Domain.Shared;

@@ -1,9 +1,9 @@
-﻿using Application.Mediator;
+﻿using Application.Dtos.OurFeature.AdminSide;
+using Application.Dtos.OurFeature.ClientSide;
+using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Static;
 using Application.Tools;
-using Application.ViewModels.OurFeature.AdminSide;
-using Application.ViewModels.OurFeature.ClientSide;
 using Data.Context;
 using Domain.Events.SiteInfo.OurFeature;
 using Domain.Models.SiteInfo;

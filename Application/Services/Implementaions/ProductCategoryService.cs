@@ -1,9 +1,9 @@
-﻿using Application.Mediator;
+﻿using Application.Dtos.ProductCategory.AdminSide;
+using Application.Dtos.ProductCategory.ClientSide;
+using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Static;
 using Application.Tools;
-using Application.ViewModels.ProductCategory.AdminSide;
-using Application.ViewModels.ProductCategory.ClientSide;
 using Data.Context;
 using Domain.Events.Products.ProductCategory;
 using Domain.Models.Products;

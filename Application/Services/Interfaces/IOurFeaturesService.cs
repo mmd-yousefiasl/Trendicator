@@ -1,5 +1,5 @@
-﻿using Application.ViewModels.OurFeature.AdminSide;
-using Application.ViewModels.OurFeature.ClientSide;
+﻿using Application.Dtos.OurFeature.AdminSide;
+using Application.Dtos.OurFeature.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

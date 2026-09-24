@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.BlogCategory.ClientSide;
+﻿using Application.Dtos.BlogCategory.ClientSide;
+using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.CodeDom;
 

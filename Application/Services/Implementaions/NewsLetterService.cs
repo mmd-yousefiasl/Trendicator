@@ -1,10 +1,10 @@
-﻿using Application.Mediator;
+﻿using Application.Dtos.NewsLetter.AdminSide;
+using Application.Dtos.NewsLetter.ClientSide;
+using Application.Dtos.SendEmail;
+using Application.Dtos.SentLetter.AdminSide;
+using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Tools;
-using Application.ViewModels.NewsLetter.AdminSide;
-using Application.ViewModels.NewsLetter.ClientSide;
-using Application.ViewModels.SendEmail;
-using Application.ViewModels.SentLetter.AdminSide;
 using Data.Context;
 using Domain.Events.NewsLetters;
 using Domain.Models.NewsLetters;

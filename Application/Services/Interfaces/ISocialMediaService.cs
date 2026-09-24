@@ -1,5 +1,5 @@
-﻿using Application.ViewModels.SocialMedia.AdminSide;
-using Application.ViewModels.SocialMedia.ClientSide;
+﻿using Application.Dtos.SocialMedia.AdminSide;
+using Application.Dtos.SocialMedia.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

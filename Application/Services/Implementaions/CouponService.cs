@@ -1,7 +1,7 @@
-﻿using Application.Mediator;
+﻿using Application.Dtos.Coupon.AdminSide;
+using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Tools;
-using Application.ViewModels.Coupon.AdminSide;
 using Data.Context;
 using Domain.Events.Coupons;
 using Domain.Models.Coupons;

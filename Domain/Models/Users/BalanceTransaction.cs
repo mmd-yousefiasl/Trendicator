@@ -4,7 +4,7 @@ namespace Domain.Models.Users
 {
     public class BalanceTransaction : AuditBaseEntity<int>
     {
-        public long Amount { get; set; }
+        public decimal Amount { get; set; }
         public BalanceTransactionTypeEnum Type { get; set; }
         public string? Description { get; set; }
         public bool IsSuccess { get; set; }

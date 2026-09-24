@@ -1,5 +1,5 @@
 ﻿using Application.Services.Interfaces;
-using Application.ViewModels.ProductReview.ClientSide;
+using Application.Dtos.ProductReview.ClientSide;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Components

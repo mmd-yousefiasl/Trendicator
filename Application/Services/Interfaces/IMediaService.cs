@@ -1,4 +1,4 @@
-﻿using Application.ViewModels.Media;
+﻿using Application.Dtos.Media;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

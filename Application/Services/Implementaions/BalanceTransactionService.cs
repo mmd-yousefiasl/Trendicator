@@ -1,8 +1,8 @@
-﻿using Application.Mediator;
+﻿using Application.Dtos.BalanceTransaction.AdminSide;
+using Application.Dtos.BalanceTransaction.ClientSide;
+using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Tools;
-using Application.ViewModels.BalanceTransaction.AdminSide;
-using Application.ViewModels.BalanceTransaction.ClientSide;
 using Data.Context;
 using Domain.Enums.Users;
 using Domain.Models.Users;
@@ -56,12 +56,12 @@ namespace Application.Services.Implementaions
             return Result.Success();
         }
 
-        public async Task<Result<long>> GetTransactionAmountByTransId(string transId)
+        public async Task<Result<decimal>> GetTransactionAmountByTransId(string transId)
         {
-            if (string.IsNullOrWhiteSpace(transId)) return Result.Failure<long>(Messages.OperationFailedError);
+            if (string.IsNullOrWhiteSpace(transId)) return Result.Failure<decimal>(Messages.OperationFailedError);
 
             var amount = await _dbSet.Where(n => n.TransId == transId).Select(n => n.Amount).FirstOrDefaultAsync();
-            if (amount < 1) return Result.Failure<long>(Messages.OperationFailedError);
+            if (amount < 1) return Result.Failure<decimal>(Messages.OperationFailedError);
 
             return amount;
         }

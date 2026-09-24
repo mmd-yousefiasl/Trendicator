@@ -17,12 +17,12 @@ namespace Data.Context
 
             #endregion
 
-            #region Identity 
+            #region Identity
 
             var adminRole = new Role()
             {
                 Id = 1,
-                Title = "Admin",
+                Title = "ادمین",
                 UniqueName = "Admin"
             };
             modelBuilder.Entity<Role>().HasData(adminRole);
@@ -41,9 +41,8 @@ namespace Data.Context
             User AdminUser = new User()
             {
                 Id = 1,
-                FirstName = "Mohammad",
-                LastName = "Yousefi",
-                Email = "mmdyousefi95@gmail.com",
+                FirstName = "محمد",
+                LastName = "یوسفی اصل",
                 IsUserBanned = false,
                 Mobile = "09962144266",
             };
@@ -64,7 +63,7 @@ namespace Data.Context
 
             #endregion
 
-            #region SiteData 
+            #region SiteData
 
             SiteData siteData = new SiteData()
             {
@@ -85,15 +84,18 @@ namespace Data.Context
             #endregion
 
             #region EmailData
+
             EmailData emailData = new EmailData()
             {
                 Id = 1,
             };
 
             modelBuilder.Entity<EmailData>().HasData(emailData);
+
             #endregion
 
             #region SmsData
+
             SmsPanel smsData = new SmsPanel()
             {
                 Id = 1,
@@ -105,9 +107,11 @@ namespace Data.Context
             };
 
             modelBuilder.Entity<SmsPanel>().HasData(smsData);
+
             #endregion
 
             #region Hero
+
             Hero hero = new Hero()
             {
                 Id = 1,

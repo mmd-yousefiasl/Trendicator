@@ -1,4 +1,4 @@
-﻿using Application.ViewModels.SendEmail;
+﻿using Application.Dtos.SendEmail;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

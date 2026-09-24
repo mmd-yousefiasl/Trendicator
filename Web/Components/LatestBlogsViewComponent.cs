@@ -1,5 +1,5 @@
 ﻿using Application.Services.Interfaces;
-using Application.ViewModels.Blog.ClientSide;
+using Application.Dtos.Blog.ClientSide;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Components

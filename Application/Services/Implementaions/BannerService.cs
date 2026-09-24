@@ -1,9 +1,9 @@
-﻿using Application.Mediator;
+﻿using Application.Dtos.Banner.AdminSide;
+using Application.Dtos.Banner.ClientSide;
+using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Static;
 using Application.Tools;
-using Application.ViewModels.Banner.AdminSide;
-using Application.ViewModels.Banner.ClientSide;
 using Data.Context;
 using Domain.Enums.Banner;
 using Domain.Events.SiteInfo.Banner;

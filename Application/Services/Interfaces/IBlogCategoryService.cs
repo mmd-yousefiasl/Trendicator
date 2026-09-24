@@ -1,5 +1,5 @@
-﻿using Application.ViewModels.BlogCategory.AdminSide;
-using Application.ViewModels.BlogCategory.ClientSide;
+﻿using Application.Dtos.BlogCategory.AdminSide;
+using Application.Dtos.BlogCategory.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

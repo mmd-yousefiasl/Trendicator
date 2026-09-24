@@ -1,36 +1,33 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.SmsData.ClientSide;
-using Application.ViewModels.SmsData.SmsConsumer;
+﻿using Application.Dtos.SmsData.ClientSide;
+using Application.Dtos.SmsData.SmsConsumer;
+using Application.Services.Interfaces;
 using Domain.Enums.SiteInfo;
 using Domain.Shared;
-using Microsoft.Extensions.Logging;
 
 namespace Application.Services.Implementaions
 {
     public class SendSmsService : ISendSmsService
     {
         #region Fields
+
         private readonly ISmsPanelService _smsDataService;
-        private readonly ILogger<ISendSmsService> _logger;
         private readonly ISmsQueue _smsQueue;
+
         #endregion
 
         #region Ctor
+
         public SendSmsService(ISmsPanelService smsDataService,
-            ILogger<ISendSmsService> logger,
             ISmsQueue smsQueue)
         {
             _smsDataService = smsDataService;
-            _logger = logger;
             _smsQueue = smsQueue;
         }
+
         #endregion
 
         public async Task<Result> ClientSideSendLoginCode(ClientSideSendLoginCodeDto dto)
         {
-            if (dto is null)
-                return Result.Failure(Messages.OperationFailedError);
-
             var infoResult = await _smsDataService.ClientSideGetSmsPanel(SmsPanelTypeEnum.OTP);
             if (infoResult.IsFailure)
                 return Result.Failure(Messages.OperationFailedError);
@@ -41,7 +38,7 @@ namespace Application.Services.Implementaions
                 PatternId: infoResult.Value.PatternId,
                 Parameters: new List<SmsParameterItem>
                 {
-                        new("LOGINCODE", dto.Code)
+                    new("LOGINCODE", dto.Code)
                 }
             );
 

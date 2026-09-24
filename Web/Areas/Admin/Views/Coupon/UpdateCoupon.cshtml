@@ -1,6 +1,6 @@
 ﻿@using Application.Services.Interfaces
-@using Application.ViewModels.Coupon.AdminSide
-@using Application.ViewModels.User.AdminSide
+@using Application.Dtos.Coupon.AdminSide
+@using Application.Dtos.User.AdminSide
 @model AdminSideUpdateCouponViewModel
 
 @inject IUserService _userService;
@@ -32,8 +32,9 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="card">
-                <form class="card-body" asp-area="Admin" asp-controller="Coupon" asp-action="UpdateCoupon" autocomplete="off" onsubmit="submitAnimation()">
-                    <input type="hidden" asp-for="Id" />
+                <form class="card-body" asp-area="Admin" asp-controller="Coupon" asp-action="UpdateCoupon"
+                      autocomplete="off" onsubmit="submitAnimation()">
+                    <input type="hidden" asp-for="Id"/>
 
                     <h4 class="card-title">@ViewData["Title"]</h4>
 
@@ -57,7 +58,8 @@
                         <label asp-for="FromDate" class="col-md-2 col-form-label"></label>
                         <div class="col-md-10">
                             <div class="input-group" id="datepicker1">
-                                <input type="text" class="form-control" data-jdp data-jdp-min-date="today" asp-for="FromDate" />
+                                <input type="text" class="form-control" data-jdp data-jdp-min-date="today"
+                                       asp-for="FromDate"/>
 
                                 <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
                             </div><!-- input-group -->
@@ -69,7 +71,8 @@
                         <label asp-for="ToDate" class="col-md-2 col-form-label"></label>
                         <div class="col-md-10">
                             <div class="input-group" id="datepicker1">
-                                <input type="text" class="form-control" data-jdp data-jdp-min-date="today" asp-for="ToDate" />
+                                <input type="text" class="form-control" data-jdp data-jdp-min-date="today"
+                                       asp-for="ToDate"/>
 
                                 <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
                             </div><!-- input-group -->
@@ -91,9 +94,9 @@
                             <select class="form-control select2" asp-for="UserIds" multiple="multiple">
                                 @if (usersResult.IsSuccess)
                                 {
-                                    foreach (var item in usersResult.Value ?? new List<AdminSideUserAsOptionViewModel>())
+                                    foreach (var item in usersResult.Value ?? new List<AdminSideUserAsOptionDto>())
                                     {
-                                        <option value="@item.Id">@($"{item.PhoneNumber} {item.FullName}")</option>
+                                        <option value="@item.Id">@($"{item.Mobile} {item.FullName}")</option>
                                     }
                                 }
                             </select>

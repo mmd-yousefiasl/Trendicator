@@ -1,15 +1,14 @@
-﻿using Application.Mediator;
+﻿using Application.Dtos.SmsData.ClientSide;
+using Application.Dtos.User.AdminSide;
+using Application.Dtos.User.ClientSide;
+using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Tools;
-using Application.ViewModels.SmsData.ClientSide;
-using Application.ViewModels.User.AdminSide;
-using Application.ViewModels.User.ClientSide;
 using Data.Context;
 using Domain.Enums.Users;
 using Domain.Events.Users;
 using Domain.Models.Users;
 using Domain.Shared;
-using Domain.Statics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
@@ -21,7 +20,6 @@ namespace Application.Services.Implementaions
         #region Fields
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly TrendicatorDbContext _context;
-        private protected DbSet<User> _dbSet;
         private readonly ISendSmsService _sendSmsService;
         private readonly IMediatorHandler _mediator;
         #endregion
@@ -34,7 +32,6 @@ namespace Application.Services.Implementaions
         {
             _httpContextAccessor = httpContextAccessor;
             _context = context;
-            _dbSet = context.Set<User>();
             _sendSmsService = sendSmsService;
             _mediator = mediator;
         }
@@ -42,7 +39,9 @@ namespace Application.Services.Implementaions
 
         public async Task<bool> IsSuperAdmin(int userId)
         {
-            if (await _dbSet.AnyAsync(user => user.Id == userId && user.UserRoleMapping.Any(mapping => mapping.RoleId == 1)))
+            if (await _context.Users
+                .AsNoTracking()
+                .AnyAsync(user => user.Id == userId && user.UserRoleMapping.Any(mapping => mapping.RoleId == 1)))
                 return true;
 
             return false;
@@ -50,15 +49,17 @@ namespace Application.Services.Implementaions
 
         public async Task<bool> CheckUserRoleIds(int userId, List<int> roleIds)
         {
-            if (await _dbSet.AnyAsync(user => user.Id == userId && user.UserRoleMapping.Any(mapping => roleIds.Contains(mapping.RoleId))))
+            if (await _context.Users
+                .AsNoTracking()
+                .AnyAsync(user => user.Id == userId && user.UserRoleMapping.Any(mapping => roleIds.Contains(mapping.RoleId))))
                 return true;
 
             return false;
         }
 
-        public async Task<Result<AdminSideFilterUsersViewModel>> AdminSideFilterUsers(AdminSideFilterUsersViewModel filter)
+        public async Task<Result<AdminSideFilterUsersDto>> AdminSideFilterUsers(AdminSideFilterUsersDto filter)
         {
-            if (filter is null) return Result.Failure<AdminSideFilterUsersViewModel>(Messages.OperationFailedError);
+            if (filter is null) return Result.Failure<AdminSideFilterUsersDto>(Messages.OperationFailedError);
 
             var conditions = Filter.GenerateConditions<User>();
 
@@ -73,7 +74,7 @@ namespace Application.Services.Implementaions
                 conditions.Add(n => n.IsUserBanned == filter.IsUserBanned);
             }
 
-            IQueryable<User> query = _dbSet;
+            IQueryable<User> query = _context.Users;
 
             query = query.OrderByDescending(n => n.Id);
 
@@ -82,10 +83,10 @@ namespace Application.Services.Implementaions
                 query = query.Where(condition);
             }
 
-            await filter.Paging(query.Select(n => new AdminSideUserViewModel()
+            await filter.Paging(query.Select(n => new AdminSideUserDto()
             {
                 Id = n.Id,
-                PhoneNumber = n.Mobile,
+                Mobile = n.Mobile,
                 FirstName = n.FirstName,
                 LastName = n.LastName,
                 IsUserBanned = n.IsUserBanned,
@@ -95,20 +96,21 @@ namespace Application.Services.Implementaions
             return filter;
         }
 
-        public async Task<Result> CreateNewUser(AdminSideCreateNewUserViewModel model)
+        public async Task<Result> CreateNewUser(AdminSideCreateNewUserDto model)
         {
             if (model is null) return Result.Failure(Messages.OperationFailedError);
 
-            if (await _dbSet.AnyAsync(n => n.Mobile == model.PhoneNumber)) return Result.Failure(Messages.ThisPhoneNumberAlreadyRegisteredError);
+            if (await _context.Users
+                .AsNoTracking()
+                .AnyAsync(n => n.Mobile == model.Mobile))
+                return Result.Failure(Messages.ThisPhoneNumberAlreadyRegisteredError);
 
             User user = new User()
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                Email = model.Email,
                 IsUserBanned = model.IsUserBanned,
-                Mobile = model.PhoneNumber,
-                BirthDate = model.BirthDate,
+                Mobile = model.Mobile,
                 UserRoleMapping = new List<UserRoleMapping>(),
             };
 
@@ -124,72 +126,52 @@ namespace Application.Services.Implementaions
                 }
             }
 
-            if (model.AvatarFile is not null)
-            {
-                if (model.AvatarFile.Length > SiteTools.MaxImageFileLength.CalculateMB()) return Result.Failure(Messages.FileLengthError);
-
-                if (model.AvatarFile.IsImage() == false) return Result.Failure(Messages.InvalidFileFormatError);
-
-                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.AvatarFile.FileName);
-
-                model.AvatarFile.UploadFileToServer(fileName, SiteTools.UserAvatarFile);
-
-                user.Avatar = fileName;
-            }
-            await _dbSet.AddAsync(user);
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
             return Result.Success();
         }
 
-        public async Task<Result<AdminSideUpdateUserViewModel>> AdminSideGetUserForUpdate(int id)
+        public async Task<Result<AdminSideUpdateUserDto>> AdminSideGetUserForUpdate(int id)
         {
-            if (id < 1) return Result.Failure<AdminSideUpdateUserViewModel>(Messages.OperationFailedError);
+            if (id < 1) return Result.Failure<AdminSideUpdateUserDto>(Messages.OperationFailedError);
 
-            var user = await _dbSet.Where(n => n.Id == id).Select(n => new AdminSideUpdateUserViewModel()
-            {
-                Id = n.Id,
-                AvatarFileName = n.Avatar,
-                BirthDate = n.BirthDate,
-                Email = n.Email,
-                FirstName = n.FirstName,
-                LastName = n.LastName,
-                IsUserBanned = n.IsUserBanned,
-                PhoneNumber = n.Mobile,
-                RoleIds = n.UserRoleMapping.Select(n => n.RoleId).ToList()
-            }).AsNoTracking().FirstOrDefaultAsync();
-            if (user is null) return Result.Failure<AdminSideUpdateUserViewModel>(Messages.OperationFailedError);
+            var user = await _context.Users
+                .AsNoTracking()
+                .Where(n => n.Id == id).Select(n => new AdminSideUpdateUserDto()
+                {
+                    Id = n.Id,
+                    FirstName = n.FirstName,
+                    LastName = n.LastName,
+                    IsUserBanned = n.IsUserBanned,
+                    Mobile = n.Mobile,
+                    RoleIds = n.UserRoleMapping.Select(n => n.RoleId).ToList()
+                }).FirstOrDefaultAsync();
+
+            if (user is null) return Result.Failure<AdminSideUpdateUserDto>(Messages.OperationFailedError);
 
             return user;
         }
 
-        public async Task<Result> UpdateUser(AdminSideUpdateUserViewModel model)
+        public async Task<Result> UpdateUser(AdminSideUpdateUserDto model)
         {
             if (model is null) return Result.Failure(Messages.OperationFailedError);
 
-            var user = await _dbSet.Include(n => n.UserRoleMapping).FirstOrDefaultAsync(n => n.Id == model.Id);
-            if (user is null) return Result.Failure(Messages.OperationFailedError);
+            var user = await _context.Users
+                .Include(n => n.UserRoleMapping)
+                .FirstOrDefaultAsync(n => n.Id == model.Id);
+
+            if (user is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            if (await _context.Users.AsNoTracking().AnyAsync(n => n.Id != model.Id && n.Mobile == model.Mobile))
+                return Result.Failure(Messages.ThisPhoneNumberAlreadyRegisteredError);
 
             user.LastUpdatedDate = DateTime.UtcNow;
-            user.Email = model.Email;
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.IsUserBanned = model.IsUserBanned;
-            user.BirthDate = model.BirthDate;
-            user.Mobile = model.PhoneNumber;
-
-            if (await _dbSet.AnyAsync(n => n.Id != model.Id && n.Mobile == model.PhoneNumber)) return Result.Failure(Messages.ThisPhoneNumberAlreadyRegisteredError);
-
-            if (model.AvatarFile is not null)
-            {
-                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.AvatarFile.FileName);
-
-                user.Avatar?.RemoveFileFromServer(SiteTools.UserAvatarFile);
-
-                model.AvatarFile.UploadFileToServer(fileName, SiteTools.UserAvatarFile);
-
-                user.Avatar = fileName;
-            }
+            user.Mobile = model.Mobile;
 
             var removedRoles = user.UserRoleMapping.Select(n => n.RoleId).Except(model.RoleIds ?? new List<int>()).ToList();
 
@@ -206,7 +188,7 @@ namespace Application.Services.Implementaions
                 });
             }
 
-            _dbSet.Update(user);
+            _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
             return Result.Success();
@@ -216,110 +198,90 @@ namespace Application.Services.Implementaions
         {
             if (id < 1) return Result.Failure(Messages.OperationFailedError);
 
-            var user = await _dbSet.FindAsync(id);
+            var user = await _context.Users.FindAsync(id);
             if (user is null) return Result.Failure(Messages.OperationFailedError);
 
             user.IsDeleted = true;
             user.LastUpdatedDate = DateTime.UtcNow;
 
-            user.Avatar?.RemoveFileFromServer(SiteTools.UserAvatarFile);
-
-            _dbSet.Update(user);
+            _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
             return Result.Success();
         }
 
-        public async Task<Result<AdminSideUserDetailsViewModel>> AdminSideGetUserDetails(int id)
+        public async Task<Result<AdminSideUserDetailsDto>> AdminSideGetUserDetails(int id)
         {
-            if (id < 1) return Result.Failure<AdminSideUserDetailsViewModel>(Messages.OperationFailedError);
+            if (id < 1) return Result.Failure<AdminSideUserDetailsDto>(Messages.OperationFailedError);
 
-            var user = await _dbSet.Where(n => n.Id == id).Select(n => new AdminSideUserDetailsViewModel()
-            {
-                Avatar = n.Avatar,
-                BirthDate = n.BirthDate,
-                Email = n.Email,
-                FirstName = n.FirstName,
-                IsUserBanned = n.IsUserBanned,
-                LastName = n.LastName,
-                PhoneNumber = n.Mobile
-            }).AsNoTracking().FirstOrDefaultAsync();
-            if (user is null) return Result.Failure<AdminSideUserDetailsViewModel>(Messages.OperationFailedError);
+            var user = await _context.Users
+                .AsNoTracking()
+                .Where(n => n.Id == id).Select(n => new AdminSideUserDetailsDto()
+                {
+                    FirstName = n.FirstName,
+                    IsUserBanned = n.IsUserBanned,
+                    LastName = n.LastName,
+                    Mobile = n.Mobile
+                }).FirstOrDefaultAsync();
+
+            if (user is null)
+                return Result.Failure<AdminSideUserDetailsDto>(Messages.OperationFailedError);
 
             return user;
         }
 
-        public async Task<long> GetCurrentUserBalance()
+        public async Task<Result<decimal>> GetCurrentUserBalance()
         {
             var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            if (userId < 1) return 0;
+            if (userId < 1) return Result.Failure<decimal>(Messages.OperationFailedError);
 
-            var balance = await _dbSet.Where(n => n.Id == userId).Select(n => n.Balance).FirstOrDefaultAsync();
-            if (balance < 0) return 0;
+            var balance = await _context.Users
+                .AsNoTracking()
+                .Where(n => n.Id == userId)
+                .Select(n => n.Balance)
+                .FirstOrDefaultAsync();
+
+            if (balance < 0) return Result.Failure<decimal>(Messages.OperationFailedError);
 
             return balance;
         }
 
-        public async Task<Result<AdminSideUpdateUserProfileViewModel>> AdminSideGetUserProfileForUpdate()
+        public async Task<Result<AdminSideUpdateUserProfileDto>> AdminSideGetUserProfileForUpdate()
         {
             var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            if (userId < 1) return Result.Failure<AdminSideUpdateUserProfileViewModel>(Messages.OperationFailedError);
+            if (userId < 1) return Result.Failure<AdminSideUpdateUserProfileDto>(Messages.OperationFailedError);
 
-            var user = await _dbSet.Where(n => n.Id == userId).Select(n => new AdminSideUpdateUserProfileViewModel()
-            {
-                AvatarFileName = n.Avatar,
-                FirstName = n.FirstName,
-                LastName = n.LastName,
-                BirthDate = n.BirthDate.ConvertToShamsi(),
-                Email = n.Email,
-            }).AsNoTracking().FirstOrDefaultAsync();
-            if (user is null) return Result.Failure<AdminSideUpdateUserProfileViewModel>(Messages.OperationFailedError);
+            var user = await _context.Users
+                .AsNoTracking()
+                .Where(n => n.Id == userId)
+                .Select(n => new AdminSideUpdateUserProfileDto()
+                {
+                    FirstName = n.FirstName,
+                    LastName = n.LastName
+                }).FirstOrDefaultAsync();
+
+            if (user is null) return Result.Failure<AdminSideUpdateUserProfileDto>(Messages.OperationFailedError);
 
             return user;
         }
 
-        public async Task<Result> AdminSideUpdateUserProfile(AdminSideUpdateUserProfileViewModel model)
+        public async Task<Result> AdminSideUpdateUserProfile(AdminSideUpdateUserProfileDto model)
         {
             if (model is null) return Result.Failure(Messages.OperationFailedError);
 
             var userId = _httpContextAccessor.HttpContext.User.GetUserId();
             if (userId < 1) return Result.Failure(Messages.OperationFailedError);
 
-            var user = await _dbSet.FindAsync(userId);
+            var user = await _context.Users.FindAsync(userId);
             if (user is null) return Result.Failure(Messages.OperationFailedError);
 
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
-            user.BirthDate = model.BirthDate?.ConvertToMiladi();
-            user.Email = model.Email;
 
-            if (model.AvatarFile is not null)
-            {
-                if (!model.AvatarFile.IsImage()) return Result.Failure(Messages.InvalidFileFormatError);
-                if (model.AvatarFile.Length > SiteTools.MaxImageFileLength.CalculateMB()) return Result.Failure(Messages.FileLengthError);
-
-                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.AvatarFile.FileName);
-                model.AvatarFile.UploadFileToServer(fileName, SiteTools.UserAvatarFile);
-                user.Avatar?.RemoveFileFromServer(SiteTools.UserAvatarFile);
-
-                user.Avatar = fileName;
-            }
-
-            _dbSet.Update(user);
+            _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
             return Result.Success();
-        }
-
-        public async Task<Result<string>> AdminSideGetAdminAvatar()
-        {
-            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            if (userId < 1) return Result.Failure<string>(Messages.OperationFailedError);
-
-            var userAvatar = await _dbSet.Where(n => n.Id == userId).Select(n => n.Avatar).AsNoTracking().FirstOrDefaultAsync();
-            if (string.IsNullOrWhiteSpace(userAvatar)) return Result.Failure<string>(Messages.OperationFailedError);
-
-            return userAvatar;
         }
 
         public async Task<Result<DateTime>> SendUserLoginCode(ClientSideLoginDto model)
@@ -505,27 +467,33 @@ namespace Application.Services.Implementaions
             return Result.Success();
         }
 
-        public async Task<Result<List<AdminSideUserAsOptionViewModel>>> AdminSideGetUsersForCoupon()
+        public async Task<Result<List<AdminSideUserAsOptionDto>>> AdminSideGetUsersForCoupon()
         {
-            var users = await _dbSet.Where(n => n.IsUserBanned == false).Select(n => new AdminSideUserAsOptionViewModel()
-            {
-                Id = n.Id,
-                PhoneNumber = n.Mobile,
-                FullName = n.FirstName + " " + n.LastName
-            }).AsNoTracking().ToListAsync();
-            if (!users.Any()) return Result.Failure<List<AdminSideUserAsOptionViewModel>>(Messages.OperationFailedError);
+            var users = await _context.Users
+                .AsNoTracking()
+                .Where(n => n.IsUserBanned == false)
+                .Select(n => new AdminSideUserAsOptionDto()
+                {
+                    Id = n.Id,
+                    Mobile = n.Mobile,
+                    FullName = n.FirstName + " " + n.LastName
+                }).ToListAsync();
+
+            if (!users.Any())
+                return Result.Failure<List<AdminSideUserAsOptionDto>>(Messages.OperationFailedError);
 
             return users;
         }
 
-        public async Task<Result> WithdrawCurrentUserCart(long amount, int orderId)
+        public async Task<Result> WithdrawCurrentUserCart(decimal amount, int orderId)
         {
             if (amount < 1) return Result.Failure(Messages.OperationFailedError);
 
             var userId = _httpContextAccessor.HttpContext.User.GetUserId();
             if (userId < 1) return Result.Failure(Messages.OperationFailedError);
 
-            var user = await _dbSet.Where(n => n.Id == userId)
+            var user = await _context.Users
+                .Where(n => n.Id == userId)
                 .Include(n => n.Transactions)
                 .FirstOrDefaultAsync();
             if (user is null) return Result.Failure(Messages.OperationFailedError);
@@ -544,7 +512,7 @@ namespace Application.Services.Implementaions
                 Description = "کاهش موجودی کیف پول جهت تسویه حساب سفارش با شناسه " + orderId
             });
 
-            _dbSet.Update(user);
+            _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
             return Result.Success();
@@ -552,7 +520,9 @@ namespace Application.Services.Implementaions
 
         public async Task<int> SiteUsersCount()
         {
-            return await _dbSet.CountAsync();
+            return await _context.Users
+                .AsNoTracking()
+                .CountAsync();
         }
 
         public async Task<Result<DateTime>> GetMySignInDate()
@@ -560,7 +530,14 @@ namespace Application.Services.Implementaions
             var userId = _httpContextAccessor.HttpContext.User.GetUserId();
             if (userId < 1) return Result.Failure<DateTime>(Messages.OperationFailedError);
 
-            var date = await _dbSet.Where(n => n.Id == userId).Select(n => n.CreatedDate).FirstOrDefaultAsync();
+            DateTime? date = await _context.Users
+                .AsNoTracking()
+                .Where(n => n.Id == userId)
+                .Select(n => n.CreatedDate)
+                .FirstOrDefaultAsync();
+
+            if (date is null)
+                return Result.Failure<DateTime>(Messages.OperationFailedError);
 
             return date;
         }

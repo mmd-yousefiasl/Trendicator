@@ -1,5 +1,5 @@
 ﻿using Application.Services.Interfaces;
-using Application.ViewModels.SiteData.ClientSide;
+using Application.Dtos.SiteData.ClientSide;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Components

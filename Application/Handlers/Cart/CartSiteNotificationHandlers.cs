@@ -1,7 +1,7 @@
-﻿using Application.Services.Interfaces;
+﻿using Application.Dtos.SiteNotifications.AdminSide;
+using Application.Dtos.SiteNotifications.ClientSide;
+using Application.Services.Interfaces;
 using Application.Tools;
-using Application.ViewModels.SiteNotifications.AdminSide;
-using Application.ViewModels.SiteNotifications.ClientSide;
 using Domain.Events.Shopping;
 using MediatR;
 

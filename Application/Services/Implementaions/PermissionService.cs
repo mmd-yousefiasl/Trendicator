@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.Permission.AdminSide;
+﻿using Application.Dtos.Permission.AdminSide;
+using Application.Services.Interfaces;
 using Data.Context;
 using Domain.Models.Identity;
 using Domain.Shared;

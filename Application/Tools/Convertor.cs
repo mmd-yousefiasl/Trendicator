@@ -60,12 +60,12 @@ namespace Application.Tools
             return persianDateTime;
         }
 
-        public static string ToToman(this long value)
+        public static string ToToman(this decimal value)
         {
             return value.ToString("#,0 تومان");
         }
 
-        public static string ToTomanFormat(this long value)
+        public static string ToTomanFormat(this decimal value)
         {
             return value.ToString("#,0");
         }

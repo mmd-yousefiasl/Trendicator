@@ -1,4 +1,4 @@
-﻿using Application.ViewModels.Coupon.AdminSide;
+﻿using Application.Dtos.Coupon.AdminSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

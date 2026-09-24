@@ -12,12 +12,6 @@
 
         #endregion
 
-        #region User
-
-        public static string UserAvatarFile { get; set; }
-
-        #endregion
-
         #region Cache
 
         public const int CachesDefaultExpirationTimeInMinutes = 180;

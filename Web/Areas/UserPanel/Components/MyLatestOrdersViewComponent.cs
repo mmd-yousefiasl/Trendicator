@@ -1,5 +1,5 @@
 ﻿using Application.Services.Interfaces;
-using Application.ViewModels.Cart.ClientSide;
+using Application.Dtos.Cart.ClientSide;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Areas.UserPanel.Components

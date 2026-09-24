@@ -1,5 +1,5 @@
-﻿using Application.ViewModels.Blog.AdminSide;
-using Application.ViewModels.Blog.ClientSide;
+﻿using Application.Dtos.Blog.AdminSide;
+using Application.Dtos.Blog.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

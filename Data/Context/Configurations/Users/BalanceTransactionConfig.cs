@@ -16,6 +16,9 @@ namespace Data.Context.Configurations.Users
             builder.Property(n => n.Description).HasMaxLength(500);
             builder.Property(n => n.TransId).HasMaxLength(200);
 
+            builder.Property(u => u.Amount)
+                .HasColumnType("numeric(18,0)");
+
             builder.HasOne(n => n.User)
                 .WithMany(n => n.Transactions)
                 .HasForeignKey(n => n.UserId);

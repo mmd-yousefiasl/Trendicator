@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.PaymentData;
+﻿using Application.Dtos.PaymentData;
+using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Web.Attributes;
 

@@ -1,5 +1,5 @@
-﻿using Application.ViewModels.Hero.AdminSide;
-using Application.ViewModels.Hero.ClientSide;
+﻿using Application.Dtos.Hero.AdminSide;
+using Application.Dtos.Hero.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

@@ -1,8 +1,8 @@
-﻿using Application.Mediator;
+﻿using Application.Dtos.ProductReview.AdminSide;
+using Application.Dtos.ProductReview.ClientSide;
+using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Tools;
-using Application.ViewModels.ProductReview.AdminSide;
-using Application.ViewModels.ProductReview.ClientSide;
 using Data.Context;
 using Domain.Events.Products.ProductReview;
 using Domain.Models.Products;

@@ -1,4 +1,4 @@
-﻿using Application.ViewModels.Role.AdminSide;
+﻿using Application.Dtos.Role.AdminSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

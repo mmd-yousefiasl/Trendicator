@@ -1,6 +1,6 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.Product.ClientSide;
-using Application.ViewModels.ProductCategory.ClientSide;
+﻿using Application.Dtos.ProductCategory.ClientSide;
+using Application.Services.Interfaces;
+using Application.Dtos.Product.ClientSide;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Components

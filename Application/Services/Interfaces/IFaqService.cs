@@ -1,5 +1,5 @@
-﻿using Application.ViewModels.Faq.AdminSide;
-using Application.ViewModels.Faq.ClientSide;
+﻿using Application.Dtos.Faq.AdminSide;
+using Application.Dtos.Faq.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

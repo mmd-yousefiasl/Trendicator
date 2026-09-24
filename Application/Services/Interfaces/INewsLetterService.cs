@@ -1,6 +1,6 @@
-﻿using Application.ViewModels.NewsLetter.AdminSide;
-using Application.ViewModels.NewsLetter.ClientSide;
-using Application.ViewModels.SentLetter.AdminSide;
+﻿using Application.Dtos.NewsLetter.AdminSide;
+using Application.Dtos.NewsLetter.ClientSide;
+using Application.Dtos.SentLetter.AdminSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

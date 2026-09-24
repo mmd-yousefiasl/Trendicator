@@ -1,5 +1,5 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.Banner.ClientSide;
+﻿using Application.Dtos.Banner.ClientSide;
+using Application.Services.Interfaces;
 using Domain.Enums.Banner;
 using Microsoft.AspNetCore.Mvc;
 

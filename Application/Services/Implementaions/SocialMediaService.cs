@@ -1,9 +1,9 @@
-﻿using Application.Mediator;
+﻿using Application.Dtos.SocialMedia.AdminSide;
+using Application.Dtos.SocialMedia.ClientSide;
+using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Static;
 using Application.Tools;
-using Application.ViewModels.SocialMedia.AdminSide;
-using Application.ViewModels.SocialMedia.ClientSide;
 using Data.Context;
 using Domain.Events.SiteInfo.SocialMedia;
 using Domain.Models.SiteInfo;

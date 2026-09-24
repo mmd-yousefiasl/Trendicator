@@ -1,5 +1,5 @@
-﻿using Application.ViewModels.Testimonial.AdminSide;
-using Application.ViewModels.Testimonial.ClientSide;
+﻿using Application.Dtos.Testimonial.AdminSide;
+using Application.Dtos.Testimonial.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

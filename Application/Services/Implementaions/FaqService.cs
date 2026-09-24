@@ -1,9 +1,9 @@
-﻿using Application.Mediator;
+﻿using Application.Dtos.Faq.AdminSide;
+using Application.Dtos.Faq.ClientSide;
+using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Static;
 using Application.Tools;
-using Application.ViewModels.Faq.AdminSide;
-using Application.ViewModels.Faq.ClientSide;
 using Data.Context;
 using Domain.Events.Faqs;
 using Domain.Models.Faqs;

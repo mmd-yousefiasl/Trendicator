@@ -1,6 +1,6 @@
-﻿using Application.Services.Interfaces;
-using Application.ViewModels.Cart.ClientSide;
-using Application.ViewModels.Payment;
+﻿using Application.Dtos.Cart.ClientSide;
+using Application.Dtos.Payment;
+using Application.Services.Interfaces;
 using Domain.Shared;
 using Domain.Statics;
 using Microsoft.AspNetCore.Authorization;

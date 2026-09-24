@@ -1,8 +1,8 @@
-﻿using Application.Mediator;
+﻿using Application.Dtos.Ticket.AdminSide;
+using Application.Dtos.Ticket.ClientSide;
+using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Tools;
-using Application.ViewModels.Ticket.AdminSide;
-using Application.ViewModels.Ticket.ClientSide;
 using Data.Context;
 using Domain.Enums.Tickets;
 using Domain.Events.Tickets;

@@ -1,9 +1,9 @@
-﻿using Application.Mediator;
+﻿using Application.Dtos.Testimonial.AdminSide;
+using Application.Dtos.Testimonial.ClientSide;
+using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Static;
 using Application.Tools;
-using Application.ViewModels.Testimonial.AdminSide;
-using Application.ViewModels.Testimonial.ClientSide;
 using Data.Context;
 using Domain.Events.SiteInfo.Testimonial;
 using Domain.Models.SiteInfo;

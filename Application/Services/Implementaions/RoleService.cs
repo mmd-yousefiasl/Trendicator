@@ -1,6 +1,6 @@
-﻿using Application.Services.Interfaces;
+﻿using Application.Dtos.Role.AdminSide;
+using Application.Services.Interfaces;
 using Application.Tools;
-using Application.ViewModels.Role.AdminSide;
 using Data.Context;
 using Domain.Models.Identity;
 using Domain.Shared;
@@ -11,12 +11,15 @@ namespace Application.Services.Implementaions
     public class RoleService : IRoleService
     {
         #region Fields
+
         private readonly TrendicatorDbContext _context;
         private protected DbSet<Role> _dbSet;
         private readonly IUserService _userService;
+
         #endregion
 
         #region Ctor
+
         public RoleService(TrendicatorDbContext context,
             IUserService userService)
         {
@@ -24,6 +27,7 @@ namespace Application.Services.Implementaions
             _dbSet = context.Set<Role>();
             _userService = userService;
         }
+
         #endregion
 
         public async Task<bool> CheckUserAccess(int userId, string permission)
@@ -33,7 +37,9 @@ namespace Application.Services.Implementaions
             if (await _userService.IsSuperAdmin(userId))
                 return true;
 
-            var roleIds = await _dbSet.Where(role => role.RolePermissionMapping.Any(mapping => mapping.Permission.UniqueName == permission)).Select(n => n.Id).ToListAsync();
+            var roleIds = await _dbSet
+                .Where(role => role.RolePermissionMapping.Any(mapping => mapping.Permission.UniqueName == permission))
+                .Select(n => n.Id).ToListAsync();
             if (!roleIds?.Any() ?? true) return false;
 
             return await _userService.CheckUserRoleIds(userId, roleIds);
@@ -46,7 +52,9 @@ namespace Application.Services.Implementaions
             if (await _userService.IsSuperAdmin(userId))
                 return true;
 
-            var roleIds = await _dbSet.Where(role => role.RolePermissionMapping.Any(mapping => mapping.Permission.UniqueName == permission)).Select(n => n.Id).ToListAsync();
+            var roleIds = await _dbSet
+                .Where(role => role.RolePermissionMapping.Any(mapping => mapping.Permission.UniqueName == permission))
+                .Select(n => n.Id).ToListAsync();
             if (!roleIds?.Any() ?? true) return Result.Failure<bool>(Messages.OperationFailedError);
 
             return await _userService.CheckUserRoleIds(userId, roleIds);
@@ -62,12 +70,14 @@ namespace Application.Services.Implementaions
                     UniqueName = n.UniqueName
                 }).AsNoTracking().ToListAsync();
 
-            if (!roles?.Any() ?? true) return Result.Failure<List<AdminSideRoleViewModel>>(Messages.OperationFailedError);
+            if (!roles?.Any() ?? true)
+                return Result.Failure<List<AdminSideRoleViewModel>>(Messages.OperationFailedError);
 
             return roles;
         }
 
-        public async Task<Result<AdminSideFilterRolesViewModel>> AdminSideFilterRoles(AdminSideFilterRolesViewModel filter)
+        public async Task<Result<AdminSideFilterRolesViewModel>> AdminSideFilterRoles(
+            AdminSideFilterRolesViewModel filter)
         {
             if (filter is null) return Result.Failure<AdminSideFilterRolesViewModel>(Messages.OperationFailedError);
 
@@ -101,7 +111,8 @@ namespace Application.Services.Implementaions
         {
             if (model is null) return Result.Failure(Messages.OperationFailedError);
 
-            if (await _dbSet.AnyAsync(n => n.UniqueName == model.UniqueName)) return Result.Failure(Messages.DuplicateUniqueNameForRoleError);
+            if (await _dbSet.AnyAsync(n => n.UniqueName == model.UniqueName))
+                return Result.Failure(Messages.DuplicateUniqueNameForRoleError);
 
             Role role = new Role()
             {
@@ -145,13 +156,14 @@ namespace Application.Services.Implementaions
         {
             if (id < 1) return Result.Failure<AdminSideUpdateRoleViewModel>(Messages.OperationFailedError);
 
-            var role = await _dbSet.Where(n => n.Id == id).Include(n => n.RolePermissionMapping).Select(n => new AdminSideUpdateRoleViewModel()
-            {
-                Id = n.Id,
-                PermissionIds = n.RolePermissionMapping.Select(n => n.PermissionId).ToList(),
-                Title = n.Title,
-                UniqueName = n.UniqueName
-            }).AsNoTracking().FirstOrDefaultAsync();
+            var role = await _dbSet.Where(n => n.Id == id).Include(n => n.RolePermissionMapping).Select(n =>
+                new AdminSideUpdateRoleViewModel()
+                {
+                    Id = n.Id,
+                    PermissionIds = n.RolePermissionMapping.Select(n => n.PermissionId).ToList(),
+                    Title = n.Title,
+                    UniqueName = n.UniqueName
+                }).AsNoTracking().FirstOrDefaultAsync();
 
             if (role is null) return Result.Failure<AdminSideUpdateRoleViewModel>(Messages.OperationFailedError);
 
@@ -160,36 +172,40 @@ namespace Application.Services.Implementaions
 
         public async Task<Result> AdminSideUpdateRole(AdminSideUpdateRoleViewModel model)
         {
-            var role = await _dbSet.Include(n => n.RolePermissionMapping).FirstOrDefaultAsync(n => n.Id == model.Id);
+            var role = await _context.Roles
+                .Include(r => r.RolePermissionMapping)
+                .FirstOrDefaultAsync(r => r.Id == model.Id);
 
-            if (role is null) return Result.Failure(Messages.OperationFailedError);
+            if (role is null)
+                return Result.Failure(Messages.OperationFailedError);
 
-
-            if (await _dbSet.AnyAsync(n => n.UniqueName == model.UniqueName && n.Id != model.Id))
-                return Result.Failure(Messages.DuplicateUniqueNameForRoleError);
-
-            foreach (var permission in role.RolePermissionMapping)
-            {
-                role.RolePermissionMapping.Remove(permission);
-            }
-
+            // Admin role is protected and cannot be modified.
             if (role.UniqueName == "Admin")
                 return Result.Failure(Messages.OperationFailedError);
+
+            if (await _context.Roles.AnyAsync(r =>
+                    r.UniqueName == model.UniqueName &&
+                    r.Id != model.Id))
+            {
+                return Result.Failure(Messages.DuplicateUniqueNameForRoleError);
+            }
+
+            _context.RolePermissionMappings.RemoveRange(
+                role.RolePermissionMapping);
+
+            foreach (var permissionId in model.PermissionIds ?? new List<int>())
+            {
+                role.RolePermissionMapping.Add(new RolePermissionMapping
+                {
+                    RoleId = role.Id,
+                    PermissionId = permissionId
+                });
+            }
 
             role.Title = model.Title;
             role.UniqueName = model.UniqueName;
             role.LastUpdatedDate = DateTime.UtcNow;
 
-            foreach (var item in model.PermissionIds ?? new List<int>())
-            {
-                role.RolePermissionMapping.Add(new RolePermissionMapping
-                {
-                    RoleId = role.Id,
-                    PermissionId = item
-                });
-            }
-
-            _dbSet.Update(role);
             await _context.SaveChangesAsync();
 
             return Result.Success(Messages.SuccessfullyDone);

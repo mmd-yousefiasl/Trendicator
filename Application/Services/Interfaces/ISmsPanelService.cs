@@ -1,5 +1,5 @@
-﻿using Application.ViewModels.SmsData.AdminSide;
-using Application.ViewModels.SmsData.ClientSide;
+﻿using Application.Dtos.SmsData.AdminSide;
+using Application.Dtos.SmsData.ClientSide;
 using Domain.Enums.SiteInfo;
 using Domain.Shared;
 

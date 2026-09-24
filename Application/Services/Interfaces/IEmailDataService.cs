@@ -1,4 +1,4 @@
-﻿using Application.ViewModels.EmailData.AdminSide;
+﻿using Application.Dtos.EmailData.AdminSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces

@@ -1,8 +1,8 @@
-﻿using Application.Mediator;
+﻿using Application.Dtos.ContactUsForm.AdminSide;
+using Application.Dtos.ContactUsForm.ClientSide;
+using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Tools;
-using Application.ViewModels.ContactUsForm.AdminSide;
-using Application.ViewModels.ContactUsForm.ClientSide;
 using Data.Context;
 using Domain.Events.ContactUs;
 using Domain.Models.ContactUs;

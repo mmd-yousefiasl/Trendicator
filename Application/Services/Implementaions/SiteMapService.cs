@@ -1,9 +1,9 @@
-﻿using Application.Mediator;
+﻿using Application.Dtos.SiteMap.AdminSide;
+using Application.Dtos.SiteMap.ClientSide;
+using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Static;
 using Application.Tools;
-using Application.ViewModels.SiteMap.AdminSide;
-using Application.ViewModels.SiteMap.ClientSide;
 using Data.Context;
 using Domain.Enums.SiteInfo;
 using Domain.Events.SiteInfo.SiteMap;

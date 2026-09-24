@@ -1,8 +1,8 @@
-﻿using Application.Mediator;
+﻿using Application.Dtos.BlogCategory.AdminSide;
+using Application.Dtos.BlogCategory.ClientSide;
+using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Tools;
-using Application.ViewModels.BlogCategory.AdminSide;
-using Application.ViewModels.BlogCategory.ClientSide;
 using Data.Context;
 using Domain.Events.Blogs.BlogCategory;
 using Domain.Models.Blogs;
