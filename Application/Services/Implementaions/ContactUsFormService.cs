@@ -8,7 +8,6 @@ using Domain.Events.ContactUs;
 using Domain.Models.ContactUs;
 using Domain.Shared;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Implementaions
 {
@@ -16,7 +15,6 @@ namespace Application.Services.Implementaions
     {
         #region Fields
         private readonly TrendicatorDbContext _context;
-        private protected DbSet<ContactUsForm> _dbSet;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMediatorHandler _mediator;
         #endregion
@@ -27,7 +25,6 @@ namespace Application.Services.Implementaions
             IMediatorHandler mediator)
         {
             _context = context;
-            _dbSet = _context.Set<ContactUsForm>();
             _httpContextAccessor = httpContextAccessor;
             _mediator = mediator;
         }
@@ -42,13 +39,16 @@ namespace Application.Services.Implementaions
             if (!string.IsNullOrWhiteSpace(filter.Search))
             {
                 conditions.Add(n => n.FullName.Contains(filter.Search) ||
-                n.Email.Contains(filter.Search) ||
-                n.PhoneNumber.Contains(filter.Search) ||
-                n.Subject.Contains(filter.Search) ||
+                n.Mobile.Contains(filter.Search) ||
                 n.UserIP.Contains(filter.Search));
             }
 
-            IQueryable<ContactUsForm> query = _dbSet;
+            if (filter.Type is not null)
+            {
+                conditions.Add(n => n.Type == filter.Type);
+            }
+
+            IQueryable<ContactUsForm> query = _context.ContactUsForms;
             query = query.OrderByDescending(n => n.Id);
 
             foreach (var item in conditions ?? new FilterConditions<ContactUsForm>())
@@ -59,11 +59,11 @@ namespace Application.Services.Implementaions
             await filter.Paging(query.Select(n => new AdminSideContactUsFormViewModel()
             {
                 Id = n.Id,
-                Email = n.Email,
+                CreatedDate = n.CreatedDate,
                 FullName = n.FullName,
-                Subject = n.Subject,
+                Type = n.Type,
                 Message = n.Message,
-                PhoneNumber = n.PhoneNumber,
+                Mobile = n.Mobile,
                 UserId = n.UserId,
                 UserIP = n.UserIP
             }));
@@ -75,12 +75,12 @@ namespace Application.Services.Implementaions
         {
             if (id < 1) return Result.Failure(Messages.OperationFailedError);
 
-            var form = await _dbSet.FindAsync(id);
+            var form = await _context.ContactUsForms.FindAsync(id);
             if (form is null) return Result.Failure(Messages.OperationFailedError);
 
             form.IsDeleted = true;
 
-            _dbSet.Update(form);
+            _context.ContactUsForms.Update(form);
             await _context.SaveChangesAsync();
 
             ContactUsFormDeletedEvent ContactUsFormDeletedEvent = new ContactUsFormDeletedEvent(
@@ -99,26 +99,26 @@ namespace Application.Services.Implementaions
 
             ContactUsForm form = new ContactUsForm()
             {
-                Email = model.Email,
                 FullName = model.FullName,
-                Subject = model.Subject,
-                PhoneNumber = model.PhoneNumber,
+                Type = model.Type,
+                Mobile = model.Mobile,
                 Message = model.Message,
-                UserIP = userIP
+                UserIP = userIP,
+                CreatedDate = DateTime.UtcNow
             };
             if (userId > 0)
             {
                 form.UserId = userId;
             }
 
-            await _dbSet.AddAsync(form);
+            _context.ContactUsForms.Add(form);
             await _context.SaveChangesAsync();
 
             ContactUsFormCreatedEvent ContactUsFormCreatedEvent = new ContactUsFormCreatedEvent(
+                form.CreatedDate,
                 form.FullName,
-                form.Email,
-                form.PhoneNumber,
-                form.Subject,
+                form.Mobile,
+                form.Type,
                 form.Message,
                 form.UserId,
                 form.UserIP);

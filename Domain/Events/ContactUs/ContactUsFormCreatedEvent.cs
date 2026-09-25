@@ -1,14 +1,18 @@
-﻿using MediatR;
+﻿using Domain.Enums.ContactUs;
+using MediatR;
 
 namespace Domain.Events.ContactUs
 {
     public record ContactUsFormCreatedEvent(
+    DateTime CreatedDate,
     string FullName,
-    string Email,
-    string PhoneNumber,
-    string Subject,
+    string Mobile,
+    ContactUsFormTypeEnum Type,
     string Message,
     int? UserId,
     string UserIP
-    ) : INotification;
+    ) : INotification
+    {
+        public object Create { get; set; }
+    }
 }

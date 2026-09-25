@@ -1,79 +1,97 @@
 ﻿@using Application.Dtos.ContactUsForm.ClientSide
+@using Domain.Enums.ContactUs
 @model ClientSideContactUsViewModel
 
 @{
     ViewData["Title"] = "تماس باما";
 }
 
-<div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-70 bg-image"
-     data-bg="@SiteTools.BreadcrumbBanner">
+
+<main>
+    <!-- ============ Breadcrumb ============ -->
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
-                    <div class="section-title-area ltn__section-title-2">
-                        <h1 class="section-title white-color">تماس باما</h1>
-                    </div>
-                    <div class="ltn__breadcrumb-list">
-                        <ul>
-                            <li><a asp-area="" asp-controller="Home" asp-action="Index">صفحه اصلی</a></li>
-                            <li>تماس باما</li>
-                        </ul>
-                    </div>
+        <ul class="crumbs">
+            <parital name="_IndexLink" />
+            <li>تماس با ما</li>
+        </ul>
+    </div>
+
+    <!-- ============ Contact ============ -->
+    <section class="section">
+        <div class="container">
+            <div class="section-head">
+                <span class="kicker"> در تماس باشیم</span>
+                <h1 class="mt-1">تماس با ما</h1>
+                <p>برای هر سؤال درباره پیش‌خرید، نصب اندیکاتورها یا مسائل مالی، تیم پشتیبانی ترندیکاتور از راه‌های زیر در دسترس شماست.</p>
+            </div>
+
+            <div class="grid grid--3 mb-3">
+                <div class="card card-pad stat stat--brand">
+                    <span>پشتیبانی تلگرام</span>
+                    <b><span dir="ltr">@@trendicator_support</span></b>
+                    <span>پاسخ‌گویی ۷ روز هفته</span>
+                </div>
+                <div class="card card-pad stat stat--brand">
+                    <span>ایمیل</span>
+                    <b><span dir="ltr">support@trendicator.ir</span></b>
+                    <span>برای مسائل فنی و مالی</span>
+                </div>
+                <div class="card card-pad stat stat--brand">
+                    <span>ساعات پاسخ‌گویی</span>
+                    <b>۹ صبح تا ۹ شب</b>
+                    <span>به وقت تهران، تمام روزهای هفته</span>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 
-@await Component.InvokeAsync("ContactUsAddress")
-
-<!-- CONTACT MESSAGE AREA START -->
-<div class="ltn__contact-message-area mb-120">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ltn__form-box contact-form-box box-shadow white-bg">
-                    <h4 class="title-2">تماس باما</h4>
-                    <form asp-area="" asp-controller="ContactUs" asp-action="ContactUs" method="post" onsubmit="submitAnimation()">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="input-item input-item-name ltn__custom-icon">
-                                    <input type="text" asp-for="FullName">
-                                </div>
-                                <span class="text-danger" asp-validation-for="FullName"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="input-item input-item-email ltn__custom-icon">
-                                    <input asp-for="Email">
-                                </div>
-                                <span class="text-danger" asp-validation-for="Email"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="input-item input-item-email ltn__custom-icon">
-                                    <input asp-for="Subject">
-                                </div>
-                                <span class="text-danger" asp-validation-for="Subject"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="input-item input-item-phone ltn__custom-icon">
-                                    <input type="text" asp-for="PhoneNumber">
-                                </div>
-                                <span class="text-danger" asp-validation-for="PhoneNumber"></span>
-                            </div>
+            <div class="grid grid--2 mt-4">
+                <!-- Contact form -->
+                <div class="card card-pad">
+                    <h2>ارسال پیام</h2>
+                    <p class="text-muted" style="font-size:.88rem">فرم زیر را پر کنید تا در سریع‌ترین زمان ممکن پاسخ بگیرید.</p>
+                    <form asp-area="" asp-controller="ContactUs" asp-action="ContactUs" method="post">
+                        <div class="field">
+                            <label asp-for="FullName"></label>
+                            <input class="input" type="text" asp-for="FullName">
+                            <span asp-validation-for="FullName"></span>
                         </div>
-                        <div class="input-item input-item-textarea ltn__custom-icon">
-                            <textarea asp-for="Message"></textarea>
+                        <div class="field">
+                            <label asp-for="Mobile"></label>
+                            <input class="input" asp-for="Mobile" dir="ltr">
+                            <span asp-validation-for="Mobile"></span>
                         </div>
-                        <span class="text-danger" asp-validation-for="Message"></span>
-                        <p>
-                            <div class="btn-wrapper mt-0">
-                                <button class="btn theme-btn-1 btn-effect-1 text-uppercase btn-submit" type="submit">ارسال</button>
-                            </div>
-                        <p class="form-messege mb-0 mt-20"></p>
+                        <div class="field">
+                            <label asp-for="Type"></label>
+                            <select class="select" asp-for="Type" asp-items="@Html.GetEnumSelectList<ContactUsFormTypeEnum>()">
+                                <option value="" selected disabled>انتخاب موضوع…</option>
+                            </select>
+                            <span asp-validation-for="Type"></span>
+                        </div>
+                        <div class="field">
+                            <label asp-for="Message"></label>
+                            <textarea class="textarea" asp-for="Message"></textarea>
+                            <span asp-validation-for="Message"></span>
+                            <span class="hint">هرچه جزئیات بیشتری بنویسید، سریع‌تر و دقیق‌تر پاسخ می‌گیرید.</span>
+                        </div>
+                        <button type="submit" class="btn btn--primary">ارسال پیام</button>
+                        <p class="hint mt-2 mb-0">
+                            با ارسال این فرم،
+                            <a asp-area="" asp-controller="TermsAndConditions" asp-action="TermsAndConditions" class="text-brand">قوانین و مقررات</a>
+                            ترندیکاتور را می‌پذیرید.
+                        </p>
                     </form>
                 </div>
+
+                <!-- Aside -->
+                <aside class="card card-pad">
+                    <h3>پاسخ سریع‌تر می‌خواهید؟</h3>
+                    <p class="text-muted">بخش زیادی از پرسش‌های رایج درباره نصب، لایسنس و بازگشت وجه، قبلاً در صفحه سوالات متداول پاسخ داده شده است؛ شاید جواب شما همان‌جا باشد.</p>
+                    <div class="alert alert--info">
+                        <span>⏱</span>
+                        <span>پیام‌های ثبت‌شده از طریق فرم یا ایمیل، حداکثر ظرف <b>۲ ساعت</b> در ساعات پاسخ‌گویی بررسی و پاسخ داده می‌شوند.</span>
+                    </div>
+                    <a asp-area="" asp-controller="Faq" asp-action="Faqs" class="btn btn--ghost mt-3">مشاهده سوالات متداول</a>
+                </aside>
             </div>
         </div>
-    </div>
-</div>
+    </section>
+</main>

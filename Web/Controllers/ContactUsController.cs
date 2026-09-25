@@ -36,7 +36,7 @@ namespace Web.Controllers
             }
             TempData[TemporarySuccessMessage] = result.Message;
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(ContactUs));
         }
     }
 }

@@ -14,9 +14,7 @@ namespace Data.Context.Configurations.ContactUs
             builder.HasQueryFilter(n => !n.IsDeleted);
 
             builder.Property(n => n.FullName).HasMaxLength(200);
-            builder.Property(n => n.Email).HasMaxLength(200);
-            builder.Property(n => n.PhoneNumber).HasMaxLength(50);
-            builder.Property(n => n.Subject).HasMaxLength(200);
+            builder.Property(n => n.Mobile).HasMaxLength(50);
             builder.Property(n => n.Message).HasMaxLength(1000);
         }
     }

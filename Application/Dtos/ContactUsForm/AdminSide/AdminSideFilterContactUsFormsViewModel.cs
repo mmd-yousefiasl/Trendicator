@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Domain.Enums.ContactUs;
+using Domain.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.Dtos.ContactUsForm.AdminSide
@@ -7,5 +8,8 @@ namespace Application.Dtos.ContactUsForm.AdminSide
     {
         [Display(Name = "جست و جو")]
         public string? Search { get; set; }
+
+        [Display(Name = "موضوع")]
+        public ContactUsFormTypeEnum? Type { get; set; }
     }
 }

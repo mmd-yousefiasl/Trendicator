@@ -1,13 +1,13 @@
-﻿using Application.Dtos;
+﻿using Domain.Enums.ContactUs;
 
 namespace Application.Dtos.ContactUsForm.AdminSide
 {
     public class AdminSideContactUsFormViewModel : CommonDto
     {
+        public DateTime CreatedDate { get; set; }
         public string FullName { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Subject { get; set; }
+        public string Mobile { get; set; }
+        public ContactUsFormTypeEnum Type { get; set; }
         public string Message { get; set; }
         public int? UserId { get; set; }
         public string UserIP { get; set; }

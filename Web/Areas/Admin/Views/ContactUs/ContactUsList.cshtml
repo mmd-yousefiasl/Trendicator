@@ -1,4 +1,6 @@
 ﻿@using Application.Dtos.ContactUsForm.AdminSide
+@using Application.Tools
+@using Domain.Enums.ContactUs
 @model AdminSideFilterContactUsFormsViewModel
 
 @{
@@ -35,6 +37,15 @@
                                     <input type="text" class="form-control" asp-for="Search" autocomplete="off">
                                 </div>
                             </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label" asp-for="Type"></label>
+                                    <select class="form-control" asp-for="Type" asp-items="@Html.GetEnumSelectList<ContactUsFormTypeEnum>()">
+                                        <option value="">همه</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <button class="btn btn-primary" type="submit">جست و جو</button>
                     </form>
@@ -54,8 +65,8 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
+                                        <th>تاریخ ثبت</th>
                                         <th>نام</th>
-                                        <th>ایمیل</th>
                                         <th>تلفن</th>
                                         <th>موضوع</th>
                                         <th>کاربر</th>
@@ -72,10 +83,10 @@
 
                                             <tr>
                                                 <th scope="row">@counter</th>
+                                                <td>@item.CreatedDate.GetDate()</td>
                                                 <td>@item.FullName</td>
-                                                <td>@item.Email</td>
-                                                <td>@item.PhoneNumber</td>
-                                                <td>@item.Subject</td>
+                                                <td>@item.Mobile</td>
+                                                <td>@item.Type</td>
                                                 <td>
                                                     @if (item.UserId > 0)
                                                     {
