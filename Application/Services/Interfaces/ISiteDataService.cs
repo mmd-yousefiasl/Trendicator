@@ -16,9 +16,9 @@ namespace Application.Services.Interfaces
 
         Task<Result<string>> ClientSideGetSitePhone();
 
-        Task<Result<string>> ClientSideGetTermsAndConditions();
+        Task<Result<ClientSideTermsAndConditionsDto>> ClientSideGetTermsAndConditions();
 
-        Task<Result<string>> ClientSideGetPrivacyPolicy();
+        Task<Result<ClientSidePrivacyPolicyDto>> ClientSideGetPrivacyPolicy();
 
         Task<Result<string>> GetSiteName();
 

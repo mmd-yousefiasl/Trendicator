@@ -19,19 +19,25 @@ namespace Web.Controllers
         [HttpGet("/terms-and-conditions")]
         public async Task<IActionResult> TermsAndConditions()
         {
-            var result = await _dataService.ClientSideGetTermsAndConditions();
-            if (result.IsFailure) return View("TermsAndConditions", "");
+            ViewData["NoIndex"] = true;
 
-            return View("TermsAndConditions", result.Value);
+            var result = await _dataService.ClientSideGetTermsAndConditions();
+            if (result.IsFailure)
+                return NotFound();
+
+            return View(result.Value);
         }
 
         [HttpGet("/privacy-policy")]
         public async Task<IActionResult> PrivacyPolicy()
         {
-            var result = await _dataService.ClientSideGetPrivacyPolicy();
-            if (result.IsFailure) return View("PrivacyPolicy", "");
+            ViewData["NoIndex"] = true;
 
-            return View("PrivacyPolicy", result.Value);
+            var result = await _dataService.ClientSideGetPrivacyPolicy();
+            if (result.IsFailure)
+                return NotFound();
+
+            return View(result.Value);
         }
     }
 }

@@ -94,6 +94,7 @@ namespace Application.Services.Implementaions
             siteData.TermsAndCondition = model.TermsAndCondition;
             siteData.PrivacyPolicy = model.PrivacyPolicy;
             siteData.FooterContent = model.FooterContent;
+            siteData.LastUpdatedDate = DateTime.UtcNow;
 
             _dbSet.Update(siteData);
             await _context.SaveChangesAsync();
@@ -160,26 +161,36 @@ namespace Application.Services.Implementaions
             return data.Phone;
         }
 
-        public async Task<Result<string>> ClientSideGetTermsAndConditions()
+        public async Task<Result<ClientSideTermsAndConditionsDto>> ClientSideGetTermsAndConditions()
         {
             var data = await _cacheManager.GetAsync(CacheKeys.SiteDataCacheKey, async () =>
             {
                 return await _dbSet.Where(n => n.Id == 1).AsNoTracking().FirstOrDefaultAsync();
             });
-            if (data is null || string.IsNullOrWhiteSpace(data.TermsAndCondition)) return Result.Failure<string>(Messages.OperationFailedError);
+            if (data is null || string.IsNullOrWhiteSpace(data.TermsAndCondition))
+                return Result.Failure<ClientSideTermsAndConditionsDto>(Messages.OperationFailedError);
 
-            return data.TermsAndCondition;
+            return new ClientSideTermsAndConditionsDto()
+            {
+                Content = data.TermsAndCondition,
+                LastUpdatedDate = data.LastUpdatedDate
+            };
         }
 
-        public async Task<Result<string>> ClientSideGetPrivacyPolicy()
+        public async Task<Result<ClientSidePrivacyPolicyDto>> ClientSideGetPrivacyPolicy()
         {
             var data = await _cacheManager.GetAsync(CacheKeys.SiteDataCacheKey, async () =>
             {
                 return await _dbSet.Where(n => n.Id == 1).AsNoTracking().FirstOrDefaultAsync();
             });
-            if (data is null || string.IsNullOrWhiteSpace(data.PrivacyPolicy)) return Result.Failure<string>(Messages.OperationFailedError);
+            if (data is null || string.IsNullOrWhiteSpace(data.PrivacyPolicy))
+                return Result.Failure<ClientSidePrivacyPolicyDto>(Messages.OperationFailedError);
 
-            return data.PrivacyPolicy;
+            return new ClientSidePrivacyPolicyDto()
+            {
+                Content = data.PrivacyPolicy,
+                LastUpdatedDate = data.LastUpdatedDate
+            };
         }
 
         public async Task<Result<string>> GetSiteName()

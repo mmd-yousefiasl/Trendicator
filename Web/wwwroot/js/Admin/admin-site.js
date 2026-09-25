@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
         relative_urls: false,
         remove_script_host: false,
 
-        language_url: '/lexaAssets/tinymce/js/tinymce/langs/fa.js',
+        language_url: '/adminAssets/tinymce/js/tinymce/langs/fa.js',
         language: "fa",
         directionality: "rtl",
 

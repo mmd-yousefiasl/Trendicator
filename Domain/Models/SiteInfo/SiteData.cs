@@ -1,6 +1,6 @@
 ﻿namespace Domain.Models.SiteInfo
 {
-    public class SiteData : BaseEntity<int>
+    public class SiteData : AuditBaseEntity<int>
     {
         public string SiteName { get; set; }
         public string? DarkBgLogo { get; set; }
