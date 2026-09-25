@@ -1,8 +1,35 @@
-﻿@using Application.Dtos.Faq.ClientSide
+﻿@using System.Text.Json
+@using Application.Dtos.Faq.ClientSide
 @model List<ClientSideFaqViewModel>
 
 @{
     ViewData["Title"] = "سوالات متداول";
+}
+
+@{
+    var jsonOptions = new JsonSerializerOptions
+    {
+        WriteIndented = true,
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    };
+
+    var faqSchema = new Dictionary<string, object>
+    {
+        ["@context"] = "https://schema.org",
+        ["@type"] = "FAQPage",
+        ["mainEntity"] = Model.Select(item => new Dictionary<string, object>
+        {
+            ["@type"] = "Question",
+            ["name"] = item.Question ?? string.Empty,
+            ["acceptedAnswer"] = new Dictionary<string, object>
+            {
+                ["@type"] = "Answer",
+                ["text"] = item.Answer ?? string.Empty
+            }
+        }).ToList()
+    };
+
+    var schemaJson = JsonSerializer.Serialize(faqSchema, jsonOptions);
 }
 
 <main>
@@ -44,7 +71,7 @@
                     تیم پشتیبانی
                     ترندیکاتور
                     آماده پاسخ‌گویی به سوالات فنی و خرید شماست — از طریق فرم تماس یا تیکت پشتیبانی با ما در ارتباط باشید.
-                    </p>
+                </p>
                 <div class="flex flex--center flex--wrap mt-3">
                     <a asp-area="" asp-controller="ContactUs" asp-action="ContactUs" class="btn btn--primary btn--lg">تماس با پشتیبانی</a>
                 </div>

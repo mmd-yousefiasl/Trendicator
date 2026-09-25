@@ -29,14 +29,13 @@
             <div>
                 <h4>قوانین</h4>
                 <ul>
-                    <li><a href="terms.html">قوانین و مقررات</a></li>
-                    <li><a href="privacy.html">حریم خصوصی</a></li>
-                    <li><a href="refund.html">سیاست بازگشت وجه</a></li>
+                    <li><a asp-area="" asp-controller="TermsAndConditions" asp-action="TermsAndConditions">شرایط و ظوابط</a></li>
+                    <li><a asp-area="" asp-controller="TermsAndConditions" asp-action="PrivacyPolicy">حریم خصوصی</a></li>
                 </ul>
             </div>
         </div>
         <div class="site-footer__bar">
-            <span>© ۱۴۰۵ ترندیکاتور — تمامی حقوق محفوظ است.</span>
+            @await Component.InvokeAsync("FooterContent")
             <div class="trust-badges">
                 <span class="badge">پرداخت امن</span>
                 <span class="badge badge--brand">۷ روز ضمانت بازگشت</span>
