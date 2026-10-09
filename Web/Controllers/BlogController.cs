@@ -21,7 +21,7 @@ namespace Web.Controllers
         [HttpGet("/blogs/{category?}")]
         public async Task<IActionResult> BlogsList(string? category, ClientSideFilterBlogsViewModel filter)
         {
-            if (!string.IsNullOrWhiteSpace(category) && filter.TagId is null && filter.Page == 1)
+            if (!string.IsNullOrWhiteSpace(category) && filter.Page == 1)
             {
                 ViewData["NoIndex"] = false;
             }

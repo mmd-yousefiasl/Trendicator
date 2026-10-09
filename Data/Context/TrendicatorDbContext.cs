@@ -28,9 +28,7 @@ namespace Data.Context
 
         public DbSet<Blog> Blogs => Set<Blog>();
         public DbSet<BlogCategory> BlogCategories => Set<BlogCategory>();
-        public DbSet<BlogTag> BlogTags => Set<BlogTag>();
         public DbSet<BlogView> BlogViews => Set<BlogView>();
-        public DbSet<BlogTagMapping> BlogTagMappings => Set<BlogTagMapping>();
 
         public DbSet<ContactUsForm> ContactUsForms => Set<ContactUsForm>();
 

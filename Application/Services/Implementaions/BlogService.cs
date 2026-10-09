@@ -1,6 +1,5 @@
 ﻿using Application.Dtos.Blog.AdminSide;
 using Application.Dtos.Blog.ClientSide;
-using Application.Dtos.BlogTag.ClientSide;
 using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Tools;
@@ -17,7 +16,6 @@ namespace Application.Services.Implementaions
     {
         #region Fields
         private readonly TrendicatorDbContext _context;
-        private protected DbSet<Blog> _dbSet;
         private readonly IMediatorHandler _mediator;
         #endregion
 
@@ -26,7 +24,6 @@ namespace Application.Services.Implementaions
             IMediatorHandler mediator)
         {
             _context = context;
-            _dbSet = _context.Set<Blog>();
             _mediator = mediator;
         }
         #endregion
@@ -50,7 +47,7 @@ namespace Application.Services.Implementaions
                 conditions.Add(n => n.IsPublished == filter.IsPublished);
             }
 
-            IQueryable<Blog> query = _dbSet;
+            IQueryable<Blog> query = _context.Blogs;
             query = query.OrderByDescending(n => n.Id);
 
             foreach (var item in conditions ?? new FilterConditions<Blog>())
@@ -66,7 +63,8 @@ namespace Application.Services.Implementaions
                 IsPublished = n.IsPublished,
                 Priority = n.Priority,
                 Title = n.Title,
-                Writer = n.Writer
+                Writer = n.Writer,
+                ReadingTimeInMinutes = n.ReadingTimeInMinutes
             }));
 
             return filter;
@@ -75,21 +73,25 @@ namespace Application.Services.Implementaions
 
         public async Task<Result<AdminSideUpdateBlogViewModel>> GetBlogForUpdate(int id)
         {
-            if (id < 1) return Result.Failure<AdminSideUpdateBlogViewModel>(Messages.OperationFailedError);
+            if (id < 1)
+                return Result.Failure<AdminSideUpdateBlogViewModel>(Messages.OperationFailedError);
 
-            var blog = await _dbSet.Where(n => n.Id == id).Select(n => new AdminSideUpdateBlogViewModel()
-            {
-                Id = n.Id,
-                Title = n.Title,
-                Body = n.Body,
-                Slug = n.Slug,
-                FileName = n.FileName,
-                Writer = n.Writer,
-                CategoryId = n.BlogCategoryId,
-                IsPublished = n.IsPublished,
-                Priority = n.Priority,
-                Tags = n.Tags.Select(n => n.TagId).ToList(),
-            }).AsNoTracking().FirstOrDefaultAsync();
+            var blog = await _context.Blogs
+                .AsNoTracking()
+                .Where(n => n.Id == id)
+                .Select(n => new AdminSideUpdateBlogViewModel()
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Body = n.Body,
+                    Slug = n.Slug,
+                    FileName = n.FileName,
+                    Writer = n.Writer,
+                    CategoryId = n.BlogCategoryId,
+                    IsPublished = n.IsPublished,
+                    Priority = n.Priority,
+                    ReadingTimeInMinutes = n.ReadingTimeInMinutes
+                }).FirstOrDefaultAsync();
             if (blog is null) return Result.Failure<AdminSideUpdateBlogViewModel>(Messages.OperationFailedError);
 
             return blog;
@@ -97,18 +99,20 @@ namespace Application.Services.Implementaions
 
         public async Task<Result> SoftDeleteBlog(int id)
         {
-            if (id < 1) return Result.Failure(Messages.OperationFailedError);
+            if (id < 1)
+                return Result.Failure(Messages.OperationFailedError);
 
-            var blog = await _dbSet.Where(n => n.Id == id).Include(n => n.Tags).FirstOrDefaultAsync();
-            if (blog is null) return Result.Failure(Messages.OperationFailedError);
+            var blog = await _context.Blogs.FindAsync(id);
+
+            if (blog is null)
+                return Result.Failure(Messages.OperationFailedError);
 
             blog.IsDeleted = true;
-            blog.Tags = new List<BlogTagMapping>();
             blog.LastUpdatedDate = DateTime.UtcNow;
 
             blog.FileName.RemoveFileFromServer(SiteTools.BlogBanner);
 
-            _dbSet.Update(blog);
+            _context.Blogs.Update(blog);
             await _context.SaveChangesAsync();
 
             BlogDeletedEvent BlogDeletedEvent = new BlogDeletedEvent(
@@ -121,12 +125,17 @@ namespace Application.Services.Implementaions
 
         public async Task<Result> CreateNewBlog(AdminSideCreateNewBlogViewModel model)
         {
-            if (model is null) return Result.Failure(Messages.OperationFailedError);
-            if (await _dbSet.AnyAsync(n => n.Slug == model.Slug.Replace(" ", "-")))
+            if (model is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            if (await _context.Blogs.AnyAsync(n => n.Slug == model.Slug.Replace(" ", "-")))
                 return Result.Failure(Messages.DuplicateSlugError);
 
-            if (!model.File.IsImage()) return Result.Failure(Messages.InvalidFileFormatError);
-            if (model.File.FileName.Length > SiteTools.MaxImageFileLength.CalculateMB()) return Result.Failure(Messages.FileLengthError);
+            if (!model.File.IsImage())
+                return Result.Failure(Messages.InvalidFileFormatError);
+
+            if (model.File.FileName.Length > SiteTools.MaxImageFileLength.CalculateMB())
+                return Result.Failure(Messages.FileLengthError);
 
             string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
             model.File.UploadFileToServer(fileName, SiteTools.BlogBanner);
@@ -141,13 +150,10 @@ namespace Application.Services.Implementaions
                 IsPublished = model.IsPublished,
                 Writer = model.Writer,
                 FileName = fileName,
-                Tags = model.Tags?.Select(n => new BlogTagMapping()
-                {
-                    TagId = n
-                }).ToList()
+                ReadingTimeInMinutes = model.ReadingTimeInMinutes
             };
 
-            await _dbSet.AddAsync(blog);
+            _context.Blogs.Add(blog);
             await _context.SaveChangesAsync();
 
             BlogCreatedEvent BlogCreatedEvent = new BlogCreatedEvent(
@@ -159,7 +165,7 @@ namespace Application.Services.Implementaions
                 blog.Priority,
                 blog.IsPublished,
                 blog.BlogCategoryId,
-                blog.Tags?.Select(n => n.TagId).ToList());
+                blog.ReadingTimeInMinutes);
 
             await _mediator.PublishEvent(BlogCreatedEvent);
 
@@ -168,12 +174,15 @@ namespace Application.Services.Implementaions
 
         public async Task<Result> UpdateBlog(AdminSideUpdateBlogViewModel model)
         {
-            if (model is null) return Result.Failure(Messages.OperationFailedError);
+            if (model is null)
+                return Result.Failure(Messages.OperationFailedError);
 
-            var blog = await _dbSet.Include(n => n.Tags).FirstOrDefaultAsync(n => n.Id == model.Id);
-            if (blog is null) return Result.Failure(Messages.OperationFailedError);
+            var blog = await _context.Blogs.FindAsync(model.Id);
 
-            if (await _dbSet.AnyAsync(n => n.Id != blog.Id && n.Slug == model.Slug.Replace(" ", "-")))
+            if (blog is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            if (await _context.Blogs.AnyAsync(n => n.Id != blog.Id && n.Slug == model.Slug.Replace(" ", "-")))
                 return Result.Failure(Messages.DuplicateSlugError);
 
             if (model.File is not null)
@@ -194,16 +203,10 @@ namespace Application.Services.Implementaions
             blog.IsPublished = model.IsPublished;
             blog.Writer = model.Writer;
             blog.BlogCategoryId = model.CategoryId;
+            blog.LastUpdatedDate = DateTime.UtcNow;
+            blog.ReadingTimeInMinutes = model.ReadingTimeInMinutes;
 
-            blog.Tags = new List<BlogTagMapping>();
-
-            blog.Tags = model.Tags?.Select(n => new BlogTagMapping()
-            {
-                BlogId = blog.Id,
-                TagId = n
-            }).ToList();
-
-            _dbSet.Update(blog);
+            _context.Blogs.Update(blog);
             await _context.SaveChangesAsync();
 
 
@@ -217,7 +220,7 @@ namespace Application.Services.Implementaions
             blog.Priority,
             blog.IsPublished,
             blog.BlogCategoryId,
-            blog.Tags?.Select(n => n.TagId).ToList());
+            blog.ReadingTimeInMinutes);
 
             await _mediator.PublishEvent(BlogUpdatedEvent);
 
@@ -232,17 +235,12 @@ namespace Application.Services.Implementaions
 
             conditions.Add(n => n.IsPublished);
 
-            if (filter.TagId is not null)
-            {
-                conditions.Add(n => n.Tags.Any(n => n.TagId == filter.TagId));
-            }
-
             if (!string.IsNullOrWhiteSpace(filter.Category))
             {
                 conditions.Add(n => n.Category.Slug == filter.Category);
             }
 
-            IQueryable<Blog> query = _dbSet;
+            IQueryable<Blog> query = _context.Blogs;
             query = query.OrderBy(n => n.Priority);
 
             foreach (var item in conditions ?? new FilterConditions<Blog>())
@@ -271,7 +269,9 @@ namespace Application.Services.Implementaions
             if (id < 1)
                 return Result.Failure<ClientSideBlogDetailsViewModel>(Messages.OperationFailedError);
 
-            var blog = await _dbSet.Where(n => n.IsPublished && n.Id == id)
+            var blog = await _context.Blogs
+                .AsNoTracking()
+                .Where(n => n.IsPublished && n.Id == id)
                 .Select(n => new ClientSideBlogDetailsViewModel()
                 {
                     Id = n.Id,
@@ -283,13 +283,8 @@ namespace Application.Services.Implementaions
                     Writer = n.Writer,
                     Category = n.Category.Title,
                     CategoryId = n.BlogCategoryId,
-                    CategorySlug = n.Category.Slug,
-                    Tags = n.Tags.Select(n => new ClientSideBlogTagViewModel()
-                    {
-                        Id = n.TagId,
-                        Title = n.Tag.Title
-                    }).ToList()
-                }).AsNoTracking().FirstOrDefaultAsync();
+                    CategorySlug = n.Category.Slug
+                }).FirstOrDefaultAsync();
             if (blog is null) return Result.Failure<ClientSideBlogDetailsViewModel>(Messages.OperationFailedError);
 
             return blog;
@@ -302,7 +297,7 @@ namespace Application.Services.Implementaions
             var conditions = Filter.GenerateConditions<Blog>();
             conditions.Add(n => n.IsPublished);
 
-            IQueryable<Blog> query = _dbSet;
+            IQueryable<Blog> query = _context.Blogs;
             query = query.OrderByDescending(n => n.Id);
 
             foreach (var item in conditions ?? new FilterConditions<Blog>())
@@ -335,7 +330,7 @@ namespace Application.Services.Implementaions
             conditions.Add(n => n.Id != id);
             conditions.Add(n => n.BlogCategoryId == categoryId);
 
-            IQueryable<Blog> query = _dbSet;
+            IQueryable<Blog> query = _context.Blogs;
             query = query.OrderByDescending(n => n.Id);
 
             foreach (var item in conditions ?? new FilterConditions<Blog>())
@@ -360,14 +355,15 @@ namespace Application.Services.Implementaions
 
         public async Task<Result<List<AdminSideBlogForSiteMapViewModel>>> AdminSideGetBlogIdsForSiteMap()
         {
-            var ids = await _dbSet.Where(n => n.IsPublished)
+            var ids = await _context.Blogs
+                .AsNoTracking()
+                .Where(n => n.IsPublished)
                 .Select(n => new AdminSideBlogForSiteMapViewModel()
                 {
                     Id = n.Id,
                     Slug = n.Slug
-                })
-                .AsNoTracking()
-                .ToListAsync();
+                }).ToListAsync();
+
             if (!ids.Any())
                 return Result.Failure<List<AdminSideBlogForSiteMapViewModel>>(Messages.OperationFailedError);
 

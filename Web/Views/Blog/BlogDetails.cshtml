@@ -1,6 +1,5 @@
-﻿@using Application.Tools
-@using Application.Dtos.Blog.ClientSide
-@using Application.Dtos.BlogTag.ClientSide
+﻿@using Application.Dtos.Blog.ClientSide
+@using Application.Tools
 @model ClientSideBlogDetailsViewModel
 
 @{
@@ -66,20 +65,6 @@
                     </div>
                     <!-- blog-tags-social-media -->
                     <div class="ltn__blog-tags-social-media mt-80 row">
-                        @if (Model.Tags?.Any() ?? false)
-                        {
-                            <div class="ltn__tagcloud-widget col-lg-8">
-                                <h4>برچسب های مرتبط</h4>
-                                <ul>
-                                    @foreach (var item in Model.Tags ?? new List<ClientSideBlogTagViewModel>())
-                                    {
-                                        <li>
-                                            <a asp-area="" asp-controller="Blog" asp-action="BlogsList" asp-route-TagId="@item.Id">@item.Title</a>
-                                        </li>
-                                    }
-                                </ul>
-                            </div>
-                        }
                         <div class="ltn__tagcloud-widget col-lg-12 mt-5">
                             <h4>اشتراک گذاری</h4>
                             @{
@@ -149,7 +134,6 @@
 
                     @await Component.InvokeAsync("BlogDetailsSocialMedia")
 
-                    @await Component.InvokeAsync("BlogTags")
                 </aside>
             </div>
         </div>

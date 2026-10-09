@@ -1,5 +1,4 @@
-﻿using Application.Dtos;
-using Domain.Shared;
+﻿using Domain.Shared;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
@@ -48,7 +47,9 @@ namespace Application.Dtos.Blog.AdminSide
         [Range(1, int.MaxValue)]
         public int CategoryId { get; set; }
 
-        [Display(Name = "برچسب")]
-        public List<int>? Tags { get; set; }
+        [Display(Name = "زمان مطالعه")]
+        [Required(ErrorMessage = Messages.RequiredError)]
+        [Range(1, 1000)]
+        public int ReadingTimeInMinutes { get; set; }
     }
 }

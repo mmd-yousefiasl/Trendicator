@@ -9,11 +9,11 @@
         public string Writer { get; set; }
         public int Priority { get; set; }
         public bool IsPublished { get; set; }
+        public int ReadingTimeInMinutes { get; set; }
 
         #region Relations
         public int BlogCategoryId { get; set; }
         public BlogCategory Category { get; set; }
-        public ICollection<BlogTagMapping>? Tags { get; set; }
         public ICollection<BlogView>? Views { get; set; }
         #endregion
     }

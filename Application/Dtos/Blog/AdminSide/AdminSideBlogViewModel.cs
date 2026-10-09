@@ -1,6 +1,4 @@
-﻿using Application.Dtos;
-
-namespace Application.Dtos.Blog.AdminSide
+﻿namespace Application.Dtos.Blog.AdminSide
 {
     public class AdminSideBlogViewModel : CommonDto
     {
@@ -10,5 +8,6 @@ namespace Application.Dtos.Blog.AdminSide
         public int Priority { get; set; }
         public bool IsPublished { get; set; }
         public string Category { get; set; }
+        public int ReadingTimeInMinutes { get; set; }
     }
 }

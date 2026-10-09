@@ -1,6 +1,4 @@
-﻿using Application.Dtos;
-
-namespace Application.Dtos.Blog.ClientSide
+﻿namespace Application.Dtos.Blog.ClientSide
 {
     public class ClientSideBlogViewModel : CommonDto
     {

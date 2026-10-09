@@ -1,6 +1,4 @@
-﻿using Application.Dtos;
-
-namespace Application.Dtos.Blog.AdminSide
+﻿namespace Application.Dtos.Blog.AdminSide
 {
     public class AdminSideBlogForSiteMapViewModel : CommonDto
     {

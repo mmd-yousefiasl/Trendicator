@@ -51,7 +51,6 @@ namespace Web
             services.AddScoped<IOurFeaturesService, OurFeaturesService>();
             services.AddScoped<IBlogCategoryService, BlogCategoryService>();
             services.AddScoped<IBlogService, BlogService>();
-            services.AddScoped<IBlogTagService, BlogTagService>();
             services.AddScoped<IBlogViewService, BlogViewService>();
             services.AddScoped<ISocialMediaService, SocialMediaService>();
             services.AddScoped<ITestimonialService, TestimonialService>();
