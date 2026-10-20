@@ -1,0 +1,31 @@
+﻿@using Application.Dtos.Blog.ClientSide
+@using Application.Tools
+@model ClientSideBlogViewModel
+
+@if (Model is not null)
+{
+    <a asp-area="" asp-controller="Blog" asp-action="BlogDetails" asp-route-id="@Model.Id" asp-route-slug="@Model.Slug" class="card post-card">
+        <img src="@SiteTools.BlogBanner@Model.FileName"
+             data-src-light="@SiteTools.BlogBanner@Model.FileName" loading="lazy"
+             data-src-dark="@SiteTools.BlogBanner@Model.FileName" decoding="async" alt="@Model.Slug">
+        <div class="post-card__body">
+            <div class="post-meta">
+                <span>
+                    @Model.CreatedDate.GetDate()
+                </span>
+                <span>
+                    ·
+                    @Model.TimeToRead
+                    دقیقه مطالعه
+                </span>
+                <span>
+                    ·
+                    @Model.ViewsCount
+                    بازدید
+                </span>
+            </div>
+            <h3>@Model.Title</h3>
+            <p>@Model.MetaDescription</p>
+        </div>
+    </a>
+}

@@ -9,15 +9,22 @@ namespace Data.Context.Configurations.Blogs
         public void Configure(EntityTypeBuilder<BlogView> builder)
         {
             builder.ToTable("BlogViews");
-
             builder.HasKey(n => n.Id);
-            builder.HasQueryFilter(n => !n.IsDeleted);
 
-            builder.Property(n => n.UserIP).HasMaxLength(50);
+            builder.HasIndex(n => new { n.BlogId, n.VisitorId })
+                .IsUnique();
+
+            builder.Property(n => n.UserIP)
+                .HasMaxLength(50);
+
+            builder.Property(n => n.VisitorId)
+                .HasMaxLength(50);
 
             builder.HasOne(n => n.Blog)
-                .WithMany(n => n.Views)
-                .HasForeignKey(n => n.BlogId);
+                 .WithMany(n => n.Views)
+                 .HasForeignKey(n => n.BlogId)
+                 .OnDelete(DeleteBehavior.Cascade)
+                 .IsRequired(false);
         }
     }
 }

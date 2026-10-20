@@ -8,6 +8,6 @@
         public int Priority { get; set; }
         public bool IsPublished { get; set; }
         public string Category { get; set; }
-        public int ReadingTimeInMinutes { get; set; }
+        public int TimeToRead { get; set; }
     }
 }

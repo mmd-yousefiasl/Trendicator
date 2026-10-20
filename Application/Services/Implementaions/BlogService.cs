@@ -1,5 +1,6 @@
 ﻿using Application.Dtos.Blog.AdminSide;
 using Application.Dtos.Blog.ClientSide;
+using Application.Dtos.BlogCategory.ClientSide;
 using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Tools;
@@ -8,6 +9,7 @@ using Domain.Events.Blogs.Blog;
 using Domain.Models.Blogs;
 using Domain.Shared;
 using Domain.Statics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Implementaions
@@ -17,14 +19,20 @@ namespace Application.Services.Implementaions
         #region Fields
         private readonly TrendicatorDbContext _context;
         private readonly IMediatorHandler _mediator;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IVisitorService _visitorService;
         #endregion
 
         #region Ctor
         public BlogService(TrendicatorDbContext context,
-            IMediatorHandler mediator)
+            IMediatorHandler mediator,
+            IHttpContextAccessor httpContextAccessor,
+            IVisitorService visitorService)
         {
             _context = context;
             _mediator = mediator;
+            _httpContextAccessor = httpContextAccessor;
+            _visitorService = visitorService;
         }
         #endregion
 
@@ -64,7 +72,7 @@ namespace Application.Services.Implementaions
                 Priority = n.Priority,
                 Title = n.Title,
                 Writer = n.Writer,
-                ReadingTimeInMinutes = n.ReadingTimeInMinutes
+                TimeToRead = n.TimeToRead
             }));
 
             return filter;
@@ -90,7 +98,8 @@ namespace Application.Services.Implementaions
                     CategoryId = n.BlogCategoryId,
                     IsPublished = n.IsPublished,
                     Priority = n.Priority,
-                    ReadingTimeInMinutes = n.ReadingTimeInMinutes
+                    TimeToRead = n.TimeToRead,
+                    MetaDescription = n.MetaDescription
                 }).FirstOrDefaultAsync();
             if (blog is null) return Result.Failure<AdminSideUpdateBlogViewModel>(Messages.OperationFailedError);
 
@@ -150,7 +159,8 @@ namespace Application.Services.Implementaions
                 IsPublished = model.IsPublished,
                 Writer = model.Writer,
                 FileName = fileName,
-                ReadingTimeInMinutes = model.ReadingTimeInMinutes
+                TimeToRead = model.TimeToRead,
+                MetaDescription = model.MetaDescription
             };
 
             _context.Blogs.Add(blog);
@@ -165,7 +175,7 @@ namespace Application.Services.Implementaions
                 blog.Priority,
                 blog.IsPublished,
                 blog.BlogCategoryId,
-                blog.ReadingTimeInMinutes);
+                blog.TimeToRead);
 
             await _mediator.PublishEvent(BlogCreatedEvent);
 
@@ -204,7 +214,8 @@ namespace Application.Services.Implementaions
             blog.Writer = model.Writer;
             blog.BlogCategoryId = model.CategoryId;
             blog.LastUpdatedDate = DateTime.UtcNow;
-            blog.ReadingTimeInMinutes = model.ReadingTimeInMinutes;
+            blog.TimeToRead = model.TimeToRead;
+            blog.MetaDescription = model.MetaDescription;
 
             _context.Blogs.Update(blog);
             await _context.SaveChangesAsync();
@@ -220,7 +231,7 @@ namespace Application.Services.Implementaions
             blog.Priority,
             blog.IsPublished,
             blog.BlogCategoryId,
-            blog.ReadingTimeInMinutes);
+            blog.TimeToRead);
 
             await _mediator.PublishEvent(BlogUpdatedEvent);
 
@@ -233,15 +244,22 @@ namespace Application.Services.Implementaions
 
             var conditions = Filter.GenerateConditions<Blog>();
 
-            conditions.Add(n => n.IsPublished);
+            conditions.Add(n => n.IsPublished == true);
 
-            if (!string.IsNullOrWhiteSpace(filter.Category))
+            if (!string.IsNullOrWhiteSpace(filter.CategorySlug))
             {
-                conditions.Add(n => n.Category.Slug == filter.Category);
+                var categoryResult = await ClientSideGetCategoryBySlug(filter.CategorySlug);
+                if (categoryResult.IsSuccess)
+                {
+                    filter.CategoryMetaDescription = categoryResult.Value.MetaDescription;
+                    filter.CategoryTitle = categoryResult.Value.Title;
+                }
+
+                conditions.Add(n => n.Category.Slug == filter.CategorySlug);
             }
 
             IQueryable<Blog> query = _context.Blogs;
-            query = query.OrderBy(n => n.Priority);
+            query = query.OrderByDescending(n => n.Id);
 
             foreach (var item in conditions ?? new FilterConditions<Blog>())
             {
@@ -251,14 +269,13 @@ namespace Application.Services.Implementaions
             await filter.Paging(query.Select(n => new ClientSideBlogViewModel()
             {
                 Id = n.Id,
-                Title = n.Title,
                 Slug = n.Slug,
-                FileName = n.FileName,
+                Title = n.Title,
                 CreatedDate = n.CreatedDate,
-                Writer = n.Writer,
-                CategoryId = n.BlogCategoryId,
-                Category = n.Category.Title,
-                CategorySlug = n.Category.Slug
+                FileName = n.FileName,
+                MetaDescription = n.MetaDescription,
+                TimeToRead = n.TimeToRead,
+                ViewsCount = n.ViewsCount
             }));
 
             return filter;
@@ -283,7 +300,21 @@ namespace Application.Services.Implementaions
                     Writer = n.Writer,
                     Category = n.Category.Title,
                     CategoryId = n.BlogCategoryId,
-                    CategorySlug = n.Category.Slug
+                    CategorySlug = n.Category.Slug,
+                    MetaDescription = n.MetaDescription,
+                    TimeToRead = n.TimeToRead,
+                    ViewsCount = n.ViewsCount,
+                    Comments = n.Comments.Where(c => c.IsPublished)
+                    .OrderByDescending(c => c.Id)
+                    .Select(c => new ClientSideBlogCommentDto()
+                    {
+                        Name = c.Name,
+                        Comment = c.Comment,
+                        CreatedDate = c.CreatedDate,
+                        LastUpdatedDate = c.LastUpdatedDate,
+                        Reply = c.Reply
+                    }).Take(10)
+                    .ToList()
                 }).FirstOrDefaultAsync();
             if (blog is null) return Result.Failure<ClientSideBlogDetailsViewModel>(Messages.OperationFailedError);
 
@@ -311,11 +342,10 @@ namespace Application.Services.Implementaions
                 Title = n.Title,
                 Slug = n.Slug,
                 FileName = n.FileName,
-                Category = n.Category.Title,
                 CreatedDate = n.CreatedDate,
-                Writer = n.Writer,
-                CategoryId = n.BlogCategoryId,
-                CategorySlug = n.Category.Slug
+                TimeToRead = n.TimeToRead,
+                MetaDescription = n.MetaDescription,
+                ViewsCount = n.ViewsCount,
             }));
 
             return filter;
@@ -323,7 +353,7 @@ namespace Application.Services.Implementaions
 
         public async Task<Result<ClientSideFilterBlogsViewModel>> ClientSideGetRelatedBlogs(int id, int categoryId)
         {
-            ClientSideFilterBlogsViewModel filter = new ClientSideFilterBlogsViewModel() { TakeEntity = 2 };
+            ClientSideFilterBlogsViewModel filter = new ClientSideFilterBlogsViewModel() { TakeEntity = 3 };
 
             var conditions = Filter.GenerateConditions<Blog>();
             conditions.Add(n => n.IsPublished);
@@ -344,10 +374,10 @@ namespace Application.Services.Implementaions
                 Title = n.Title,
                 Slug = n.Slug,
                 FileName = n.FileName,
-                Category = n.Category.Title,
                 CreatedDate = n.CreatedDate,
-                Writer = n.Writer,
-                CategoryId = n.BlogCategoryId,
+                MetaDescription = n.MetaDescription,
+                ViewsCount = n.ViewsCount,
+                TimeToRead = n.TimeToRead,
             }));
 
             return filter;
@@ -368,6 +398,218 @@ namespace Application.Services.Implementaions
                 return Result.Failure<List<AdminSideBlogForSiteMapViewModel>>(Messages.OperationFailedError);
 
             return ids;
+        }
+
+        public async Task<Result> ClientSideAddBlogView(int blogId)
+        {
+            var visitorId = _visitorService.GetOrCreateVisitorId();
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            var userIP = _httpContextAccessor.HttpContext.GetUserIP();
+
+            var alreadyViewed = await _context.BlogViews
+                .AsNoTracking()
+                .AnyAsync(n => n.BlogId == blogId && n.VisitorId == visitorId);
+
+            if (alreadyViewed)
+                return Result.Success();
+
+            var view = new BlogView()
+            {
+                BlogId = blogId,
+                UserId = userId > 0 ? userId : null,
+                UserIP = userIP,
+                VisitorId = visitorId
+            };
+
+            _context.BlogViews.Add(view);
+            await _context.SaveChangesAsync();
+
+            try
+            {
+                await _context.Blogs
+                    .Where(b => b.Id == blogId)
+                    .ExecuteUpdateAsync(s => s.SetProperty(b => b.ViewsCount, b => b.ViewsCount + 1));
+            }
+            catch
+            {
+                return Result.Failure(Messages.OperationFailedError);
+            }
+
+            return Result.Success();
+        }
+
+        public async Task<Result> ClientSideAddNewBlogComment(ClientSideAddCommentDto model)
+        {
+            if (model is null || model.BlogId < 1)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            var userIP = _httpContextAccessor.HttpContext.GetUserIP();
+
+            var comment = new BlogComment()
+            {
+                BlogId = model.BlogId,
+                Name = model.Name,
+                Email = model.Email,
+                Comment = model.Comment,
+                IsPublished = false,
+                Reply = null,
+                UserIP = userIP
+            };
+
+            if (userId > 0)
+                comment.UserId = userId;
+
+
+            _context.BlogComments.Add(comment);
+            await _context.SaveChangesAsync();
+
+            return Result.Success(Messages.BlogCommentSentSuccessfully);
+        }
+
+        public async Task<Result<AdminSideFilterBlogCommentsDto>> AdminSideFilterComments(AdminSideFilterBlogCommentsDto filter)
+        {
+            if (filter.BlogId < 1)
+                return Result.Failure<AdminSideFilterBlogCommentsDto>(Messages.OperationFailedError);
+
+            var conditions = Filter.GenerateConditions<BlogComment>();
+
+            conditions.Add(n => n.BlogId == filter.BlogId);
+
+            if (!string.IsNullOrWhiteSpace(filter.Search))
+            {
+                conditions.Add(n => n.Name.Contains(filter.Search) || n.Email.Contains(filter.Search));
+            }
+
+            if (filter.IsPublished is not null)
+            {
+                conditions.Add(n => n.IsPublished == filter.IsPublished);
+            }
+
+            if (filter.IsAnswered is not null)
+            {
+                if (filter.IsAnswered == true)
+                {
+                    conditions.Add(n => n.Reply != null);
+                }
+                else
+                {
+                    conditions.Add(n => n.Reply == null);
+                }
+            }
+
+            IQueryable<BlogComment> query = _context.BlogComments;
+            query = query.OrderByDescending(n => n.Id);
+
+            foreach (var item in conditions ?? new FilterConditions<BlogComment>())
+            {
+                query = query.Where(item);
+            }
+
+            await filter.Paging(query.Select(n => new AdminSideBlogCommentDto()
+            {
+                Id = n.Id,
+                Comment = n.Comment,
+                Email = n.Email,
+                IsAnswered = (n.Reply != null) ? true : false,
+                IsPublished = n.IsPublished,
+                Name = n.Name
+            }));
+
+            return filter;
+        }
+
+        public async Task<Result<int>> AdminSideDeleteBlogComment(int id)
+        {
+            if (id < 1)
+                return Result.Failure<int>(Messages.OperationFailedError);
+
+            var comment = await _context.BlogComments.FindAsync(id);
+            if (comment is null)
+                return Result.Failure<int>(Messages.OperationFailedError);
+
+            comment.IsDeleted = true;
+            comment.LastUpdatedDate = DateTime.UtcNow;
+
+            _context.BlogComments.Update(comment);
+            await _context.SaveChangesAsync();
+
+            return comment.BlogId;
+        }
+
+        public async Task<Result<AdminSideUpdateBlogCommentDto>> AdminSideGetBlogCommentForUpdate(int id)
+        {
+            if (id < 1)
+                return Result.Failure<AdminSideUpdateBlogCommentDto>(Messages.OperationFailedError);
+
+            var comment = await _context.BlogComments
+                .AsNoTracking()
+                .Where(n => n.Id == id)
+                .Select(n => new AdminSideUpdateBlogCommentDto()
+                {
+                    Id = n.Id,
+                    Comment = n.Comment,
+                    IsPublished = n.IsPublished,
+                    Reply = n.Reply,
+                    BlogId = n.BlogId
+                }).FirstOrDefaultAsync();
+
+            if (comment is null)
+                return Result.Failure<AdminSideUpdateBlogCommentDto>(Messages.OperationFailedError);
+
+            return comment;
+        }
+
+        public async Task<Result<int>> AdminSideUpdateBlogComment(AdminSideUpdateBlogCommentDto model)
+        {
+            if (model is null)
+                return Result.Failure<int>(Messages.OperationFailedError);
+
+            var comment = await _context.BlogComments.FindAsync(model.Id);
+            if (comment is null)
+                return Result.Failure<int>(Messages.OperationFailedError);
+
+            comment.Reply = model.Reply;
+            comment.IsPublished = model.IsPublished;
+            comment.LastUpdatedDate = DateTime.UtcNow;
+
+            _context.BlogComments.Update(comment);
+            await _context.SaveChangesAsync();
+
+            return comment.BlogId;
+        }
+
+        public async Task<Result<ClientSideBlogCategoryViewModel>> ClientSideGetCategoryBySlug(string slug)
+        {
+            if (string.IsNullOrWhiteSpace(slug))
+                return Result.Failure<ClientSideBlogCategoryViewModel>(Messages.OperationFailedError);
+
+            var categories = await _context.BlogCategories
+                          .AsNoTracking()
+                          .Where(n => n.IsPublished)
+                          .OrderBy(n => n.Priority)
+                          .Select(n => new ClientSideBlogCategoryViewModel()
+                          {
+                              Id = n.Id,
+                              Title = n.Title,
+                              Slug = n.Slug,
+                              MetaDescription = n.MetaDescription
+                          }).ToListAsync();
+
+            if (!categories?.Any() ?? true)
+                return Result.Failure<ClientSideBlogCategoryViewModel>(Messages.OperationFailedError);
+
+            var category = categories!.FirstOrDefault(n => n.Slug == slug);
+            if (category is null)
+                return Result.Failure<ClientSideBlogCategoryViewModel>(Messages.OperationFailedError);
+
+            return new ClientSideBlogCategoryViewModel()
+            {
+                Id = category.Id,
+                Title = category.Title,
+                Slug = category.Slug,
+                MetaDescription = category.MetaDescription
+            };
         }
     }
 }

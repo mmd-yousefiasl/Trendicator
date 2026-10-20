@@ -1,0 +1,30 @@
+﻿@using Application.Dtos.Blog.ClientSide
+@model ClientSideAddCommentDto
+
+<form class="comments__form card card-pad"
+      asp-area="" asp-controller="Blog" asp-action="AddComment" method="post">
+
+    <input type="hidden" asp-for="BlogId" />
+    <b>دیدگاه خود را بنویسید</b>
+    <div class="grid grid--2 mt-2" style="gap:14px">
+        <div class="field m-0">
+            <label asp-for="Name"></label>
+            <input class="input" asp-for="Name">
+            <span asp-validation-for="Name"></span>
+        </div>
+        <div class="field m-0">
+            <label asp-for="Email">ایمیل (منتشر نمی‌شود)</label>
+            <input class="input" asp-for="Email">
+            <span asp-validation-for="Email"></span>
+        </div>
+    </div>
+    <div class="field">
+        <label asp-for="Comment"></label>
+        <textarea class="textarea" asp-for="Comment"></textarea>
+        <span asp-validation-for="Comment"></span>
+    </div>
+    <div class="flex flex--between flex--wrap" style="gap:12px">
+        <p class="hint m-0">دیدگاه‌ها پس از بررسی کارشناسان منتشر می‌شوند.</p>
+        <button class="btn btn--primary" type="submit">ارسال دیدگاه</button>
+    </div>
+</form>

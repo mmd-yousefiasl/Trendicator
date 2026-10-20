@@ -109,5 +109,65 @@ namespace Web.Areas.Admin.Controllers
             }
             return RedirectToAction(nameof(BlogsList));
         }
+
+        [Permission("BlogComments")]
+        [HttpGet("/admin/blog-comments")]
+        public async Task<IActionResult> BlogComments(AdminSideFilterBlogCommentsDto filter)
+        {
+            var result = await _blogService.AdminSideFilterComments(filter);
+            if (result.IsFailure)
+                return View(new AdminSideFilterBlogCommentsDto());
+
+            return View(result.Value);
+        }
+
+        [Permission("DeleteBlogComment")]
+        [HttpPost("/admin/remove-blog-comment"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteBlogComment(int id)
+        {
+            var result = await _blogService.AdminSideDeleteBlogComment(id);
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+                return RedirectToAction(nameof(BlogsList));
+            }
+            else
+            {
+                TempData[TemporarySuccessMessage] = result.Message;
+                return RedirectToAction(nameof(BlogComments), new { BlogId = result.Value });
+            }
+        }
+
+        [Permission("UpdateBlogComment")]
+        [HttpGet("/admin/edit-blog-comment")]
+        public async Task<IActionResult> UpdateBlogComment(int id)
+        {
+            var result = await _blogService.AdminSideGetBlogCommentForUpdate(id);
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+                return RedirectToAction(nameof(BlogsList));
+            }
+
+            return View(result.Value);
+        }
+
+        [Permission("UpdateBlogComment")]
+        [HttpPost("/admin/edit-blog-comment"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateBlogComment(AdminSideUpdateBlogCommentDto model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var result = await _blogService.AdminSideUpdateBlogComment(model);
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+                return View(model);
+            }
+
+            TempData[TemporarySuccessMessage] = result.Message;
+            return RedirectToAction(nameof(BlogComments), new { BlogId = result.Value });
+        }
     }
 }

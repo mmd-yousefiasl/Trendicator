@@ -12,13 +12,18 @@ namespace Application.Dtos.Blog.AdminSide
 
         [Display(Name = "عنوان")]
         [Required(ErrorMessage = Messages.RequiredError)]
-        [MaxLength(200, ErrorMessage = Messages.MaxLengthError)]
+        [MaxLength(100, ErrorMessage = Messages.MaxLengthError)]
         public string Title { get; set; }
 
         [Display(Name = "عنوان در مرورگر")]
         [Required(ErrorMessage = Messages.RequiredError)]
-        [MaxLength(400, ErrorMessage = Messages.MaxLengthError)]
+        [MaxLength(200, ErrorMessage = Messages.MaxLengthError)]
         public string Slug { get; set; }
+
+        [Display(Name = "توضیحات متا")]
+        [Required(ErrorMessage = Messages.RequiredError)]
+        [MaxLength(200, ErrorMessage = Messages.MaxLengthError)]
+        public string MetaDescription { get; set; }
 
         [Display(Name = "بدنه")]
         [Required(ErrorMessage = Messages.RequiredError)]
@@ -46,6 +51,6 @@ namespace Application.Dtos.Blog.AdminSide
         [Display(Name = "زمان مطالعه")]
         [Required(ErrorMessage = Messages.RequiredError)]
         [Range(1, 1000)]
-        public int ReadingTimeInMinutes { get; set; }
+        public int TimeToRead { get; set; }
     }
 }

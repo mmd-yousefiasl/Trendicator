@@ -51,7 +51,6 @@ namespace Web
             services.AddScoped<IOurFeaturesService, OurFeaturesService>();
             services.AddScoped<IBlogCategoryService, BlogCategoryService>();
             services.AddScoped<IBlogService, BlogService>();
-            services.AddScoped<IBlogViewService, BlogViewService>();
             services.AddScoped<ISocialMediaService, SocialMediaService>();
             services.AddScoped<ITestimonialService, TestimonialService>();
             services.AddScoped<ISiteDataService, SiteDataService>();
@@ -82,6 +81,7 @@ namespace Web
             services.AddScoped<ISiteMapService, SiteMapService>();
             services.AddScoped<IMediaService, MediaService>();
             services.AddScoped<IProductFaqService, ProductFaqService>();
+            services.AddScoped<IVisitorService, VisitorService>();
             #endregion
 
             #region Background Services

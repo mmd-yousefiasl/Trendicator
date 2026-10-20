@@ -316,6 +316,27 @@ namespace Domain.Statics
                 Title = "حذف مقاله",
                 UniqueName = "DeleteBlog"
             },
+            new Permission
+            {
+                Id = 136,
+                ParentId = 42,
+                Title = "نظرات مقالات",
+                UniqueName = "BlogComments"
+            },
+            new Permission
+            {
+                Id = 137,
+                ParentId = 42,
+                Title = "حذف نظر",
+                UniqueName = "DeleteBlogComment"
+            },
+            new Permission
+            {
+                Id = 138,
+                ParentId = 42,
+                Title = "ویرایش نظر",
+                UniqueName = "UpdateBlogComment"
+            },
             #endregion
 
             #region SocialMedia
@@ -980,7 +1001,7 @@ namespace Domain.Statics
             #endregion
         };
 
-        //Last used id ==> 135
+        //Last used id ==> 138
         public static List<Permission> Permissions = _permissions;
     }
 }

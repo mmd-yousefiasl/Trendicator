@@ -61,5 +61,10 @@
         public static string AdminTelegramWorkerSendUrl { get; set; }
 
         #endregion
+
+        #region Visior
+        public static string VisitorKeyName { get; set; }
+        public static int VisitorExpirationDays { get; set; }
+        #endregion
     }
 }

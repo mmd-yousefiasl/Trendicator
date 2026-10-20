@@ -15,7 +15,6 @@ namespace Application.Services.Implementaions
     {
         #region Fields
         private readonly TrendicatorDbContext _context;
-        private protected DbSet<BlogCategory> _dbSet;
         private readonly IMediatorHandler _mediator;
         #endregion
 
@@ -24,7 +23,6 @@ namespace Application.Services.Implementaions
             IMediatorHandler mediator)
         {
             _context = context;
-            _dbSet = _context.Set<BlogCategory>();
             _mediator = mediator;
         }
         #endregion
@@ -32,7 +30,9 @@ namespace Application.Services.Implementaions
         public async Task<Result> CreateNewBlogCategory(AdminSideCreateNewBlogCategoryViewModel model)
         {
             if (model is null) return Result.Failure(Messages.OperationFailedError);
-            if (await _dbSet.AnyAsync(n => n.Slug == model.Slug.Replace(" ", "-")))
+            if (await _context.BlogCategories
+                .AsNoTracking()
+                .AnyAsync(n => n.Slug == model.Slug.Replace(" ", "-")))
                 return Result.Failure(Messages.DuplicateSlugError);
 
             var category = new BlogCategory()
@@ -40,15 +40,17 @@ namespace Application.Services.Implementaions
                 Title = model.Title,
                 IsPublished = model.IsPublished,
                 Priority = model.Priority,
+                MetaDescription = model.MetaDescription,
                 Slug = model.Slug.Replace(" ", "-")
             };
 
-            await _dbSet.AddAsync(category);
+            _context.BlogCategories.Add(category);
             await _context.SaveChangesAsync();
 
             BlogCategoryCreatedEvent BlogCategoryCreatedEvent = new BlogCategoryCreatedEvent(
                 category.Title,
                 category.Slug,
+                category.MetaDescription,
                 category.Priority,
                 category.IsPublished);
 
@@ -74,7 +76,7 @@ namespace Application.Services.Implementaions
                 conditions.Add(n => n.IsPublished == filter.IsPublished);
             }
 
-            IQueryable<BlogCategory> query = _dbSet;
+            IQueryable<BlogCategory> query = _context.BlogCategories;
             query = query.OrderByDescending(n => n.Id);
 
             foreach (var item in conditions ?? new FilterConditions<BlogCategory>())
@@ -98,29 +100,39 @@ namespace Application.Services.Implementaions
         {
             if (id < 1) return Result.Failure<AdminSideUpdateBlogCategoryViewModel>(Messages.OperationFailedError);
 
-            var category = await _dbSet.Where(n => n.Id == id).Select(n => new AdminSideUpdateBlogCategoryViewModel()
-            {
-                Id = n.Id,
-                IsPublished = n.IsPublished,
-                Priority = n.Priority,
-                Title = n.Title,
-                Slug = n.Slug
-            }).AsNoTracking().FirstOrDefaultAsync();
-            if (category is null) return Result.Failure<AdminSideUpdateBlogCategoryViewModel>(Messages.OperationFailedError);
+            var category = await _context.BlogCategories
+                .AsNoTracking()
+                .Where(n => n.Id == id)
+                .Select(n => new AdminSideUpdateBlogCategoryViewModel()
+                {
+                    Id = n.Id,
+                    IsPublished = n.IsPublished,
+                    Priority = n.Priority,
+                    Title = n.Title,
+                    Slug = n.Slug,
+                    MetaDescription = n.MetaDescription
+                }).FirstOrDefaultAsync();
+
+            if (category is null)
+                return Result.Failure<AdminSideUpdateBlogCategoryViewModel>(Messages.OperationFailedError);
 
             return category;
         }
 
         public async Task<Result<List<AdminSideBlogCategoryAsOptionViewModel>>> GetCategoriesAsOptions()
         {
-            var categories = await _dbSet.Where(n => n.IsPublished).OrderBy(n => n.Priority)
+            var categories = await _context.BlogCategories
+                .AsNoTracking()
+                .Where(n => n.IsPublished).OrderBy(n => n.Priority)
                 .Select(n => new AdminSideBlogCategoryAsOptionViewModel()
                 {
                     Id = n.Id,
                     Title = n.Title,
                     Slug = n.Slug
-                }).AsNoTracking().ToListAsync();
-            if (!categories?.Any() ?? true) return Result.Failure<List<AdminSideBlogCategoryAsOptionViewModel>>(Messages.OperationFailedError);
+                }).ToListAsync();
+
+            if (!categories?.Any() ?? true)
+                return Result.Failure<List<AdminSideBlogCategoryAsOptionViewModel>>(Messages.OperationFailedError);
 
             return categories;
         }
@@ -129,14 +141,15 @@ namespace Application.Services.Implementaions
         {
             if (id < 1) return Result.Failure(Messages.OperationFailedError);
 
-            var category = await _dbSet.FindAsync(id);
-            if (category is null) return Result.Failure(Messages.OperationFailedError);
+            var category = await _context.BlogCategories.Where(n => n.Id == id && !n.Blogs.Any()).FirstOrDefaultAsync();
 
-            if (await _dbSet.AnyAsync(n => n.Blogs.Any())) return Result.Failure(Messages.CantDeleteThisRecordError);
+            if (category is null)
+                return Result.Failure(Messages.CantDeleteThisRecordError);
+
 
             category.IsDeleted = true;
 
-            _dbSet.Update(category);
+            _context.BlogCategories.Update(category);
             await _context.SaveChangesAsync();
 
             BlogCategoryDeletedEvent BlogCategoryDeletedEvent = new BlogCategoryDeletedEvent(
@@ -150,24 +163,30 @@ namespace Application.Services.Implementaions
         public async Task<Result> UpdateBlogCategory(AdminSideUpdateBlogCategoryViewModel model)
         {
             if (model is null) return Result.Failure(Messages.OperationFailedError);
-            if (await _dbSet.AnyAsync(n => n.Slug == model.Slug.Replace(" ", "-") && n.Id != model.Id))
+            if (await _context.BlogCategories.
+                AsNoTracking()
+                .AnyAsync(n => n.Slug == model.Slug.Replace(" ", "-") && n.Id != model.Id))
                 return Result.Failure(Messages.DuplicateSlugError);
 
-            var category = await _dbSet.FindAsync(model.Id);
-            if (category is null) return Result.Failure(Messages.OperationFailedError);
+            var category = await _context.BlogCategories.FindAsync(model.Id);
+
+            if (category is null)
+                return Result.Failure(Messages.OperationFailedError);
 
             category.Title = model.Title;
             category.IsPublished = model.IsPublished;
             category.Priority = model.Priority;
             category.Slug = model.Slug.Replace(" ", "-");
+            category.MetaDescription = model.MetaDescription;
 
-            _dbSet.Update(category);
+            _context.BlogCategories.Update(category);
             await _context.SaveChangesAsync();
 
             BlogCategoryUpdatedEvent BlogCategoryUpdatedEvent = new BlogCategoryUpdatedEvent(
             category.Id,
             category.Title,
             category.Slug,
+            category.MetaDescription,
             category.Priority,
             category.IsPublished);
 
@@ -178,15 +197,19 @@ namespace Application.Services.Implementaions
 
         public async Task<Result<List<ClientSideBlogCategoryViewModel>>> ClientSideGetBlogCategories()
         {
-            var categories = await _dbSet.Where(n => n.IsPublished).OrderBy(n => n.Priority)
+            var categories = await _context.BlogCategories
+                .AsNoTracking()
+                .Where(n => n.IsPublished).OrderBy(n => n.Priority)
                 .Select(n => new ClientSideBlogCategoryViewModel()
                 {
                     Id = n.Id,
                     Title = n.Title,
                     Slug = n.Slug,
-                    BlogsCount = n.Blogs.Count()
-                }).AsNoTracking().ToListAsync();
-            if (!categories?.Any() ?? true) return Result.Failure<List<ClientSideBlogCategoryViewModel>>(Messages.OperationFailedError);
+                    MetaDescription = n.MetaDescription
+                }).ToListAsync();
+
+            if (!categories?.Any() ?? true)
+                return Result.Failure<List<ClientSideBlogCategoryViewModel>>(Messages.OperationFailedError);
 
             return categories;
         }

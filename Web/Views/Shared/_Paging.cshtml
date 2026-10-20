@@ -3,41 +3,33 @@
 
 @if (Model.PageCount > 1)
 {
-    <div class="ltn__pagination-area text-center">
-        <div class="ltn__pagination">
-            <ul>
-                @if (Model.StartPage < Model.Page)
-                {
-                    <li>
-                        <button type="button" class="bg-none" data-page="@(Model.Page - 1)" onclick="FillPageId(@(Model.Page - 1))">
-                            <i class="fas fa-angle-double-right"></i>
-                        </button>
-                    </li>
-                }
-                @for (int i = Model.StartPage; i <= Model.EndPage; i++)
-                {
-                    if (Model.Page == i)
-                    {
-                        <li class="active">
-                            <button type="button" class="bg-none" data-page="0">@i</button>
-                        </li>
-                    }
-                    else
-                    {
-                        <li>
-                            <button type="button" class="bg-none" data-page="@i" onclick="FillPageId(@i)">@i</button>
-                        </li>
-                    }
-                }
-                @if (Model.EndPage > Model.Page)
-                {
-                    <li>
-                        <button type="button" class="bg-none" data-page="@(Model.Page + 1)" onclick="FillPageId(@(Model.Page + 1))">
-                            <i class="fas fa-angle-double-left"></i>
-                        </button>
-                    </li>
-                }
-            </ul>
-        </div>
-    </div>
+    <nav class="pagination" aria-label="صفحه‌بندی">
+        @if (Model.StartPage < Model.Page)
+        {
+            <a href="javascript:void(0)" aria-label="صفحه قبل" data-page="@(Model.Page - 1)" onclick="FillPageId(@(Model.Page - 1))">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </a>
+        }
+        @for (int i = Model.StartPage; i <= Model.EndPage; i++)
+        {
+            if (Model.Page == i)
+            {
+                <a href="javascript:void(0)" class="is-active" aria-current="page">@i</a>
+            }
+            else
+            {
+                <a href="javascript:void(0)" data-page="@i" onclick="FillPageId(@i)">@i</a>
+            }
+        }
+        @if (Model.EndPage > Model.Page)
+        {
+            <a href="javascript:void(0)" aria-label="صفحه بعد" data-page="@(Model.Page + 1)" onclick="FillPageId(@(Model.Page + 1))">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </a>
+        }
+    </nav>
 }

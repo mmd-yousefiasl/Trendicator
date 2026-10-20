@@ -2,142 +2,107 @@
 @using Application.Tools
 @model ClientSideBlogDetailsViewModel
 
-@{
-    ViewData["Title"] = Model.Title;
-    ViewData["CanonicalOverride"] = (SiteTools.SiteUrl + "b/" + Model.Id + "/" + Model.Slug);
-}
+<main class="container">
+    <ul class="crumbs">
+        <partial name="_IndexLink" />
+        <li><a asp-area="" asp-controller="Blog" asp-action="BlogsList" asp-route-category="">وبلاگ</a></li>
+        <li>@Model.Title</li>
+    </ul>
 
-<div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-70 bg-image"
-     data-bg="@SiteTools.BreadcrumbBanner">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
-                    <div class="section-title-area ltn__section-title-2">
-                        <h2 class="section-title white-color">@ViewData["Title"]</h2>
+    <!-- ============ Article header ============ -->
+    <div class="section-head mt-3">
+        <span class="kicker mb-1">@Model.Category</span>
+        <h1 class="mt-1">@Model.Title</h1>
+        <div class="post-meta mt-1">
+            <span>@Model.CreatedDate.GetDate()</span>
+            <span>
+                ·
+                @Model.TimeToRead
+                دقیقه مطالعه
+            </span>
+            <span>
+                · نویسنده:
+                @Model.Writer
+            </span>
+        </div>
+    </div>
+
+    <!-- ============ Article body ============ -->
+    <section class="section" style="padding-top:8px">
+        <article class="prose">
+            @Html.Raw(Model.Body)
+        </article>
+    </section>
+
+    <!-- ============ Comments ============ -->
+    <section class="section" style="padding-top:0" id="comments-section">
+        <div class="container" style="padding-inline:0">
+            <div class="comments">
+                <div class="section-head">
+                    <span class="kicker">
+                        گفتگو
+                    </span>
+                    <h2 class="mt-1">دیدگاه کاربران</h2>
+                </div>
+
+                <partial name="_AddBlogComment" model="@(new ClientSideAddCommentDto() { BlogId = Model.Id })" />
+
+                @if (Model.Comments?.Any() ?? false)
+                {
+                    <div class="comments__list" data-comment-list>
+                        @foreach (var item in Model.Comments ?? new List<ClientSideBlogCommentDto>())
+                        {
+                            <article class="comment">
+                                <div class="comment__avatar" aria-hidden="true">@item.Name.FirstOrDefault()</div>
+                                <div class="comment__body">
+                                    <div class="comment__head">
+                                        <b>@item.Name</b>
+                                        <span class="comment__time">@item.CreatedDate.GetDate()</span>
+                                    </div>
+                                    <p>
+                                        @item.Comment
+                                    </p>
+                                    @if (!string.IsNullOrWhiteSpace(item.Reply))
+                                    {
+                                        <div class="comment__reply">
+                                            <div class="comment__head">
+                                                <b>تیم ترندیکاتور</b>
+                                                <span class="badge badge--brand">پاسخ رسمی</span>
+                                                <span class="comment__time">@item.LastUpdatedDate.GetDate()</span>
+                                            </div>
+                                            @Html.Raw(item.Reply)
+                                        </div>
+                                    }
+                                </div>
+                            </article>
+                        }
                     </div>
-                    <div class="ltn__breadcrumb-list">
-                        <ul>
-                            <li><a asp-area="" asp-controller="Home" asp-action="Index">صفحه اصلی</a></li>
-                            <li><a asp-area="" asp-controller="Blog" asp-action="BlogsList" asp-route-category="">مقالات</a></li>
-                            <li><a asp-area="" asp-controller="Blog" asp-action="BlogsList" asp-route-category="@Model.CategorySlug">@Model.Category</a></li>
-                            <li>@ViewData["Title"]</li>
-                        </ul>
-                    </div>
+                }
+                else
+                {
+                    <partial name="_NotFoundPartial" />
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CTA ============ -->
+    <section class="section" style="padding-top:0">
+        <div class="container" style="padding-inline:0">
+            <div class="card card-pad text-center"
+                 style="background:linear-gradient(135deg, var(--brand-soft), transparent 60%); border-color:var(--brand-line); padding-block:40px">
+                <h2>اندیکاتور متناسب با سبک خود را انتخاب کنید</h2>
+                <p class="text-muted" style="max-width:48ch;margin-inline:auto">
+                    در فروشگاه ترندیکیتور، همه اندیکاتورها بر اساس
+                    پلتفرم و سبک معاملاتی دسته‌بندی شده‌اند تا انتخاب برایتان ساده‌تر باشد.
+                </p>
+                <div class="flex flex--center flex--wrap mt-3">
+                    <a href="products.html" class="btn btn--primary btn--lg">مشاهده فروشگاه</a>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<!-- BREADCRUMB AREA END -->
-<!-- PAGE DETAILS AREA START (blog-details) -->
-<div class="ltn__page-details-area ltn__blog-details-area mb-120">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="ltn__blog-details-wrap">
-                    <div class="ltn__page-details-inner ltn__blog-details-inner">
-                        <div class="ltn__blog-meta">
-                            <ul>
-                                <li class="ltn__blog-category">
-                                    <a asp-area="" asp-controller="Blog" asp-action="BlogsList" asp-route-Category="@Model.CategorySlug">
-                                        @Model.Category
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <img src="@SiteTools.BlogBanner@Model.FileName" alt="@Model.Title" title="@Model.Title" class="mb-3" />
-                        <h1 class="ltn__blog-title">
-                            @Model.Title
-                        </h1>
-                        <div class="ltn__blog-meta">
-                            <ul>
-                                <li class="ltn__blog-author">
-                                    نویسنده:
-                                    @Model.Writer
-                                </li>
-                                <li class="ltn__blog-date">
-                                    <i class="far fa-calendar-alt"></i>@Model.CreatedDate.GetDate()
-                                </li>
-                            </ul>
-                        </div>
-                        @Html.Raw(Model.Body)
-                    </div>
-                    <!-- blog-tags-social-media -->
-                    <div class="ltn__blog-tags-social-media mt-80 row">
-                        <div class="ltn__tagcloud-widget col-lg-12 mt-5">
-                            <h4>اشتراک گذاری</h4>
-                            @{
-                                string pageUrl = (SiteTools.SiteUrl + "b/" + Model.Id);
-                            }
-                            <ul>
-                                <li>
-                                    <a href="@("https://www.facebook.com/sharer/sharer.php?u=" + pageUrl)"
-                                       target="_blank" rel="noopener" title="Facebook">
-                                        <i class="fab fa-facebook-f"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@("https://twitter.com/intent/tweet?url=" + pageUrl)"
-                                       target="_blank" rel="noopener" title="Twitter">
-                                        <i class="fab fa-twitter"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@("https://www.linkedin.com/shareArticle?mini=true&url=" + pageUrl)"
-                                       target="_blank" rel="noopener" title="LinkedIn">
-                                        <i class="fab fa-linkedin"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@("https://api.whatsapp.com/send?text=" + pageUrl)"
-                                       target="_blank" rel="noopener" title="WhatsApp">
-                                        <i class="fab fa-whatsapp"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@("https://t.me/share/url?url=" + pageUrl)"
-                                       target="_blank" rel="noopener" title="Telegram">
-                                        <i class="fab fa-telegram"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@("https://www.instagram.com/?url=" + pageUrl)"
-                                       target="_blank" rel="noopener" title="Instagram">
-                                        <i class="fab fa-instagram"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="ltn__tagcloud-widget col-lg-12 mt-5">
-                            <h4>لینک کوتاه: </h4>
-                            <ul>
-                                <li>
-                                    <a asp-area="" asp-controller="Blog" asp-action="BlogDetails" asp-route-id="@Model.Id" asp-route-slug="" title="لینک کوتاه">
-                                        @pageUrl
-                                    </a>
-                                </li>
-                                <li>
-                                    <button class="bg-transparent" type="button" title="کپی لینک کوتاه" onclick="CopyUrlToClipboard('@pageUrl')">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 408 480"><path fill="#000000" d="M299 5v43H43v299H0V48q0-18 12.5-30.5T43 5h256zm64 86q17 0 29.5 12.5T405 133v299q0 18-12.5 30.5T363 475H128q-18 0-30.5-12.5T85 432V133q0-17 12.5-29.5T128 91h235zm0 341V133H128v299h235z" /></svg>
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    @await Component.InvokeAsync("RelatedBlogs", new { id = Model.Id, categoryId = Model.CategoryId })
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <aside class="sidebar-area blog-sidebar ltn__right-sidebar">
-                    @await Component.InvokeAsync("BlogCategories")
+    </section>
 
-                    @await Component.InvokeAsync("BlogDetailsSocialMedia")
 
-                </aside>
-            </div>
-        </div>
-    </div>
-</div>
-
-@await Component.InvokeAsync("OurFeatures")
+    @await Component.InvokeAsync("RelatedBlogs", new { id = Model.Id, categoryId = Model.CategoryId })
+</main>

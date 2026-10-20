@@ -277,47 +277,7 @@
         </div>
     </section>
 
-    <!-- ============ Blog preview ============ -->
-    <section class="section">
-        <div class="container">
-            <div class="flex flex--between flex--wrap mb-3">
-                <div class="section-head" style="margin-bottom:0">
-                    <span class="kicker">آموزش</span>
-                    <h2 class="mt-1">آخرین مقالات</h2>
-                </div>
-                <a href="blog.html" class="btn btn--ghost btn--sm">همه مقالات ←</a>
-            </div>
-            <div class="grid grid--3 grid--posts">
-                <a href="blog-post.html" class="card post-card">
-                    <img src="assets/img/blog/b2-dark.webp" data-src-light="assets/img/blog/b2-light.webp"
-                         loading="lazy" data-src-dark="assets/img/blog/b2-dark.webp" decoding="async" alt="">
-                    <div class="post-card__body">
-                        <div class="post-meta"><span>۵ مرداد ۱۴۰۵</span><span>· ۷ دقیقه مطالعه</span></div>
-                        <h3>۵ اشتباه رایج در استفاده از اندیکاتور RSI</h3>
-                        <p>چرا سیگنال اشباع فروش RSI همیشه یعنی خرید نیست؟ یک نگاه عمیق‌تر به نوسان‌سنج محبوب بازار.</p>
-                    </div>
-                </a>
-                <a href="blog-post.html" class="card post-card">
-                    <img src="assets/img/blog/b3-dark.webp" data-src-light="assets/img/blog/b3-light.webp"
-                         loading="lazy" data-src-dark="assets/img/blog/b3-dark.webp" decoding="async" alt="">
-                    <div class="post-card__body">
-                        <div class="post-meta"><span>۲۸ تیر ۱۴۰۵</span><span>· ۵ دقیقه مطالعه</span></div>
-                        <h3>ترکیب اندیکاتورها؛ فرمول استراتژی شخصی شما</h3>
-                        <p>چطور دو یا سه اندیکاتور بدون تکرار سیگنال ترکیب کنیم تا یک سیستم معاملاتی منسجم بسازیم.</p>
-                    </div>
-                </a>
-                <a href="blog-post.html" class="card post-card">
-                    <img src="assets/img/blog/b4-dark.webp" data-src-light="assets/img/blog/b4-light.webp"
-                         loading="lazy" data-src-dark="assets/img/blog/b4-dark.webp" decoding="async" alt="">
-                    <div class="post-card__body">
-                        <div class="post-meta"><span>۱۵ تیر ۱۴۰۵</span><span>· ۹ دقیقه مطالعه</span></div>
-                        <h3>پس‌تست کردن اکسپرت‌ها در متاتریدر ۵</h3>
-                        <p>قبل از اعتماد به هر ربات معامله‌گر، این روش استاندارد بک‌تست را روی دیتای تیک‌به‌تیک اجرا کنید.</p>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </section>
+    @await Component.InvokeAsync("LatestBlogs")
 
     @if (faqResult.IsSuccess)
     {

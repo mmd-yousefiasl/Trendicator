@@ -87,7 +87,7 @@
                                                 <td>@item.Writer</td>
                                                 <td>@item.Category</td>
                                                 <td>@item.Priority</td>
-                                                <td>@item.ReadingTimeInMinutes</td>
+                                                <td>@item.TimeToRead</td>
                                                 <td>
                                                     @if (item.IsPublished)
                                                     {
@@ -106,6 +106,10 @@
                                                     <form permission="DeleteBlog" class="btn btn-outline-secondary btn-sm" method="post" onclick="ConfirmDelete(this)" asp-route-id="@item.Id" asp-area="Admin" asp-controller="Blog" asp-action="DeleteBlog" title="حذف">
                                                         <i class="mdi mdi-delete"></i>
                                                     </form>
+
+                                                    <a permission="BlogComments" asp-area="Admin" asp-controller="Blog" asp-action="BlogComments" asp-route-BlogId="@item.Id" class="btn btn-outline-secondary btn-sm edit" title="نظرات">
+                                                        <i class="mdi mdi-comment-multiple-outline"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         }

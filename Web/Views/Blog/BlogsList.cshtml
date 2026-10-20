@@ -2,64 +2,48 @@
 @model ClientSideFilterBlogsViewModel
 
 @{
-    ViewData["Title"] = (!string.IsNullOrWhiteSpace(Model.Category) ? Model.Category : "بلاگ");
-    if (!string.IsNullOrWhiteSpace(Model.Category))
+    ViewData["Title"] = (!string.IsNullOrWhiteSpace(Model.CategoryTitle) ? ((Model.CategoryTitle + " | ترندیکاتور")) : "آموزش‌های گام‌به‌گام تحلیل تکنیکال، استراتژی‌سازی و مدیریت ریسک | ترندیکاتور");
+    if (!string.IsNullOrWhiteSpace(Model.CategorySlug))
     {
-        ViewData["CanonicalOverride"] = (SiteTools.SiteUrl + "blogs/" + Model.Category);
+        ViewData["CanonicalOverride"] = (SiteTools.SiteUrl + "blogs/" + Model.CategorySlug);
     }
 }
 
-<div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-70 bg-image"
-     data-bg="@SiteTools.BreadcrumbBanner">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
-                    <div class="section-title-area ltn__section-title-2">
-                        <h1 class="section-title white-color">@ViewData["Title"]</h1>
-                    </div>
-                    <div class="ltn__breadcrumb-list">
-                        <ul>
-                            <li><a asp-area="" asp-controller="Home" asp-action="Index">صفحه اصلی</a></li>
-                            @if (!string.IsNullOrWhiteSpace(Model.Category))
-                            {
-                                <li><a asp-area="" asp-controller="Blog" asp-action="BlogsList" asp-route-category="">بلاگ</a></li>
-                            }
-                            <li>@ViewData["Title"]</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<main class="container">
+    <ul class="crumbs">
+        <partial name="_IndexLink" />
+        <li>وبلاگ</li>
+    </ul>
 
-<div class="ltn__blog-area ltn__blog-item-3-normal mb-120">
-    <div class="container">
-        @if (Model?.Entities?.Any() ?? false)
-        {
-            <form asp-area="" asp-controller="Blog" asp-action="BlogsList" method="get" id="search-form">
-                <input type="hidden" asp-for="Page" id="Page" />
-            </form>
-            <div class="row">
-                @foreach (var item in Model?.Entities ?? new List<ClientSideBlogViewModel>())
+    <div class="section-head">
+        <h1>وبلاگ آموزشی</h1>
+        <p>آموزش‌های گام‌به‌گام تحلیل تکنیکال، استراتژی‌سازی و مدیریت ریسک — نوشته‌شده توسط تیم معامله‌گران ترندیکیتور، برای معامگران فارسی‌زبان.</p>
+    </div>
+
+ 
+    <!-- ============ Category filter ============ -->
+    <form novalidate asp-area="" asp-controller="Blog" asp-action="BlogsList" method="get" class="flex flex--wrap mb-3" style="gap:8px" id="search-form">
+        <input type="hidden" asp-for="Page" id="Page" />
+
+        @await Component.InvokeAsync("BlogCategories")
+    </form>
+
+    @if (Model?.Entities.Any() ?? false)
+    {
+        <!-- ============ Articles grid ============ -->
+        <section class="section" style="padding-top:8px">
+            <div class="grid grid--3">
+                @foreach (var item in Model.Entities ?? new List<ClientSideBlogViewModel>())
                 {
-                    <div class="col-lg-4 col-sm-6 col-12">
-                        <partial name="_BlogListView" model="@item" />
-                    </div>
+                    <partial name="_BlogCard" model="item" />
                 }
             </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <partial name="_Paging" model="@Model.GetCurrentPaging()" />
-                </div>
-            </div>
-        }
-        else
-        {
-            <partial name="_NotFoundPartial" />
-        }
-    </div>
-</div>
 
-@await Component.InvokeAsync("OurFeatures")
+            <partial name="_Paging" model="Model.GetCurrentPaging()" />
+        </section>
+    }
+    else
+    {
+        <partial name="_NotFoundPartial" />
+    }
+</main>

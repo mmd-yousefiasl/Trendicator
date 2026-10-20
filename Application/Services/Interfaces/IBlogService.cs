@@ -25,5 +25,17 @@ namespace Application.Services.Interfaces
         Task<Result<ClientSideFilterBlogsViewModel>> ClientSideGetRelatedBlogs(int id, int categoryId);
 
         Task<Result<List<AdminSideBlogForSiteMapViewModel>>> AdminSideGetBlogIdsForSiteMap();
+
+        Task<Result> ClientSideAddBlogView(int blogId);
+
+        Task<Result> ClientSideAddNewBlogComment(ClientSideAddCommentDto model);
+
+        Task<Result<AdminSideFilterBlogCommentsDto>> AdminSideFilterComments(AdminSideFilterBlogCommentsDto filter);
+
+        Task<Result<int>> AdminSideDeleteBlogComment(int id);
+
+        Task<Result<AdminSideUpdateBlogCommentDto>> AdminSideGetBlogCommentForUpdate(int id);
+
+        Task<Result<int>> AdminSideUpdateBlogComment(AdminSideUpdateBlogCommentDto model);
     }
 }

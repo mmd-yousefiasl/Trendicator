@@ -137,3 +137,9 @@
     });
     
 });
+
+function FillPageId(id) {
+    $("#Page").val(id);
+
+    document.getElementById("search-form").submit();
+}

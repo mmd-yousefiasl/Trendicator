@@ -53,6 +53,14 @@
                     </div>
 
                     <div class="mb-3 row">
+                        <label asp-for="MetaDescription" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <textarea class="form-control" type="text" asp-for="MetaDescription" rows="3"></textarea>
+                            <span asp-validation-for="MetaDescription" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
                         <label asp-for="Writer" class="col-md-2 col-form-label"></label>
                         <div class="col-md-10">
                             <input class="form-control" type="text" asp-for="Writer">
@@ -68,11 +76,11 @@
                         </div>
                     </div>
 
-                                        <div class="mb-3 row">
-                        <label asp-for="ReadingTimeInMinutes" class="col-md-2 col-form-label"></label>
+                    <div class="mb-3 row">
+                        <label asp-for="TimeToRead" class="col-md-2 col-form-label"></label>
                         <div class="col-md-10">
-                            <input class="form-control" asp-for="ReadingTimeInMinutes">
-                            <span asp-validation-for="ReadingTimeInMinutes" class="text-danger"></span>
+                            <input class="form-control" asp-for="TimeToRead">
+                            <span asp-validation-for="TimeToRead" class="text-danger"></span>
                         </div>
                     </div>
 

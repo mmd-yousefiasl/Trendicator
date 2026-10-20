@@ -13,8 +13,9 @@ namespace Data.Context.Configurations.Blogs
             builder.HasKey(n => n.Id);
             builder.HasQueryFilter(n => !n.IsDeleted);
 
-            builder.Property(n => n.Title).HasMaxLength(50);
-            builder.Property(n => n.Slug).HasMaxLength(100);
+            builder.Property(n => n.Title).HasMaxLength(100);
+            builder.Property(n => n.Slug).HasMaxLength(200);
+            builder.Property(n => n.MetaDescription).HasMaxLength(200);
         }
     }
 }

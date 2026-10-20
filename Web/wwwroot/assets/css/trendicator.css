@@ -1839,7 +1839,7 @@ ul, ol {
 
 /* Prose (article/legal pages) */
 .prose {
-    max-width: 760px;
+    max-width: 100%;
 }
 
 .prose h2 {
@@ -1867,7 +1867,7 @@ ul, ol {
 
 /* Comments (blog-post) */
 .comments {
-    max-width: 760px;
+    max-width: 100%;
     display: flex;
     flex-direction: column;
     gap: 24px;

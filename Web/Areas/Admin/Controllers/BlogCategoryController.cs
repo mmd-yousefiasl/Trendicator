@@ -94,11 +94,6 @@ namespace Web.Areas.Admin.Controllers
         [HttpPost("/admin/remove-blog-category"), ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteBlogCategory(int id)
         {
-            if (id < 1)
-            {
-                TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
-                return RedirectToAction(nameof(BlogCategoriesList));
-            }
             var result = await _categoryService.SoftDeleteBlogCategory(id);
             if (result.IsFailure)
             {

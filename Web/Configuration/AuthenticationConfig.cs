@@ -17,9 +17,9 @@ namespace Web.Configuration
             {
                 option.LoginPath = "/login";
                 option.LogoutPath = "/logout";
-                option.ExpireTimeSpan = TimeSpan.FromDays(1);
+                option.ExpireTimeSpan = TimeSpan.FromDays(30);
                 option.Cookie.SameSite = SameSiteMode.Lax;
-                option.Cookie.MaxAge = TimeSpan.FromDays(1);
+                option.Cookie.MaxAge = TimeSpan.FromDays(30);
                 option.SlidingExpiration = false;
                 option.Cookie.IsEssential = true;
                 option.Cookie.HttpOnly = true;

@@ -13,6 +13,7 @@
         public const string RequiredAccessForRoleError = "حداقل یک دسترسی برای نقش انتخاب کنید";
         public const string DuplicateUniqueNameForRoleError = "نام یکتا برای این نقش قبلاً ثبت شده است";
         public const string MaxLengthError = "تعداد کاراکتر بیشتر از حد مجاز می باشد ({1})";
+        public const string MinLengthError = "تعداد کاراکتر کمتر از حد مجاز می باشد ({1})";
         public const string MobileFormatError = "موبایل نامعتبر می باشد";
         public const string ToManyLoginAttemptError = "تعداد تلاش‌های شما برای ورود از حد مجاز فراتر رفته است. لطفاً بعد از دقایقی دوباره تلاش کنید";
         public const string InvalidLoginCodeError = "کد تایید نامعتبر می باشد.";
@@ -34,6 +35,7 @@
         public const string CheckTermsAndConditionsError = "پذیرش قوانین و شرایط برای ادامه الزامی است";
         public const string CaptchaFailedError = "خطای کد امنیتی، لطفا دوباره امتحان کنید";
         public const string LoginCodeExpiredError = "کد تایید شما منقضی شده است. لطفا مجددا درخواست کد کنید";
+        public const string InvalidEmailError = "لطفا یک ایمیل معتبر وارد کنید";
 
         #endregion
 
@@ -48,6 +50,7 @@
         public const string DiscountAppliedSuccessfully = "تخفیف با موفقیت اعمال شد";
         public const string PaymentDoneSuccessfully = "پرداخت با موفقیت انجام شد";
         public const string TicketSentSuccessfully = "تیکت با موفقیت ارسال شد";
+        public const string BlogCommentSentSuccessfully = "دیدگاه شما ثبت شد و پس از تأیید نمایش داده می‌شود.";
 
         #endregion
     }

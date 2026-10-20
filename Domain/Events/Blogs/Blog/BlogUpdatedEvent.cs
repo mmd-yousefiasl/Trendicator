@@ -12,6 +12,6 @@ namespace Domain.Events.Blogs.Blog
     int Priority,
     bool IsPublished,
     int BlogCategoryId,
-    int ReadingTimeInMinutes
+    int TimeToRead
     ) : INotification;
 }

@@ -1,5 +1,4 @@
-﻿using Application.Dtos;
-using Domain.Shared;
+﻿using Domain.Shared;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.Dtos.BlogCategory.AdminSide
@@ -8,13 +7,18 @@ namespace Application.Dtos.BlogCategory.AdminSide
     {
         [Display(Name = "عنوان")]
         [Required(ErrorMessage = Messages.RequiredError)]
-        [MaxLength(50, ErrorMessage = Messages.MaxLengthError)]
+        [MaxLength(100, ErrorMessage = Messages.MaxLengthError)]
         public string Title { get; set; }
 
         [Display(Name = "عنوان در مرورگر")]
         [Required(ErrorMessage = Messages.RequiredError)]
-        [MaxLength(100, ErrorMessage = Messages.MaxLengthError)]
+        [MaxLength(200, ErrorMessage = Messages.MaxLengthError)]
         public string Slug { get; set; }
+
+        [Display(Name = "توضیحات متا")]
+        [Required(ErrorMessage = Messages.RequiredError)]
+        [MaxLength(200, ErrorMessage = Messages.MaxLengthError)]
+        public string MetaDescription { get; set; }
 
         [Display(Name = "اولویت")]
         [Required(ErrorMessage = Messages.RequiredError)]

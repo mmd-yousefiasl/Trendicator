@@ -1,6 +1,27 @@
-﻿<meta charset="utf-8">
+﻿@{
+    // Define the default fallbacks if pages don't specify them
+    var metaAuthor = ViewData["MetaAuthor"] as string
+        ?? $"تیم استراتژی و فنی {SiteTools.SiteName}";
+
+    var metaDescription = ViewData["MetaDescription"] as string
+            ?? "پایش قیمت رقبا و مدیریت هوشمند بای‌باکس دیجی‌کالا. دریافت هشدار تغییر قیمت در کمتر از ۱۵ دقیقه در پیامرسان بله برای حفظ سهم ۸۰ درصدی فروش در بازار.";
+}
+
+<meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 <meta name="robots" content="@(ViewData["NoIndex"] is true ? "noindex, follow" : "index, follow")" />
-<meta name="author" content="Trendicator | ترندیکاتور">
-<meta name="description" content="ترندیکاتور مجموعه‌ای از ابزارهای معاملاتی حرفه‌ای مانند اندیکاتورها، اسکریپت‌ها و تحلیل‌های بازار را برای معامله‌گران فراهم می‌کند." />
+<meta name="author" content="@metaAuthor">
+<meta name="description" content="@metaDescription" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Generic/Default values -->
+<meta property="og:type" content="@(ViewData["OgType"] as string ?? "website")">
+<meta property="og:url" content="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path">
+<meta property="og:image" content="@(ViewData["OgImage"] as string ?? "https://digipricealert.ir/assets/image/og-image.jpg")">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Dynamic values with Fallbacks -->
+<meta property="og:title" content="@(ViewData["Title"] ?? "پایش قیمت رقبا و مدیریت بای‌باکس دیجی‌کالا | دیجیتو")">
+<meta property="og:description" content="@(ViewData["OgDescription"] ?? metaDescription)">

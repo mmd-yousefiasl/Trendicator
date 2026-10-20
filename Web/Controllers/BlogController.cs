@@ -21,20 +21,31 @@ namespace Web.Controllers
         [HttpGet("/blogs/{category?}")]
         public async Task<IActionResult> BlogsList(string? category, ClientSideFilterBlogsViewModel filter)
         {
-            if (!string.IsNullOrWhiteSpace(category) && filter.Page == 1)
+            var query = HttpContext.Request.Query;
+
+            if (query.Count == 0 && !string.IsNullOrWhiteSpace(category))
             {
                 ViewData["NoIndex"] = false;
             }
-            else
+            else if (query.Count > 0)
             {
                 ViewData["NoIndex"] = true;
             }
 
-            filter.Category = category;
-
+            filter.CategorySlug = category;
             filter.TakeEntity = 9;
+
             var result = await _blogService.ClientSideFilterBlogs(filter);
             if (result.IsFailure) return View(new ClientSideFilterBlogsViewModel());
+
+            if (string.IsNullOrWhiteSpace(category))
+            {
+                ViewData["MetaDescription"] = "آموزش‌های گام‌به‌گام تحلیل تکنیکال، استراتژی‌سازی و مدیریت ریسک — نوشته‌شده توسط تیم معامله‌گران ترندیکاتور، برای معامگران فارسی‌زبان.";
+            }
+            else
+            {
+                ViewData["MetaDescription"] = result.Value.CategoryMetaDescription;
+            }
 
             return View(result.Value);
         }
@@ -53,6 +64,7 @@ namespace Web.Controllers
                 TempData[TemporaryErrorMessage] = result.Message;
                 return RedirectToAction(nameof(BlogsList));
             }
+            await _blogService.ClientSideAddBlogView(result.Value.Id);
 
             return View(result.Value);
         }
@@ -73,6 +85,28 @@ namespace Web.Controllers
             }
 
             return View(result.Value);
+        }
+
+        [HttpPost("/blog/add-comment"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddComment(ClientSideAddCommentDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
+                return RedirectToAction(nameof(BlogDetails), new { id = model.BlogId });
+            }
+
+            var result = await _blogService.ClientSideAddNewBlogComment(model);
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+            }
+            else
+            {
+                TempData[TemporarySuccessMessage] = result.Message;
+            }
+
+            return RedirectToAction(nameof(BlogDetails), new { id = model.BlogId });
         }
     }
 }

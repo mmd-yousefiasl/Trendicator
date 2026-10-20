@@ -1,40 +1,21 @@
-﻿@using Application.Tools
-@using Application.Dtos.Blog.ClientSide
+﻿@using Application.Dtos.Blog.ClientSide
 @model ClientSideFilterBlogsViewModel
 
 @if (Model?.Entities?.Any() ?? false)
 {
-    <hr>
-
-    <div class="related-post-area mb-50">
-        <h4 class="title-2">مقالات مرتبط</h4>
-        <div class="row">
-            @foreach (var item in Model.Entities ?? new List<ClientSideBlogViewModel>())
-            {
-                <div class="col-md-6">
-                    <div class="ltn__blog-item ltn__blog-item-6">
-                        <div class="ltn__blog-img">
-                            <a asp-area="" asp-controller="Blog" asp-action="BlogDetails" asp-route-id="@item.Id" asp-route-slug="@item.Slug">
-                                <img src="@SiteTools.BlogBanner@item.FileName" alt="@item.Title">
-                            </a>
-                        </div>
-                        <div class="ltn__blog-brief">
-                            <div class="ltn__blog-meta">
-                                <ul>
-                                    <li class="ltn__blog-date ltn__secondary-color">
-                                        <i class="far fa-calendar-alt"></i>@item.CreatedDate.GetDate()
-                                    </li>
-                                </ul>
-                            </div>
-                            <h3 class="ltn__blog-title">
-                                <a asp-area="" asp-controller="Blog" asp-action="BlogDetails" asp-route-id="@item.Id" asp-route-slug="@item.Slug">
-                                    @item.Title
-                                </a>
-                            </h3>
-                        </div>
-                    </div>
-                </div>
-            }
+    <!-- ============ Related posts ============ -->
+    <section class="section" style="padding-top:0">
+        <div class="container" style="padding-inline:0">
+            <div class="section-head">
+                <span class="kicker">ادامه مطالعه</span>
+                <h2 class="mt-1">مقالات مرتبط</h2>
+            </div>
+            <div class="grid grid--3">
+                @foreach(var item in Model.Entities ?? new List<ClientSideBlogViewModel>())
+                {
+                    <partial name="_BlogCard" model="item" />
+                }
+            </div>
         </div>
-    </div>
+    </section>
 }

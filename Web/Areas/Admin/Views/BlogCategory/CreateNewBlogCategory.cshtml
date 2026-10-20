@@ -48,6 +48,14 @@
                     </div>
 
                     <div class="mb-3 row">
+                        <label asp-for="MetaDescription" class="col-md-2 col-form-label"></label>
+                        <div class="col-md-10">
+                            <textarea class="form-control" type="text" asp-for="MetaDescription" rows="4"></textarea>
+                            <span asp-validation-for="MetaDescription" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
                         <label asp-for="Priority" class="col-md-2 col-form-label"></label>
                         <div class="col-md-10">
                             <input class="form-control" asp-for="Priority">

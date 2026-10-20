@@ -2,8 +2,9 @@
 {
     public class BlogView : BaseEntity<int>
     {
-        public string UserIP { get; set; }
+        public string VisitorId { get; set; }
         public int? UserId { get; set; }
+        public string UserIP { get; set; }
 
         #region Relations
         public int BlogId { get; set; }
