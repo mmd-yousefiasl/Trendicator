@@ -16,7 +16,6 @@ namespace Application.Services.Implementaions
     {
         #region Fields
         private readonly TrendicatorDbContext _context;
-        private protected DbSet<ProductCategory> _dbSet;
         private readonly IMediatorHandler _mediator;
         private readonly ICacheManager _cacheManager;
         #endregion
@@ -27,7 +26,6 @@ namespace Application.Services.Implementaions
             ICacheManager cacheManager)
         {
             _context = context;
-            _dbSet = _context.Set<ProductCategory>();
             _mediator = mediator;
             _cacheManager = cacheManager;
         }
@@ -36,22 +34,30 @@ namespace Application.Services.Implementaions
         public async Task<Result> AdminSideCreateNewProductCategory(AdminSideCreateNewProductCategoryViewModel model)
         {
             if (model is null) return Result.Failure(Messages.OperationFailedError);
-            if (await _dbSet.AnyAsync(n => n.Slug == model.Slug.Replace(" ", "-")))
+
+            if (await _context.ProductCategories.AnyAsync(n => n.Slug == model.Slug.Replace(" ", "-")))
                 return Result.Failure(Messages.DuplicateSlugError);
 
             var category = new ProductCategory()
             {
                 Title = model.Title,
                 ParentCategoryId = model.ParentCategoryId,
-                Slug = model.Slug.Replace(" ", "-")
+                Slug = model.Slug.Replace(" ", "-"),
+                Priority = model.Priority,
+                IsPublished = model.IsPublished,
+                MetaDescription = model.MetaDescription
             };
 
-            await _dbSet.AddAsync(category);
+            _context.ProductCategories.Add(category);
             await _context.SaveChangesAsync();
 
             ProductCategoryCreatedEvent ProductCategoryCreatedEvent = new ProductCategoryCreatedEvent(
                 category.Title,
-                category.Slug);
+                category.Slug,
+                category.MetaDescription,
+                category.Priority,
+                category.IsPublished,
+                category.ParentCategoryId);
 
             await _mediator.PublishEvent(ProductCategoryCreatedEvent);
 
@@ -62,12 +68,12 @@ namespace Application.Services.Implementaions
         {
             if (id < 1) return Result.Failure(Messages.OperationFailedError);
 
-            if (await _dbSet.AnyAsync(n => n.Products.Any())) return Result.Failure(Messages.CantDeleteThisRecordError);
+            var category = await _context.ProductCategories
+                .Where(n => n.Id == id && !n.Products.Any() && !n.SubCategories.Any())
+                .FirstOrDefaultAsync();
+            if (category is null) return Result.Failure(Messages.CantDeleteThisRecordError);
 
-            var category = await _dbSet.FindAsync(id);
-            if (category is null) return Result.Failure(Messages.OperationFailedError);
-
-            _dbSet.Remove(category);
+            _context.ProductCategories.Remove(category);
             await _context.SaveChangesAsync();
 
             ProductCategoryDeletedEvent ProductCategoryDeletedEvent = new ProductCategoryDeletedEvent(
@@ -91,7 +97,12 @@ namespace Application.Services.Implementaions
                 n.Slug.Contains(filter.Search));
             }
 
-            IQueryable<ProductCategory> query = _dbSet;
+            if (filter.IsPublished is not null)
+            {
+                conditions.Add(n => n.IsPublished == filter.IsPublished);
+            }
+
+            IQueryable<ProductCategory> query = _context.ProductCategories;
             query = query.OrderByDescending(n => n.Id);
 
             foreach (var item in conditions ?? new FilterConditions<ProductCategory>())
@@ -104,7 +115,9 @@ namespace Application.Services.Implementaions
                 Id = n.Id,
                 Title = n.Title,
                 Slug = n.Slug,
-                ParentCategoryTitle = n.ParentCategory.Title
+                ParentCategoryTitle = n.ParentCategory.Title,
+                IsPublished = n.IsPublished,
+                Priority = n.Priority
             }));
 
             return filter;
@@ -114,54 +127,80 @@ namespace Application.Services.Implementaions
         {
             if (id < 1) return Result.Failure<AdminSideUpdateProductCategoryViewModel>(Messages.OperationFailedError);
 
-            var category = await _dbSet.Where(n => n.Id == id).Select(n => new AdminSideUpdateProductCategoryViewModel()
-            {
-                Id = n.Id,
-                ParentCategoryId = n.ParentCategoryId,
-                Title = n.Title,
-                Slug = n.Slug,
-            }).AsNoTracking().FirstOrDefaultAsync();
-            if (category is null) return Result.Failure<AdminSideUpdateProductCategoryViewModel>(Messages.OperationFailedError);
+            var category = await _context.ProductCategories
+                .AsNoTracking()
+                .Where(n => n.Id == id)
+                .Select(n => new AdminSideUpdateProductCategoryViewModel()
+                {
+                    Id = n.Id,
+                    ParentCategoryId = n.ParentCategoryId,
+                    Title = n.Title,
+                    Slug = n.Slug,
+                    IsPublished = n.IsPublished,
+                    MetaDescription = n.MetaDescription,
+                    Priority = n.Priority
+                }).FirstOrDefaultAsync();
+
+            if (category is null)
+                return Result.Failure<AdminSideUpdateProductCategoryViewModel>(Messages.OperationFailedError);
 
             return category;
         }
 
         public async Task<Result<List<AdminSideProductCategoryAsOptionViewModel>>> AdminSideGetProductCategoriesAsOptions(int? id)
         {
-            IQueryable<ProductCategory> query = _dbSet;
+            IQueryable<ProductCategory> query = _context.ProductCategories;
             if (id > 0) query = query.Where(n => n.Id != id);
 
-            var categories = await query.Select(n => new AdminSideProductCategoryAsOptionViewModel()
-            {
-                Id = n.Id,
-                Title = n.Title,
-                Slug = n.Slug,
-            }).AsNoTracking().ToListAsync();
-            if (!categories.Any()) return Result.Failure<List<AdminSideProductCategoryAsOptionViewModel>>(Messages.OperationFailedError);
+            query = query.Where(n => n.IsPublished);
+            query = query.OrderBy(n => n.Priority);
+
+            var categories = await query
+                .AsNoTracking()
+                .Select(n => new AdminSideProductCategoryAsOptionViewModel()
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Slug = n.Slug
+                }).ToListAsync();
+
+            if (!categories.Any())
+                return Result.Failure<List<AdminSideProductCategoryAsOptionViewModel>>(Messages.OperationFailedError);
 
             return categories;
         }
 
         public async Task<Result> AdminSideUpdateProductCategory(AdminSideUpdateProductCategoryViewModel model)
         {
-            if (model is null) return Result.Failure(Messages.OperationFailedError);
-            if (await _dbSet.AnyAsync(n => n.Slug == model.Slug.Replace(" ", "-") && n.Id != model.Id))
+            if (model is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            if (await _context.ProductCategories.AnyAsync(n => n.Slug == model.Slug.Replace(" ", "-") && n.Id != model.Id))
                 return Result.Failure(Messages.DuplicateSlugError);
 
-            var category = await _dbSet.FindAsync(model.Id);
-            if (category is null) return Result.Failure(Messages.OperationFailedError);
+            var category = await _context.ProductCategories.FindAsync(model.Id);
+
+            if (category is null)
+                return Result.Failure(Messages.OperationFailedError);
 
             category.Title = model.Title;
             category.ParentCategoryId = model.ParentCategoryId;
             category.Slug = model.Slug.Replace(" ", "-");
+            category.IsPublished = model.IsPublished;
+            category.Priority = model.Priority;
+            category.MetaDescription = model.MetaDescription;
 
-            _dbSet.Update(category);
+            _context.ProductCategories.Update(category);
             await _context.SaveChangesAsync();
 
             ProductCategoryUpdatedEvent ProductCategoryUpdatedEvent = new ProductCategoryUpdatedEvent(
                 category.Id,
                 category.Title,
-                category.Slug);
+                category.Slug,
+                category.MetaDescription,
+                category.Priority,
+                category.IsPublished,
+                category.ParentCategoryId);
 
             await _mediator.PublishEvent(ProductCategoryUpdatedEvent);
 
@@ -172,8 +211,13 @@ namespace Application.Services.Implementaions
         {
             var categories = await _cacheManager.GetAsync(CacheKeys.ProductCategoriesCacheKey, async () =>
             {
-                return await _dbSet.AsNoTracking().ToListAsync();
+                return await _context.ProductCategories
+                .AsNoTracking()
+                .Where(n => n.IsPublished)
+                .OrderBy(n => n.Priority)
+                .ToListAsync();
             });
+
             if (!categories?.Any() ?? true)
                 return Result.Failure<List<ClientSideProductCategoryViewModel>>(Messages.OperationFailedError);
 
@@ -223,13 +267,17 @@ namespace Application.Services.Implementaions
 
         public async Task<Result<List<AdminSideProductCategoryAsOptionViewModel>>> AdminSideGetCategoriesForSiteMap()
         {
-            var categories = await _dbSet.Select(n => new AdminSideProductCategoryAsOptionViewModel()
-            {
-                Id = n.Id,
-                Title = n.Title,
-                Slug = n.Slug,
-            }).AsNoTracking().ToListAsync();
-            if (!categories.Any()) return Result.Failure<List<AdminSideProductCategoryAsOptionViewModel>>(Messages.OperationFailedError);
+            var categories = await _context.ProductCategories
+                .AsNoTracking()
+                .Select(n => new AdminSideProductCategoryAsOptionViewModel()
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Slug = n.Slug
+                }).ToListAsync();
+
+            if (!categories.Any())
+                return Result.Failure<List<AdminSideProductCategoryAsOptionViewModel>>(Messages.OperationFailedError);
 
             return categories;
         }

@@ -15,6 +15,20 @@ namespace Application.Dtos.ProductCategory.AdminSide
         [MaxLength(200, ErrorMessage = Messages.MaxLengthError)]
         public string Slug { get; set; }
 
+        [Display(Name = "توضیحات متا")]
+        [Required(ErrorMessage = Messages.RequiredError)]
+        [MaxLength(200, ErrorMessage = Messages.MaxLengthError)]
+        public string MetaDescription { get; set; }
+
+        [Display(Name = "اولویت")]
+        [Required(ErrorMessage = Messages.RequiredError)]
+        [Range(1, 100)]
+        public int Priority { get; set; }
+
+        [Display(Name = "وضعیت انتشار")]
+        [Required(ErrorMessage = Messages.RequiredError)]
+        public bool IsPublished { get; set; }
+
         [Display(Name = "دسته بندی والد")]
         public int? ParentCategoryId { get; set; }
     }

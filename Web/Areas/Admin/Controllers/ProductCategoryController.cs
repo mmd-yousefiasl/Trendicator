@@ -93,11 +93,6 @@ namespace Web.Areas.Admin.Controllers
         [HttpPost("/admin/remove-product-category"), ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteProductCategory(int id)
         {
-            if (id < 1)
-            {
-                TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
-                return RedirectToAction(nameof(ProductCategoriesList));
-            }
             var result = await _categoryService.AdminSideDeleteProductCategory(id);
             if (result.IsFailure)
             {
