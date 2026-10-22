@@ -351,3 +351,38 @@
     });
 })();
 
+    (function () {
+        "use strict";
+
+    var menu = document.querySelector(".cat-nav");
+    if (!menu) return;
+
+    var summary = menu.querySelector("summary");
+
+    function close() {
+        if (!menu.open) return;
+    menu.open = false;
+    }
+
+    /* Click outside → close */
+    document.addEventListener("click", function (e) {
+        if (menu.open && !menu.contains(e.target)) close();
+    });
+
+    /* Escape → close + return focus to the toggle */
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && menu.open) {
+        close();
+    summary.focus();
+        }
+    });
+
+    /* Optional: close when the mobile drawer is closed */
+    var navToggle = document.querySelector("[data-nav-toggle]");
+    if (navToggle) {
+        navToggle.addEventListener("click", function () {
+            var nav = document.getElementById("main-nav");
+            if (nav && !nav.classList.contains("is-open")) close();
+        });
+    }
+})();

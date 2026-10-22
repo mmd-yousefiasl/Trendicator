@@ -2593,3 +2593,167 @@ ul, ol {
 .otp + [data-valmsg-for].field-validation-error {
     justify-content: center;
 }
+
+/* ---------- Product categories menu (max 2 parent levels) ---------- */
+.cat-nav {
+    position: relative;
+}
+
+    .cat-nav > summary {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 12px;
+        border-radius: var(--r-sm);
+        font-size: .92rem;
+        font-weight: 600;
+        color: var(--text-2);
+        cursor: pointer;
+        list-style: none;
+        user-select: none;
+        transition: color var(--t), background var(--t);
+    }
+
+        .cat-nav > summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .cat-nav > summary::after {
+            content: "";
+            flex: none;
+            width: 7px;
+            height: 7px;
+            margin-block-start: -3px;
+            border-inline-end: 2px solid currentColor;
+            border-block-end: 2px solid currentColor;
+            transform: rotate(45deg);
+            transition: transform var(--t);
+        }
+
+    .cat-nav[open] > summary::after {
+        transform: rotate(-135deg);
+        margin-block-start: 3px;
+    }
+
+    .cat-nav > summary:hover,
+    .cat-nav[open] > summary {
+        color: var(--text);
+        background: var(--panel-2);
+    }
+
+.cat-nav__panel {
+    position: absolute;
+    inset-block-start: calc(100% + 10px);
+    inset-inline-start: 0;
+    z-index: 60;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 18px 26px;
+    min-width: 560px;
+    max-width: min(780px, calc(100vw - 40px));
+    max-height: min(70vh, 520px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 20px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-3);
+}
+
+.cat-nav__col {
+    min-width: 0;
+}
+
+.cat-nav .cat-nav__col > .cat-nav__parent {
+    display: block;
+    padding: 6px 8px;
+    margin-bottom: 4px;
+    border-radius: var(--r-sm);
+    font-size: .92rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+    .cat-nav .cat-nav__col > .cat-nav__parent:hover {
+        color: var(--brand);
+        background: var(--brand-soft);
+    }
+
+.cat-nav__group + .cat-nav__group {
+    margin-top: 10px;
+}
+
+.cat-nav .cat-nav__group > a {
+    display: block;
+    padding: 4px 8px;
+    font-size: .84rem;
+    font-weight: 700;
+    color: var(--text-2);
+}
+
+    .cat-nav .cat-nav__group > a:hover {
+        color: var(--brand);
+    }
+
+.cat-nav__group ul {
+    list-style: none;
+    margin: 2px 0 0;
+    padding: 0;
+}
+
+.cat-nav .cat-nav__group ul a {
+    display: block;
+    padding: 5px 8px;
+    border-radius: var(--r-sm);
+    font-size: .84rem;
+    line-height: 1.7;
+    color: var(--text-2);
+}
+
+    .cat-nav .cat-nav__group ul a:hover {
+        background: var(--panel-2);
+        color: var(--brand);
+    }
+
+/* Mobile: panel becomes an inline accordion inside the existing drawer */
+@media (max-width: 860px) {
+    .cat-nav {
+        width: 100%;
+    }
+
+        .cat-nav > summary {
+            padding: 12px;
+            font-size: 1rem;
+        }
+
+    .cat-nav__panel {
+        position: static;
+        min-width: 0;
+        max-width: none;
+        max-height: none;
+        overflow: visible;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 4px 10px 10px;
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .cat-nav .cat-nav__col > .cat-nav__parent {
+        padding: 8px 10px;
+        background: var(--panel-2);
+    }
+
+    .cat-nav .cat-nav__group > a {
+        padding: 8px 10px;
+        font-size: .9rem;
+    }
+
+    .cat-nav .cat-nav__group ul a {
+        padding: 8px 10px;
+        font-size: .9rem;
+    }
+}
