@@ -2594,129 +2594,240 @@ ul, ol {
     justify-content: center;
 }
 
-/* ---------- Product categories menu (max 2 parent levels) ---------- */
-.cat-nav {
+/* ---------- Product categories mega-menu (max 2 parent levels) ---------- */
+
+/* Anchor the panel to the header inner (not the trigger) */
+.site-header__inner {
     position: relative;
 }
 
-    .cat-nav > summary {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 12px;
-        border-radius: var(--r-sm);
-        font-size: .92rem;
-        font-weight: 600;
-        color: var(--text-2);
-        cursor: pointer;
-        list-style: none;
-        user-select: none;
-        transition: color var(--t), background var(--t);
+.cat-nav > summary {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: var(--r-sm);
+    font-size: .92rem;
+    font-weight: 600;
+    color: var(--text-2);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    transition: color var(--t), background var(--t);
+}
+
+    .cat-nav > summary::-webkit-details-marker {
+        display: none;
     }
 
-        .cat-nav > summary::-webkit-details-marker {
-            display: none;
-        }
-
-        .cat-nav > summary::after {
-            content: "";
-            flex: none;
-            width: 7px;
-            height: 7px;
-            margin-block-start: -3px;
-            border-inline-end: 2px solid currentColor;
-            border-block-end: 2px solid currentColor;
-            transform: rotate(45deg);
-            transition: transform var(--t);
-        }
-
-    .cat-nav[open] > summary::after {
-        transform: rotate(-135deg);
-        margin-block-start: 3px;
+    .cat-nav > summary::after {
+        content: "";
+        flex: none;
+        width: 7px;
+        height: 7px;
+        margin-block-start: -3px;
+        border-inline-end: 2px solid currentColor;
+        border-block-end: 2px solid currentColor;
+        transform: rotate(45deg);
+        transition: transform var(--t);
     }
 
-    .cat-nav > summary:hover,
-    .cat-nav[open] > summary {
-        color: var(--text);
-        background: var(--panel-2);
-    }
+.cat-nav[open] > summary::after {
+    transform: rotate(-135deg);
+    margin-block-start: 3px;
+}
 
+.cat-nav > summary:hover,
+.cat-nav[open] > summary {
+    color: var(--text);
+    background: var(--panel-2);
+}
+
+/* Panel: full-width mega window under the header */
 .cat-nav__panel {
     position: absolute;
-    inset-block-start: calc(100% + 10px);
-    inset-inline-start: 0;
+    inset-block-start: calc(100% + 2px);
+    inset-inline: 0;
     z-index: 60;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 18px 26px;
-    min-width: 560px;
-    max-width: min(780px, calc(100vw - 40px));
-    max-height: min(70vh, 520px);
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    padding: 20px;
+    display: flex;
+    align-items: stretch;
     background: var(--panel);
     border: 1px solid var(--line);
     border-radius: var(--r-lg);
     box-shadow: var(--shadow-3);
+    overflow: hidden;
+    max-height: min(72vh, 560px);
 }
 
-.cat-nav__col {
+/* Right rail (inline-start in RTL): level-1 tabs */
+.cat-nav__side {
+    flex: 0 0 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 14px 10px;
+    background: var(--panel-2);
+    border-inline-end: 1px solid var(--line-soft);
+    overflow-y: auto;
+}
+
+.cat-nav__tab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 11px 14px;
+    text-align: start;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--r-sm);
+    font-family: inherit;
+    font-size: .93rem;
+    font-weight: 700;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: color var(--t), background var(--t), border-color var(--t);
+}
+
+    .cat-nav__tab::after {
+        content: "";
+        flex: none;
+        width: 6px;
+        height: 6px;
+        margin-inline-start: auto;
+        border-block-start: 2px solid currentColor;
+        border-inline-start: 2px solid currentColor;
+        transform: rotate(-135deg); /* points to the content side in RTL */
+        opacity: .45;
+        transition: transform var(--t), opacity var(--t);
+    }
+
+    .cat-nav__tab:hover {
+        color: var(--text);
+        background: var(--panel);
+    }
+
+    .cat-nav__tab.is-active {
+        color: var(--brand);
+        background: var(--panel);
+        border-color: var(--brand-line);
+    }
+
+        .cat-nav__tab.is-active::after {
+            opacity: 1;
+            transform: rotate(-135deg) translateY(1px);
+        }
+
+/* Content area (to the left of the rail in RTL) */
+.cat-nav__main {
+    flex: 1;
+    min-width: 0;
+    padding: 20px 24px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.cat-nav__pane {
+    display: none;
+}
+
+    .cat-nav__pane.is-active {
+        display: block;
+    }
+
+.cat-nav__all {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 16px;
+    padding: 4px 10px 4px 0;
+    font-size: .8rem;
+    font-weight: 700;
+    color: var(--brand);
+    border-radius: var(--r-sm);
+}
+
+    .cat-nav__all span {
+        transition: transform var(--t);
+    }
+
+    .cat-nav__all:hover {
+        color: var(--brand-strong);
+    }
+
+        .cat-nav__all:hover span {
+            transform: translateX(-3px);
+        }
+
+/* Grid of level-2 groups */
+.cat-nav__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px 28px;
+}
+
+.cat-nav__group {
     min-width: 0;
 }
 
-.cat-nav .cat-nav__col > .cat-nav__parent {
-    display: block;
-    padding: 6px 8px;
-    margin-bottom: 4px;
-    border-radius: var(--r-sm);
-    font-size: .92rem;
+/* Level-2: bold title with brand accent bar (visually distinct from level-3) */
+.cat-nav .cat-nav__group-title {
+    position: relative;
+    display: inline-block;
+    padding-inline-start: 12px;
+    margin-bottom: 8px;
+    font-size: .95rem;
     font-weight: 800;
     color: var(--text);
+    line-height: 1.5;
 }
 
-    .cat-nav .cat-nav__col > .cat-nav__parent:hover {
-        color: var(--brand);
-        background: var(--brand-soft);
+    .cat-nav .cat-nav__group-title::before {
+        content: "";
+        position: absolute;
+        inset-inline-start: 0;
+        inset-block: 6px 6px;
+        width: 3px;
+        border-radius: 2px;
+        background: var(--brand);
+        transition: inset-block var(--t);
     }
 
-.cat-nav__group + .cat-nav__group {
-    margin-top: 10px;
-}
-
-.cat-nav .cat-nav__group > a {
-    display: block;
-    padding: 4px 8px;
-    font-size: .84rem;
-    font-weight: 700;
-    color: var(--text-2);
-}
-
-    .cat-nav .cat-nav__group > a:hover {
+    .cat-nav .cat-nav__group-title:hover {
         color: var(--brand);
     }
 
+        .cat-nav .cat-nav__group-title:hover::before {
+            inset-block: 2px 2px;
+        }
+
+/* Level-3: smaller muted links */
 .cat-nav__group ul {
     list-style: none;
-    margin: 2px 0 0;
-    padding: 0;
+    margin: 0;
+    padding: 0 0 0 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
 }
 
 .cat-nav .cat-nav__group ul a {
     display: block;
-    padding: 5px 8px;
+    padding: 6px 10px;
     border-radius: var(--r-sm);
     font-size: .84rem;
-    line-height: 1.7;
+    font-weight: 500;
     color: var(--text-2);
+    transition: color var(--t), background var(--t), padding-inline-start var(--t);
 }
 
     .cat-nav .cat-nav__group ul a:hover {
-        background: var(--panel-2);
         color: var(--brand);
+        background: var(--brand-soft);
+        padding-inline-start: 14px;
     }
 
-/* Mobile: panel becomes an inline accordion inside the existing drawer */
+/* ---------- Mobile: inline accordion inside the drawer ---------- */
 @media (max-width: 860px) {
     .cat-nav {
         width: 100%;
@@ -2729,31 +2840,71 @@ ul, ol {
 
     .cat-nav__panel {
         position: static;
-        min-width: 0;
-        max-width: none;
+        inset: auto;
+        display: block;
         max-height: none;
         overflow: visible;
-        grid-template-columns: 1fr;
-        gap: 10px;
-        padding: 4px 10px 10px;
         background: transparent;
         border: 0;
         border-radius: 0;
         box-shadow: none;
+        margin-top: 4px;
     }
 
-    .cat-nav .cat-nav__col > .cat-nav__parent {
-        padding: 8px 10px;
-        background: var(--panel-2);
+    /* Rail becomes a horizontal chip strip */
+    .cat-nav__side {
+        flex-direction: row;
+        gap: 6px;
+        padding: 4px 0 10px;
+        background: transparent;
+        border-inline-end: 0;
+        border-bottom: 1px solid var(--line-soft);
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
     }
 
-    .cat-nav .cat-nav__group > a {
-        padding: 8px 10px;
-        font-size: .9rem;
+        .cat-nav__side::-webkit-scrollbar {
+            display: none;
+        }
+
+    .cat-nav__tab {
+        flex: 0 0 auto;
+        width: auto;
+        padding: 8px 14px;
+        font-size: .85rem;
+        border: 1px solid var(--line);
+        border-radius: var(--r-full);
+    }
+
+        .cat-nav__tab::after {
+            display: none;
+        }
+
+        .cat-nav__tab.is-active {
+            border-color: var(--brand-line);
+        }
+
+    .cat-nav__main {
+        padding: 12px 2px 4px;
+        overflow: visible;
+    }
+
+    .cat-nav__all {
+        margin-bottom: 10px;
+    }
+
+    .cat-nav__grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .cat-nav .cat-nav__group-title {
+        font-size: .92rem;
     }
 
     .cat-nav .cat-nav__group ul a {
         padding: 8px 10px;
-        font-size: .9rem;
+        font-size: .88rem;
     }
 }

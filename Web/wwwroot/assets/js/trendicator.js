@@ -358,31 +358,45 @@
     if (!menu) return;
 
     var summary = menu.querySelector("summary");
+    var tabs = Array.prototype.slice.call(menu.querySelectorAll(".cat-nav__tab"));
+    var panes = Array.prototype.slice.call(menu.querySelectorAll(".cat-nav__pane"));
 
-    function close() {
-        if (!menu.open) return;
-    menu.open = false;
+    function activate(tab) {
+        var id = tab.getAttribute("data-cat");
+    tabs.forEach(function (t) {
+            var on = t === tab;
+    t.classList.toggle("is-active", on);
+    t.setAttribute("aria-expanded", on ? "true" : "false");
+        });
+    panes.forEach(function (p) {
+        p.classList.toggle("is-active", p.getAttribute("data-pane") === id);
+        });
     }
+
+    tabs.forEach(function (tab) {
+        tab.addEventListener("click", function () {
+            activate(tab);
+            if (window.matchMedia("(max-width: 860px)").matches) {
+                tab.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+            }
+        });
+    });
+
+    /* Reset to the first tab every time the menu opens */
+    menu.addEventListener("toggle", function () {
+        if (menu.open && tabs.length) activate(tabs[0]);
+    });
 
     /* Click outside → close */
     document.addEventListener("click", function (e) {
-        if (menu.open && !menu.contains(e.target)) close();
+        if (menu.open && !menu.contains(e.target)) menu.open = false;
     });
 
-    /* Escape → close + return focus to the toggle */
+    /* Esc → close + focus back to the trigger */
     document.addEventListener("keydown", function (e) {
         if (e.key === "Escape" && menu.open) {
-        close();
+        menu.open = false;
     summary.focus();
         }
     });
-
-    /* Optional: close when the mobile drawer is closed */
-    var navToggle = document.querySelector("[data-nav-toggle]");
-    if (navToggle) {
-        navToggle.addEventListener("click", function () {
-            var nav = document.getElementById("main-nav");
-            if (nav && !nav.classList.contains("is-open")) close();
-        });
-    }
 })();

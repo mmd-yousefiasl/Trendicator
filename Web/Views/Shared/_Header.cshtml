@@ -8,60 +8,8 @@
         <nav class="main-nav" id="main-nav" aria-label="منوی اصلی">
             <a asp-area="" asp-controller="Home" asp-action="Index">خانه</a>
 
-            <!-- ===== دسته‌بندی محصولات (حداکثر ۲ سطح والد) ===== -->
-            <details class="cat-nav">
-                <summary>دسته‌بندی محصولات</summary>
-                <div class="cat-nav__panel">
+            @await Component.InvokeAsync("HeaderProductCategories")
 
-                    <!-- والد سطح ۱ -->
-                    <div class="cat-nav__col">
-                        <a class="cat-nav__parent" href="/products?cat=metatrader">اندیکاتورهای متاتریدر</a>
-
-                        <!-- والد سطح ۲ -->
-                        <div class="cat-nav__group">
-                            <a href="/products?cat=mt4">متاتریدر ۴</a>
-                            <ul>
-                                <li><a href="/products?cat=mt4-forex">فارکس</a></li>
-                                <li><a href="/products?cat=mt4-crypto">کریپتو</a></li>
-                                <li><a href="/products?cat=mt4-bourse">بورس</a></li>
-                            </ul>
-                        </div>
-                        <div class="cat-nav__group">
-                            <a href="/products?cat=mt5">متاتریدر ۵</a>
-                            <ul>
-                                <li><a href="/products?cat=mt5-forex">فارکس</a></li>
-                                <li><a href="/products?cat=mt5-crypto">کریپتو</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="cat-nav__col">
-                        <a class="cat-nav__parent" href="/products?cat=tradingview">اندیکاتورهای تریدینگ‌ویو</a>
-                        <div class="cat-nav__group">
-                            <a href="/products?cat=tv-price-action">پرایس اکشن</a>
-                            <ul>
-                                <li><a href="/products?cat=tv-smart-money">اسمارت مانی</a></li>
-                                <li><a href="/products?cat=tv-volume">حجم و نقدینگی</a></li>
-                            </ul>
-                        </div>
-                        <div class="cat-nav__group">
-                            <a href="/products?cat=tv-templates">تمپلیت‌ها</a>
-                        </div>
-                    </div>
-
-                    <div class="cat-nav__col">
-                        <a class="cat-nav__parent" href="/products?cat=courses">دوره‌های آموزشی</a>
-                        <div class="cat-nav__group">
-                            <a href="/products?cat=course-basic">مقدماتی</a>
-                        </div>
-                        <div class="cat-nav__group">
-                            <a href="/products?cat=course-pro">پیشرفته</a>
-                        </div>
-                    </div>
-
-                </div>
-            </details>
-            <!-- ===== /دسته‌بندی محصولات ===== -->
 
             <a href="products.html">فروشگاه</a>
             <a asp-area="" asp-controller="Blog" asp-action="BlogsList" asp-route-category="">وبلاگ</a>

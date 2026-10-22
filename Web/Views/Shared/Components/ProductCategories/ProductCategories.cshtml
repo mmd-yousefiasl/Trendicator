@@ -3,36 +3,76 @@
 
 @if (Model?.Any() ?? false)
 {
-    <!-- Category Widget -->
-    <div class="widget ltn__menu-widget">
-        <h4 class="ltn__widget-title ltn__widget-title-border">دسته بندی ها</h4>
-        <ul>
-            @foreach (var item in Model ?? new List<ClientSideProductCategoryViewModel>())
-            {
-                <li>
-                    <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@item.Slug">
-                        @item.Title
-                    </a>
-                </li>
+    <details class="cat-nav">
+        <summary>دسته‌بندی محصولات</summary>
+        <div class="cat-nav__panel">
 
-                @foreach (var item2 in item.Categories ?? new List<ClientSideProductCategoryViewModel>())
+            <!-- ستون کنار: والدهای سطح ۱ -->
+            <div class="cat-nav__side" role="tablist" aria-label="دسته‌بندی‌های اصلی">
+                @for (var i = 0; i < Model.Count; i++)
                 {
-                    <li class="mr-20">
-                        <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@item2.Slug">
-                            @item2.Title
-                        </a>
-                    </li>
-
-                    @foreach (var item3 in item2.Categories ?? new List<ClientSideProductCategoryViewModel>())
-                    {
-                        <li class="mr-40">
-                            <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@item3.Slug">
-                                @item3.Title
-                            </a>
-                        </li>
-                    }
+                    var cat = Model[i];
+                    <button type="button"
+                            class="cat-nav__tab@(i == 0 ? " is-active" : "")"
+                            data-cat="@i"
+                            aria-expanded="@(i == 0 ? "true" : "false")">
+                        @cat.Title
+                    </button>
                 }
-            }
-        </ul>
-    </div>
+            </div>
+
+            <!-- محتوای هر دسته -->
+            <div class="cat-nav__main">
+                @for (var i = 0; i < Model.Count; i++)
+                {
+                    var cat = Model[i];
+                    <div class="cat-nav__pane@(i == 0 ? " is-active" : "")" data-pane="@i">
+
+                        <a class="cat-nav__all"
+                           asp-area=""
+                           asp-controller="Product"
+                           asp-action="ProductsList"
+                           asp-route-category="@cat.Slug">
+                            مشاهده همه @cat.Title <span aria-hidden="true">←</span>
+                        </a>
+
+                        @if (cat.Categories?.Any() ?? false)
+                        {
+                            <div class="cat-nav__grid">
+                                @foreach (var group in cat.Categories)
+                                {
+                                    <div class="cat-nav__group">
+                                        <a class="cat-nav__group-title"
+                                           asp-area=""
+                                           asp-controller="Product"
+                                           asp-action="ProductsList"
+                                           asp-route-category="@group.Slug">
+                                            @group.Title
+                                        </a>
+
+                                        @if (group.Categories?.Any() ?? false)
+                                        {
+                                            <ul>
+                                                @foreach (var leaf in group.Categories)
+                                                {
+                                                    <li>
+                                                        <a asp-area=""
+                                                           asp-controller="Product"
+                                                           asp-action="ProductsList"
+                                                           asp-route-category="@leaf.Slug">
+                                                            @leaf.Title
+                                                        </a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </details>
 }

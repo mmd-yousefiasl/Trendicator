@@ -1,6 +1,4 @@
-﻿using Application.Dtos;
-
-namespace Application.Dtos.ProductCategory.ClientSide
+﻿namespace Application.Dtos.ProductCategory.ClientSide
 {
     public class ClientSideProductCategoryViewModel : CommonDto
     {
