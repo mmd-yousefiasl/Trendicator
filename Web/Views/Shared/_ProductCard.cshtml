@@ -1,0 +1,63 @@
+﻿@using Application.Dtos.Product.ClientSide
+@using Application.Tools
+@model ClientSideProductViewModel
+
+@if (Model is not null)
+{
+    <article class="product-card"
+             data-product-name="@Model.Title">
+        <div class="product-card__media">
+            <div class="product-card__tags"><span class="badge badge--brand">پرفروش</span></div>
+            <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@Model.Id" asp-route-slug="@Model.Slug">
+                <img src="@SiteTools.ProductBanner@Model.BannerFileName"
+                     data-src-light="@SiteTools.ProductBanner@Model.BannerFileName"
+                     loading="lazy" data-src-dark="@SiteTools.ProductBanner@Model.BannerFileName" decoding="async" alt="@Model.Slug">
+            </a>
+        </div>
+        <div class="product-card__body">
+            <h3 class="product-card__title">
+                <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@Model.Id" asp-route-slug="@Model.Slug">
+                    @Model.Title
+                </a>
+            </h3>
+            <div class="product-card__meta">
+                <span>
+                    <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@Model.ParentCategorySlug">
+                        @Model.ParentCategory
+                    </a>
+                </span>
+                <span>
+                    <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@Model.CategorySlug">
+                        · @Model.Category
+                    </a>
+                </span>
+                @if (Model.ReviewRate > 0)
+                {
+                    <span>
+                        ·
+                        @Model.ReviewRate
+                        ★
+                    </span>
+                }
+            </div>
+            <p class="text-muted" style="font-size:.85rem;margin:0">
+                <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@Model.Id" asp-route-slug="@Model.Slug">
+                    @Model.ShortDescription
+                </a>
+            </p>
+            <div class="product-card__foot">
+                <div class="price">
+                    @if (Model.DisplayPrice > 0)
+                    {
+                        <del>@Model.DisplayPrice.ToTomanFormat()</del>
+                    }
+                    <small>تومان</small>
+                    @Model.OrderPrice.ToTomanFormat()
+                </div>
+                <button class="btn btn--soft btn--sm">
+                    افزودن
+                </button>
+            </div>
+        </div>
+    </article>
+}

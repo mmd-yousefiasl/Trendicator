@@ -63,7 +63,7 @@ namespace Application.Services.Implementaions
                 Slug = model.Slug,
                 Description = model.Description,
                 DisplayPrice = model.DisplayPrice,
-                DisplayOrderPrice = model.DisplayOrderPrice,
+                OrderPrice = model.OrderPrice,
                 IsAvailable = model.IsAvailable,
                 IsPublished = model.IsPublished,
                 Priority = model.Priority,
@@ -102,7 +102,7 @@ namespace Application.Services.Implementaions
                 product.Priority,
                 product.IsPublished,
                 product.DisplayPrice,
-                product.DisplayOrderPrice,
+                product.OrderPrice,
                 product.IsAvailable,
                 product.Type,
                 product.MetaTraderLink,
@@ -149,11 +149,7 @@ namespace Application.Services.Implementaions
 
             if (!string.IsNullOrWhiteSpace(filter.Search))
             {
-                conditions.Add(n => n.Title.Contains(filter.Search) ||
-                n.Slug.Contains(filter.Search) ||
-                n.Description.Contains(filter.Search) ||
-                n.Category.Title.Contains(filter.Search) ||
-                n.ShortDescription.Contains(filter.Search));
+                conditions.Add(n => n.Title.Contains(filter.Search));
             }
 
             if (filter.IsPublished is not null)
@@ -179,7 +175,7 @@ namespace Application.Services.Implementaions
                 Id = n.Id,
                 Title = n.Title,
                 Slug = n.Slug,
-                DisplayOrderPrice = n.DisplayOrderPrice,
+                OrderPrice = n.OrderPrice,
                 DisplayPrice = n.DisplayPrice,
                 IsAvailable = n.IsAvailable,
                 IsPublished = n.IsPublished,
@@ -204,7 +200,7 @@ namespace Application.Services.Implementaions
                 BannerFileName = n.BannerFileName,
                 CategoryId = n.CategoryId,
                 Description = n.Description,
-                DisplayOrderPrice = n.DisplayOrderPrice,
+                OrderPrice = n.OrderPrice,
                 DisplayPrice = n.DisplayPrice,
                 IsPublished = n.IsPublished,
                 IsAvailable = n.IsAvailable,
@@ -270,7 +266,7 @@ namespace Application.Services.Implementaions
             product.Description = model.Description;
             product.Priority = model.Priority;
             product.IsPublished = model.IsPublished;
-            product.DisplayOrderPrice = model.DisplayOrderPrice;
+            product.OrderPrice = model.OrderPrice;
             product.DisplayPrice = model.DisplayPrice;
             product.IsAvailable = model.IsAvailable;
             product.CategoryId = model.CategoryId;
@@ -292,7 +288,7 @@ namespace Application.Services.Implementaions
                 product.Priority,
                 product.IsPublished,
                 product.DisplayPrice,
-                product.DisplayOrderPrice,
+                product.OrderPrice,
                 product.IsAvailable,
                 product.Type,
                 product.MetaTraderLink,
@@ -300,49 +296,6 @@ namespace Application.Services.Implementaions
             ));
 
             return Result.Success();
-        }
-
-        public async Task<Result<List<ClientSideProductViewModel>>> ClientSideGetLatestProducts()
-        {
-            var products = await _dbSet.Where(n => n.IsPublished).OrderByDescending(n => n.Id)
-                .Take(8)
-                .Select(n => new ClientSideProductViewModel()
-                {
-                    Id = n.Id,
-                    BannerFileName = n.BannerFileName,
-                    Title = n.Title,
-                    Slug = n.Slug,
-                    ShortDescription = n.ShortDescription,
-                    Price = n.DisplayPrice,
-                    HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
-                    OrderPrice = n.DisplayOrderPrice,
-                    Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
-                    IsAvailable = n.IsAvailable,
-                }).AsNoTracking().ToListAsync();
-            if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
-
-            var productIds = products.Select(n => n.Id).ToList();
-
-            var reviewsResult = await _reviewService.GetProductsReviewRate(productIds);
-
-            var wishListResult = await _wishListService.GetCurrentUserWishListIds();
-
-            foreach (var item in products ?? new List<ClientSideProductViewModel>())
-            {
-                if (wishListResult.IsSuccess)
-                {
-                    var productId = wishListResult.Value.FirstOrDefault(n => n == item.Id);
-                    if (productId > 0) item.IsInUserWishList = true;
-                }
-
-                if (reviewsResult.IsSuccess)
-                {
-                    var review = reviewsResult.Value.FirstOrDefault(n => n.ProductId == item.Id);
-                    if (review is not null) item.ReviewRate = review.RoundedAvrage;
-                }
-            }
-
-            return products;
         }
 
         public async Task<Result<ClientSideFilterProductsViewModel>> ClientSideFilterProducts(ClientSideFilterProductsViewModel filter)
@@ -353,14 +306,6 @@ namespace Application.Services.Implementaions
 
             conditions.Add(n => n.IsPublished);
 
-            if (!string.IsNullOrWhiteSpace(filter.Search))
-            {
-                conditions.Add(n => n.Title.Contains(filter.Search) ||
-                n.Slug.Contains(filter.Search) ||
-                n.ShortDescription.Contains(filter.Search) ||
-                n.Category.Title.Contains(filter.Search));
-            }
-
             if (!string.IsNullOrWhiteSpace(filter.Category))
             {
                 conditions.Add(n => n.Category.Slug == filter.Category ||
@@ -368,7 +313,7 @@ namespace Application.Services.Implementaions
                 n.Category.ParentCategory.ParentCategory.Slug == filter.Category);
             }
 
-            IQueryable<Product> query = _dbSet;
+            IQueryable<Product> query = _context.Products;
             if (filter.Sort is not null)
             {
                 switch (filter.Sort)
@@ -377,15 +322,15 @@ namespace Application.Services.Implementaions
                         query = query.OrderByDescending(n => n.Id);
                         break;
                     case ProductSortTypeEnum.Popularity:
-                        query = query.OrderBy(n => n.Views.Count());
+                        query = query.OrderBy(n => n.ViewsCount);
                         break;
                     case ProductSortTypeEnum.PriceLowToHigh:
                         conditions.Add(n => n.IsAvailable);
-                        query = query.OrderBy(n => n.DisplayPrice);
+                        query = query.OrderBy(n => n.OrderPrice);
                         break;
                     case ProductSortTypeEnum.PriceHighToLow:
                         conditions.Add(n => n.IsAvailable);
-                        query = query.OrderByDescending(n => n.DisplayPrice);
+                        query = query.OrderByDescending(n => n.OrderPrice);
                         break;
                     default:
                         query = query.OrderByDescending(n => n.Id);
@@ -409,33 +354,18 @@ namespace Application.Services.Implementaions
                 Slug = n.Slug,
                 BannerFileName = n.BannerFileName,
                 ShortDescription = n.ShortDescription,
-                HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
-                Price = n.DisplayPrice,
-                OrderPrice = n.DisplayOrderPrice,
-                Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
                 IsAvailable = n.IsAvailable,
+                Category = n.Category.Title,
+                ParentCategory = n.Category.ParentCategory.Title,
+                CategorySlug = n.Category.Slug,
+                ParentCategorySlug = n.Category.ParentCategory.Slug,
+                ReviewRate = n.ReviewRate,
+                HaveDiscount = ((n.DisplayPrice > 0) ? true : false),
+                DisplayPrice = n.DisplayPrice,
+                OrderPrice = n.OrderPrice,
+                Percent = ((n.DisplayPrice > 0) ? n.DisplayPrice.GetDiscountPercent(n.OrderPrice) : 0),
             }));
 
-            var productIds = filter.Entities.Select(n => n.Id).ToList();
-
-            var wishListResult = await _wishListService.GetCurrentUserWishListIds();
-
-            var reviewsResult = await _reviewService.GetProductsReviewRate(productIds);
-
-            foreach (var item in filter.Entities ?? new List<ClientSideProductViewModel>())
-            {
-                if (wishListResult.IsSuccess)
-                {
-                    var id = wishListResult.Value.FirstOrDefault(n => n == item.Id);
-                    if (id > 0) item.IsInUserWishList = true;
-                }
-
-                if (reviewsResult.IsSuccess)
-                {
-                    var review = reviewsResult.Value.FirstOrDefault(n => n.ProductId == item.Id);
-                    if (review is not null) item.ReviewRate = review.RoundedAvrage;
-                }
-            }
             return filter;
         }
 
@@ -450,10 +380,10 @@ namespace Application.Services.Implementaions
                     Title = n.Title,
                     Slug = n.Slug,
                     ShortDescription = n.ShortDescription,
-                    HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
-                    Price = n.DisplayPrice,
-                    OrderPrice = n.DisplayOrderPrice,
-                    Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
+                    HaveDiscount = ((n.DisplayPrice > 0) ? true : false),
+                    DisplayPrice = n.DisplayPrice,
+                    OrderPrice = n.OrderPrice,
+                    Percent = ((n.DisplayPrice > 0) ? n.DisplayPrice.GetDiscountPercent(n.OrderPrice) : 0),
                     IsAvailable = n.IsAvailable,
                 }).AsNoTracking().ToListAsync();
             if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
@@ -488,13 +418,13 @@ namespace Application.Services.Implementaions
                     ShortDescription = n.ShortDescription,
                     Description = n.Description,
                     BannerFileName = n.BannerFileName,
-                    HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
-                    OrderPrice = n.DisplayOrderPrice,
-                    Price = n.DisplayPrice,
+                    HaveDiscount = ((n.DisplayPrice > 0) ? true : false),
+                    OrderPrice = n.OrderPrice,
+                    DisplayPrice = n.DisplayPrice,
                     Category = n.Category.Title,
                     CategorySlug = n.Category.Slug,
                     CategoryId = n.CategoryId,
-                    Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
+                    Percent = ((n.DisplayPrice > 0) ? n.DisplayPrice.GetDiscountPercent(n.OrderPrice) : 0),
                     Faqs = n.Faqs.Where(f => f.IsPublished).OrderBy(f => f.Priority)
                     .Select(f => new ClientSideProductFaqViewModel()
                     {
@@ -533,13 +463,13 @@ namespace Application.Services.Implementaions
                     ShortDescription = n.ShortDescription,
                     Description = n.Description,
                     BannerFileName = n.BannerFileName,
-                    HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
-                    OrderPrice = n.DisplayOrderPrice,
-                    Price = n.DisplayPrice,
+                    HaveDiscount = ((n.DisplayPrice > 0) ? true : false),
+                    OrderPrice = n.OrderPrice,
+                    DisplayPrice = n.DisplayPrice,
                     Category = n.Category.Title,
                     CategorySlug = n.Category.Slug,
                     CategoryId = n.CategoryId,
-                    Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
+                    Percent = ((n.DisplayPrice > 0) ? n.DisplayPrice.GetDiscountPercent(n.OrderPrice) : 0),
                     Faqs = n.Faqs.Where(f => f.IsPublished).OrderBy(f => f.Priority)
                     .Select(f => new ClientSideProductFaqViewModel()
                     {
@@ -575,11 +505,11 @@ namespace Application.Services.Implementaions
                     Title = n.Title,
                     Slug = n.Slug,
                     BannerFileName = n.BannerFileName,
-                    Price = n.DisplayPrice,
+                    DisplayPrice = n.DisplayPrice,
                     ShortDescription = n.ShortDescription,
-                    HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
-                    OrderPrice = n.DisplayOrderPrice,
-                    Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
+                    HaveDiscount = ((n.DisplayPrice > 0) ? true : false),
+                    OrderPrice = n.OrderPrice,
+                    Percent = ((n.DisplayPrice > 0) ? n.DisplayPrice.GetDiscountPercent(n.OrderPrice) : 0),
                     IsAvailable = n.IsAvailable,
                 }).AsNoTracking().ToListAsync();
             if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
@@ -592,11 +522,6 @@ namespace Application.Services.Implementaions
 
             foreach (var item in products ?? new List<ClientSideProductViewModel>())
             {
-                if (wishListResult.IsSuccess)
-                {
-                    var productId = wishListResult.Value.FirstOrDefault(n => n == item.Id);
-                    if (productId > 0) item.IsInUserWishList = true;
-                }
 
                 if (reviewsResult.IsSuccess)
                 {
@@ -621,7 +546,7 @@ namespace Application.Services.Implementaions
 
         public async Task<Result<List<ClientSideProductViewModel>>> ClientSideGetDiscountedProducts()
         {
-            var products = await _dbSet.Where(n => n.IsPublished && n.DisplayOrderPrice != null).OrderByDescending(n => n.Id)
+            var products = await _dbSet.Where(n => n.IsPublished && n.OrderPrice != null).OrderByDescending(n => n.Id)
                 .Take(6)
                 .Select(n => new ClientSideProductViewModel()
                 {
@@ -630,10 +555,10 @@ namespace Application.Services.Implementaions
                     Title = n.Title,
                     Slug = n.Slug,
                     ShortDescription = n.ShortDescription,
-                    Price = n.DisplayPrice,
-                    HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
-                    OrderPrice = n.DisplayOrderPrice,
-                    Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
+                    DisplayPrice = n.DisplayPrice,
+                    HaveDiscount = ((n.DisplayPrice > 0) ? true : false),
+                    OrderPrice = n.OrderPrice,
+                    Percent = ((n.DisplayPrice > 0) ? n.DisplayPrice.GetDiscountPercent(n.OrderPrice) : 0),
                     IsAvailable = n.IsAvailable,
                 }).AsNoTracking().ToListAsync();
             if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
@@ -665,10 +590,10 @@ namespace Application.Services.Implementaions
                     Title = n.Title,
                     Slug = n.Slug,
                     ShortDescription = n.ShortDescription,
-                    Price = n.DisplayPrice,
-                    HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
-                    OrderPrice = n.DisplayOrderPrice,
-                    Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
+                    DisplayPrice = n.DisplayPrice,
+                    HaveDiscount = ((n.DisplayPrice > 0) ? true : false),
+                    OrderPrice = n.OrderPrice,
+                    Percent = ((n.DisplayPrice > 0) ? n.DisplayPrice.GetDiscountPercent(n.OrderPrice) : 0),
                     IsAvailable = n.IsAvailable,
                 }).AsNoTracking().ToListAsync();
             if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
@@ -700,10 +625,10 @@ namespace Application.Services.Implementaions
                        Title = n.Title,
                        Slug = n.Slug,
                        ShortDescription = n.ShortDescription,
-                       Price = n.DisplayPrice,
-                       HaveDiscount = ((n.DisplayOrderPrice != null) ? true : false),
-                       OrderPrice = n.DisplayOrderPrice,
-                       Percent = ((n.DisplayOrderPrice != null) ? n.DisplayPrice.GetDiscountPercent(n.DisplayOrderPrice.Value) : 0),
+                       DisplayPrice = n.DisplayPrice,
+                       HaveDiscount = ((n.DisplayPrice > 0) ? true : false),
+                       OrderPrice = n.OrderPrice,
+                       Percent = ((n.DisplayPrice > 0) ? n.DisplayPrice.GetDiscountPercent(n.OrderPrice) : 0),
                        IsAvailable = n.IsAvailable,
                    }).AsNoTracking().ToListAsync();
             if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);

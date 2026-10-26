@@ -21,5 +21,7 @@ namespace Application.Services.Interfaces
         Task<Result<List<ClientSideProductCategoryViewModel>>> ClientSideGetProductCategories();
 
         Task<Result<List<AdminSideProductCategoryAsOptionViewModel>>> AdminSideGetCategoriesForSiteMap();
+
+        Task<Result<List<ClientSideProductCategoryViewModel>>> ClientSideGetParentCategories();
     }
 }

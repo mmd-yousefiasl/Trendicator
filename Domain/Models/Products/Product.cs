@@ -12,12 +12,14 @@ namespace Domain.Models.Products
         public string Description { get; set; }
         public int Priority { get; set; }
         public bool IsPublished { get; set; }
-        public long DisplayPrice { get; set; }
-        public long? DisplayOrderPrice { get; set; }
+        public decimal DisplayPrice { get; set; }
+        public decimal OrderPrice { get; set; }
         public bool IsAvailable { get; set; }
         public ProductTypeEnum Type { get; set; }
         public string? MetaTraderLink { get; set; }
         public string? IndicatorFileName { get; set; }
+        public int ReviewRate { get; set; }
+        public int ViewsCount { get; set; }
 
         #region Relations
 

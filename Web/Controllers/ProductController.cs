@@ -2,6 +2,7 @@
 using Application.Services.Interfaces;
 using Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Crypto.Signers;
 
 namespace Web.Controllers
 {
@@ -24,7 +25,8 @@ namespace Web.Controllers
         [HttpGet("/products/{category?}")]
         public async Task<IActionResult> ProductsList(string? category, ClientSideFilterProductsViewModel filter)
         {
-            if (!string.IsNullOrWhiteSpace(category) && string.IsNullOrWhiteSpace(filter.Search) && filter.Sort is null && filter.Page == 1)
+            filter.TakeEntity = 9;
+            if (!string.IsNullOrWhiteSpace(category) && filter.Sort is null && filter.Page == 1)
             {
                 ViewData["NoIndex"] = false;
             }

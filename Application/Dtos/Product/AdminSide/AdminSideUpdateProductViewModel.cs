@@ -1,5 +1,4 @@
-﻿using Application.Dtos;
-using Domain.Enums.Products;
+﻿using Domain.Enums.Products;
 using Domain.Shared;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
@@ -46,10 +45,11 @@ namespace Application.Dtos.Product.AdminSide
 
         [Display(Name = "قیمت نمایشی")]
         [Required(ErrorMessage = Messages.RequiredError)]
-        public long DisplayPrice { get; set; }
+        public decimal DisplayPrice { get; set; }
 
         [Display(Name = "قیمت سفارش")]
-        public long? DisplayOrderPrice { get; set; }
+        [Required(ErrorMessage = Messages.RequiredError)]
+        public decimal OrderPrice { get; set; }
 
         [Display(Name = "وضعیت موجودی")]
         [Required(ErrorMessage = Messages.RequiredError)]

@@ -1,5 +1,5 @@
-﻿@using Application.Tools
-@using Application.Dtos.Product.ClientSide
+﻿@using Application.Dtos.Product.ClientSide
+@using Application.Tools
 @model ClientSideProductDetailsViewModel
 
 <div class="ltn__quick-view-modal-inner">
@@ -29,12 +29,12 @@
                     <div class="product-price">
                         @if (Model.HaveDiscount)
                         {
-                            <span id="price-field">@Model.OrderPrice?.ToToman()</span>
-                            <del id="order-price-field">@Model.Price.ToTomanFormat()</del>
+                            <span id="price-field">@Model.OrderPrice.ToToman()</span>
+                            <del id="order-price-field">@Model.DisplayPrice.ToTomanFormat()</del>
                         }
                         else
                         {
-                            <span id="price-field">@Model.Price.ToToman()</span>
+                            <span id="price-field">@Model.OrderPrice.ToToman()</span>
                             <del id="order-price-field"></del>
                         }
                     </div>

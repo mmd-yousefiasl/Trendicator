@@ -28,7 +28,7 @@
             "@@type": "Offer",
             "url": "@(SiteTools.SiteUrl + "p/" + Model.Id + "/" + Model.Slug)",
             "priceCurrency": "IRR",
-            "price": "@(Model.Price * 10)",
+            "price": "@(Model.OrderPrice * 10)",
             "availability": "https://schema.org/InStock",
             "itemCondition": "https://schema.org/NewCondition"
           }
@@ -45,14 +45,14 @@
           "mainEntity": [
             @foreach (var faq in Model.Faqs ?? new List<ClientSideProductFaqViewModel>())
             {
-                    @: {
-                    @:   "@@type": "Question",
-                    @:   "name": "@faq.Question",
-                    @:   "acceptedAnswer": {
-                    @:     "@@type": "Answer",
-                    @:     "text": "@faq.Answer"
-                    @:   }
-                    @: }@(faq != Model?.Faqs?.Last() ? "," : "")
+                                    @: {
+                                    @:   "@@type": "Question",
+                                    @:   "name": "@faq.Question",
+                                    @:   "acceptedAnswer": {
+                                    @:     "@@type": "Answer",
+                                    @:     "text": "@faq.Answer"
+                                    @:   }
+                                    @: }@(faq != Model?.Faqs?.Last() ? "," : "")
             }
           ]
         }
@@ -122,12 +122,12 @@
                                 <div class="product-price">
                                     @if (Model.HaveDiscount)
                                     {
-                                        <span id="price-field">@Model.OrderPrice?.ToToman()</span>
-                                        <del id="order-price-field">@Model.Price.ToTomanFormat()</del>
+                                        <span id="price-field">@Model.OrderPrice.ToToman()</span>
+                                        <del id="order-price-field">@Model.DisplayPrice.ToTomanFormat()</del>
                                     }
                                     else
                                     {
-                                        <span id="price-field">@Model.Price.ToToman()</span>
+                                        <span id="price-field">@Model.OrderPrice.ToToman()</span>
                                         <del id="order-price-field"></del>
                                     }
                                 </div>

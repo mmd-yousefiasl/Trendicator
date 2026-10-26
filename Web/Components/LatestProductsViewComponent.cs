@@ -14,8 +14,13 @@ namespace Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var result = await _productService.ClientSideGetLatestProducts();
-            if (result.IsFailure) return View("LatestProducts", new List<ClientSideProductViewModel>());
+            var result = await _productService.ClientSideFilterProducts(new ClientSideFilterProductsViewModel()
+            {
+                TakeEntity = 4,
+                Sort = Domain.Enums.Products.ProductSortTypeEnum.Popularity,
+                Category = null
+            });
+            if (result.IsFailure) return View("LatestProducts", new ClientSideFilterProductsViewModel());
 
             return View("LatestProducts", result.Value);
         }

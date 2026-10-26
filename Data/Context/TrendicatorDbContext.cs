@@ -47,7 +47,7 @@ namespace Data.Context
 
         public DbSet<ProductCategory> ProductCategories => Set<ProductCategory>();
         public DbSet<ProductCompare> ProductCompare => Set<ProductCompare>();
-        public DbSet<Product> Product => Set<Product>();
+        public DbSet<Product> Products => Set<Product>();
         public DbSet<ProductFaq> ProductFaqs => Set<ProductFaq>();
         public DbSet<ProductOption> ProductOptions => Set<ProductOption>();
         public DbSet<ProductReview> ProductReviews => Set<ProductReview>();

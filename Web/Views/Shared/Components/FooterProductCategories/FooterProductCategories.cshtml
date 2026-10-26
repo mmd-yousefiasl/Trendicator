@@ -1,0 +1,10 @@
+﻿@using Application.Dtos.ProductCategory.ClientSide
+@model List<ClientSideProductCategoryViewModel>
+
+@if (Model?.Any() ?? false)
+{
+    @foreach (var item in Model ?? new List<ClientSideProductCategoryViewModel>())
+    {
+        <li><a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@item.Slug">@item.Title</a></li>
+    }
+}

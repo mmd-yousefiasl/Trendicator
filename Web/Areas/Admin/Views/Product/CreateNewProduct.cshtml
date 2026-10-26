@@ -1,6 +1,6 @@
-﻿@using Application.Services.Interfaces
-@using Application.Dtos.Product.AdminSide
+﻿@using Application.Dtos.Product.AdminSide
 @using Application.Dtos.ProductCategory.AdminSide
+@using Application.Services.Interfaces
 @using Domain.Enums.Products
 @model AdminSideCreateNewProductViewModel
 
@@ -63,10 +63,10 @@
                     </div>
 
                     <div class="mb-3 row">
-                        <label asp-for="DisplayOrderPrice" class="col-md-2 col-form-label"></label>
+                        <label asp-for="OrderPrice" class="col-md-2 col-form-label"></label>
                         <div class="col-md-10">
-                            <input class="form-control" asp-for="DisplayOrderPrice">
-                            <span asp-validation-for="DisplayOrderPrice" class="text-danger"></span>
+                            <input class="form-control" asp-for="OrderPrice">
+                            <span asp-validation-for="OrderPrice" class="text-danger"></span>
                         </div>
                     </div>
 

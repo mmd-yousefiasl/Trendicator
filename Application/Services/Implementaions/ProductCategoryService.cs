@@ -281,5 +281,24 @@ namespace Application.Services.Implementaions
 
             return categories;
         }
+
+        public async Task<Result<List<ClientSideProductCategoryViewModel>>> ClientSideGetParentCategories()
+        {
+            var categories = await _context.ProductCategories
+                .AsNoTracking()
+                .Where(n => n.IsPublished && n.ParentCategoryId == null)
+                .OrderBy(n => n.Priority)
+                .ToListAsync();
+
+            if (!categories?.Any() ?? true)
+                return Result.Failure<List<ClientSideProductCategoryViewModel>>(Messages.OperationFailedError);
+
+            return categories.Select(n => new ClientSideProductCategoryViewModel()
+            {
+                Id = n.Id,
+                Title = n.Title,
+                Slug = n.Slug,
+            }).ToList();
+        }
     }
 }

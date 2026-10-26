@@ -19,7 +19,7 @@
                     با سیگنال‌های دقیق ورود و خروج — ساخته‌شده توسط معامگران، تست‌شده روی دیتای واقعی.
                 </p>
                 <div class="hero__cta">
-                    <a href="products.html" class="btn btn--primary btn--lg">مشاهده فروشگاه</a>
+                    <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="" class="btn btn--primary btn--lg">مشاهده فروشگاه</a>
                     <a href="guide.html" class="btn btn--ghost btn--lg">اندیکاتور چیست؟</a>
                 </div>
             </div>
@@ -144,111 +144,7 @@
         </div>
     </section>
 
-    <!-- ============ Featured products ============ -->
-    <section class="section">
-        <div class="container">
-            <div class="flex flex--between flex--wrap mb-3">
-                <div class="section-head" style="margin-bottom:0">
-                    <span class="kicker">پرفروش‌ترین‌ها</span>
-                    <h2 class="mt-1">اندیکاتورهای منتخب</h2>
-                </div>
-                <a href="products.html" class="btn btn--ghost btn--sm">مشاهده همه ←</a>
-            </div>
-
-            <div class="grid grid--4 grid--posts" tabindex="0" role="region" aria-label="محصولات منتخب">
-                <!-- Product card -->
-                <article class="product-card" data-product data-product-id="p1" data-product-name="ترند اسکالپر پرو">
-                    <div class="product-card__media">
-                        <div class="product-card__tags"><span class="badge badge--brand">پرفروش</span></div>
-                        <img src="assets/img/products/p1-dark.webp" data-src-light="assets/img/products/p1-light.webp" width="800"
-                             height="450" loading="lazy" data-src-dark="assets/img/products/p1-dark.webp" decoding="async" alt="">
-                    </div>
-                    <div class="product-card__body">
-                        <h3 class="product-card__title"><a href="product.html">ترند اسکالپر پرو</a></h3>
-                        <div class="product-card__meta"><span>MT4 / MT5</span><span>· اسکالپ</span><span>· ۴٫۹ ★</span></div>
-                        <p class="text-muted" style="font-size:.85rem;margin:0">
-                            سیگنال‌گیری لحظه‌ای برای اسکالپ با فیلتر جریان
-                            سفارشات.
-                        </p>
-                        <div class="product-card__foot">
-                            <div class="price"><small>تومان</small> ۲٬۴۸۰٬۰۰۰</div>
-                            <button class="btn btn--soft btn--sm" data-add-to-cart data-id="p1" data-name="ترند اسکالپر پرو"
-                                    data-price="2480000">
-                                افزودن
-                            </button>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="product-card" data-product data-product-id="p2" data-product-name="سوپر ترند دارچین">
-                    <div class="product-card__media">
-                        <div class="product-card__tags"><span class="badge">جدید</span></div>
-                        <img src="assets/img/products/p2-dark.webp" data-src-light="assets/img/products/p2-light.webp" width="800"
-                             height="450" loading="lazy" data-src-dark="assets/img/products/p2-dark.webp" decoding="async" alt="">
-                    </div>
-                    <div class="product-card__body">
-                        <h3 class="product-card__title"><a href="product.html">سوپر ترند دارچین</a></h3>
-                        <div class="product-card__meta"><span>TradingView</span><span>· سوئینگ</span><span>· ۴٫۸ ★</span></div>
-                        <p class="text-muted" style="font-size:.85rem;margin:0">تشخیص جهت روند با پاین‌های رنگی و آلارم تلگرام.</p>
-                        <div class="product-card__foot">
-                            <div class="price"><small>تومان</small> ۱٬۸۹۰٬۰۰۰</div>
-                            <button class="btn btn--soft btn--sm" data-add-to-cart data-id="p2" data-name="سوپر ترند دارچین"
-                                    data-price="1890000">
-                                افزودن
-                            </button>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="product-card" data-product data-product-id="p3" data-product-name="اسمارت مانی فلو">
-                    <div class="product-card__media">
-                        <div class="product-card__tags"><span class="badge badge--up">٪۱۵ تخفیف</span></div>
-                        <img src="assets/img/products/p3-dark.webp" data-src-light="assets/img/products/p3-light.webp" width="800"
-                             height="450" loading="lazy" data-src-dark="assets/img/products/p3-dark.webp" decoding="async" alt="">
-                    </div>
-                    <div class="product-card__body">
-                        <h3 class="product-card__title"><a href="product.html">اسمارت مانی فلو</a></h3>
-                        <div class="product-card__meta"><span>MT5</span><span>· پرایس اکشن</span><span>· ۴٫۹ ★</span></div>
-                        <p class="text-muted" style="font-size:.85rem;margin:0">شناسایی نواحی خرید و فروش پول هوشمند روی چارت.</p>
-                        <div class="product-card__foot">
-                            <div class="price">
-                                <del>۲٬۹۰۰٬۰۰۰</del>
-                                <small>تومان</small> ۲٬۴۶۰٬۰۰۰
-                            </div>
-                            <button class="btn btn--soft btn--sm" data-add-to-cart data-id="p3" data-name="اسمارت مانی فلو"
-                                    data-price="2460000">
-                                افزودن
-                            </button>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="product-card" data-product data-product-id="p4" data-product-name="ایکسپرت گاردین">
-                    <div class="product-card__media">
-                        <img src="assets/img/products/p4-dark.webp" data-src-light="assets/img/products/p4-light.webp" width="800"
-                             height="450" loading="lazy" data-src-dark="assets/img/products/p4-dark.webp" decoding="async" alt="">
-                    </div>
-                    <div class="product-card__body">
-                        <h3 class="product-card__title"><a href="product.html">ایکسپرت گاردین</a></h3>
-                        <div class="product-card__meta">
-                            <span>MT4 / MT5</span><span>· ربات معامله‌گر</span><span>· ۴٫۷ ★</span>
-                        </div>
-                        <p class="text-muted" style="font-size:.85rem;margin:0">
-                            مدیریت خودکار معاملات با حد ضرر متحرک و پوزیشن
-                            سایزینگ.
-                        </p>
-                        <div class="product-card__foot">
-                            <div class="price"><small>تومان</small> ۴٬۹۰۰٬۰۰۰</div>
-                            <button class="btn btn--soft btn--sm" data-add-to-cart data-id="p4" data-name="ایکسپرت گاردین"
-                                    data-price="4900000">
-                                افزودن
-                            </button>
-                        </div>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
+    @await Component.InvokeAsync("LatestProducts")
 
     <!-- ============ How it works ============ -->
     <section class="section section--soft">
@@ -324,7 +220,7 @@
                     با اشتراک حرفه‌ای به همه محصولات دسترسی داشته باشید.
                 </p>
                 <div class="flex flex--center flex--wrap mt-3">
-                    <a href="products.html" class="btn btn--primary btn--lg">ورود به فروشگاه</a>
+                    <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="" class="btn btn--primary btn--lg">ورود به فروشگاه</a>
                     <a asp-area="" asp-controller="ContactUs" asp-action="ContactUs" class="btn btn--ghost btn--lg">مشاوره رایگان</a>
                 </div>
             </div>

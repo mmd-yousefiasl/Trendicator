@@ -16,8 +16,6 @@ namespace Application.Services.Interfaces
 
         Task<Result> AdminSideDeleteProduct(int id);
 
-        Task<Result<List<ClientSideProductViewModel>>> ClientSideGetLatestProducts();
-
         Task<Result<ClientSideFilterProductsViewModel>> ClientSideFilterProducts(ClientSideFilterProductsViewModel filter);
 
         Task<Result<List<ClientSideProductViewModel>>> ClientSideGetTopRatedProducts();

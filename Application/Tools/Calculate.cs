@@ -2,7 +2,7 @@
 {
     public static class Calculate
     {
-        public static int GetDiscountPercent(this long value, long afterDiscount)
+        public static int GetDiscountPercent(this decimal value, decimal afterDiscount)
         {
             if (value <= 0 || afterDiscount <= 0) return 0;
 

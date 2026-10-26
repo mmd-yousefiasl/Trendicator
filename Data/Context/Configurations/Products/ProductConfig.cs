@@ -20,6 +20,11 @@ namespace Data.Context.Configurations.Products
             builder.Property(n => n.MetaTraderLink).HasMaxLength(200);
             builder.Property(n => n.IndicatorFileName).HasMaxLength(50);
 
+            builder.Property(u => u.OrderPrice)
+           .HasColumnType("numeric(18,0)");
+
+            builder.Property(u => u.DisplayPrice)
+           .HasColumnType("numeric(18,0)");
 
             builder.HasOne(n => n.Category)
                 .WithMany(n => n.Products)

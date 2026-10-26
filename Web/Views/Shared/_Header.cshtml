@@ -11,7 +11,7 @@
             @await Component.InvokeAsync("HeaderProductCategories")
 
 
-            <a href="products.html">فروشگاه</a>
+            <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="">فروشگاه</a>
             <a asp-area="" asp-controller="Blog" asp-action="BlogsList" asp-route-category="">وبلاگ</a>
             <a asp-area="" asp-controller="Faq" asp-action="Faqs">سوالات متداول</a>
             <a asp-area="" asp-controller="ContactUs" asp-action="ContactUs"> تماس با ما</a>

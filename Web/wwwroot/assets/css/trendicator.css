@@ -2294,6 +2294,60 @@ ul, ol {
     padding: 16px 18px;
 }
 
+/* Nested (collapsible) sub-category groups inside the sidebar filter.
+   Reuses the existing .filter-group details/summary styling. */
+.filter-group .filter-group {
+    border: 0;
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+}
+
+    .filter-group .filter-group > summary {
+        padding: 7px 10px;
+        font-size: .88rem;
+        font-weight: 600;
+        color: var(--text-2);
+        border-radius: var(--r-sm);
+        transition: background var(--t), color var(--t);
+    }
+
+        .filter-group .filter-group > summary:hover {
+            background: var(--panel-2);
+            color: var(--text);
+        }
+
+    .filter-group .filter-group[open] > summary {
+        color: var(--brand);
+    }
+
+/* The anchor inside <summary> is just text; the summary row is the toggle. */
+.filter-group summary a {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+}
+
+    .filter-group summary a:hover {
+        background: transparent;
+        color: inherit;
+    }
+
+/* Indent sub-lists; keep the anchor hit-area generous. */
+.filter-group .filter-group > ul {
+    padding-inline-start: 12px;
+    margin-top: 4px;
+}
+
+    .filter-group .filter-group > ul a {
+        font-size: .85rem;
+        padding: 6px 10px;
+    }
+
 /* Shop sidebar on mobile: filters behind a toggle.
    The toggle button lives INSIDE the aside; when the aside is closed
    the whole sidebar (button included) hides. */

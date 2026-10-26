@@ -1,78 +1,91 @@
 ﻿@using Application.Dtos.ProductCategory.ClientSide
 @model List<ClientSideProductCategoryViewModel>
 
+@{
+    // Current slug — works whether asp-route-category became a query string (?category=…)
+    // or a real route segment.
+    var currentCategory = ViewContext.RouteData.Values["category"]?.ToString();
+    if (string.IsNullOrWhiteSpace(currentCategory))
+        currentCategory = Context.Request.Query["category"].ToString();
+    if (string.IsNullOrWhiteSpace(currentCategory))
+        currentCategory = null;
+
+    Func<ClientSideProductCategoryViewModel, bool> isActive = c =>
+        string.Equals(c.Slug, currentCategory, StringComparison.OrdinalIgnoreCase);
+
+    // Recursive: "does this node, or any descendant, match?"
+    Func<ClientSideProductCategoryViewModel, bool> containsActive = null;
+    containsActive = c =>
+        isActive(c) || (c.Categories?.Any(containsActive) ?? false);
+}
+
 @if (Model?.Any() ?? false)
 {
-    <details class="cat-nav">
-        <summary>دسته‌بندی محصولات</summary>
-        <div class="cat-nav__panel">
+    <details class="card card-pad filter-group" open>
+        <summary>دسته بندی</summary>
+        <ul>
+            <li>
+                <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category=""
+                   class="@(currentCategory is null ? "is-active" : null)">همه</a>
+            </li>
 
-            <!-- ستون کنار: والدهای سطح ۱ -->
-            <div class="cat-nav__side" role="tablist" aria-label="دسته‌بندی‌های اصلی">
-                @for (var i = 0; i < Model.Count; i++)
-                {
-                    var cat = Model[i];
-                    <button type="button"
-                            class="cat-nav__tab@(i == 0 ? " is-active" : "")"
-                            data-cat="@i"
-                            aria-expanded="@(i == 0 ? "true" : "false")">
-                        @cat.Title
-                    </button>
-                }
-            </div>
+            @foreach (var item in Model)
+            {
+                var active = isActive(item);
+                var contains = containsActive(item);
 
-            <!-- محتوای هر دسته -->
-            <div class="cat-nav__main">
-                @for (var i = 0; i < Model.Count; i++)
-                {
-                    var cat = Model[i];
-                    <div class="cat-nav__pane@(i == 0 ? " is-active" : "")" data-pane="@i">
-
-                        <a class="cat-nav__all"
-                           asp-area=""
-                           asp-controller="Product"
-                           asp-action="ProductsList"
-                           asp-route-category="@cat.Slug">
-                            مشاهده همه @cat.Title <span aria-hidden="true">←</span>
-                        </a>
-
-                        @if (cat.Categories?.Any() ?? false)
-                        {
-                            <div class="cat-nav__grid">
-                                @foreach (var group in cat.Categories)
+                <li>
+                    @if (item.Categories?.Any() ?? false)
+                    {
+                        <details class="filter-group @(contains ? "is-active" : null)"
+                            @(contains ? "open" : null)>
+                            <summary>
+                                <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@item.Slug"
+                                   class="@(active ? "is-active" : null)">@item.Title</a>
+                            </summary>
+                            <ul>
+                                @foreach (var item2 in item.Categories)
                                 {
-                                    <div class="cat-nav__group">
-                                        <a class="cat-nav__group-title"
-                                           asp-area=""
-                                           asp-controller="Product"
-                                           asp-action="ProductsList"
-                                           asp-route-category="@group.Slug">
-                                            @group.Title
-                                        </a>
+                                    var active2 = isActive(item2);
+                                    var contains2 = containsActive(item2);
 
-                                        @if (group.Categories?.Any() ?? false)
+                                    <li>
+                                        @if (item2.Categories?.Any() ?? false)
                                         {
-                                            <ul>
-                                                @foreach (var leaf in group.Categories)
-                                                {
-                                                    <li>
-                                                        <a asp-area=""
-                                                           asp-controller="Product"
-                                                           asp-action="ProductsList"
-                                                           asp-route-category="@leaf.Slug">
-                                                            @leaf.Title
-                                                        </a>
-                                                    </li>
-                                                }
-                                            </ul>
+                                            <details class="filter-group @(contains2 ? "is-active" : null)"
+                                                @(contains2 ? "open" : null)>
+                                                <summary>
+                                                    <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@item2.Slug"
+                                                       class="@(active2 ? "is-active" : null)">@item2.Title</a>
+                                                </summary>
+                                                <ul>
+                                                    @foreach (var item3 in item2.Categories)
+                                                    {
+                                                        <li>
+                                                            <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@item3.Slug"
+                                                               class="@(isActive(item3) ? "is-active" : null)">@item3.Title</a>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </details>
                                         }
-                                    </div>
+                                        else
+                                        {
+                                            <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@item2.Slug"
+                                               class="@(active2 ? "is-active" : null)">@item2.Title</a>
+                                        }
+                                    </li>
                                 }
-                            </div>
-                        }
-                    </div>
-                }
-            </div>
-        </div>
+                            </ul>
+                        </details>
+                    }
+                    else
+                    {
+                        <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@item.Slug"
+                           class="@(active ? "is-active" : null)">@item.Title</a>
+                    }
+                </li>
+            }
+        </ul>
     </details>
 }

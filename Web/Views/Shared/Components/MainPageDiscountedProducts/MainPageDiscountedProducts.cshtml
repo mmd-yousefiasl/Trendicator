@@ -1,5 +1,5 @@
-﻿@using Application.Tools
-@using Application.Dtos.Product.ClientSide
+﻿@using Application.Dtos.Product.ClientSide
+@using Application.Tools
 @model List<ClientSideProductViewModel>
 
 @if (Model?.Any() ?? false)
@@ -36,12 +36,12 @@
                                 {
                                     @if (item.HaveDiscount)
                                     {
-                                        <span class="fs-large">@item.OrderPrice?.ToToman()</span>
-                                        <del class="fs-small">@item.Price.ToTomanFormat()</del>
+                                        <span class="fs-large">@item.OrderPrice.ToToman()</span>
+                                        <del class="fs-small">@item.DisplayPrice.ToTomanFormat()</del>
                                     }
                                     else
                                     {
-                                        <span class="fs-large">@item.Price.ToToman()</span>
+                                        <span class="fs-large">@item.OrderPrice.ToToman()</span>
                                     }
                                 }
                                 else
