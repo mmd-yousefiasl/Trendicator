@@ -999,9 +999,40 @@ namespace Domain.Statics
                 UniqueName = "DeleteProductFeature"
             },
             #endregion
+
+            #region ProductDetails
+            new Permission
+            {
+                Id = 143,
+                ParentId = 1,
+                Title = "مدیریت جزئیات محصول",
+                UniqueName = "ManageProductDetails"
+            },
+            new Permission
+            {
+                Id = 144,
+                ParentId = 143,
+                Title = "افزودن جزئیات جدید",
+                UniqueName = "CreateNewProductDetails"
+            },
+            new Permission
+            {
+                Id = 145,
+                ParentId = 143,
+                Title = "ویرایش جزئیات",
+                UniqueName = "UpdateProductDetails"
+            },
+            new Permission
+            {
+                Id = 146,
+                ParentId = 143,
+                Title = "حذف جزئیات",
+                UniqueName = "DeleteProductDetails"
+            },
+            #endregion
         };
 
-        //Last used id ==> 142
+        //Last used id ==> 146
         public static List<Permission> Permissions = _permissions;
     }
 }

@@ -51,6 +51,7 @@ namespace Data.Context
         public DbSet<ProductReview> ProductReviews => Set<ProductReview>();
         public DbSet<ProductView> ProductViews => Set<ProductView>();
         public DbSet<ProductFeature> ProductFeatures => Set<ProductFeature>();
+        public DbSet<ProductDetails> ProductDetails => Set<ProductDetails>();
 
         public DbSet<Cart> Carts => Set<Cart>();
         public DbSet<CartItem> CartItems => Set<CartItem>();

@@ -33,6 +33,7 @@ namespace Domain.Models.Products
         public ICollection<CartItem>? CartItems { get; set; }
         public ICollection<ProductFaq>? Faqs { get; set; }
         public ICollection<ProductFeature>? Features { get; set; }
+        public ICollection<ProductDetails>? Details { get; set; }
         #endregion
     }
 }

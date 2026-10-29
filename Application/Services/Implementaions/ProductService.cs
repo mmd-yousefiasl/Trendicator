@@ -1,5 +1,6 @@
 ﻿using Application.Dtos.Product.AdminSide;
 using Application.Dtos.Product.ClientSide;
+using Application.Dtos.ProductDetails.AdminSide;
 using Application.Dtos.ProductFaq.ClientSide;
 using Application.Dtos.ProductFeature.AdminSide;
 using Application.Mediator;
@@ -699,7 +700,7 @@ namespace Application.Services.Implementaions
         }
         #endregion
 
-        #region ProductFeature
+        #region Product Feature
 
         public async Task<Result> AdminSideCreateNewProductFeature(AdminSideCreateNewProductFeatureDto model)
         {
@@ -806,6 +807,117 @@ namespace Application.Services.Implementaions
             return filter;
         }
 
+        #endregion
+
+        #region Product Details
+        public async Task<Result> AdminSideCreateNewProductDeatils(AdminSideCreateNewProductDetailsDto model)
+        {
+            if (model is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var details = new ProductDetails()
+            {
+                Title = model.Title,
+                Description = model.Description,
+                Priority = model.Priority,
+                IsPublished = model.IsPublished,
+                ProductId = model.ProductId,
+            };
+
+            _context.ProductDetails.Add(details);
+            await _context.SaveChangesAsync();
+
+            return Result.Success();
+        }
+
+        public async Task<Result> AdminSideDeleteProductDetails(int id)
+        {
+            if (id < 1)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var details = await _context.ProductDetails.FindAsync(id);
+            if (details is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            _context.ProductDetails.Remove(details);
+            await _context.SaveChangesAsync();
+
+            return Result.Success();
+        }
+
+        public async Task<Result<AdminSideFilterProductDetailsDto>> AdminSideFilterProductDetails(AdminSideFilterProductDetailsDto filter)
+        {
+            if (filter is null)
+                return Result.Failure<AdminSideFilterProductDetailsDto>(Messages.OperationFailedError);
+
+            var conditions = Filter.GenerateConditions<ProductDetails>();
+
+            conditions.Add(n => n.ProductId == filter.ProductId);
+
+            IQueryable<ProductDetails> query = _context.ProductDetails;
+            query = query.OrderByDescending(n => n.Id);
+
+            foreach (var item in conditions ?? new FilterConditions<ProductDetails>())
+            {
+                query = query.Where(item);
+            }
+
+            await filter.Paging(query.Select(n => new AdminSideProductDetailsDto()
+            {
+                Id = n.Id,
+                Title = n.Title,
+                Description = n.Description,
+                Priority = n.Priority,
+                IsPublished = n.IsPublished,
+                ProductId = n.ProductId
+            }));
+
+            return filter;
+        }
+
+        public async Task<Result<AdminSideUpdateProductDetailsDto>> AdminSideGetProductDetailsForUpdate(int id)
+        {
+            if (id < 1)
+                return Result.Failure<AdminSideUpdateProductDetailsDto>(Messages.OperationFailedError);
+
+            var details = await _context.ProductDetails
+                .AsNoTracking()
+                .Where(n => n.Id == id)
+                .Select(n => new AdminSideUpdateProductDetailsDto()
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Description = n.Description,
+                    IsPublished = n.IsPublished,
+                    Priority = n.Priority,
+                    ProductId = n.ProductId
+                }).FirstOrDefaultAsync();
+
+            if (details is null)
+                return Result.Failure<AdminSideUpdateProductDetailsDto>(Messages.OperationFailedError);
+
+            return details;
+        }
+
+        public async Task<Result> AdminSideUpdateProductDetails(AdminSideUpdateProductDetailsDto model)
+        {
+            if (model is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var details = await _context.ProductDetails.FindAsync(model.Id);
+            if (details is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            details.Title = model.Title;
+            details.Description = model.Description;
+            details.IsPublished = model.IsPublished;
+            details.Priority = model.Priority;
+
+            _context.ProductDetails.Update(details);
+            await _context.SaveChangesAsync();
+
+            return Result.Success();
+        }
         #endregion
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Application.Dtos.Product.AdminSide;
 using Application.Dtos.Product.ClientSide;
+using Application.Dtos.ProductDetails.AdminSide;
 using Application.Dtos.ProductFeature.AdminSide;
 using Domain.Shared;
 
@@ -51,6 +52,18 @@ namespace Application.Services.Interfaces
         Task<Result> AdminSideUpdateProductFeature(AdminSideUpdateProductFeatureDto model);
 
         Task<Result<AdminSideFilterProductFeaturesDto>> AdminSideFilterProductFeatures(AdminSideFilterProductFeaturesDto filter);
+        #endregion
+
+        #region ProductDetails
+        Task<Result> AdminSideCreateNewProductDeatils(AdminSideCreateNewProductDetailsDto model);
+
+        Task<Result> AdminSideDeleteProductDetails(int id);
+
+        Task<Result<AdminSideFilterProductDetailsDto>> AdminSideFilterProductDetails(AdminSideFilterProductDetailsDto filter);
+
+        Task<Result<AdminSideUpdateProductDetailsDto>> AdminSideGetProductDetailsForUpdate(int id);
+
+        Task<Result> AdminSideUpdateProductDetails(AdminSideUpdateProductDetailsDto model);
         #endregion
     }
 }
