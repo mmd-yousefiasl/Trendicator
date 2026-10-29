@@ -13,6 +13,10 @@
 <main class="container">
     <ul class="crumbs">
         <partial name="_IndexLink" />
+        @if (!string.IsNullOrWhiteSpace(Model.Category))
+        {
+            <li><a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="">فروشگاه</a></li>
+        }
         <li>@ViewData["Title"]</li>
     </ul>
 
@@ -55,8 +59,8 @@
                     {
                         <partial name="_ProductCard" model="@item" />
                     }
-                </div >
-                <partial name ="_Paging" model="@Model.GetCurrentPaging()" />
+                </div>
+                <partial name="_Paging" model="@Model.GetCurrentPaging()" />
             }
             else
             {

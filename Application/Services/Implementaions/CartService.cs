@@ -133,7 +133,6 @@ namespace Application.Services.Implementaions
                     item.Product.BannerFileName,
                     item.Product.Title,
                     item.Product.Slug,
-                    Option = item.Product.Options.FirstOrDefault(o => o.Id == item.StockOptionId)
                 })
                 .Select(x => new ClientSideCartViewModel
                 {
@@ -142,9 +141,6 @@ namespace Application.Services.Implementaions
                     IsAvailable = x.IsAvailable,
                     Title = x.Title,
                     Slug = x.Slug,
-                    Price = x.Option != null ? x.Option.Price : 0,
-                    OrderPrice = x.Option != null ? x.Option.OrderPrice : 0,
-                    OptionTitle = x.Option != null ? x.Option.Title : ""
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -505,7 +501,7 @@ namespace Application.Services.Implementaions
             if (id < 1)
                 return Result.Failure<AdminSideCartDetailsViewModel>(Messages.OperationFailedError);
 
-            var cartEntity = await _dbSet.Include(n => n.Items).ThenInclude(i => i.Product).ThenInclude(p => p.Options)
+            var cartEntity = await _dbSet.Include(n => n.Items).ThenInclude(i => i.Product)
                 .AsNoTracking()
                 .AsSplitQuery()
                 .FirstOrDefaultAsync(n => n.Id == id && n.Status != CartStatusEnum.PendingPayment);
@@ -524,12 +520,9 @@ namespace Application.Services.Implementaions
                 TotalPaid = cartEntity.TotalPaid ?? 0,
                 Products = cartEntity.Items?.Select(i =>
                 {
-                    var option = i.Product.Options?.FirstOrDefault(o => o.Id == i.StockOptionId);
                     return new AdminSideCartItemViewModel
                     {
                         Title = i.Product.Title,
-                        Option = option?.Title ?? "",
-                        Price = option?.Price ?? 0,
                     };
                 }).ToList() ?? new List<AdminSideCartItemViewModel>()
             };
@@ -582,7 +575,6 @@ namespace Application.Services.Implementaions
             var cartEntity = await _dbSet
                 .Include(n => n.Items)
                 .ThenInclude(i => i.Product)
-                .ThenInclude(p => p.Options)
                 .AsNoTracking()
                 .AsSplitQuery()
                 .FirstOrDefaultAsync(n => n.Id == id &&
@@ -603,12 +595,9 @@ namespace Application.Services.Implementaions
                 TotalPaid = cartEntity.TotalPaid ?? 0,
                 Products = cartEntity.Items?.Select(i =>
                 {
-                    var option = i.Product.Options?.FirstOrDefault(o => o.Id == i.StockOptionId);
                     return new ClientSIdeCartItemViewModel
                     {
                         Title = i.Product.Title,
-                        Option = option?.Title ?? "",
-                        Price = option?.Price ?? 0,
                     };
                 }).ToList() ?? new List<ClientSIdeCartItemViewModel>()
             };

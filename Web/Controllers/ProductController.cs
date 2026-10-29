@@ -2,7 +2,6 @@
 using Application.Services.Interfaces;
 using Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Crypto.Signers;
 
 namespace Web.Controllers
 {
@@ -10,15 +9,12 @@ namespace Web.Controllers
     {
         #region Fields
         private readonly IProductService _productService;
-        private readonly IProductViewService _viewService;
         #endregion
 
         #region Ctor
-        public ProductController(IProductService productService,
-            IProductViewService viewService)
+        public ProductController(IProductService productService)
         {
             _productService = productService;
-            _viewService = viewService;
         }
         #endregion
 
@@ -58,7 +54,7 @@ namespace Web.Controllers
                 return RedirectToAction(nameof(ProductsList));
             }
 
-            await _viewService.AddProductView(result.Value.Id);
+            await _productService.ClientSideAddProductView(result.Value.Id);
 
             return View(result.Value);
         }
@@ -79,22 +75,9 @@ namespace Web.Controllers
                 return RedirectToAction(nameof(ProductsList));
             }
 
-            await _viewService.AddProductView(result.Value.Id);
+            await _productService.ClientSideAddProductView(result.Value.Id);
 
             return View(result.Value);
-        }
-
-        [HttpGet("/product/quick-view/{slug}")]
-        public async Task<IActionResult> ProductQuickView(string slug)
-        {
-            ViewData["NoIndex"] = true;
-
-            var result = await _productService.ClientSideGetProductDetails(slug);
-            if (result.IsFailure) return PartialView("_ProductQuickView", new ClientSideProductDetailsViewModel());
-
-            await _viewService.AddProductView(result.Value.Id);
-
-            return PartialView("_ProductQuickView", result.Value);
         }
     }
 }

@@ -123,7 +123,6 @@ namespace Application.Services.Implementaions
                 PaidDate = n.Cart.PaidDate ?? DateTime.UtcNow,
                 ProductTitle = n.Product.Title,
                 Type = n.Product.Type,
-                OptionTitle = n.Product.Options.Where(o => o.Id == n.StockOptionId).Select(o => o.Title).FirstOrDefault() ?? "",
                 Status = n.Cart.Status,
                 MetaTraderLink = n.Product.MetaTraderLink,
             }));

@@ -1,5 +1,5 @@
-﻿@using Application.Tools
-@using Application.Dtos.CartItem.ClientSide
+﻿@using Application.Dtos.CartItem.ClientSide
+@using Application.Tools
 @using Domain.Enums.Products
 @using Domain.Enums.Shopping
 @model ClientSideFilterBoughtFilesViewModel
@@ -54,7 +54,7 @@
                                             <tr>
                                                 <th scope="row">@counter</th>
                                                 <td>@item.PaidDate.GetDateTime()</td>
-                                                <td>@item.ProductTitle (@item.OptionTitle)</td>
+                                                <td>@item.ProductTitle</td>
                                                 <td>
                                                     @if (item.Type == ProductTypeEnum.TradingView)
                                                     {

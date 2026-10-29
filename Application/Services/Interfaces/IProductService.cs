@@ -1,11 +1,13 @@
 ﻿using Application.Dtos.Product.AdminSide;
 using Application.Dtos.Product.ClientSide;
+using Application.Dtos.ProductFeature.AdminSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces
 {
     public interface IProductService
     {
+        #region Product
         Task<Result<AdminSideFilterProductsViewModel>> AdminSideFilterProducts(AdminSideFilterProductsViewModel filter);
 
         Task<Result> AdminSideCreateNewProduct(AdminSideCreateNewProductViewModel model);
@@ -35,5 +37,20 @@ namespace Application.Services.Interfaces
         Task<Result<List<ClientSideProductViewModel>>> ClientSideGetMostPurchasedProducts();
 
         Task<Result<List<AdminSideProductForSiteMapViewModel>>> AdminSideGetProductIdsForSiteMap();
+
+        Task<Result> ClientSideAddProductView(int productId);
+        #endregion
+
+        #region ProductFeature
+        Task<Result> AdminSideCreateNewProductFeature(AdminSideCreateNewProductFeatureDto model);
+
+        Task<Result> AdminSideDeleteProductFeature(int id);
+
+        Task<Result<AdminSideUpdateProductFeatureDto>> AdminSideGetProductFeatureForUpdate(int id);
+
+        Task<Result> AdminSideUpdateProductFeature(AdminSideUpdateProductFeatureDto model);
+
+        Task<Result<AdminSideFilterProductFeaturesDto>> AdminSideFilterProductFeatures(AdminSideFilterProductFeaturesDto filter);
+        #endregion
     }
 }

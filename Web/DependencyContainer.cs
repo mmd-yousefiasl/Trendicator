@@ -62,10 +62,6 @@ namespace Web
             services.AddScoped<IContactUsFormService, ContactUsFormService>();
             services.AddScoped<IProductCategoryService, ProductCategoryService>();
             services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<IProductOptionService, ProductOptionService>();
-            services.AddScoped<IProductViewService, ProductViewService>();
-            services.AddScoped<IProductWishListService, ProductWishListService>();
-            services.AddScoped<IProductCompareService, ProductCompareService>();
             services.AddScoped<IProductReviewService, ProductReviewService>();
             services.AddScoped<ICouponService, CouponService>();
             services.AddScoped<ICartService, CartService>();

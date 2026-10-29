@@ -1,5 +1,4 @@
-﻿using Application.Dtos.Product;
-using Application.Dtos.ProductFaq.ClientSide;
+﻿using Application.Dtos.ProductFaq.ClientSide;
 
 namespace Application.Dtos.Product.ClientSide
 {
@@ -14,11 +13,11 @@ namespace Application.Dtos.Product.ClientSide
         public string Category { get; set; }
         public string CategorySlug { get; set; }
         public int CategoryId { get; set; }
+        public string? ParentCategory { get; set; }
+        public decimal ReviewRate { get; set; }
+        public int ViewsCount { get; set; }
         public int ReviewsCount { get; set; }
-        public bool IsInUserWishList { get; set; }
-        public bool IsInUserCompare { get; set; }
 
-        public List<ClientSideProductOptionViewModel>? Options { get; set; }
         public List<ClientSideProductFaqViewModel>? Faqs { get; set; }
     }
 }

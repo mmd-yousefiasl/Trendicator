@@ -10,14 +10,20 @@ namespace Data.Context.Configurations.Products
         {
             builder.ToTable("ProductViews");
 
-            builder.HasKey(n => n.Id);
-            builder.HasQueryFilter(n => !n.IsDeleted);
+            builder.HasIndex(n => new { n.ProductId, n.VisitorId })
+                .IsUnique();
 
-            builder.Property(n => n.UserIP).HasMaxLength(50);
+            builder.Property(n => n.UserIP)
+                .HasMaxLength(50);
+
+            builder.Property(n => n.VisitorId)
+                .HasMaxLength(50);
 
             builder.HasOne(n => n.Product)
                 .WithMany(n => n.Views)
-                .HasForeignKey(n => n.ProductId);
+                .HasForeignKey(n => n.ProductId)
+                .OnDelete(DeleteBehavior.Cascade)
+                 .IsRequired(false);
         }
     }
 }

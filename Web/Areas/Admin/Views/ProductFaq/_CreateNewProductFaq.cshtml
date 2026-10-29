@@ -1,14 +1,25 @@
 ﻿@using Application.Dtos.ProductFaq.AdminSide
 @model AdminSideCreateNewProductFaqViewModel
 
-<div id="ProductFaqs">
+<div id="ProductFaqs"
+     data-ajax-container
+     data-reload-url="/admin/add-new-product-faq"
+     data-edit-url="/admin/edit-product-faq"
+     data-product-id-input="ProductFaqProductId">
+
     <input type="hidden" asp-for="ProductId" id="ProductFaqProductId" />
     @await Component.InvokeAsync("ProductFaqs", Model.ProductId)
 
     <div class="row">
         <div class="col-sm-12">
             <div class="card">
-                <form class="card-body" id="createFaqForm" asp-area="Admin" asp-controller="ProductFaq" asp-action="CreateNewProductFaq" autocomplete="off" onsubmit="submitProductFaqForm(event)">
+                <form class="card-body"
+                      id="createFaqForm"
+                      autocomplete="off"
+                      data-ajax-form
+                      data-url="@Url.Action("CreateNewProductFaq", "ProductFaq", new { area = "Admin" })"
+                      onsubmit="return false;">
+                    @Html.AntiForgeryToken()
                     <input type="hidden" asp-for="ProductId" />
 
                     <h4 class="card-title">@ViewData["Title"]</h4>
@@ -51,12 +62,12 @@
                     <div asp-validation-summary="All" class="text-danger validation-summary"></div>
 
                     <div class="col-12 text-end mt-5">
-                        <button class="btn btn-primary btn-submit" type="submit">ثبت</button>
+                        <button class="btn btn-primary btn-submit" type="button" data-ajax-submit>ثبت</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
-    <partial name="_ValidationScriptsPartial" />
 </div>
+
+<partial name="_ValidationScriptsPartial" />

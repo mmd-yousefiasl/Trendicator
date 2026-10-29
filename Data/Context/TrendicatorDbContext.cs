@@ -46,13 +46,11 @@ namespace Data.Context
         public DbSet<SentLetter> SentLetters => Set<SentLetter>();
 
         public DbSet<ProductCategory> ProductCategories => Set<ProductCategory>();
-        public DbSet<ProductCompare> ProductCompare => Set<ProductCompare>();
         public DbSet<Product> Products => Set<Product>();
         public DbSet<ProductFaq> ProductFaqs => Set<ProductFaq>();
-        public DbSet<ProductOption> ProductOptions => Set<ProductOption>();
         public DbSet<ProductReview> ProductReviews => Set<ProductReview>();
         public DbSet<ProductView> ProductViews => Set<ProductView>();
-        public DbSet<ProductWishList> ProductWishList => Set<ProductWishList>();
+        public DbSet<ProductFeature> ProductFeatures => Set<ProductFeature>();
 
         public DbSet<Cart> Carts => Set<Cart>();
         public DbSet<CartItem> CartItems => Set<CartItem>();

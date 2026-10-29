@@ -33,11 +33,21 @@
                                 }
                             </td>
                             <td>
-                                <a permission="UpdateProductFaq" href="javascript:void(0)" onclick="UpdateProductFaq('@item.Id')">
+                                <a permission="UpdateProductFaq"
+                                   href="javascript:void(0)"
+                                   data-ajax-edit
+                                   data-id="@item.Id">
                                     <i class="fa fa-edit" title="Edit"></i>
                                 </a>
-                                <form permission="DeleteProductFaq" method="post" onclick="RemoveProductFaq(this)" asp-route-id="@item.Id" asp-area="Admin" asp-controller="ProductFaq" asp-action="DeleteProductFaq" title="Delete" class="list-delete-button">
-                                    <i class="fa fa-trash" title="Delete"></i>
+
+                                <form permission="DeleteProductFaq"
+                                      method="post"
+                                      asp-route-id="@item.Id"
+                                      asp-area="Admin"
+                                      asp-controller="ProductFaq"
+                                      asp-action="DeleteProductFaq"
+                                      class="list-delete-button">
+                                    <i class="fa fa-trash" data-ajax-delete title="Delete"></i>
                                 </form>
                             </td>
                         </tr>

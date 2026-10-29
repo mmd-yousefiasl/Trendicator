@@ -1,9 +1,10 @@
 ﻿namespace Domain.Models.Products
 {
-    public class ProductWishList : AuditBaseEntity<int>
+    public class ProductFeature : BaseEntity<int>
     {
-        public string UserIP { get; set; }
-        public int? UserId { get; set; }
+        public string Text { get; set; }
+        public int Priority { get; set; }
+        public bool IsPublished { get; set; }
 
         #region Relations
         public int ProductId { get; set; }

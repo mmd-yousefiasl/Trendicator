@@ -1,337 +1,150 @@
 ﻿@using Application.Dtos.Product.ClientSide
-@using Application.Dtos.ProductFaq.ClientSide
-@using Application.Dtos.ProductReview.ClientSide
 @using Application.Tools
-@model Application.Dtos.Product.ClientSide.ClientSideProductDetailsViewModel
+@model ClientSideProductDetailsViewModel
 
 @{
     ViewData["Title"] = Model.Title;
     ViewData["CanonicalOverride"] = (SiteTools.SiteUrl + "p/" + Model.Id + "/" + Model.Slug);
 }
 
-@section HeaderReferences {
-    <script type="application/ld+json">
-        {
-          "@@context": "https://schema.org/",
-          "@@type": "Product",
-          "name": "@Model.Title",
-          "image": [
-            "@(SiteTools.SiteUrl.TrimEnd('/') + SiteTools.ProductBanner + Model.BannerFileName)"
-          ],
-          "description": "@Model.ShortDescription",
-          "sku": "@Model.Id",
-          "brand": {
-            "@@type": "Brand",
-            "name": "Trendicator"
-          },
-          "offers": {
-            "@@type": "Offer",
-            "url": "@(SiteTools.SiteUrl + "p/" + Model.Id + "/" + Model.Slug)",
-            "priceCurrency": "IRR",
-            "price": "@(Model.OrderPrice * 10)",
-            "availability": "https://schema.org/InStock",
-            "itemCondition": "https://schema.org/NewCondition"
-          }
-        }
-    </script>
-}
+<main class="container">
+    <ul class="crumbs">
+        <partial name="_IndexLink" />
+        <li><a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="">فروشگاه</a></li>
+        <li><a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@Model.CategorySlug">@Model.Category</a></li>
+        <li>@Model.Title</li>
+    </ul>
 
-@if (Model?.Faqs?.Any() ?? false)
-{
-    <script type="application/ld+json">
-        {
-          "@@context": "https://schema.org",
-          "@@type": "FAQPage",
-          "mainEntity": [
-            @foreach (var faq in Model.Faqs ?? new List<ClientSideProductFaqViewModel>())
-            {
-                                    @: {
-                                    @:   "@@type": "Question",
-                                    @:   "name": "@faq.Question",
-                                    @:   "acceptedAnswer": {
-                                    @:     "@@type": "Answer",
-                                    @:     "text": "@faq.Answer"
-                                    @:   }
-                                    @: }@(faq != Model?.Faqs?.Last() ? "," : "")
-            }
-          ]
-        }
-    </script>
-}
+    <!-- ============ Product hero ============ -->
+    <div class="product-hero mt-2">
+        <div>
+            <div class="product-view card" aria-label="@Model.Title">
+                <img src="@SiteTools.ProductBanner@Model.BannerFileName" decoding="async" alt="@Model.Slug">
+            </div>
 
-<!-- BREADCRUMB AREA START -->
-<div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-70 bg-image"
-     data-bg="@SiteTools.BreadcrumbBanner">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
-                    <div class="section-title-area ltn__section-title-2">
-                        <h2 class="section-title white-color">@ViewData["Title"]</h2>
-                    </div>
-                    <div class="ltn__breadcrumb-list">
-                        <ul>
-                            <li><a asp-area="" asp-controller="Home" asp-action="Index">صفحه اصلی</a></li>
-                            <li><a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="">محصولات</a></li>
-                            <li>
-                                <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@Model.CategorySlug">
-                                    @Model.Category
-                                </a>
-                            </li>
-                            <li>@ViewData["Title"]</li>
-                        </ul>
-                    </div>
+            <div class="grid grid--3 mt-3" style="gap:12px">
+                <div class="stat card"><b class="num">@Model.ViewsCount</b><span>بازدید کل</span></div>
+                <div class="stat card"><b class="num">۱۲٬۴۰۰</b><span>دانلود موفق</span></div>
+                <div class="stat card">
+                    <b>
+                        @if (Model.ReviewRate > 0)
+                        {
+                            @Model.ReviewRate
+                        }
+                        else
+                        {
+                            @:-/-
+                        }
+                        ★
+                    </b>
+                    <span>
+                        امتیاز از
+                        @Model.ReviewsCount
+                        نظر
+                    </span>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<!-- BREADCRUMB AREA END -->
-<!-- SHOP DETAILS AREA START -->
-<div class="ltn__shop-details-area pb-85">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ltn__shop-details-inner mb-60">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="ltn__shop-details-img-gallery">
-                                <div class="ltn__shop-details-large-img">
-                                    <div class="single-large-img">
-                                        <a href="@SiteTools.ProductBanner@Model.BannerFileName" target="_blank">
-                                            <img src="@SiteTools.ProductBanner@Model.BannerFileName" alt="@Model.Title">
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="modal-product-info shop-details-info pl-0">
-                                <div class="product-ratting">
-                                    <ul>
-                                        @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id })
-                                        <li class="review-total">
-                                            <span>
-                                                ( @Model.ReviewsCount
-                                                بازخورد )
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <h1>@Model.Title</h1>
-                                <div class="product-price">
-                                    @if (Model.HaveDiscount)
-                                    {
-                                        <span id="price-field">@Model.OrderPrice.ToToman()</span>
-                                        <del id="order-price-field">@Model.DisplayPrice.ToTomanFormat()</del>
-                                    }
-                                    else
-                                    {
-                                        <span id="price-field">@Model.OrderPrice.ToToman()</span>
-                                        <del id="order-price-field"></del>
-                                    }
-                                </div>
-                                <div class="modal-product-meta ltn__product-details-menu-1">
-                                    <ul>
-                                        <li>
-                                            <strong>دسته بندی: </strong>
-                                            <span>
-                                                <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="@Model.CategorySlug">
-                                                    @Model.Category
-                                                </a>
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                @Html.Raw(Model.ShortDescription)
-                                <div class="ltn__product-details-menu-2">
-                                    <ul>
-                                        @if (Model.IsAvailable)
-                                        {
-                                            <li>
-                                                <select class="form-control" id="Product-Option-Id" onchange="updateProductPrice(this)">
-                                                    @foreach (var item in Model.Options ?? new List<ClientSideProductOptionViewModel>())
-                                                    {
-                                                        @if (item.OrderPrice > 0)
-                                                        {
-                                                            <option value="@item.Id" data-price-field="@item.Price.ToToman()" data-order-price-field="@item.OrderPrice?.ToToman()">@item.Title</option>
-                                                        }
-                                                        else
-                                                        {
-                                                            <option value="@item.Id" data-price-field="@item.Price.ToToman()">@item.Title</option>
-                                                        }
-                                                    }
-                                                </select>
-                                            </li>
-                                            <li>
-                                                <button type="button" title="افزودن به سبد خرید" class="theme-btn-1 btn btn-effect-1 btn-submit" onclick="AddToCart()">
-                                                    <i class="fas fa-shopping-cart"></i>
-                                                    <span>افزودن به سبد خرید</span>
-                                                </button>
-                                            </li>
-                                        }
-                                        else
-                                        {
-                                            <li>
-                                                <div class="btn btn-outline-danger">
-                                                    <span>ناموجود</span>
-                                                </div>
-                                            </li>
-                                        }
-                                    </ul>
-                                </div>
-                                <div class="ltn__product-details-menu-3">
-                                    <ul>
-                                        <li>
-                                            <button type="button" title="علاقه مندی ها" class="wishlist-toggle bg-none" data-product-id="@Model.Id">
-                                                <i class="@((Model.IsInUserWishList) ? "fa" : "far") fa-heart"></i>
-                                                <span>@((Model.IsInUserWishList) ? "حذف از علاقه مندی ها" : "افزودن به علاقمندی ها")</span>
-                                            </button>
-                                        </li>
-                                        <li>
-                                            <button type="button" class="compare-toggle bg-none" data-product-id="@Model.Id"
-                                                    title="@(Model.IsInUserCompare ? "حذف از لیست مقایسه" : "اضافه کردن به لیست مقایسه")">
-                                                <i class="fas fa-exchange-alt"></i>
-                                                <span>@(Model.IsInUserCompare ? "حذف از لیست مقایسه" : "اضافه کردن به لیست مقایسه")</span>
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <hr>
-                                <div class="ltn__social-media">
-                                    @{
-                                        string pageUrl = (SiteTools.SiteUrl + "p/" + Model.Id);
-                                    }
-                                    <ul>
-                                        <li>اشتراک گذاری: </li>
-                                        <li>
-                                            <a href="@("https://www.facebook.com/sharer/sharer.php?u=" + pageUrl)"
-                                               target="_blank" rel="noopener" title="Facebook">
-                                                <i class="fab fa-facebook-f"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="@("https://twitter.com/intent/tweet?url=" + pageUrl)"
-                                               target="_blank" rel="noopener" title="Twitter">
-                                                <i class="fab fa-twitter"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="@("https://www.linkedin.com/shareArticle?mini=true&url=" + pageUrl)"
-                                               target="_blank" rel="noopener" title="LinkedIn">
-                                                <i class="fab fa-linkedin"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="@("https://api.whatsapp.com/send?text=" + pageUrl)"
-                                               target="_blank" rel="noopener" title="WhatsApp">
-                                                <i class="fab fa-whatsapp"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="@("https://t.me/share/url?url=" + pageUrl)"
-                                               target="_blank" rel="noopener" title="Telegram">
-                                                <i class="fab fa-telegram"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="@("https://www.instagram.com/?url=" + pageUrl)"
-                                               target="_blank" rel="noopener" title="Instagram">
-                                                <i class="fab fa-instagram"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <hr>
-                                <div class="ltn__social-media">
-                                    <ul>
-                                        <li>لینک کوتاه: </li>
-                                        <li>
-                                            <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@Model.Id" asp-route-slug="" title="لینک کوتاه">
-                                                @pageUrl
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <button class="bg-transparent" type="button" title="کپی لینک کوتاه" onclick="CopyUrlToClipboard('@pageUrl')">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 408 480"><path fill="#000000" d="M299 5v43H43v299H0V48q0-18 12.5-30.5T43 5h256zm64 86q17 0 29.5 12.5T405 133v299q0 18-12.5 30.5T363 475H128q-18 0-30.5-12.5T85 432V133q0-17 12.5-29.5T128 91h235zm0 341V133H128v299h235z" /></svg>
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Shop Tab Start -->
-                <div class="ltn__shop-details-tab-inner ltn__shop-details-tab-inner-2">
-                    <div class="ltn__shop-details-tab-menu">
-                        <div class="nav">
-                            <a class="active show" data-toggle="tab" href="#liton_tab_details_1_1">توضیحات</a>
-                            <a data-toggle="tab" href="#liton_tab_details_1_2" class="">بازخورد ها</a>
-                        </div>
-                    </div>
-                    <div class="tab-content">
-                        <div class="tab-pane fade active show" id="liton_tab_details_1_1">
-                            <div class="ltn__shop-details-tab-content-inner">
-                                @Html.Raw(Model.Description)
 
-                                @if (Model?.Faqs?.Any() ?? false)
-                                {
-                                    <div class="col-lg-12">
-                                        <div class="ltn__faq-inner ltn__faq-inner-2">
-                                            <div id="accordion_2">
-                                                @{
-                                                    int faqCounter = 0;
-                                                    foreach (var item in Model.Faqs ?? new List<ClientSideProductFaqViewModel>())
-                                                    {
-                                                        faqCounter++;
-                                                        <div class="card">
-                                                            <h6 class="collapsed ltn__card-title" data-toggle="collapse" data-target="#faq-item-2-@faqCounter" aria-expanded="false">
-                                                                @item.Question
-                                                            </h6>
-                                                            <div id="faq-item-2-@faqCounter" class="collapse" data-parent="#accordion_2">
-                                                                <div class="card-body">
-                                                                    <p>@item.Answer</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    }
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="liton_tab_details_1_2">
-                            <div class="ltn__shop-details-tab-content-inner">
-                                <h4 class="title-2">بازخورد مشتریان</h4>
-                                <div class="product-ratting">
-                                    <ul>
-                                        @await Component.InvokeAsync("ProductReviewsRate", new { productId = Model.Id })
-
-                                        <li class="review-total">
-                                            <span>
-                                                ( @Model.ReviewsCount
-                                                بازخورد )
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <hr>
-                                @await Component.InvokeAsync("ProductReviews", new { productId = Model.Id })
-                                <partial name="_AddProductReview"
-                                         model="@(new ClientSideWriteProductReviewViewModel()
-                                         { ProductId = Model.Id, Slug = Model.Slug })" />
-                            </div>
-                        </div>
-                    </div>
+        <!-- Buy panel -->
+        <div class="product-hero__panel">
+            <div class="card card-pad">
+                <div class="flex flex--wrap" style="gap:6px">
+                    @if (Model.Percent > 0)
+                    {
+                        <span class="badge badge--brand">@Model.Percent%</span>
+                    }
+                    <span class="badge">@Model.ParentCategory</span>
+                    <span class="badge">@Model.Category</span>
                 </div>
+                <h1 class="mt-2" style="font-size:1.5rem">@Model.Title</h1>
+                <p class="text-muted">@Model.ShortDescription</p>
+
+                <div class="price price--lg mt-2">
+                    @if (Model.DisplayPrice > 0)
+                    {
+                        <del>@Model.DisplayPrice.ToTomanFormat()</del>
+                    }
+                    <small>تومان</small> @Model.OrderPrice.ToTomanFormat()
+                </div>
+                <p class="hint">پرداخت یک‌باره · لایسنس دائمی · به‌روزرسانی رایگان ۱ سال</p>
+
+                <div class="flex mt-2" style="gap:10px">
+                    <button class="btn btn--primary" style="flex:1" data-add-to-cart data-id="p1" data-name="ترند اسکالپر پرو" data-price="2480000">افزودن به سبد خرید</button>
+                    <a href="cart.html" class="btn btn--ghost">خرید سریع</a>
+                </div>
+
+                <ul class="feature-list mt-3" style="padding-top:16px;border-top:1px dashed var(--line)">
+                    <li>دانلود فوری بعد از پرداخت</li>
+                    <li>۷ روز ضمانت بازگشت وجه</li>
+                    <li>آموزش نصب تصویری + پشتیبانی تلگرام</li>
+                    <li>سازگار با حساب‌های پروپفرم</li>
+                </ul>
             </div>
         </div>
     </div>
-</div>
 
-@await Component.InvokeAsync("RelatedProducts", new { id = Model.Id, categoryId = Model.CategoryId })
+    <!-- ============ Tabs ============ -->
+    <section class="section" data-tabs>
+        <div class="tabs" role="tablist" aria-label="اطلاعات محصول">
+            <button role="tab" aria-selected="true" aria-controls="tab-desc">توضیحات</button>
+            <button role="tab" aria-selected="false" aria-controls="tab-features">امکانات</button>
+            <button role="tab" aria-selected="false" aria-controls="tab-reviews">
+                نظرات
+                (@Model.ReviewsCount)
+            </button>
+        </div>
 
-@await Component.InvokeAsync("OurFeatures")
+        <div role="tabpanel" id="tab-desc">
+            @Html.Raw(Model.Description)
+        </div>
+
+        <div role="tabpanel" id="tab-features" hidden>
+            <h3>امکانات کلیدی</h3>
+            <ul class="feature-list">
+                <li>سیگنال فلش خرید/فروش با تأیید سه‌لایه</li>
+                <li>آلارم صوتی، پوش نوتیفیکیشن و تلگرام</li>
+                <li>نمایش سشن‌های معاملاتی روی چارت</li>
+                <li>حد ضرر و تارگت پیشنهادی خودکار</li>
+                <li>دارک و لایت مود مطابق تم ترمینال</li>
+                <li>پشتیبانی از ۲۸ جفت‌ارز، طلا و شاخص‌ها</li>
+            </ul>
+            <h3 class="mt-3">مشخصات فنی</h3>
+            <div class="table-wrap">
+                <table class="table">
+                    <tbody>
+                        <tr><td>پلتفرم</td><td>متاتریدر ۴ و ۵</td></tr>
+                        <tr><td>تایم‌فریم پیشنهادی</td><td>M1 – M15</td></tr>
+                        <tr><td>ابزارهای معاملاتی</td><td>فارکس، طلا، شاخص</td></tr>
+                        <tr><td>نوع لایسنس</td><td>دائمی · ۱ حساب واقعی + ۲ دمو</td></tr>
+                        <tr><td>به‌روزرسانی</td><td>رایگان تا ۱ سال</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div role="tabpanel" id="tab-reviews" hidden>
+            <div class="grid" style="gap:14px">
+                <div class="card card-pad testimonial">
+                    <div class="flex flex--between">
+                        <div class="testimonial__stars">★★★★★</div>
+                        <span class="text-dim" style="font-size:.75rem">۳ روز پیش</span>
+                    </div>
+                    <p class="text-muted mb-0">«بهترین اندیکاتور اسکالپی که تا حالا خریدم. آلارم تلگرامش خیلی به دردم می‌خوره چون همیشه پشت لپ‌تاپ نیستم.»</p>
+                    <div class="testimonial__author"><span class="testimonial__avatar">ن.ط</span><div><b>نگین طاهری</b><span>خرید تأییدشده</span></div></div>
+                </div>
+                <div class="card card-pad testimonial">
+                    <div class="flex flex--between">
+                        <div class="testimonial__stars">★★★★☆</div>
+                        <span class="text-dim" style="font-size:.75rem">۲ هفته پیش</span>
+                    </div>
+                    <p class="text-muted mb-0">«سیگنال‌ها خوبن ولی در سشن آسیا کمی نویز داره. پشتیبانی گفت تنظیمات حساسیت رو کم کنم که درست شد.»</p>
+                    <div class="testimonial__author"><span class="testimonial__avatar">م.ص</span><div><b>محمد صادقی</b><span>خرید تأییدشده</span></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    @await Component.InvokeAsync("RelatedProducts", new { id = Model.Id, categoryId = Model.CategoryId })
+</main>

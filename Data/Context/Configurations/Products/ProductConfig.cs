@@ -16,6 +16,7 @@ namespace Data.Context.Configurations.Products
             builder.Property(n => n.BannerFileName).HasMaxLength(50);
             builder.Property(n => n.Title).HasMaxLength(100);
             builder.Property(n => n.Slug).HasMaxLength(200);
+            builder.Property(n => n.Hint).HasMaxLength(200);
             builder.Property(n => n.ShortDescription).HasMaxLength(500);
             builder.Property(n => n.MetaTraderLink).HasMaxLength(200);
             builder.Property(n => n.IndicatorFileName).HasMaxLength(50);

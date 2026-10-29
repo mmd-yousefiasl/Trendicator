@@ -7,7 +7,13 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="card">
-            <form class="card-body" id="createFaqForm" asp-area="Admin" asp-controller="ProductFaq" asp-action="UpdateProductFaq" autocomplete="off" onsubmit="submitProductFaqForm(event)">
+            <form class="card-body"
+                  id="createFaqForm"
+                  autocomplete="off"
+                  data-ajax-form
+                  data-url="@Url.Action("UpdateProductFaq", "ProductFaq", new { area = "Admin" })"
+                  onsubmit="return false;">
+                @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="ProductId" />
                 <input type="hidden" asp-for="Id" />
 
@@ -50,13 +56,10 @@
 
                 <div asp-validation-summary="All" class="text-danger validation-summary"></div>
 
-
                 <div class="col-12 text-end mt-5">
-                    <button class="btn btn-primary btn-submit" type="submit">ویرایش</button>
+                    <button class="btn btn-primary btn-submit" type="button" data-ajax-submit>ویرایش</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-<partial name="_ValidationScriptsPartial" />
