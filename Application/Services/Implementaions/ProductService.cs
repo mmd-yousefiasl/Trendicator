@@ -1,6 +1,7 @@
 ﻿using Application.Dtos.Product.AdminSide;
 using Application.Dtos.Product.ClientSide;
 using Application.Dtos.ProductDetails.AdminSide;
+using Application.Dtos.ProductDetails.ClientSide;
 using Application.Dtos.ProductFaq.ClientSide;
 using Application.Dtos.ProductFeature.AdminSide;
 using Application.Mediator;
@@ -447,6 +448,14 @@ namespace Application.Services.Implementaions
                     .OrderBy(f => f.Priority)
                     .Select(f => f.Text)
                     .ToList(),
+                    Details = n.Details
+                    .Where(d => d.IsPublished)
+                    .OrderBy(d => d.Priority)
+                    .Select(d => new ClientSideProductDetailsDto()
+                    {
+                        Title = d.Title,
+                        Description = d.Description
+                    }).ToList(),
                     ReviewsCount = n.ReviewsCount,
                     ReviewRate = n.ReviewRate,
                     ViewsCount = n.ViewsCount,

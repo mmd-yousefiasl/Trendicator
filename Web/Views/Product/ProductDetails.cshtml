@@ -1,5 +1,6 @@
 ﻿@using System.Text.Json
 @using Application.Dtos.Product.ClientSide
+@using Application.Dtos.ProductDetails.ClientSide
 @using Application.Tools
 @model ClientSideProductDetailsViewModel
 
@@ -114,18 +115,24 @@
                     }
                 </ul>
             }
-            <h3 class="mt-3">مشخصات فنی</h3>
-            <div class="table-wrap">
-                <table class="table">
-                    <tbody>
-                        <tr><td>پلتفرم</td><td>متاتریدر ۴ و ۵</td></tr>
-                        <tr><td>تایم‌فریم پیشنهادی</td><td>M1 – M15</td></tr>
-                        <tr><td>ابزارهای معاملاتی</td><td>فارکس، طلا، شاخص</td></tr>
-                        <tr><td>نوع لایسنس</td><td>دائمی · ۱ حساب واقعی + ۲ دمو</td></tr>
-                        <tr><td>به‌روزرسانی</td><td>رایگان تا ۱ سال</td></tr>
-                    </tbody>
-                </table>
-            </div>
+
+            @if (Model?.Details?.Count() > 0)
+            {
+                <h3 class="mt-3">مشخصات فنی</h3>
+                <div class="table-wrap">
+                    <table class="table">
+                        <tbody>
+                            @foreach (var item in Model.Details ?? new List<ClientSideProductDetailsDto>())
+                            {
+                                <tr>
+                                    <td>@item.Title</td>
+                                    <td>@item.Description</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
         </div>
 
         <div role="tabpanel" id="tab-reviews" hidden>

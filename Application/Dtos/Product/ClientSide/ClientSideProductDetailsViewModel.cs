@@ -1,4 +1,5 @@
-﻿using Application.Dtos.ProductFaq.ClientSide;
+﻿using Application.Dtos.ProductDetails.ClientSide;
+using Application.Dtos.ProductFaq.ClientSide;
 
 namespace Application.Dtos.Product.ClientSide
 {
@@ -21,6 +22,7 @@ namespace Application.Dtos.Product.ClientSide
         public int PurchaseCount { get; set; }
 
         public List<ClientSideProductFaqViewModel>? Faqs { get; set; }
+        public List<ClientSideProductDetailsDto>? Details { get; set; }
         public List<string>? Features { get; set; }
     }
 }
