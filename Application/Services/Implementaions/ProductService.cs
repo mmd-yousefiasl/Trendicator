@@ -73,6 +73,7 @@ namespace Application.Services.Implementaions
                 CategoryId = model.CategoryId,
                 ShortDescription = model.ShortDescription,
                 Type = model.Type,
+                Hint = model.Hint,
             };
             if (model.Type == ProductTypeEnum.MetaTraderLink) product.MetaTraderLink = model.MetaTraderLink;
 
@@ -212,6 +213,7 @@ namespace Application.Services.Implementaions
                 Type = n.Type,
                 MetaTraderLink = n.MetaTraderLink,
                 IndicatorFileName = n.IndicatorFileName,
+                Hint = n.Hint,
             }).AsNoTracking().FirstOrDefaultAsync();
             if (product is null) return Result.Failure<AdminSideUpdateProductViewModel>(Messages.OperationFailedError);
 
@@ -275,6 +277,7 @@ namespace Application.Services.Implementaions
             product.CategoryId = model.CategoryId;
             product.ShortDescription = model.ShortDescription;
             product.Type = model.Type;
+            product.Hint = model.Hint;
 
             if (model.Type == ProductTypeEnum.MetaTraderLink) product.MetaTraderLink = model.MetaTraderLink;
 
@@ -422,6 +425,7 @@ namespace Application.Services.Implementaions
                     Title = n.Title,
                     Slug = n.Slug,
                     IsAvailable = n.IsAvailable,
+                    Hint = n.Hint,
                     ShortDescription = n.ShortDescription,
                     Description = n.Description,
                     BannerFileName = n.BannerFileName,

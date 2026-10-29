@@ -7,6 +7,7 @@ namespace Application.Dtos.Product.ClientSide
         public string BannerFileName { get; set; }
         public string Title { get; set; }
         public string Slug { get; set; }
+        public string Hint { get; set; }
         public string ShortDescription { get; set; }
         public string Description { get; set; }
         public bool IsAvailable { get; set; }

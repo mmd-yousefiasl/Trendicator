@@ -40,12 +40,19 @@ namespace Application.Dtos.Product.AdminSide
         public bool IsPublished { get; set; }
 
         [Display(Name = "قیمت نمایشی")]
+        [DisplayFormat(DataFormatString = "{0:0}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = Messages.RequiredError)]
         public decimal DisplayPrice { get; set; }
 
         [Display(Name = "قیمت سفارش")]
+        [DisplayFormat(DataFormatString = "{0:0}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = Messages.RequiredError)]
         public decimal OrderPrice { get; set; }
+
+        [Display(Name = "راهنمایی")]
+        [Required(ErrorMessage = Messages.RequiredError)]
+        [MaxLength(200, ErrorMessage = Messages.MaxLengthError)]
+        public string Hint { get; set; }
 
         [Display(Name = "وضعیت موجودی")]
         [Required(ErrorMessage = Messages.RequiredError)]

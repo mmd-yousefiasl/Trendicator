@@ -1,4 +1,5 @@
-﻿@using Application.Dtos.Product.ClientSide
+﻿@using System.Text.Json
+@using Application.Dtos.Product.ClientSide
 @using Application.Tools
 @model ClientSideProductDetailsViewModel
 
@@ -67,7 +68,7 @@
                     }
                     <small>تومان</small> @Model.OrderPrice.ToTomanFormat()
                 </div>
-                <p class="hint">پرداخت یک‌باره · لایسنس دائمی · به‌روزرسانی رایگان ۱ سال</p>
+                <p class="hint">@Model.Hint</p>
 
                 <div class="flex mt-2" style="gap:10px">
                     <button class="btn btn--primary" style="flex:1" data-add-to-cart data-id="p1" data-name="ترند اسکالپر پرو" data-price="2480000">افزودن به سبد خرید</button>
@@ -145,6 +146,42 @@
         </div>
     </section>
 
+    @if (Model?.Faqs?.Any() ?? false)
+    {
+        var faqItems = Model.Faqs;
+
+        var jsonOptions = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        };
+
+        var faqSchema = new Dictionary<string, object>
+        {
+            ["@context"] = "https://schema.org",
+            ["@type"] = "FAQPage",
+            ["mainEntity"] = faqItems.Select(item => new Dictionary<string, object>
+            {
+                ["@type"] = "Question",
+                ["name"] = item.Question ?? string.Empty,
+                ["acceptedAnswer"] = new Dictionary<string, object>
+                {
+                    ["@type"] = "Answer",
+                    ["text"] = item.Answer ?? string.Empty
+                }
+            }).ToList()
+        };
+
+        var schemaJson = JsonSerializer.Serialize(faqSchema, jsonOptions);
+
+        @section FooterReferences {
+            <script type="application/ld+json">
+                    @Html.Raw(schemaJson)
+            </script>
+        }
+
+        <partial name="_ProductFaqs" model="faqItems" />
+    }
 
     @await Component.InvokeAsync("RelatedProducts", new { id = Model.Id, categoryId = Model.CategoryId })
 </main>

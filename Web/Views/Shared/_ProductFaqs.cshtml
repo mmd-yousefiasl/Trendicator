@@ -1,0 +1,22 @@
+﻿@using Application.Dtos.ProductFaq.ClientSide
+@model List<ClientSideProductFaqViewModel>
+
+<section class="section">
+    <div class="container" style="max-width:820px">
+        <div class="section-head section-head--center">
+            <span class="kicker">سوالات متداول</span>
+            <h2 class="mt-1">هر آنچه باید بدانید</h2>
+        </div>
+        <div class="faq">
+            @foreach (var item in Model)
+            {
+                <details>
+                    <summary>@item.Question</summary>
+                    <div class="faq__wrap" style="overflow: hidden; height: 0px;">
+                        <div class="faq__a">@item.Answer</div>
+                    </div>
+                </details>
+            }
+        </div>
+    </div>
+</section>
