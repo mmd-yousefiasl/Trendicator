@@ -18,7 +18,9 @@ namespace Application.Dtos.Product.ClientSide
         public decimal ReviewRate { get; set; }
         public int ViewsCount { get; set; }
         public int ReviewsCount { get; set; }
+        public int PurchaseCount { get; set; }
 
         public List<ClientSideProductFaqViewModel>? Faqs { get; set; }
+        public List<string>? Features { get; set; }
     }
 }

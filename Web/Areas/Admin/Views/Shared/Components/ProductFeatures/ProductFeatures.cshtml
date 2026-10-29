@@ -1,0 +1,62 @@
+﻿@using Application.Dtos.ProductFeature.AdminSide
+@model AdminSideFilterProductFeaturesDto
+
+@if (Model.Entities?.Any() ?? false)
+{
+    <div class="col-sm-12">
+        <div class="table-responsive table-desi">
+            <table class="table all-package table-category " id="editableTable">
+                <thead>
+                    <tr>
+                        <th>ویژگی</th>
+                        <th>اولویت</th>
+                        <th>وضعیت انتشار</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.Entities ?? new List<AdminSideProductFeatureDto>())
+                    {
+                        <tr>
+                            <td>@item.Text</td>
+                            <td>@item.Priority</td>
+                            <td>
+                                @if (item.IsPublished)
+                                {
+                                    <span class="text-success">منتشر شده</span>
+                                }
+                                else
+                                {
+                                    <span class="text-danger">منتشر نشده</span>
+                                }
+                            </td>
+                            <td>
+                                <a permission="UpdateProductFeature"
+                                   href="javascript:void(0)"
+                                   data-ajax-edit
+                                   data-id="@item.Id">
+                                    <i class="fa fa-edit" title="Edit"></i>
+                                </a>
+
+                                <form permission="DeleteProductFeature"
+                                      method="post"
+                                      asp-route-id="@item.Id"
+                                      asp-area="Admin"
+                                      asp-controller="ProductFeature"
+                                      asp-action="DeleteProductFeature"
+                                      class="list-delete-button">
+                                    <i class="fa fa-trash" data-ajax-delete title="Delete"></i>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <partial name="_NotFoundPartial" />
+}

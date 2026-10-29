@@ -149,6 +149,11 @@ namespace Application.Tools
             return value.ToString("#,0");
         }
 
+        public static string ToTomanFormat(this int value)
+        {
+            return value.ToString("#,0");
+        }
+
         public static int RoundToHigher(this decimal value)
         {
             return (int)Math.Ceiling(value);

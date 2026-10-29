@@ -27,7 +27,7 @@ namespace Web.Areas.Admin.Controllers
             if (id < 1)
                 return NotFound();
 
-            return PartialView("_CreateNewProductFeature", new AdminSideCreateNewProductFeatureDto() { ProductId = id });
+            return PartialView("_CreateNewProductFeature", new AdminSideCreateNewProductFeatureDto() { ProductId = id, Priority = 50, IsPublished = true });
         }
 
         [Permission("CreateNewProductFeature")]

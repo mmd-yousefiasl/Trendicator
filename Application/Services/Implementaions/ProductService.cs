@@ -185,7 +185,7 @@ namespace Application.Services.Implementaions
                 IsPublished = n.IsPublished,
                 Priority = n.Priority,
                 Category = n.Category.Title,
-                ViewsCount = n.Views.Count(),
+                ViewsCount = n.ViewsCount,
                 Type = n.Type
             }));
 
@@ -433,15 +433,23 @@ namespace Application.Services.Implementaions
                     CategorySlug = n.Category.Slug,
                     CategoryId = n.CategoryId,
                     ParentCategory = n.Category.ParentCategory.Title,
-                    Faqs = n.Faqs.Where(f => f.IsPublished).OrderBy(f => f.Priority)
+                    Faqs = n.Faqs
+                    .Where(f => f.IsPublished)
+                    .OrderBy(f => f.Priority)
                     .Select(f => new ClientSideProductFaqViewModel()
                     {
                         Question = f.Question,
                         Answer = f.Answer
                     }).ToList(),
+                    Features = n.Features
+                    .Where(f => f.IsPublished)
+                    .OrderBy(f => f.Priority)
+                    .Select(f => f.Text)
+                    .ToList(),
                     ReviewsCount = n.ReviewsCount,
                     ReviewRate = n.ReviewRate,
                     ViewsCount = n.ViewsCount,
+                    PurchaseCount = n.PurchaseCount,
                     HaveDiscount = ((n.DisplayPrice > 0) ? true : false),
                     OrderPrice = n.OrderPrice,
                     DisplayPrice = n.DisplayPrice,

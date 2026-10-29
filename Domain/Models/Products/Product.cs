@@ -22,6 +22,7 @@ namespace Domain.Models.Products
         public decimal ReviewRate { get; set; }
         public int ReviewsCount { get; set; }
         public int ViewsCount { get; set; }
+        public int PurchaseCount { get; set; }
 
         #region Relations
 
