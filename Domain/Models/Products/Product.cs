@@ -21,6 +21,7 @@ namespace Domain.Models.Products
         public string? IndicatorFileName { get; set; }
         public decimal ReviewRate { get; set; }
         public int ReviewsCount { get; set; }
+        public decimal ReviewsSum { get; set; }
         public int ViewsCount { get; set; }
         public int PurchaseCount { get; set; }
 

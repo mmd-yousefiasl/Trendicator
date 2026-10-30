@@ -4,6 +4,7 @@ using Application.Dtos.ProductDetails.AdminSide;
 using Application.Dtos.ProductDetails.ClientSide;
 using Application.Dtos.ProductFaq.ClientSide;
 using Application.Dtos.ProductFeature.AdminSide;
+using Application.Dtos.ProductReview.AdminSide;
 using Application.Dtos.ProductReview.ClientSide;
 using Application.Mediator;
 using Application.Services.Interfaces;
@@ -970,6 +971,133 @@ namespace Application.Services.Implementaions
             await _context.SaveChangesAsync();
 
             return Result.Success(Messages.CommentSentSuccessfully);
+        }
+
+        public async Task<Result<AdminSideFilterProductReviewsDto>> AdminSideFilterProductReviews(AdminSideFilterProductReviewsDto filter)
+        {
+            if (filter is null) return Result.Failure<AdminSideFilterProductReviewsDto>(Messages.OperationFailedError);
+
+            var conditions = Filter.GenerateConditions<ProductReview>();
+
+            if (filter.Stars is not null)
+            {
+                conditions.Add(n => n.Stars == filter.Stars);
+            }
+
+            if (filter.IsPublished is not null)
+            {
+                conditions.Add(n => n.IsPublished == filter.IsPublished);
+            }
+
+            IQueryable<ProductReview> query = _context.ProductReviews;
+            query = query.OrderByDescending(n => n.Id);
+
+            foreach (var item in conditions ?? new FilterConditions<ProductReview>())
+            {
+                query = query.Where(item);
+            }
+
+            await filter.Paging(query.Select(n => new AdminSideProductReviewDto()
+            {
+                Id = n.Id,
+                Name = n.Name,
+                Email = n.Email,
+                Stars = n.Stars,
+                Review = n.Review,
+                IsPublished = n.IsPublished,
+                ProductId = n.ProductId,
+                ProductTitle = n.Product.Title,
+                UserId = n.UserId,
+                UserIP = n.UserIP,
+            }));
+
+            return filter;
+        }
+
+        public async Task<Result> AdminSideConfirmReview(int id)
+        {
+            if (id < 1)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var review = await _context.ProductReviews.FindAsync(id);
+            if (review is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            if (review.IsPublished)
+                return Result.Success();            // idempotent
+
+            var product = await _context.Products.FindAsync(review.ProductId);
+            if (product is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            review.IsPublished = true;
+            review.LastUpdatedDate = DateTime.UtcNow;
+
+            // mutate product in the same unit of work
+            ApplyReviewDelta(product, review.Stars, confirmed: true);
+
+            await _context.SaveChangesAsync();      // one atomic transaction
+            return Result.Success();
+        }
+
+        public async Task<Result> AdminSideRejectReview(int id)
+        {
+            if (id < 1)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var review = await _context.ProductReviews.FindAsync(id);
+            if (review is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            if (!review.IsPublished)
+                return Result.Success();            // already rejected / never confirmed
+
+            var product = await _context.Products.FindAsync(review.ProductId);
+            if (product is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            review.IsPublished = false;
+            review.LastUpdatedDate = DateTime.UtcNow;
+
+            ApplyReviewDelta(product, review.Stars, confirmed: false);
+
+            await _context.SaveChangesAsync();
+            return Result.Success();
+        }
+
+        public async Task<Result> AdminSideSoftDeleteProductReview(int id)
+        {
+            if (id < 1)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var review = await _context.ProductReviews.FindAsync(id);
+            if (review is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            if (review.IsPublished)
+            {
+                var product = await _context.Products.FindAsync(review.ProductId);
+                if (product is null)
+                    return Result.Failure(Messages.OperationFailedError);
+
+                ApplyReviewDelta(product, review.Stars, confirmed: false);
+            }
+
+            review.IsDeleted = true;
+            review.IsPublished = false;
+            review.LastUpdatedDate = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return Result.Success();
+        }
+
+        private static void ApplyReviewDelta(Product product, int stars, bool confirmed)
+        {
+            var sign = confirmed ? 1 : -1;
+            product.ReviewsCount += sign;
+            product.ReviewsSum += sign * stars;
+            product.LastUpdatedDate = DateTime.UtcNow;
+            // no clamping — if it goes negative, the caller's guards are wrong, and we want to see it
         }
         #endregion
     }

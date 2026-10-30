@@ -1,7 +1,6 @@
-﻿@using Application.Tools
-@using Application.Dtos.ProductReview.AdminSide
+﻿@using Application.Dtos.ProductReview.AdminSide
 @using Domain.Enums.Products
-@model AdminSideFilterProductReviewsViewModel
+@model AdminSideFilterProductReviewsDto
 
 @{
     ViewData["Title"] = "لیست نظرات محصولات";
@@ -33,13 +32,6 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label" asp-for="Search"></label>
-                                    <input type="text" class="form-control" asp-for="Search" autocomplete="off">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="mb-3">
                                     <label class="form-label" asp-for="Stars"></label>
                                     <select class="form-control" asp-for="Stars" autocomplete="off"
                                             asp-items="@Html.GetEnumSelectList<ProductReviewStarsEnum>()">
@@ -50,8 +42,8 @@
 
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label" asp-for="IsConfirmed"></label>
-                                    <select class="form-control" asp-for="IsConfirmed" autocomplete="off">
+                                    <label class="form-label" asp-for="IsPublished"></label>
+                                    <select class="form-control" asp-for="IsPublished" autocomplete="off">
                                         <option value="">همه</option>
                                         <option value="true">تایید شده</option>
                                         <option value="false">تایید نشده</option>
@@ -80,7 +72,7 @@
                                         <th>نام</th>
                                         <th>امتیاز</th>
                                         <th>وضعیت</th>
-                                        <th>شماره تلفن</th>
+                                        <th>ایمیل</th>
                                         <th>محصول</th>
                                         <th>کاربر</th>
                                         <th>عملیات</th>
@@ -90,16 +82,16 @@
                                     @{
                                         int counter = 0;
 
-                                        foreach (var item in Model.Entities ?? new List<AdminSideProductReviewViewModel>())
+                                        foreach (var item in Model.Entities ?? new List<AdminSideProductReviewDto>())
                                         {
                                             counter++;
 
                                             <tr>
                                                 <th scope="row">@counter</th>
-                                                <td>@item.FullName</td>
+                                                <td>@item.Name</td>
                                                 <td>@item.Stars</td>
                                                 <td>
-                                                    @if (item.IsConfirmed)
+                                                    @if (item.IsPublished)
                                                     {
                                                         <span class="text-success">تایید شده</span>
                                                     }
@@ -108,7 +100,7 @@
                                                         <span class="text-danger">تایید نشده</span>
                                                     }
                                                 </td>
-                                                <td>@item.PhoneNumber</td>
+                                                <td>@item.Email</td>
                                                 <td>
                                                     <a asp-area="Admin" asp-controller="Product" asp-action="UpdateProduct" asp-route-id="@item.ProductId" target="_blank">
                                                         @item.ProductTitle
@@ -127,19 +119,46 @@
                                                     }
                                                 </td>
                                                 <td>
-                                                    <form permission="DeleteProductReview" class="btn btn-outline-secondary btn-sm" method="post" onclick="ConfirmDelete(this)" asp-route-id="@item.Id" asp-area="Admin" asp-controller="ProductReview" asp-action="DeleteProductReview" title="حذف">
+                                                    <form permission="DeleteProductReview" class="btn btn-outline-secondary btn-sm"
+                                                          method="post" onclick="ConfirmDelete(this)"
+                                                          asp-route-id="@item.Id"
+                                                          asp-area="Admin"
+                                                          asp-controller="ProductReview"
+                                                          asp-action="DeleteProductReview"
+                                                          asp-route-Stars="@Model.Stars"
+                                                          asp-route-IsPublished="@Model.IsPublished"
+                                                          asp-route-Page="@Model.Page"
+                                                          title="حذف">
                                                         <i class="mdi mdi-delete"></i>
                                                     </form>
 
-                                                    @if (item.IsConfirmed)
+                                                    @if (item.IsPublished)
                                                     {
-                                                        <form permission="RejectProductReview" class="btn btn-outline-secondary btn-sm" method="post" onclick="ConfirmDelete(this)" asp-route-id="@item.Id" asp-area="Admin" asp-controller="ProductReview" asp-action="RejectProductReview" title="رد نظر">
+                                                        <form permission="RejectProductReview" class="btn btn-outline-secondary btn-sm"
+                                                              method="post" onclick="ConfirmDelete(this)"
+                                                              asp-route-id="@item.Id"
+                                                              asp-area="Admin"
+                                                              asp-controller="ProductReview"
+                                                              asp-action="RejectProductReview"
+                                                              asp-route-Stars="@Model.Stars"
+                                                              asp-route-IsPublished="@Model.IsPublished"
+                                                              asp-route-Page="@Model.Page"
+                                                              title="رد نظر">
                                                             <i class="fa fa-ban"></i>
                                                         </form>
                                                     }
                                                     else
                                                     {
-                                                        <form permission="ConfirmProductReview" class="btn btn-outline-secondary btn-sm" method="post" onclick="ConfirmDelete(this)" asp-route-id="@item.Id" asp-area="Admin" asp-controller="ProductReview" asp-action="ConfirmProductReview" title="تایید نظر">
+                                                        <form permission="ConfirmProductReview" class="btn btn-outline-secondary btn-sm"
+                                                              method="post" onclick="ConfirmDelete(this)"
+                                                              asp-route-id="@item.Id"
+                                                              asp-area="Admin"
+                                                              asp-controller="ProductReview"
+                                                              asp-action="ConfirmProductReview"
+                                                              asp-route-Stars="@Model.Stars"
+                                                              asp-route-IsPublished="@Model.IsPublished"
+                                                              asp-route-Page="@Model.Page"
+                                                              title="تایید نظر">
                                                             <i class="fa fa-check"></i>
                                                         </form>
                                                     }

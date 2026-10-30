@@ -33,29 +33,23 @@ namespace Application.Services.Implementaions
         }
         #endregion
 
-        public async Task<Result<AdminSideFilterProductReviewsViewModel>> AdminSideFilterProductReviews(AdminSideFilterProductReviewsViewModel filter)
+        public async Task<Result<AdminSideFilterProductReviewsDto>> AdminSideFilterProductReviews(AdminSideFilterProductReviewsDto filter)
         {
-            if (filter is null) return Result.Failure<AdminSideFilterProductReviewsViewModel>(Messages.OperationFailedError);
+            if (filter is null) return Result.Failure<AdminSideFilterProductReviewsDto>(Messages.OperationFailedError);
 
             var conditions = Filter.GenerateConditions<ProductReview>();
-
-            if (!string.IsNullOrWhiteSpace(filter.Search))
-            {
-                conditions.Add(n => n.Product.Title.Contains(filter.Search) ||
-                n.Review.Contains(filter.Search));
-            }
 
             if (filter.Stars is not null)
             {
                 conditions.Add(n => n.Stars == filter.Stars);
             }
 
-            if (filter.IsConfirmed is not null)
+            if (filter.IsPublished is not null)
             {
-                conditions.Add(n => n.IsPublished == filter.IsConfirmed);
+                conditions.Add(n => n.IsPublished == filter.IsPublished);
             }
 
-            IQueryable<ProductReview> query = _dbSet;
+            IQueryable<ProductReview> query = _context.ProductReviews;
             query = query.OrderByDescending(n => n.Id);
 
             foreach (var item in conditions ?? new FilterConditions<ProductReview>())
@@ -63,18 +57,18 @@ namespace Application.Services.Implementaions
                 query = query.Where(item);
             }
 
-            await filter.Paging(query.Select(n => new AdminSideProductReviewViewModel()
+            await filter.Paging(query.Select(n => new AdminSideProductReviewDto()
             {
                 Id = n.Id,
-                IsConfirmed = n.IsPublished,
-                FullName = n.Name,
+                Name = n.Name,
+                Email = n.Email,
                 Stars = n.Stars,
-                ProductTitle = n.Product.Title,
-                ProductId = n.ProductId,
                 Review = n.Review,
+                IsPublished = n.IsPublished,
+                ProductId = n.ProductId,
+                ProductTitle = n.Product.Title,
                 UserId = n.UserId,
                 UserIP = n.UserIP,
-                PhoneNumber = n.Email,
             }));
 
             return filter;
@@ -155,43 +149,6 @@ namespace Application.Services.Implementaions
                 review.Id);
 
             await _mediator.PublishEvent(ProductReviewDeletedEvent);
-
-            return Result.Success();
-        }
-
-        public async Task<Result> ClientSideWriteProductReview(ClientSideWriteProductReviewViewModel model)
-        {
-            if (model is null) return Result.Failure(Messages.OperationFailedError);
-            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            var userIP = _httpContextAccessor.HttpContext.GetUserIP();
-
-            ProductReview review = new ProductReview()
-            {
-                Review = model.Review,
-                Stars = model.Stars,
-                ProductId = model.ProductId,
-                IsPublished = false,
-                UserIP = userIP,
-                Name = model.UserName,
-                Email = model.PhoneNumber,
-            };
-
-            if (userId > 0) review.UserId = userId;
-
-            await _dbSet.AddAsync(review);
-            await _context.SaveChangesAsync();
-
-            ProductReviewCreatedEvent ProductReviewCreatedEvent = new ProductReviewCreatedEvent(
-                review.Name,
-               review.Review,
-               review.Stars,
-               review.IsPublished,
-               review.Email,
-               review.UserId,
-               review.UserIP,
-               review.ProductId);
-
-            await _mediator.PublishEvent(ProductReviewCreatedEvent);
 
             return Result.Success();
         }

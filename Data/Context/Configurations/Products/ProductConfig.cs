@@ -27,6 +27,16 @@ namespace Data.Context.Configurations.Products
             builder.Property(u => u.DisplayPrice)
            .HasColumnType("numeric(18,0)");
 
+            builder.Property(u => u.ReviewRate)
+                .HasColumnType("numeric(2,1)")
+                .HasComputedColumnSql(
+                    "CASE WHEN \"ReviewsCount\" = 0 THEN 0 " +
+                    "ELSE ROUND(\"ReviewsSum\"::numeric / \"ReviewsCount\", 2) END",
+                    stored: true);
+
+            builder.Property(u => u.ReviewsSum)
+                .HasColumnType("numeric(18,0)");
+
             builder.HasOne(n => n.Category)
                 .WithMany(n => n.Products)
                 .HasForeignKey(n => n.CategoryId);

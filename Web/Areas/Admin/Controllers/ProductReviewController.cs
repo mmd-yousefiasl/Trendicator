@@ -11,57 +11,59 @@ namespace Web.Areas.Admin.Controllers
     {
         #region Fields
         private readonly IProductReviewService _reviewService;
+        private readonly IProductService _productService;
         #endregion
 
         #region Ctor
-        public ProductReviewController(IProductReviewService reviewService)
+        public ProductReviewController(IProductReviewService reviewService,
+            IProductService productService)
         {
             _reviewService = reviewService;
+            _productService = productService;
         }
         #endregion
 
         [Permission("ProductReviewsList")]
         [HttpGet("/admin/product-reviews-list")]
-        public async Task<IActionResult> ProductReviewsList(AdminSideFilterProductReviewsViewModel filter)
+        public async Task<IActionResult> ProductReviewsList(AdminSideFilterProductReviewsDto filter)
         {
-            var result = await _reviewService.AdminSideFilterProductReviews(filter);
-            if (result.IsFailure) return View(new AdminSideFilterProductReviewsViewModel());
+            var result = await _productService.AdminSideFilterProductReviews(filter);
+
+            if (result.IsFailure)
+                return View(new AdminSideFilterProductReviewsDto());
 
             return View(result.Value);
         }
 
         [Permission("ConfirmProductReview")]
         [HttpPost("/admin/confirm-product-review"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmProductReview(int id)
+        public async Task<IActionResult> ConfirmProductReview(int id, [Bind(Prefix = "")] AdminSideFilterProductReviewsDto filter)
         {
             if (id < 1)
             {
                 TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
-                return RedirectToAction(nameof(ProductReviewsList));
-            }
-            var result = await _reviewService.ConfirmReview(id);
-            if (result.IsFailure)
-            {
-                TempData[TemporaryErrorMessage] = result.Message;
-            }
-            else
-            {
-                TempData[TemporarySuccessMessage] = result.Message;
+                return RedirectToAction(nameof(ProductReviewsList), filter);
             }
 
-            return RedirectToAction(nameof(ProductReviewsList));
+            var result = await _productService.AdminSideConfirmReview(id);
+            if (result.IsFailure)
+                TempData[TemporaryErrorMessage] = result.Message;
+            else
+                TempData[TemporarySuccessMessage] = result.Message;
+
+            return RedirectToAction(nameof(ProductReviewsList), filter);
         }
 
         [Permission("RejectProductReview")]
         [HttpPost("/admin/reject-product-review"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> RejectProductReview(int id)
+        public async Task<IActionResult> RejectProductReview(int id, [Bind(Prefix = "")] AdminSideFilterProductReviewsDto filter)
         {
             if (id < 1)
             {
                 TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
                 return RedirectToAction(nameof(ProductReviewsList));
             }
-            var result = await _reviewService.RejectReview(id);
+            var result = await _productService.AdminSideRejectReview(id);
             if (result.IsFailure)
             {
                 TempData[TemporaryErrorMessage] = result.Message;
@@ -71,19 +73,19 @@ namespace Web.Areas.Admin.Controllers
                 TempData[TemporarySuccessMessage] = result.Message;
             }
 
-            return RedirectToAction(nameof(ProductReviewsList));
+            return RedirectToAction(nameof(ProductReviewsList), filter);
         }
 
         [Permission("DeleteProductReview")]
         [HttpPost("/admin/remove-product-review"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteProductReview(int id)
+        public async Task<IActionResult> DeleteProductReview(int id, [Bind(Prefix = "")] AdminSideFilterProductReviewsDto filter)
         {
             if (id < 1)
             {
                 TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
                 return RedirectToAction(nameof(ProductReviewsList));
             }
-            var result = await _reviewService.SoftDeleteProductReview(id);
+            var result = await _productService.AdminSideSoftDeleteProductReview(id);
             if (result.IsFailure)
             {
                 TempData[TemporaryErrorMessage] = result.Message;
@@ -93,7 +95,7 @@ namespace Web.Areas.Admin.Controllers
                 TempData[TemporarySuccessMessage] = result.Message;
             }
 
-            return RedirectToAction(nameof(ProductReviewsList));
+            return RedirectToAction(nameof(ProductReviewsList), filter);
         }
     }
 }

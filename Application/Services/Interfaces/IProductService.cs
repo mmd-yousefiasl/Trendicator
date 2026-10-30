@@ -2,6 +2,7 @@
 using Application.Dtos.Product.ClientSide;
 using Application.Dtos.ProductDetails.AdminSide;
 using Application.Dtos.ProductFeature.AdminSide;
+using Application.Dtos.ProductReview.AdminSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces
@@ -70,6 +71,13 @@ namespace Application.Services.Interfaces
 
         Task<Result> ClientSideAddProductComment(ClientSideAddProductCommentDto model);
 
+        Task<Result<AdminSideFilterProductReviewsDto>> AdminSideFilterProductReviews(AdminSideFilterProductReviewsDto filter);
+
+        Task<Result> AdminSideConfirmReview(int id);
+
+        Task<Result> AdminSideRejectReview(int id);
+
+        Task<Result> AdminSideSoftDeleteProductReview(int id);
         #endregion
     }
 }

@@ -6,15 +6,13 @@ namespace Application.Services.Interfaces
 {
     public interface IProductReviewService
     {
-        Task<Result<AdminSideFilterProductReviewsViewModel>> AdminSideFilterProductReviews(AdminSideFilterProductReviewsViewModel filter);
+        Task<Result<AdminSideFilterProductReviewsDto>> AdminSideFilterProductReviews(AdminSideFilterProductReviewsDto filter);
 
         Task<Result> ConfirmReview(int id);
 
         Task<Result> RejectReview(int id);
 
         Task<Result> SoftDeleteProductReview(int id);
-
-        Task<Result> ClientSideWriteProductReview(ClientSideWriteProductReviewViewModel model);
 
         Task<Result<ClientSideProductReviewRateDataViewModel>> GetProductReviewRate(int productId);
 
