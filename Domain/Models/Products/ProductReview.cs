@@ -1,16 +1,15 @@
-﻿using Domain.Enums.Products;
-
-namespace Domain.Models.Products
+﻿namespace Domain.Models.Products
 {
     public class ProductReview : AuditBaseEntity<int>
     {
-        public string UserName { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
         public string Review { get; set; }
-        public ProductReviewStarsEnum Stars { get; set; }
-        public bool IsConfirmed { get; set; }
-        public string PhoneNumber { get; set; }
+        public int Stars { get; set; }
+        public bool IsPublished { get; set; }
         public int? UserId { get; set; }
         public string UserIP { get; set; }
+        public string? Reply { get; set; }
 
         #region Relations
 

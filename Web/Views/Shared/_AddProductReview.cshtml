@@ -1,33 +1,56 @@
-﻿@using Application.Dtos.ProductReview.ClientSide
-@using Domain.Enums.Products
-@model ClientSideWriteProductReviewViewModel
+﻿@using Application.Dtos.Product.ClientSide
+@model ClientSideAddProductCommentDto
 
-<div class="ltn__comment-reply-area ltn__form-box mb-30">
-    <form asp-area="" asp-controller="ProductReview" asp-action="WriteReview" method="post" onsubmit="submitAnimation()">
-        <input type="hidden" asp-for="ProductId" />
-        <input type="hidden" asp-for="Slug" />
-        <h4 class="title-2">نظر خود را اضافه کنید</h4>
+<!-- ============ فرم ثبت نظر ============ -->
+<form class="comments__form card card-pad mt-4" id="review-form"
+      method="post" asp-area="" asp-controller="Product" asp-action="AddComment">
+    <input type="hidden" asp-for="ProductId" />
 
-        <div class="input-item input-item-name">
-            <input type="text" asp-for="UserName" />
-            <span class="text-danger" asp-validation-for="UserName"></span>
-        </div>
+    <!-- سربرگ فرم: عنوان + راهنما در یک ردیف -->
+    <div class="flex flex--between flex--wrap" style="gap:6px 12px">
+        <h3 class="mb-0">ثبت نظر</h3>
+        <span class="hint">نظر شما پس از تأیید کارشناسان نمایش داده می‌شود.</span>
+    </div>
 
-        <div class="input-item input-item-name">
-            <input type="text" asp-for="PhoneNumber" />
-            <span class="text-danger" asp-validation-for="PhoneNumber"></span>
+    <!-- نام و ایمیل کنار هم -->
+    <div class="grid grid--2" style="gap:0 16px; margin-top:18px">
+        <div class="field">
+            <label asp-for="Name"></label>
+            <input class="input" type="text" asp-for="Name" />
+            <span asp-validation-for="Name"></span>
         </div>
+        <div class="field">
+            <label asp-for="Email"></label>
+            <input class="input" asp-for="Email" dir="ltr" />
+            <span asp-validation-for="Email"></span>
+        </div>
+    </div>
 
-        <div class="input-item input-item-textarea">
-            <select asp-for="Stars" asp-items="@Html.GetEnumSelectList<ProductReviewStarsEnum>()" class="form-control"></select>
-            <span class="text-danger" asp-validation-for="Stars"></span>
+    <!-- امتیاز -->
+    <div class="field">
+        <label asp-for="Stars"></label>
+        <div class="rating-input" role="radiogroup" aria-label="امتیاز">
+            <input type="radio" id="star-5" asp-for="Stars" value="5" />
+            <label for="star-5" title="۵ ستاره">★</label>
+            <input type="radio" id="star-4" asp-for="Stars" value="4" />
+            <label for="star-4" title="۴ ستاره">★</label>
+            <input type="radio" id="star-3" asp-for="Stars" value="3" />
+            <label for="star-3" title="۳ ستاره">★</label>
+            <input type="radio" id="star-2" asp-for="Stars" value="2" />
+            <label for="star-2" title="۲ ستاره">★</label>
+            <input type="radio" id="star-1" asp-for="Stars" value="1" />
+            <label for="star-1" title="۱ ستاره">★</label>
         </div>
-        <div class="input-item input-item-textarea">
-            <textarea asp-for="Review"></textarea>
-            <span class="text-danger" asp-validation-for="Review"></span>
-        </div>
-        <div class="btn-wrapper">
-            <button class="btn theme-btn-1 btn-effect-1 text-uppercase btn-submit" type="submit">ثبت</button>
-        </div>
-    </form>
-</div>
+        <span asp-validation-for="Stars"></span>
+    </div>
+
+    <!-- متن نظر -->
+    <div class="field">
+        <label asp-for="Review"></label>
+        <textarea class="textarea" asp-for="Review"></textarea>
+        <span asp-validation-for="Review"></span>
+    </div>
+
+    <!-- دکمه در انتهای سمت شروع (RTL) -->
+    <button type="submit" class="btn btn--primary">ثبت نظر</button>
+</form>

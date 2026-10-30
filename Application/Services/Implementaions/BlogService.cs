@@ -464,7 +464,7 @@ namespace Application.Services.Implementaions
             _context.BlogComments.Add(comment);
             await _context.SaveChangesAsync();
 
-            return Result.Success(Messages.BlogCommentSentSuccessfully);
+            return Result.Success(Messages.CommentSentSuccessfully);
         }
 
         public async Task<Result<AdminSideFilterBlogCommentsDto>> AdminSideFilterComments(AdminSideFilterBlogCommentsDto filter)

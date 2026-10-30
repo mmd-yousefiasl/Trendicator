@@ -136,24 +136,60 @@
         </div>
 
         <div role="tabpanel" id="tab-reviews" hidden>
-            <div class="grid" style="gap:14px">
-                <div class="card card-pad testimonial">
-                    <div class="flex flex--between">
-                        <div class="testimonial__stars">★★★★★</div>
-                        <span class="text-dim" style="font-size:.75rem">۳ روز پیش</span>
+
+            @if (Model?.Reviews?.Any() ?? false)
+            {
+                <div class="grid" style="gap:14px">
+                    <div class="card card-pad testimonial">
+                        <div class="flex flex--between">
+                            <div class="testimonial__stars">★★★★★</div>
+                            <span class="text-dim" style="font-size:.75rem">۳ روز پیش</span>
+                        </div>
+                        <p class="text-muted mb-0">«بهترین اندیکاتور اسکالپی که تا حالا خریدم. آلارم تلگرامش خیلی به دردم می‌خوره چون همیشه پشت لپ‌تاپ نیستم.»</p>
+                        <div class="testimonial__author"><span class="testimonial__avatar">ن.ط</span><div><b>نگین طاهری</b><span>خرید تأییدشده</span></div></div>
                     </div>
-                    <p class="text-muted mb-0">«بهترین اندیکاتور اسکالپی که تا حالا خریدم. آلارم تلگرامش خیلی به دردم می‌خوره چون همیشه پشت لپ‌تاپ نیستم.»</p>
-                    <div class="testimonial__author"><span class="testimonial__avatar">ن.ط</span><div><b>نگین طاهری</b><span>خرید تأییدشده</span></div></div>
-                </div>
-                <div class="card card-pad testimonial">
-                    <div class="flex flex--between">
-                        <div class="testimonial__stars">★★★★☆</div>
-                        <span class="text-dim" style="font-size:.75rem">۲ هفته پیش</span>
+                    <div class="card card-pad testimonial">
+                        <div class="flex flex--between">
+                            <div class="testimonial__stars">★★★★☆</div>
+                            <span class="text-dim" style="font-size:.75rem">۲ هفته پیش</span>
+                        </div>
+                        <p class="text-muted mb-0">«سیگنال‌ها خوبن ولی در سشن آسیا کمی نویز داره. پشتیبانی گفت تنظیمات حساسیت رو کم کنم که درست شد.»</p>
+                        <div class="testimonial__author"><span class="testimonial__avatar">م.ص</span><div><b>محمد صادقی</b><span>خرید تأییدشده</span></div></div>
                     </div>
-                    <p class="text-muted mb-0">«سیگنال‌ها خوبن ولی در سشن آسیا کمی نویز داره. پشتیبانی گفت تنظیمات حساسیت رو کم کنم که درست شد.»</p>
-                    <div class="testimonial__author"><span class="testimonial__avatar">م.ص</span><div><b>محمد صادقی</b><span>خرید تأییدشده</span></div></div>
                 </div>
-            </div>
+
+                @if (Model.ReviewsCount > 10)
+                {
+                    <!-- Load more -->
+                    <div class="text-center mt-2">
+                        <button type="button"
+                                class="btn btn--ghost"
+                                data-load-more-reviews>
+                            مشاهده نظرات بیشتر
+                        </button>
+                    </div>
+                }
+            }
+            else
+            {
+                <!-- حالت خالی -->
+                <div class="card card-pad">
+                    <div class="empty">
+                        <div class="empty__icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                            </svg>
+                        </div>
+                        <h3>هنوز نظری ثبت نشده است</h3>
+                        <p>اولین نفری باشید که تجربه‌اش را با این محصول به اشتراک می‌گذارد.</p>
+                        <a href="#review-form" class="btn btn--soft">ثبت اولین نظر</a>
+                    </div>
+                </div>
+            }
+
+            <partial name="_AddProductReview" model="@(new ClientSideAddProductCommentDto() { ProductId = Model.Id })" />
+
         </div>
     </section>
 

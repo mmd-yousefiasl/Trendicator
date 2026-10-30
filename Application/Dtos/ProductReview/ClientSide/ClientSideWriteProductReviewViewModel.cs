@@ -1,5 +1,4 @@
-﻿using Domain.Enums.Products;
-using Domain.Shared;
+﻿using Domain.Shared;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.Dtos.ProductReview.ClientSide
@@ -17,7 +16,7 @@ namespace Application.Dtos.ProductReview.ClientSide
 
         [Display(Name = "امتیاز")]
         [Required(ErrorMessage = Messages.RequiredError)]
-        public ProductReviewStarsEnum Stars { get; set; } = ProductReviewStarsEnum.FiveStars;
+        public int Stars { get; set; } 
 
         [Display(Name = "نام شما", Prompt = "نام شما ...")]
         [Required(ErrorMessage = Messages.RequiredError)]

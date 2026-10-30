@@ -50,7 +50,7 @@
         public const string DiscountAppliedSuccessfully = "تخفیف با موفقیت اعمال شد";
         public const string PaymentDoneSuccessfully = "پرداخت با موفقیت انجام شد";
         public const string TicketSentSuccessfully = "تیکت با موفقیت ارسال شد";
-        public const string BlogCommentSentSuccessfully = "دیدگاه شما ثبت شد و پس از تأیید نمایش داده می‌شود.";
+        public const string CommentSentSuccessfully = "دیدگاه شما ثبت شد و پس از تأیید نمایش داده می‌شود.";
 
         #endregion
     }

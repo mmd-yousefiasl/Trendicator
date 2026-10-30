@@ -1,5 +1,6 @@
 ﻿using Application.Dtos.ProductDetails.ClientSide;
 using Application.Dtos.ProductFaq.ClientSide;
+using Application.Dtos.ProductReview.ClientSide;
 
 namespace Application.Dtos.Product.ClientSide
 {
@@ -23,6 +24,7 @@ namespace Application.Dtos.Product.ClientSide
 
         public List<ClientSideProductFaqViewModel>? Faqs { get; set; }
         public List<ClientSideProductDetailsDto>? Details { get; set; }
+        public List<ClientSideProductReviewDto>? Reviews { get; set; }
         public List<string>? Features { get; set; }
     }
 }

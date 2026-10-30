@@ -20,6 +20,6 @@ namespace Application.Services.Interfaces
 
         Task<Result<List<ClientSideProductReviewRateDataViewModel>>> GetProductsReviewRate(List<int> productIds);
 
-        Task<Result<List<ClientSideProductReviewViewModel>>> ClientSideProductReviews(int productId);
+        Task<Result<List<ClientSideProductReviewDto>>> ClientSideProductReviews(int productId);
     }
 }

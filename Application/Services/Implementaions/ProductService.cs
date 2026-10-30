@@ -4,6 +4,7 @@ using Application.Dtos.ProductDetails.AdminSide;
 using Application.Dtos.ProductDetails.ClientSide;
 using Application.Dtos.ProductFaq.ClientSide;
 using Application.Dtos.ProductFeature.AdminSide;
+using Application.Dtos.ProductReview.ClientSide;
 using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Tools;
@@ -456,6 +457,17 @@ namespace Application.Services.Implementaions
                         Title = d.Title,
                         Description = d.Description
                     }).ToList(),
+                    Reviews = n.Reviews
+                    .Where(r => r.IsPublished)
+                    .OrderByDescending(r => r.Id)
+                    .Take(10)
+                    .Select(r => new ClientSideProductReviewDto()
+                    {
+                        Name = r.Name,
+                        Starts = r.Stars,
+                        Review = r.Review,
+                        CreatedDate = r.CreatedDate,
+                    }).ToList(),
                     ReviewsCount = n.ReviewsCount,
                     ReviewRate = n.ReviewRate,
                     ViewsCount = n.ViewsCount,
@@ -500,7 +512,7 @@ namespace Application.Services.Implementaions
                         Question = f.Question,
                         Answer = f.Answer
                     }).ToList(),
-                    ReviewsCount = n.Reviews.Where(n => n.IsConfirmed).Count(),
+                    ReviewsCount = n.Reviews.Where(n => n.IsPublished).Count(),
                 }).AsNoTracking().FirstOrDefaultAsync();
             if (product is null) return Result.Failure<ClientSideProductDetailsViewModel>(Messages.OperationFailedError);
 
@@ -926,6 +938,38 @@ namespace Application.Services.Implementaions
             await _context.SaveChangesAsync();
 
             return Result.Success();
+        }
+        #endregion
+
+        #region Product Comment
+        public async Task<Result> ClientSideAddProductComment(ClientSideAddProductCommentDto model)
+        {
+            if (model is null || model.ProductId < 1)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            var userIP = _httpContextAccessor.HttpContext.GetUserIP();
+
+            var comment = new ProductReview()
+            {
+                ProductId = model.ProductId,
+                Name = model.Name,
+                Email = model.Email,
+                Review = model.Review,
+                IsPublished = false,
+                Reply = null,
+                UserIP = userIP,
+                Stars = model.Stars,
+            };
+
+            if (userId > 0)
+                comment.UserId = userId;
+
+
+            _context.ProductReviews.Add(comment);
+            await _context.SaveChangesAsync();
+
+            return Result.Success(Messages.CommentSentSuccessfully);
         }
         #endregion
     }

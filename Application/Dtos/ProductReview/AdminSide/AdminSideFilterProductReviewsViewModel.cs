@@ -1,5 +1,4 @@
-﻿using Domain.Enums.Products;
-using Domain.Models;
+﻿using Domain.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.Dtos.ProductReview.AdminSide
@@ -10,7 +9,7 @@ namespace Application.Dtos.ProductReview.AdminSide
         public string? Search { get; set; }
 
         [Display(Name = "امتیاز")]
-        public ProductReviewStarsEnum? Stars { get; set; }
+        public int? Stars { get; set; }
 
         [Display(Name = "وضعیت انتشار")]
         public bool? IsConfirmed { get; set; }

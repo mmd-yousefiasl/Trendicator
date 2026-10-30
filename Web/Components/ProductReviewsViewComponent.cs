@@ -15,7 +15,7 @@ namespace Web.Components
         public async Task<IViewComponentResult> InvokeAsync(int productId)
         {
             var result = await _reviewService.ClientSideProductReviews(productId);
-            if (result.IsFailure) return View("ProductReviews", new List<ClientSideProductReviewViewModel>());
+            if (result.IsFailure) return View("ProductReviews", new List<ClientSideProductReviewDto>());
 
             return View("ProductReviews", result.Value);
         }

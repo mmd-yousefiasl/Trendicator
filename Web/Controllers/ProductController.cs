@@ -79,5 +79,27 @@ namespace Web.Controllers
 
             return View(result.Value);
         }
+
+        [HttpPost("/product/add-comment"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddComment(ClientSideAddProductCommentDto model)
+        {
+            if (!ModelState.IsValid || model.Stars < 1 || model.Stars > 5)
+            {
+                TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
+                return RedirectToAction(nameof(ProductDetails), new { id = model.ProductId });
+            }
+
+            var result = await _productService.ClientSideAddProductComment(model);
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+            }
+            else
+            {
+                TempData[TemporarySuccessMessage] = result.Message;
+            }
+
+            return RedirectToAction(nameof(ProductDetails), new { id = model.ProductId });
+        }
     }
 }

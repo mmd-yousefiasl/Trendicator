@@ -7,7 +7,7 @@ namespace Domain.Events.Products.ProductReview
     int id,
     string UserName,
     string Review,
-    ProductReviewStarsEnum Stars,
+    int Stars,
     bool IsConfirmed,
     string PhoneNumber,
     int? UserId,

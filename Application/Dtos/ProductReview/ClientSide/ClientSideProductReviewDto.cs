@@ -1,10 +1,10 @@
 ﻿namespace Application.Dtos.ProductReview.ClientSide
 {
-    public class ClientSideProductReviewViewModel
+    public class ClientSideProductReviewDto
     {
-        public string FullName { get; set; }
+        public string Name { get; set; }
         public string Review { get; set; }
         public DateTime CreatedDate { get; set; }
-        public int Rate { get; set; }
+        public int Starts { get; set; }
     }
 }

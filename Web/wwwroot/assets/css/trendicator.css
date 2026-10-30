@@ -1965,9 +1965,79 @@ ul, ol {
     flex-direction: column;
 }
 
+/* Empty state (tabs, lists, reviews, cart…) */
+.empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    padding: 40px 24px;
+}
+
+.empty__icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+    border-radius: var(--r-full);
+    background: var(--brand-soft);
+    border: 1px solid var(--brand-line);
+    color: var(--brand);
+}
+
+    .empty__icon svg {
+        width: 26px;
+        height: 26px;
+    }
+
+.empty h3 {
+    margin: 0;
+    font-size: 1.05rem;
+}
+
+.empty p {
+    margin: 0;
+    max-width: 42ch;
+    font-size: .88rem;
+    color: var(--text-2);
+}
+
+.empty .btn {
+    margin-top: 8px;
+}
+
 .comments__form .hint {
     font-size: .78rem;
 }
+
+/* Star rating input (write review) */
+.rating-input {
+    display: inline-flex;
+    gap: 4px;
+}
+
+    .rating-input input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .rating-input label {
+        cursor: pointer;
+        font-size: 1.6rem;
+        line-height: 1;
+        color: var(--text-3);
+        transition: color var(--t);
+    }
+
+        .rating-input label:hover,
+        .rating-input label:hover ~ label,
+        .rating-input input:checked ~ label {
+            color: var(--warn);
+        }
 
 @media (max-width: 600px) {
     .comment {

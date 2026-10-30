@@ -42,7 +42,7 @@ namespace Application.Services.Interfaces
         Task<Result> ClientSideAddProductView(int productId);
         #endregion
 
-        #region ProductFeature
+        #region Product Feature
         Task<Result> AdminSideCreateNewProductFeature(AdminSideCreateNewProductFeatureDto model);
 
         Task<Result> AdminSideDeleteProductFeature(int id);
@@ -54,7 +54,7 @@ namespace Application.Services.Interfaces
         Task<Result<AdminSideFilterProductFeaturesDto>> AdminSideFilterProductFeatures(AdminSideFilterProductFeaturesDto filter);
         #endregion
 
-        #region ProductDetails
+        #region Product Details
         Task<Result> AdminSideCreateNewProductDeatils(AdminSideCreateNewProductDetailsDto model);
 
         Task<Result> AdminSideDeleteProductDetails(int id);
@@ -64,6 +64,12 @@ namespace Application.Services.Interfaces
         Task<Result<AdminSideUpdateProductDetailsDto>> AdminSideGetProductDetailsForUpdate(int id);
 
         Task<Result> AdminSideUpdateProductDetails(AdminSideUpdateProductDetailsDto model);
+        #endregion
+
+        #region Product Comment
+
+        Task<Result> ClientSideAddProductComment(ClientSideAddProductCommentDto model);
+
         #endregion
     }
 }

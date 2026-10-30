@@ -6,7 +6,7 @@ namespace Application.Dtos.ProductReview.AdminSide
     public class AdminSideProductReviewViewModel : CommonDto
     {
         public string Review { get; set; }
-        public ProductReviewStarsEnum Stars { get; set; }
+        public int Stars { get; set; }
         public bool IsConfirmed { get; set; }
         public string FullName { get; set; }
         public string PhoneNumber { get; set; }

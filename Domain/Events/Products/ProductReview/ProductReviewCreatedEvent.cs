@@ -6,7 +6,7 @@ namespace Domain.Events.Products.ProductReview
     public record ProductReviewCreatedEvent(
     string UserName,
     string Review,
-    ProductReviewStarsEnum Stars,
+    int Stars,
     bool IsConfirmed,
     string PhoneNumber,
     int? UserId,

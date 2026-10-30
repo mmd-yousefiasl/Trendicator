@@ -52,7 +52,7 @@ namespace Application.Services.Implementaions
 
             if (filter.IsConfirmed is not null)
             {
-                conditions.Add(n => n.IsConfirmed == filter.IsConfirmed);
+                conditions.Add(n => n.IsPublished == filter.IsConfirmed);
             }
 
             IQueryable<ProductReview> query = _dbSet;
@@ -66,15 +66,15 @@ namespace Application.Services.Implementaions
             await filter.Paging(query.Select(n => new AdminSideProductReviewViewModel()
             {
                 Id = n.Id,
-                IsConfirmed = n.IsConfirmed,
-                FullName = n.UserName,
+                IsConfirmed = n.IsPublished,
+                FullName = n.Name,
                 Stars = n.Stars,
                 ProductTitle = n.Product.Title,
                 ProductId = n.ProductId,
                 Review = n.Review,
                 UserId = n.UserId,
                 UserIP = n.UserIP,
-                PhoneNumber = n.PhoneNumber,
+                PhoneNumber = n.Email,
             }));
 
             return filter;
@@ -87,7 +87,7 @@ namespace Application.Services.Implementaions
             var review = await _dbSet.FindAsync(id);
             if (review is null) return Result.Failure(Messages.OperationFailedError);
 
-            review.IsConfirmed = true;
+            review.IsPublished = true;
             review.LastUpdatedDate = DateTime.UtcNow;
 
             _dbSet.Update(review);
@@ -95,11 +95,11 @@ namespace Application.Services.Implementaions
 
             ProductReviewUpdatedEvent ProductReviewUpdatedEvent = new ProductReviewUpdatedEvent(
             review.Id,
-            review.UserName,
+            review.Name,
             review.Review,
             review.Stars,
-            review.IsConfirmed,
-            review.PhoneNumber,
+            review.IsPublished,
+            review.Email,
             review.UserId,
             review.UserIP,
             review.ProductId);
@@ -116,7 +116,7 @@ namespace Application.Services.Implementaions
             var review = await _dbSet.FindAsync(id);
             if (review is null) return Result.Failure(Messages.OperationFailedError);
 
-            review.IsConfirmed = false;
+            review.IsPublished = false;
             review.LastUpdatedDate = DateTime.UtcNow;
 
             _dbSet.Update(review);
@@ -124,11 +124,11 @@ namespace Application.Services.Implementaions
 
             ProductReviewUpdatedEvent ProductReviewUpdatedEvent = new ProductReviewUpdatedEvent(
             review.Id,
-            review.UserName,
+            review.Name,
             review.Review,
             review.Stars,
-            review.IsConfirmed,
-            review.PhoneNumber,
+            review.IsPublished,
+            review.Email,
             review.UserId,
             review.UserIP,
             review.ProductId);
@@ -170,10 +170,10 @@ namespace Application.Services.Implementaions
                 Review = model.Review,
                 Stars = model.Stars,
                 ProductId = model.ProductId,
-                IsConfirmed = false,
+                IsPublished = false,
                 UserIP = userIP,
-                UserName = model.UserName,
-                PhoneNumber = model.PhoneNumber,
+                Name = model.UserName,
+                Email = model.PhoneNumber,
             };
 
             if (userId > 0) review.UserId = userId;
@@ -182,11 +182,11 @@ namespace Application.Services.Implementaions
             await _context.SaveChangesAsync();
 
             ProductReviewCreatedEvent ProductReviewCreatedEvent = new ProductReviewCreatedEvent(
-                review.UserName,
+                review.Name,
                review.Review,
                review.Stars,
-               review.IsConfirmed,
-               review.PhoneNumber,
+               review.IsPublished,
+               review.Email,
                review.UserId,
                review.UserIP,
                review.ProductId);
@@ -200,7 +200,7 @@ namespace Application.Services.Implementaions
         {
             if (productId < 1) Result.Failure<ClientSideProductReviewRateDataViewModel>(Messages.OperationFailedError);
 
-            var reviews = await _dbSet.Where(n => n.ProductId == productId && n.IsConfirmed).Select(n => n.Stars).ToListAsync();
+            var reviews = await _dbSet.Where(n => n.ProductId == productId && n.IsPublished).Select(n => n.Stars).ToListAsync();
             if (!reviews?.Any() ?? true) new ClientSideProductReviewRateDataViewModel();
 
             int sum = reviews.Select(n => (int)n).Sum();
@@ -217,20 +217,20 @@ namespace Application.Services.Implementaions
             return rateData;
         }
 
-        public async Task<Result<List<ClientSideProductReviewViewModel>>> ClientSideProductReviews(int productId)
+        public async Task<Result<List<ClientSideProductReviewDto>>> ClientSideProductReviews(int productId)
         {
-            if (productId < 1) return Result.Failure<List<ClientSideProductReviewViewModel>>(Messages.OperationFailedError);
+            if (productId < 1) return Result.Failure<List<ClientSideProductReviewDto>>(Messages.OperationFailedError);
 
-            var reviews = await _dbSet.Where(n => n.ProductId == productId && n.IsConfirmed)
+            var reviews = await _dbSet.Where(n => n.ProductId == productId && n.IsPublished)
                 .OrderByDescending(n => n.Id)
-                .Select(n => new ClientSideProductReviewViewModel()
+                .Select(n => new ClientSideProductReviewDto()
                 {
                     CreatedDate = n.CreatedDate,
-                    Rate = (int)n.Stars,
+                    Starts = n.Stars,
                     Review = n.Review,
-                    FullName = n.UserName
+                    Name = n.Name
                 }).AsNoTracking().ToListAsync();
-            if (!reviews?.Any() ?? true) return Result.Failure<List<ClientSideProductReviewViewModel>>(Messages.OperationFailedError);
+            if (!reviews?.Any() ?? true) return Result.Failure<List<ClientSideProductReviewDto>>(Messages.OperationFailedError);
 
             return reviews;
         }
@@ -239,7 +239,7 @@ namespace Application.Services.Implementaions
         {
             if (!productIds?.Any() ?? true) return Result.Failure<List<ClientSideProductReviewRateDataViewModel>>(Messages.OperationFailedError);
 
-            var reviews = await _dbSet.Where(n => productIds.Contains(n.ProductId) && n.IsConfirmed).AsNoTracking().ToListAsync();
+            var reviews = await _dbSet.Where(n => productIds.Contains(n.ProductId) && n.IsPublished).AsNoTracking().ToListAsync();
             if (!reviews?.Any() ?? true) return Result.Failure<List<ClientSideProductReviewRateDataViewModel>>(Messages.OperationFailedError);
 
             var productReviews = new List<ClientSideProductReviewRateDataViewModel>();

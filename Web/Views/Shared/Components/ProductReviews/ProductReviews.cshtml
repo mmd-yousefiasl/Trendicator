@@ -1,21 +1,21 @@
-﻿@using Application.Tools
-@using Application.Dtos.ProductReview.ClientSide
-@model List<ClientSideProductReviewViewModel>
+﻿@using Application.Dtos.ProductReview.ClientSide
+@using Application.Tools
+@model List<ClientSideProductReviewDto>
 
 @if (Model?.Any() ?? false)
 {
     <div class="ltn__comment-area mb-30">
-        <div class="ltn__comment-inner">
+        <div class="ltn__comment-innser">
             <ul>
-                @foreach (var item in Model ?? new List<ClientSideProductReviewViewModel>())
+                @foreach (var item in Model ?? new List<ClientSideProductReviewDto>())
                 {
                     <li>
                         <div class="ltn__comment-item clearfix">
                             <div class="ltn__commenter-comment">
-                                <h6>@item.FullName</h6>
+                                <h6>@item.Name</h6>
                                 <div class="product-ratting">
                                     <ul>
-                                        <partial name="_ProductReviewStars" model="@item.Rate" />
+                                        <partial name="_ProductReviewStars" model="@item.Starts" />
                                     </ul>
                                 </div>
                                 <p>@item.Review</p>
