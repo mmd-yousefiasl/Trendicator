@@ -1,0 +1,25 @@
+﻿@using Application.Dtos.ProductReview.ClientSide
+@using Application.Tools
+@model ClientSideFilterProductReviewsDto
+
+@foreach (var item in Model?.Entities ?? new List<ClientSideProductReviewDto>())
+{
+    <div class="card card-pad testimonial">
+        <div class="flex flex--between">
+            <div class="testimonial__stars" aria-label="@item.Stars از ۵ ستاره">
+                @for (var i = 1; i <= 5; i++)
+                {
+                    <span class="fs-large @(i <= item.Stars ? "star--filled" : "star--empty")">★</span>
+                }
+            </div>
+            <span class="text-dim" style="font-size:.75rem">
+                @item.CreatedDate.ToPersianRelativeTime()
+            </span>
+        </div>
+        <p class="text-muted mb-0">@item.Review</p>
+        <div class="testimonial__author">
+            <span class="testimonial__avatar">@item.Name.FirstOrDefault()</span>
+            <div><b>@item.Name</b></div>
+        </div>
+    </div>
+}

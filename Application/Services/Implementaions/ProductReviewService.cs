@@ -183,7 +183,7 @@ namespace Application.Services.Implementaions
                 .Select(n => new ClientSideProductReviewDto()
                 {
                     CreatedDate = n.CreatedDate,
-                    Starts = n.Stars,
+                    Stars = n.Stars,
                     Review = n.Review,
                     Name = n.Name
                 }).AsNoTracking().ToListAsync();

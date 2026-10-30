@@ -3,6 +3,7 @@ using Application.Dtos.Product.ClientSide;
 using Application.Dtos.ProductDetails.AdminSide;
 using Application.Dtos.ProductFeature.AdminSide;
 using Application.Dtos.ProductReview.AdminSide;
+using Application.Dtos.ProductReview.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces
@@ -78,6 +79,8 @@ namespace Application.Services.Interfaces
         Task<Result> AdminSideRejectReview(int id);
 
         Task<Result> AdminSideSoftDeleteProductReview(int id);
+
+        Task<Result<ClientSideFilterProductReviewsDto>> ClientSideFilterReviews(ClientSideFilterProductReviewsDto filter);
         #endregion
     }
 }

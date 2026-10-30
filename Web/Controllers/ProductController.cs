@@ -1,4 +1,5 @@
 ﻿using Application.Dtos.Product.ClientSide;
+using Application.Dtos.ProductReview.ClientSide;
 using Application.Services.Interfaces;
 using Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
@@ -100,6 +101,17 @@ namespace Web.Controllers
             }
 
             return RedirectToAction(nameof(ProductDetails), new { id = model.ProductId });
+        }
+
+        [HttpGet("/product/comments")]
+        public async Task<IActionResult> ProductComments(ClientSideFilterProductReviewsDto filter)
+        {
+            var result = await _productService.ClientSideFilterReviews(filter);
+            if (result.IsFailure)
+                return PartialView("_ProductComments", new ClientSideFilterProductReviewsDto());
+
+            Response.Headers["X-Has-More"] = result.Value.HasMore.ToString().ToLowerInvariant();
+            return PartialView("_ProductComments", result.Value);
         }
     }
 }

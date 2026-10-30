@@ -28,6 +28,10 @@
     font-size: small;
 }
 
+.fs-large {
+    font-size: 22px;
+}
+
 .spinner {
     display: none;
     border: 2px solid #f3f3f3;
@@ -60,3 +64,13 @@
 .mr-5 {
     margin-right: 50px;
 }
+
+
+.testimonial__stars .star--filled {
+    color: #f5b301;
+}
+
+.testimonial__stars .star--empty {
+    color: #cfcfcf;
+}
+/* or opacity: .35 */

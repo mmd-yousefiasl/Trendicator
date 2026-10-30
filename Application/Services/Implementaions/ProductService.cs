@@ -465,7 +465,7 @@ namespace Application.Services.Implementaions
                     .Select(r => new ClientSideProductReviewDto()
                     {
                         Name = r.Name,
-                        Starts = r.Stars,
+                        Stars = r.Stars,
                         Review = r.Review,
                         CreatedDate = r.CreatedDate,
                     }).ToList(),
@@ -1098,6 +1098,39 @@ namespace Application.Services.Implementaions
             product.ReviewsSum += sign * stars;
             product.LastUpdatedDate = DateTime.UtcNow;
             // no clamping — if it goes negative, the caller's guards are wrong, and we want to see it
+        }
+
+        public async Task<Result<ClientSideFilterProductReviewsDto>> ClientSideFilterReviews(ClientSideFilterProductReviewsDto filter)
+        {
+            if (filter is null)
+                return Result.Failure<ClientSideFilterProductReviewsDto>(Messages.OperationFailedError);
+
+            var pageSize = 10;
+            var page = filter.Page < 1 ? 1 : filter.Page;
+
+            var items = await _context.ProductReviews
+                .AsNoTracking()
+                .Where(r => r.ProductId == filter.ProductId && r.IsPublished)
+                .OrderByDescending(r => r.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize + 1)                           // ← +1
+                .Select(r => new ClientSideProductReviewDto
+                {
+                    Name = r.Name,
+                    CreatedDate = r.CreatedDate,
+                    Stars = r.Stars,
+                    Review = r.Review,
+                })
+                .ToListAsync();
+
+            filter.HasMore = items.Count > pageSize;          // ← exact, no guessing
+            if (filter.HasMore) items.RemoveAt(pageSize);
+
+            filter.Page = page;
+            filter.TakeEntity = pageSize;
+            filter.Entities = items;
+
+            return filter;
         }
         #endregion
     }
