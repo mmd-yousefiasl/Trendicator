@@ -21,7 +21,6 @@ namespace Application.Services.Implementaions
         private protected DbSet<SiteMap> _dbSet;
         private readonly IMediatorHandler _mediator;
         private readonly ICacheManager _cacheManager;
-        private readonly IProductCategoryService _productCategoryService;
         private readonly IBlogCategoryService _blogCategoryService;
         private readonly IProductService _productService;
         private readonly IBlogService _blogService;
@@ -31,7 +30,6 @@ namespace Application.Services.Implementaions
         public SiteMapService(TrendicatorDbContext context,
             IMediatorHandler mediator,
             ICacheManager cacheManer,
-            IProductCategoryService productCategoryService,
             IBlogCategoryService blogCategoryService,
             IProductService productService,
             IBlogService blogService)
@@ -40,7 +38,6 @@ namespace Application.Services.Implementaions
             _dbSet = _context.Set<SiteMap>();
             _mediator = mediator;
             _cacheManager = cacheManer;
-            _productCategoryService = productCategoryService;
             _blogCategoryService = blogCategoryService;
             _productService = productService;
             _blogService = blogService;
@@ -187,7 +184,7 @@ namespace Application.Services.Implementaions
 
         public async Task<Result> UpdateProductCategoriesSiteMap()
         {
-            var productCategoriesResult = await _productCategoryService.AdminSideGetCategoriesForSiteMap();
+            var productCategoriesResult = await _productService.AdminSideGetCategoriesForSiteMap();
             if (productCategoriesResult.IsFailure)
                 return Result.Failure(Messages.OperationFailedError);
 

@@ -10,15 +10,12 @@ namespace Web.Areas.Admin.Controllers
     public class ProductReviewController : BaseAdminController
     {
         #region Fields
-        private readonly IProductReviewService _reviewService;
         private readonly IProductService _productService;
         #endregion
 
         #region Ctor
-        public ProductReviewController(IProductReviewService reviewService,
-            IProductService productService)
+        public ProductReviewController(IProductService productService)
         {
-            _reviewService = reviewService;
             _productService = productService;
         }
         #endregion

@@ -1,6 +1,9 @@
 ﻿using Application.Dtos.Product.AdminSide;
 using Application.Dtos.Product.ClientSide;
+using Application.Dtos.ProductCategory.AdminSide;
+using Application.Dtos.ProductCategory.ClientSide;
 using Application.Dtos.ProductDetails.AdminSide;
+using Application.Dtos.ProductFaq.AdminSide;
 using Application.Dtos.ProductFeature.AdminSide;
 using Application.Dtos.ProductReview.AdminSide;
 using Application.Dtos.ProductReview.ClientSide;
@@ -23,25 +26,35 @@ namespace Application.Services.Interfaces
 
         Task<Result<ClientSideFilterProductsViewModel>> ClientSideFilterProducts(ClientSideFilterProductsViewModel filter);
 
-        Task<Result<List<ClientSideProductViewModel>>> ClientSideGetTopRatedProducts();
-
         Task<Result<ClientSideProductDetailsViewModel>> ClientSideGetProductDetails(int id);
-
-        Task<Result<ClientSideProductDetailsViewModel>> ClientSideGetProductDetails(string slug);
 
         Task<Result<List<ClientSideProductViewModel>>> ClientSideGetRelatedProducts(int id, int categoryId);
 
         Task<Result<int>> ClientSideGetProductIdByOptionId(int optionId);
 
-        Task<Result<List<ClientSideProductViewModel>>> ClientSideGetDiscountedProducts();
-
-        Task<Result<List<ClientSideProductViewModel>>> ClientSideGetMostViewedProducts();
-
-        Task<Result<List<ClientSideProductViewModel>>> ClientSideGetMostPurchasedProducts();
-
         Task<Result<List<AdminSideProductForSiteMapViewModel>>> AdminSideGetProductIdsForSiteMap();
 
         Task<Result> ClientSideAddProductView(int productId);
+        #endregion
+
+        #region Product Category
+        Task<Result<AdminSideFilterProductCategoriesViewMdoel>> AdminSideFilterProductCategories(AdminSideFilterProductCategoriesViewMdoel filter);
+
+        Task<Result> AdminSideCreateNewProductCategory(AdminSideCreateNewProductCategoryViewModel model);
+
+        Task<Result<AdminSideUpdateProductCategoryViewModel>> AdminSideGetCategoryForUpdate(int id);
+
+        Task<Result> AdminSideUpdateProductCategory(AdminSideUpdateProductCategoryViewModel model);
+
+        Task<Result> AdminSideDeleteProductCategory(int id);
+
+        Task<Result<List<AdminSideProductCategoryAsOptionViewModel>>> AdminSideGetProductCategoriesAsOptions(int? id);
+
+        Task<Result<List<ClientSideProductCategoryViewModel>>> ClientSideGetProductCategories();
+
+        Task<Result<List<AdminSideProductCategoryAsOptionViewModel>>> AdminSideGetCategoriesForSiteMap();
+
+        Task<Result<List<ClientSideProductCategoryViewModel>>> ClientSideGetParentCategories();
         #endregion
 
         #region Product Feature
@@ -81,6 +94,18 @@ namespace Application.Services.Interfaces
         Task<Result> AdminSideSoftDeleteProductReview(int id);
 
         Task<Result<ClientSideFilterProductReviewsDto>> ClientSideFilterReviews(ClientSideFilterProductReviewsDto filter);
+        #endregion
+
+        #region Product Faq
+        Task<Result<AdminSideFilterProductFaqsViewModel>> AdminSideFilterProductFaqs(AdminSideFilterProductFaqsViewModel filter);
+
+        Task<Result> AdminSideCreateNewProductFaq(AdminSideCreateNewProductFaqViewModel model);
+
+        Task<Result<AdminSideUpdateProductFaqViewModel>> AdminSideGetProductFaqForUpdate(int id);
+
+        Task<Result> AdminSideUpdateProductFaq(AdminSideUpdateProductFaqViewModel model);
+
+        Task<Result> AdminSideDeleteProductFaq(int id);
         #endregion
     }
 }

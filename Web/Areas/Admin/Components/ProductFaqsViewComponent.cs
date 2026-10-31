@@ -6,15 +6,15 @@ namespace Web.Areas.Admin.Components
 {
     public class ProductFaqsViewComponent : ViewComponent
     {
-        private readonly IProductFaqService _faqService;
-        public ProductFaqsViewComponent(IProductFaqService faqService)
+        private readonly IProductService _productService;
+        public ProductFaqsViewComponent(IProductService productService)
         {
-            _faqService = faqService;
+            _productService = productService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(int id)
         {
-            var result = await _faqService.AdminSideFilterProductFaqs(new AdminSideFilterProductFaqsViewModel() { ProductId = id, TakeEntity = 50 });
+            var result = await _productService.AdminSideFilterProductFaqs(new AdminSideFilterProductFaqsViewModel() { ProductId = id, TakeEntity = 50 });
             if (result.IsFailure)
                 return View("ProductFaqs", new AdminSideFilterProductFaqsViewModel() { ProductId = id });
 

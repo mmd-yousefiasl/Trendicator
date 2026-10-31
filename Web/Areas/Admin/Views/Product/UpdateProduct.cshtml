@@ -4,11 +4,11 @@
 @using Domain.Enums.Products
 @model AdminSideUpdateProductViewModel
 
-@inject IProductCategoryService _categoryService;
+@inject IProductService _productService;
 
 @{
     ViewData["Title"] = "ویرایش محصول";
-    var categoryResult = await _categoryService.AdminSideGetProductCategoriesAsOptions(null);
+    var categoryResult = await _productService.AdminSideGetProductCategoriesAsOptions(null);
 }
 
 <div class="container-fluid">

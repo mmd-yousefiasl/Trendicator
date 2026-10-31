@@ -2,11 +2,11 @@
 @using Application.Services.Interfaces
 @model AdminSideUpdateProductCategoryViewModel
 
-@inject IProductCategoryService _categoryService;
+@inject IProductService _productService;
 
 @{
     ViewData["Title"] = "ویرایش دسته بندی";
-    var categoryResult = await _categoryService.AdminSideGetProductCategoriesAsOptions(Model.Id);
+    var categoryResult = await _productService.AdminSideGetProductCategoriesAsOptions(Model.Id);
 }
 
 <div class="container-fluid">

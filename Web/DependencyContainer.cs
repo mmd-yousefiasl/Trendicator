@@ -60,9 +60,7 @@ namespace Web
             services.AddScoped<INewsLetterService, NewsLetterService>();
             services.AddScoped<IViewRenderService, ViewRenderService>();
             services.AddScoped<IContactUsFormService, ContactUsFormService>();
-            services.AddScoped<IProductCategoryService, ProductCategoryService>();
             services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<IProductReviewService, ProductReviewService>();
             services.AddScoped<ICouponService, CouponService>();
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<ICartItemService, CartItemService>();
@@ -76,7 +74,6 @@ namespace Web
             services.AddScoped<IHeroService, HeroService>();
             services.AddScoped<ISiteMapService, SiteMapService>();
             services.AddScoped<IMediaService, MediaService>();
-            services.AddScoped<IProductFaqService, ProductFaqService>();
             services.AddScoped<IVisitorService, VisitorService>();
             #endregion
 

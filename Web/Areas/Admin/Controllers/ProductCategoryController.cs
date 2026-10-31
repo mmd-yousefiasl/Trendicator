@@ -10,13 +10,13 @@ namespace Web.Areas.Admin.Controllers
     public class ProductCategoryController : BaseAdminController
     {
         #region Fields
-        private readonly IProductCategoryService _categoryService;
+        private readonly IProductService _productService;
         #endregion
 
         #region Ctor
-        public ProductCategoryController(IProductCategoryService categoryService)
+        public ProductCategoryController(IProductService productService)
         {
-            _categoryService = categoryService;
+            _productService = productService;
         }
         #endregion
 
@@ -24,7 +24,7 @@ namespace Web.Areas.Admin.Controllers
         [HttpGet("/admin/product-categories-list")]
         public async Task<IActionResult> ProductCategoriesList(AdminSideFilterProductCategoriesViewMdoel filter)
         {
-            var result = await _categoryService.AdminSideFilterProductCategories(filter);
+            var result = await _productService.AdminSideFilterProductCategories(filter);
             if (result.IsFailure) return View(new AdminSideFilterProductCategoriesViewMdoel());
 
             return View(result.Value);
@@ -42,7 +42,7 @@ namespace Web.Areas.Admin.Controllers
         public async Task<IActionResult> CreateNewProductCategory(AdminSideCreateNewProductCategoryViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
-            var result = await _categoryService.AdminSideCreateNewProductCategory(model);
+            var result = await _productService.AdminSideCreateNewProductCategory(model);
             if (result.IsFailure)
             {
                 TempData[TemporaryErrorMessage] = result.Message;
@@ -62,7 +62,7 @@ namespace Web.Areas.Admin.Controllers
                 TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
                 return RedirectToAction(nameof(ProductCategoriesList));
             }
-            var result = await _categoryService.AdminSideGetCategoryForUpdate(id);
+            var result = await _productService.AdminSideGetCategoryForUpdate(id);
             if (result.IsFailure)
             {
                 TempData[TemporaryErrorMessage] = result.Message;
@@ -78,7 +78,7 @@ namespace Web.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var result = await _categoryService.AdminSideUpdateProductCategory(model);
+            var result = await _productService.AdminSideUpdateProductCategory(model);
             if (result.IsFailure)
             {
                 TempData[TemporaryErrorMessage] = result.Message;
@@ -93,7 +93,7 @@ namespace Web.Areas.Admin.Controllers
         [HttpPost("/admin/remove-product-category"), ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteProductCategory(int id)
         {
-            var result = await _categoryService.AdminSideDeleteProductCategory(id);
+            var result = await _productService.AdminSideDeleteProductCategory(id);
             if (result.IsFailure)
             {
                 TempData[TemporaryErrorMessage] = result.Message;

@@ -2,11 +2,11 @@
 @using Application.Services.Interfaces
 @model AdminSideCreateNewProductCategoryViewModel
 
-@inject IProductCategoryService _categoryService;
+@inject IProductService _productService;
 
 @{
     ViewData["Title"] = "افزودن دسته بندی جدید";
-    var categoryResult = await _categoryService.AdminSideGetProductCategoriesAsOptions(null);
+    var categoryResult = await _productService.AdminSideGetProductCategoriesAsOptions(null);
 }
 
 <div class="container-fluid">

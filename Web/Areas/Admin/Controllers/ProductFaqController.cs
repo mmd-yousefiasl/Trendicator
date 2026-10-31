@@ -10,13 +10,13 @@ namespace Web.Areas.Admin.Controllers
     public class ProductFaqController : BaseAdminController
     {
         #region Fields
-        private readonly IProductFaqService _faqService;
+        private readonly IProductService _productService;
         #endregion
 
         #region Ctor
-        public ProductFaqController(IProductFaqService faqService)
+        public ProductFaqController(IProductService productService)
         {
-            _faqService = faqService;
+            _productService = productService;
         }
         #endregion
 
@@ -34,15 +34,12 @@ namespace Web.Areas.Admin.Controllers
         public async Task<IActionResult> CreateNewProductFaq(AdminSideCreateNewProductFaqViewModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return Json(new { success = false, message = Messages.OperationFailedError });
-            }
 
-            var result = await _faqService.AdminSideCreateNewProductFaq(model);
+            var result = await _productService.AdminSideCreateNewProductFaq(model);
+
             if (result.IsFailure)
-            {
                 return Json(new { success = false, message = result.Message });
-            }
 
             return Json(new { success = true, message = result.Message });
         }
@@ -51,9 +48,13 @@ namespace Web.Areas.Admin.Controllers
         [HttpGet("/admin/edit-product-faq")]
         public async Task<IActionResult> UpdateProductFaq(int id)
         {
-            if (id < 1) return Json(new { success = false, message = Messages.OperationFailedError });
-            var result = await _faqService.AdminSideGetProductFaqForUpdate(id);
-            if (result.IsFailure) return Json(new { success = false, message = result.Message });
+            if (id < 1)
+                return Json(new { success = false, message = Messages.OperationFailedError });
+
+            var result = await _productService.AdminSideGetProductFaqForUpdate(id);
+
+            if (result.IsFailure)
+                return Json(new { success = false, message = result.Message });
 
             return PartialView("_UpdateProductFaq", result.Value);
         }
@@ -62,13 +63,13 @@ namespace Web.Areas.Admin.Controllers
         [HttpPost("/admin/edit-product-faq"), ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateProductFaq(AdminSideUpdateProductFaqViewModel model)
         {
-            if (!ModelState.IsValid) return Json(new { success = false, message = Messages.OperationFailedError });
+            if (!ModelState.IsValid)
+                return Json(new { success = false, message = Messages.OperationFailedError });
 
-            var result = await _faqService.AdminSideUpdateProductFaq(model);
+            var result = await _productService.AdminSideUpdateProductFaq(model);
+
             if (result.IsFailure)
-            {
                 return Json(new { success = false, message = result.Message });
-            }
 
             return Json(new { success = true, message = result.Message });
         }
@@ -77,12 +78,13 @@ namespace Web.Areas.Admin.Controllers
         [HttpPost("/admin/remove-product-faq"), ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteProductFaq(int id)
         {
-            if (id < 1) return Json(new { success = false, message = Messages.OperationFailedError });
-            var result = await _faqService.AdminSideDeleteProductFaq(id);
+            if (id < 1)
+                return Json(new { success = false, message = Messages.OperationFailedError });
+
+            var result = await _productService.AdminSideDeleteProductFaq(id);
+
             if (result.IsFailure)
-            {
                 return Json(new { success = false, message = result.Message });
-            }
 
             return Json(new { success = true, message = result.Message });
         }

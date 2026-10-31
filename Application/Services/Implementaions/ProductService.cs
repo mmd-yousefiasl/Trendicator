@@ -1,17 +1,22 @@
 ﻿using Application.Dtos.Product.AdminSide;
 using Application.Dtos.Product.ClientSide;
+using Application.Dtos.ProductCategory.AdminSide;
+using Application.Dtos.ProductCategory.ClientSide;
 using Application.Dtos.ProductDetails.AdminSide;
 using Application.Dtos.ProductDetails.ClientSide;
+using Application.Dtos.ProductFaq.AdminSide;
 using Application.Dtos.ProductFaq.ClientSide;
 using Application.Dtos.ProductFeature.AdminSide;
 using Application.Dtos.ProductReview.AdminSide;
 using Application.Dtos.ProductReview.ClientSide;
 using Application.Mediator;
 using Application.Services.Interfaces;
+using Application.Static;
 using Application.Tools;
 using Data.Context;
 using Domain.Enums.Products;
 using Domain.Events.Products.Product;
+using Domain.Events.Products.ProductCategory;
 using Domain.Models.Products;
 using Domain.Shared;
 using Domain.Statics;
@@ -24,26 +29,24 @@ namespace Application.Services.Implementaions
     {
         #region Fields
         private readonly TrendicatorDbContext _context;
-        private protected DbSet<Product> _dbSet;
         private readonly IMediatorHandler _mediator;
-        private readonly IProductReviewService _reviewService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IVisitorService _visitorService;
+        private readonly ICacheManager _cacheManager;
         #endregion
 
         #region Ctor
         public ProductService(TrendicatorDbContext context,
             IMediatorHandler mediator,
-            IProductReviewService reviewService,
             IHttpContextAccessor httpContextAccessor,
-            IVisitorService visitorService)
+            IVisitorService visitorService,
+            ICacheManager cacheManager)
         {
             _context = context;
-            _dbSet = _context.Set<Product>();
             _mediator = mediator;
-            _reviewService = reviewService;
             _httpContextAccessor = httpContextAccessor;
             _visitorService = visitorService;
+            _cacheManager = cacheManager;
         }
         #endregion
 
@@ -55,7 +58,9 @@ namespace Application.Services.Implementaions
 
             model.Slug = model.Slug.Replace(" ", "-");
 
-            if (await _dbSet.AnyAsync(n => n.Slug == model.Slug))
+            if (await _context.ProductCategories
+                .AsNoTracking()
+                .AnyAsync(n => n.Slug == model.Slug))
                 return Result.Failure(Messages.DuplicateSlugError);
 
             if (!model.BannerFile.IsImage())
@@ -98,7 +103,7 @@ namespace Application.Services.Implementaions
             model.BannerFile.UploadFileToServer(bannerFileName, SiteTools.ProductBanner);
             product.BannerFileName = bannerFileName;
 
-            await _dbSet.AddAsync(product);
+            _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
             await _mediator.PublishEvent(new ProductCreatedEvent(
@@ -124,13 +129,13 @@ namespace Application.Services.Implementaions
         {
             if (id < 1) return Result.Failure(Messages.OperationFailedError);
 
-            var product = await _dbSet.Where(n => n.Id == id).FirstOrDefaultAsync();
+            var product = await _context.Products.FindAsync(id);
             if (product is null) return Result.Failure(Messages.OperationFailedError);
 
             product.IsDeleted = true;
             product.LastUpdatedDate = DateTime.UtcNow;
 
-            _dbSet.Update(product);
+            _context.Products.Update(product);
             await _context.SaveChangesAsync();
 
             product.BannerFileName.RemoveFileFromServer(SiteTools.ProductBanner);
@@ -170,7 +175,7 @@ namespace Application.Services.Implementaions
                 conditions.Add(n => n.IsAvailable == filter.IsAvailable);
             }
 
-            IQueryable<Product> query = _dbSet;
+            IQueryable<Product> query = _context.Products;
             query = query.OrderByDescending(n => n.Id);
 
             foreach (var item in conditions ?? new FilterConditions<Product>())
@@ -200,25 +205,29 @@ namespace Application.Services.Implementaions
         {
             if (id < 1) return Result.Failure<AdminSideUpdateProductViewModel>(Messages.OperationFailedError);
 
-            var product = await _dbSet.Where(n => n.Id == id).Select(n => new AdminSideUpdateProductViewModel()
-            {
-                Id = n.Id,
-                Title = n.Title,
-                Slug = n.Slug,
-                BannerFileName = n.BannerFileName,
-                CategoryId = n.CategoryId,
-                Description = n.Description,
-                OrderPrice = n.OrderPrice,
-                DisplayPrice = n.DisplayPrice,
-                IsPublished = n.IsPublished,
-                IsAvailable = n.IsAvailable,
-                Priority = n.Priority,
-                ShortDescription = n.ShortDescription,
-                Type = n.Type,
-                MetaTraderLink = n.MetaTraderLink,
-                IndicatorFileName = n.IndicatorFileName,
-                Hint = n.Hint,
-            }).AsNoTracking().FirstOrDefaultAsync();
+            var product = await _context.Products
+                .AsNoTracking()
+                .Where(n => n.Id == id)
+                .Select(n => new AdminSideUpdateProductViewModel()
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Slug = n.Slug,
+                    BannerFileName = n.BannerFileName,
+                    CategoryId = n.CategoryId,
+                    Description = n.Description,
+                    OrderPrice = n.OrderPrice,
+                    DisplayPrice = n.DisplayPrice,
+                    IsPublished = n.IsPublished,
+                    IsAvailable = n.IsAvailable,
+                    Priority = n.Priority,
+                    ShortDescription = n.ShortDescription,
+                    Type = n.Type,
+                    MetaTraderLink = n.MetaTraderLink,
+                    IndicatorFileName = n.IndicatorFileName,
+                    Hint = n.Hint,
+                }).FirstOrDefaultAsync();
+
             if (product is null) return Result.Failure<AdminSideUpdateProductViewModel>(Messages.OperationFailedError);
 
             return product;
@@ -231,11 +240,13 @@ namespace Application.Services.Implementaions
 
             model.Slug = model.Slug.Replace(" ", "-");
 
-            bool isDuplicateSlug = await _dbSet.AnyAsync(n => n.Id != model.Id && n.Slug == model.Slug);
+            bool isDuplicateSlug = await _context.Products
+                .AsNoTracking()
+                .AnyAsync(n => n.Id != model.Id && n.Slug == model.Slug);
             if (isDuplicateSlug)
                 return Result.Failure(Messages.DuplicateSlugError);
 
-            var product = await _dbSet.FindAsync(model.Id);
+            var product = await _context.Products.FindAsync(model.Id);
             if (product is null)
                 return Result.Failure(Messages.OperationFailedError);
 
@@ -285,7 +296,7 @@ namespace Application.Services.Implementaions
 
             if (model.Type == ProductTypeEnum.MetaTraderLink) product.MetaTraderLink = model.MetaTraderLink;
 
-            _dbSet.Update(product);
+            _context.Products.Update(product);
             await _context.SaveChangesAsync();
 
             await _mediator.PublishEvent(new ProductUpdatedEvent(
@@ -379,41 +390,6 @@ namespace Application.Services.Implementaions
             return filter;
         }
 
-        public async Task<Result<List<ClientSideProductViewModel>>> ClientSideGetTopRatedProducts()
-        {
-            var products = await _dbSet.Where(n => n.IsPublished).OrderBy(n => n.Views.Count())
-                .Take(5)
-                .Select(n => new ClientSideProductViewModel()
-                {
-                    Id = n.Id,
-                    BannerFileName = n.BannerFileName,
-                    Title = n.Title,
-                    Slug = n.Slug,
-                    ShortDescription = n.ShortDescription,
-                    HaveDiscount = ((n.DisplayPrice > 0) ? true : false),
-                    DisplayPrice = n.DisplayPrice,
-                    OrderPrice = n.OrderPrice,
-                    Percent = ((n.DisplayPrice > 0) ? n.DisplayPrice.GetDiscountPercent(n.OrderPrice) : 0),
-                    IsAvailable = n.IsAvailable,
-                }).AsNoTracking().ToListAsync();
-            if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
-
-            var productIds = products.Select(n => n.Id).ToList();
-
-            var reviewsResult = await _reviewService.GetProductsReviewRate(productIds);
-
-            foreach (var item in products ?? new List<ClientSideProductViewModel>())
-            {
-                if (reviewsResult.IsSuccess)
-                {
-                    var review = reviewsResult.Value.FirstOrDefault(n => n.ProductId == item.Id);
-                    if (review is not null) item.ReviewRate = review.RoundedAvrage;
-                }
-            }
-
-            return products;
-        }
-
         public async Task<Result<ClientSideProductDetailsViewModel>> ClientSideGetProductDetails(int Id)
         {
             if (Id < 1)
@@ -485,41 +461,6 @@ namespace Application.Services.Implementaions
             return product;
         }
 
-        public async Task<Result<ClientSideProductDetailsViewModel>> ClientSideGetProductDetails(string slug)
-        {
-            if (string.IsNullOrWhiteSpace(slug))
-                return Result.Failure<ClientSideProductDetailsViewModel>(Messages.OperationFailedError);
-
-            var product = await _dbSet.Where(n => n.Slug == slug && n.IsPublished)
-                .Select(n => new ClientSideProductDetailsViewModel()
-                {
-                    Id = n.Id,
-                    Title = n.Title,
-                    Slug = n.Slug,
-                    IsAvailable = n.IsAvailable,
-                    ShortDescription = n.ShortDescription,
-                    Description = n.Description,
-                    BannerFileName = n.BannerFileName,
-                    HaveDiscount = ((n.DisplayPrice > 0) ? true : false),
-                    OrderPrice = n.OrderPrice,
-                    DisplayPrice = n.DisplayPrice,
-                    Category = n.Category.Title,
-                    CategorySlug = n.Category.Slug,
-                    CategoryId = n.CategoryId,
-                    Percent = ((n.DisplayPrice > 0) ? n.DisplayPrice.GetDiscountPercent(n.OrderPrice) : 0),
-                    Faqs = n.Faqs.Where(f => f.IsPublished).OrderBy(f => f.Priority)
-                    .Select(f => new ClientSideProductFaqViewModel()
-                    {
-                        Question = f.Question,
-                        Answer = f.Answer
-                    }).ToList(),
-                    ReviewsCount = n.Reviews.Where(n => n.IsPublished).Count(),
-                }).AsNoTracking().FirstOrDefaultAsync();
-            if (product is null) return Result.Failure<ClientSideProductDetailsViewModel>(Messages.OperationFailedError);
-
-            return product;
-        }
-
         public async Task<Result<List<ClientSideProductViewModel>>> ClientSideGetRelatedProducts(int id, int categoryId)
         {
             if (id < 1 || categoryId < 1)
@@ -562,121 +503,17 @@ namespace Application.Services.Implementaions
             return Result.Failure<int>(Messages.OperationFailedError);
         }
 
-        public async Task<Result<List<ClientSideProductViewModel>>> ClientSideGetDiscountedProducts()
-        {
-            var products = await _dbSet.Where(n => n.IsPublished && n.OrderPrice != null).OrderByDescending(n => n.Id)
-                .Take(6)
-                .Select(n => new ClientSideProductViewModel()
-                {
-                    Id = n.Id,
-                    BannerFileName = n.BannerFileName,
-                    Title = n.Title,
-                    Slug = n.Slug,
-                    ShortDescription = n.ShortDescription,
-                    DisplayPrice = n.DisplayPrice,
-                    HaveDiscount = ((n.DisplayPrice > 0) ? true : false),
-                    OrderPrice = n.OrderPrice,
-                    Percent = ((n.DisplayPrice > 0) ? n.DisplayPrice.GetDiscountPercent(n.OrderPrice) : 0),
-                    IsAvailable = n.IsAvailable,
-                }).AsNoTracking().ToListAsync();
-            if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
-
-            var productIds = products.Select(n => n.Id).ToList();
-
-            var reviewsResult = await _reviewService.GetProductsReviewRate(productIds);
-
-            foreach (var item in products ?? new List<ClientSideProductViewModel>())
-            {
-                if (reviewsResult.IsSuccess)
-                {
-                    var review = reviewsResult.Value.FirstOrDefault(n => n.ProductId == item.Id);
-                    if (review is not null) item.ReviewRate = review.RoundedAvrage;
-                }
-            }
-
-            return products;
-        }
-
-        public async Task<Result<List<ClientSideProductViewModel>>> ClientSideGetMostViewedProducts()
-        {
-            var products = await _dbSet.Where(n => n.IsPublished).OrderBy(n => n.Views.Count())
-                .Take(6)
-                .Select(n => new ClientSideProductViewModel()
-                {
-                    Id = n.Id,
-                    BannerFileName = n.BannerFileName,
-                    Title = n.Title,
-                    Slug = n.Slug,
-                    ShortDescription = n.ShortDescription,
-                    DisplayPrice = n.DisplayPrice,
-                    HaveDiscount = ((n.DisplayPrice > 0) ? true : false),
-                    OrderPrice = n.OrderPrice,
-                    Percent = ((n.DisplayPrice > 0) ? n.DisplayPrice.GetDiscountPercent(n.OrderPrice) : 0),
-                    IsAvailable = n.IsAvailable,
-                }).AsNoTracking().ToListAsync();
-            if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
-
-            var productIds = products.Select(n => n.Id).ToList();
-
-            var reviewsResult = await _reviewService.GetProductsReviewRate(productIds);
-
-            foreach (var item in products ?? new List<ClientSideProductViewModel>())
-            {
-                if (reviewsResult.IsSuccess)
-                {
-                    var review = reviewsResult.Value.FirstOrDefault(n => n.ProductId == item.Id);
-                    if (review is not null) item.ReviewRate = review.RoundedAvrage;
-                }
-            }
-
-            return products;
-        }
-
-        public async Task<Result<List<ClientSideProductViewModel>>> ClientSideGetMostPurchasedProducts()
-        {
-            var products = await _dbSet.Where(n => n.IsPublished).OrderBy(n => n.CartItems.Count())
-                   .Take(6)
-                   .Select(n => new ClientSideProductViewModel()
-                   {
-                       Id = n.Id,
-                       BannerFileName = n.BannerFileName,
-                       Title = n.Title,
-                       Slug = n.Slug,
-                       ShortDescription = n.ShortDescription,
-                       DisplayPrice = n.DisplayPrice,
-                       HaveDiscount = ((n.DisplayPrice > 0) ? true : false),
-                       OrderPrice = n.OrderPrice,
-                       Percent = ((n.DisplayPrice > 0) ? n.DisplayPrice.GetDiscountPercent(n.OrderPrice) : 0),
-                       IsAvailable = n.IsAvailable,
-                   }).AsNoTracking().ToListAsync();
-            if (!products.Any()) return Result.Failure<List<ClientSideProductViewModel>>(Messages.OperationFailedError);
-
-            var productIds = products.Select(n => n.Id).ToList();
-
-            var reviewsResult = await _reviewService.GetProductsReviewRate(productIds);
-
-            foreach (var item in products ?? new List<ClientSideProductViewModel>())
-            {
-                if (reviewsResult.IsSuccess)
-                {
-                    var review = reviewsResult.Value.FirstOrDefault(n => n.ProductId == item.Id);
-                    if (review is not null) item.ReviewRate = review.RoundedAvrage;
-                }
-            }
-
-            return products;
-        }
-
         public async Task<Result<List<AdminSideProductForSiteMapViewModel>>> AdminSideGetProductIdsForSiteMap()
         {
-            var ids = await _dbSet.Where(n => n.IsPublished)
+            var ids = await _context.Products
+                .AsNoTracking()
+                .Where(n => n.IsPublished)
                 .Select(n => new AdminSideProductForSiteMapViewModel()
                 {
                     Id = n.Id,
                     Slug = n.Slug
-                })
-                .AsNoTracking()
-                .ToListAsync();
+                }).ToListAsync();
+
             if (!ids.Any())
                 return Result.Failure<List<AdminSideProductForSiteMapViewModel>>(Messages.OperationFailedError);
 
@@ -719,6 +556,284 @@ namespace Application.Services.Implementaions
             }
 
             return Result.Success();
+        }
+        #endregion
+
+        #region Product Category
+        public async Task<Result> AdminSideCreateNewProductCategory(AdminSideCreateNewProductCategoryViewModel model)
+        {
+            if (model is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            if (await _context.ProductCategories
+                .AsNoTracking()
+                .AnyAsync(n => n.Slug == model.Slug.Replace(" ", "-")))
+                return Result.Failure(Messages.DuplicateSlugError);
+
+            var category = new ProductCategory()
+            {
+                Title = model.Title,
+                ParentCategoryId = model.ParentCategoryId,
+                Slug = model.Slug.Replace(" ", "-"),
+                Priority = model.Priority,
+                IsPublished = model.IsPublished,
+                MetaDescription = model.MetaDescription
+            };
+
+            _context.ProductCategories.Add(category);
+            await _context.SaveChangesAsync();
+
+            ProductCategoryCreatedEvent ProductCategoryCreatedEvent = new ProductCategoryCreatedEvent(
+                category.Title,
+                category.Slug,
+                category.MetaDescription,
+                category.Priority,
+                category.IsPublished,
+                category.ParentCategoryId);
+
+            await _mediator.PublishEvent(ProductCategoryCreatedEvent);
+
+            return Result.Success();
+        }
+
+        public async Task<Result> AdminSideDeleteProductCategory(int id)
+        {
+            if (id < 1)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var category = await _context.ProductCategories
+                .Where(n => n.Id == id && !n.Products.Any() && !n.SubCategories.Any())
+                .FirstOrDefaultAsync();
+            if (category is null) return Result.Failure(Messages.CantDeleteThisRecordError);
+
+            _context.ProductCategories.Remove(category);
+            await _context.SaveChangesAsync();
+
+            ProductCategoryDeletedEvent ProductCategoryDeletedEvent = new ProductCategoryDeletedEvent(
+                category.Id);
+
+            await _mediator.PublishEvent(ProductCategoryDeletedEvent);
+
+            return Result.Success();
+        }
+
+        public async Task<Result<AdminSideFilterProductCategoriesViewMdoel>> AdminSideFilterProductCategories(AdminSideFilterProductCategoriesViewMdoel filter)
+        {
+            if (filter is null)
+                return Result.Failure<AdminSideFilterProductCategoriesViewMdoel>(Messages.OperationFailedError);
+
+            var conditions = Filter.GenerateConditions<ProductCategory>();
+
+            if (!string.IsNullOrWhiteSpace(filter.Search))
+            {
+                conditions.Add(n => n.Title.Contains(filter.Search) ||
+                n.ParentCategory.Title.Contains(filter.Search) ||
+                n.Slug.Contains(filter.Search));
+            }
+
+            if (filter.IsPublished is not null)
+            {
+                conditions.Add(n => n.IsPublished == filter.IsPublished);
+            }
+
+            IQueryable<ProductCategory> query = _context.ProductCategories;
+            query = query.OrderByDescending(n => n.Id);
+
+            foreach (var item in conditions ?? new FilterConditions<ProductCategory>())
+            {
+                query = query.Where(item);
+            }
+
+            await filter.Paging(query.Select(n => new AdminSideProductCategoryViewModel()
+            {
+                Id = n.Id,
+                Title = n.Title,
+                Slug = n.Slug,
+                ParentCategoryTitle = n.ParentCategory.Title,
+                IsPublished = n.IsPublished,
+                Priority = n.Priority
+            }));
+
+            return filter;
+        }
+
+        public async Task<Result<AdminSideUpdateProductCategoryViewModel>> AdminSideGetCategoryForUpdate(int id)
+        {
+            if (id < 1)
+                return Result.Failure<AdminSideUpdateProductCategoryViewModel>(Messages.OperationFailedError);
+
+            var category = await _context.ProductCategories
+                .AsNoTracking()
+                .Where(n => n.Id == id)
+                .Select(n => new AdminSideUpdateProductCategoryViewModel()
+                {
+                    Id = n.Id,
+                    ParentCategoryId = n.ParentCategoryId,
+                    Title = n.Title,
+                    Slug = n.Slug,
+                    IsPublished = n.IsPublished,
+                    MetaDescription = n.MetaDescription,
+                    Priority = n.Priority
+                }).FirstOrDefaultAsync();
+
+            if (category is null)
+                return Result.Failure<AdminSideUpdateProductCategoryViewModel>(Messages.OperationFailedError);
+
+            return category;
+        }
+
+        public async Task<Result<List<AdminSideProductCategoryAsOptionViewModel>>> AdminSideGetProductCategoriesAsOptions(int? id)
+        {
+            IQueryable<ProductCategory> query = _context.ProductCategories;
+            if (id > 0) query = query.Where(n => n.Id != id);
+
+            query = query.Where(n => n.IsPublished);
+            query = query.OrderBy(n => n.Priority);
+
+            var categories = await query
+                .AsNoTracking()
+                .Select(n => new AdminSideProductCategoryAsOptionViewModel()
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Slug = n.Slug
+                }).ToListAsync();
+
+            if (!categories.Any())
+                return Result.Failure<List<AdminSideProductCategoryAsOptionViewModel>>(Messages.OperationFailedError);
+
+            return categories;
+        }
+
+        public async Task<Result> AdminSideUpdateProductCategory(AdminSideUpdateProductCategoryViewModel model)
+        {
+            if (model is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            if (await _context.ProductCategories.AnyAsync(n => n.Slug == model.Slug.Replace(" ", "-") && n.Id != model.Id))
+                return Result.Failure(Messages.DuplicateSlugError);
+
+            var category = await _context.ProductCategories.FindAsync(model.Id);
+
+            if (category is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            category.Title = model.Title;
+            category.ParentCategoryId = model.ParentCategoryId;
+            category.Slug = model.Slug.Replace(" ", "-");
+            category.IsPublished = model.IsPublished;
+            category.Priority = model.Priority;
+            category.MetaDescription = model.MetaDescription;
+
+            _context.ProductCategories.Update(category);
+            await _context.SaveChangesAsync();
+
+            ProductCategoryUpdatedEvent ProductCategoryUpdatedEvent = new ProductCategoryUpdatedEvent(
+                category.Id,
+                category.Title,
+                category.Slug,
+                category.MetaDescription,
+                category.Priority,
+                category.IsPublished,
+                category.ParentCategoryId);
+
+            await _mediator.PublishEvent(ProductCategoryUpdatedEvent);
+
+            return Result.Success();
+        }
+
+        public async Task<Result<List<ClientSideProductCategoryViewModel>>> ClientSideGetProductCategories()
+        {
+            var categories = await _cacheManager.GetAsync(CacheKeys.ProductCategoriesCacheKey, async () =>
+            {
+                return await _context.ProductCategories
+                .AsNoTracking()
+                .Where(n => n.IsPublished)
+                .OrderBy(n => n.Priority)
+                .ToListAsync();
+            });
+
+            if (!categories?.Any() ?? true)
+                return Result.Failure<List<ClientSideProductCategoryViewModel>>(Messages.OperationFailedError);
+
+            var firstParents = new List<ClientSideProductCategoryViewModel>();
+            foreach (var item in categories.Where(n => n.ParentCategoryId == null).ToList() ?? new List<ProductCategory>())
+            {
+                ClientSideProductCategoryViewModel firstParent = new ClientSideProductCategoryViewModel()
+                {
+                    Id = item.Id,
+                    Title = item.Title,
+                    Slug = item.Slug,
+                    ParentId = null,
+                    Categories = new List<ClientSideProductCategoryViewModel>()
+                };
+                foreach (var item2 in categories.Where(n => n.ParentCategoryId == item.Id).ToList() ?? new List<ProductCategory>())
+                {
+                    ClientSideProductCategoryViewModel secondParent = new ClientSideProductCategoryViewModel()
+                    {
+                        Id = item2.Id,
+                        Title = item2.Title,
+                        Slug = item2.Slug,
+                        ParentId = item.Id,
+                        Categories = new List<ClientSideProductCategoryViewModel>()
+                    };
+                    foreach (var item3 in categories.Where(n => n.ParentCategoryId == item2.Id).ToList() ?? new List<ProductCategory>())
+                    {
+                        ClientSideProductCategoryViewModel sub = new ClientSideProductCategoryViewModel()
+                        {
+                            Id = item3.Id,
+                            Title = item3.Title,
+                            Slug = item3.Slug,
+                            ParentId = item2.Id,
+                        };
+
+                        secondParent.Categories.Add(sub);
+                    }
+
+                    firstParent.Categories.Add(secondParent);
+                }
+
+                firstParents.Add(firstParent);
+            }
+            if (!firstParents.Any()) return Result.Failure<List<ClientSideProductCategoryViewModel>>(Messages.OperationFailedError);
+
+            return firstParents;
+        }
+
+        public async Task<Result<List<AdminSideProductCategoryAsOptionViewModel>>> AdminSideGetCategoriesForSiteMap()
+        {
+            var categories = await _context.ProductCategories
+                .AsNoTracking()
+                .Select(n => new AdminSideProductCategoryAsOptionViewModel()
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Slug = n.Slug
+                }).ToListAsync();
+
+            if (!categories.Any())
+                return Result.Failure<List<AdminSideProductCategoryAsOptionViewModel>>(Messages.OperationFailedError);
+
+            return categories;
+        }
+
+        public async Task<Result<List<ClientSideProductCategoryViewModel>>> ClientSideGetParentCategories()
+        {
+            var categories = await _context.ProductCategories
+                .AsNoTracking()
+                .Where(n => n.IsPublished && n.ParentCategoryId == null)
+                .OrderBy(n => n.Priority)
+                .ToListAsync();
+
+            if (!categories?.Any() ?? true)
+                return Result.Failure<List<ClientSideProductCategoryViewModel>>(Messages.OperationFailedError);
+
+            return categories.Select(n => new ClientSideProductCategoryViewModel()
+            {
+                Id = n.Id,
+                Title = n.Title,
+                Slug = n.Slug,
+            }).ToList();
         }
         #endregion
 
@@ -1131,6 +1246,119 @@ namespace Application.Services.Implementaions
             filter.Entities = items;
 
             return filter;
+        }
+        #endregion
+
+        #region Product Faq
+        public async Task<Result> AdminSideCreateNewProductFaq(AdminSideCreateNewProductFaqViewModel model)
+        {
+            if (model is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var faq = new ProductFaq()
+            {
+                Question = model.Question,
+                Answer = model.Answer,
+                Priority = model.Priority,
+                IsPublished = model.IsPublished,
+                ProductId = model.ProductId
+            };
+
+            _context.ProductFaqs.Add(faq);
+            await _context.SaveChangesAsync();
+
+            return Result.Success();
+        }
+
+        public async Task<Result> AdminSideDeleteProductFaq(int id)
+        {
+            if (id < 1)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var faq = await _context.ProductFaqs.FindAsync(id);
+
+            if (faq is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            _context.ProductFaqs.Remove(faq);
+            await _context.SaveChangesAsync();
+
+            return Result.Success();
+        }
+
+        public async Task<Result<AdminSideFilterProductFaqsViewModel>> AdminSideFilterProductFaqs(AdminSideFilterProductFaqsViewModel filter)
+        {
+            if (filter is null)
+                return Result.Failure<AdminSideFilterProductFaqsViewModel>(Messages.OperationFailedError);
+
+            var conditions = Filter.GenerateConditions<ProductFaq>();
+
+            conditions.Add(n => n.ProductId == filter.ProductId);
+
+            IQueryable<ProductFaq> query = _context.ProductFaqs;
+            query = query.OrderByDescending(n => n.Id);
+
+            foreach (var item in conditions ?? new FilterConditions<ProductFaq>())
+            {
+                query = query.Where(item);
+            }
+
+            await filter.Paging(query.Select(n => new AdminSideProductFaqViewModel()
+            {
+                Id = n.Id,
+                Question = n.Question,
+                Answer = n.Answer,
+                Priority = n.Priority,
+                IsPublished = n.IsPublished,
+                ProductId = n.ProductId
+            }));
+
+            return filter;
+        }
+
+        public async Task<Result<AdminSideUpdateProductFaqViewModel>> AdminSideGetProductFaqForUpdate(int id)
+        {
+            if (id < 1)
+                return Result.Failure<AdminSideUpdateProductFaqViewModel>(Messages.OperationFailedError);
+
+            var faq = await _context.ProductFaqs.
+                AsNoTracking()
+                .Where(n => n.Id == id)
+                .Select(n => new AdminSideUpdateProductFaqViewModel()
+                {
+                    Id = n.Id,
+                    Question = n.Question,
+                    Answer = n.Answer,
+                    IsPublished = n.IsPublished,
+                    Priority = n.Priority,
+                    ProductId = n.ProductId
+                }).FirstOrDefaultAsync();
+
+            if (faq is null)
+                return Result.Failure<AdminSideUpdateProductFaqViewModel>(Messages.OperationFailedError);
+
+            return faq;
+        }
+
+        public async Task<Result> AdminSideUpdateProductFaq(AdminSideUpdateProductFaqViewModel model)
+        {
+            if (model is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var faq = await _context.ProductFaqs.FindAsync(model.Id);
+
+            if (faq is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            faq.Question = model.Question;
+            faq.Answer = model.Answer;
+            faq.Priority = model.Priority;
+            faq.IsPublished = model.IsPublished;
+
+            _context.ProductFaqs.Update(faq);
+            await _context.SaveChangesAsync();
+
+            return Result.Success();
         }
         #endregion
     }
