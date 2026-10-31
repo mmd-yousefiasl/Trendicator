@@ -10,8 +10,7 @@ namespace Data.Context.Configurations.Shopping
         {
             builder.ToTable("CartItems");
 
-            builder.HasKey(n => n.Id);
-            builder.HasQueryFilter(n => !n.IsDeleted);
+            builder.HasKey(n => new { n.CartId, n.ProductId });
 
             builder.HasOne(n => n.Cart)
                 .WithMany(n => n.Items)

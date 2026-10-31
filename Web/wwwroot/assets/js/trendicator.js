@@ -1,8 +1,8 @@
 /* ==========================================================================
    Trendicator — main.js
    All non-login page code. Split from trendicator.js without changing logic.
-   Hooks: [data-theme-toggle] [data-nav-toggle] [data-add-to-cart]
-          [data-cart-render] [data-chart] [data-tabs] [data-count]
+   Hooks: [data-theme-toggle] [data-nav-toggle]
+          [data-chart] [data-tabs] [data-count]
           [data-filter] [data-comment-form]
    ========================================================================== */
 (function () {
@@ -148,91 +148,6 @@
 
     function initCharts() { $$("[data-chart]").forEach(buildChart); }
 
-    /* ---------- Cart (localStorage) ---------- */
-    const CART_KEY = "trendicator-cart";
-    function cartGet() {
-        try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
-        catch (e) { return []; }
-    }
-    function cartSet(items) {
-        try { localStorage.setItem(CART_KEY, JSON.stringify(items)); } catch (e) { }
-        updateCartBadge();
-    }
-    function updateCartBadge() {
-        const n = cartGet().reduce((s, i) => s + (i.qty || 1), 0);
-        $$("[data-cart-count]").forEach(el => {
-            el.textContent = toFa(n);
-            el.hidden = n === 0;
-        });
-    }
-    function addToCart(item) {
-        const items = cartGet();
-        const found = items.find(i => i.id === item.id);
-        if (found) { found.qty = (found.qty || 1) + 1; }
-        else { items.push(Object.assign({ qty: 1 }, item)); }
-        cartSet(items);
-        toast("«" + item.name + "» به سبد خرید اضافه شد", "ok");
-    }
-
-    function initCart() {
-        $$("[data-add-to-cart]").forEach(btn =>
-            btn.addEventListener("click", () => {
-                const el = btn.closest("[data-product]") || document;
-                addToCart({
-                    id: btn.dataset.id || el.dataset.productId || "item",
-                    name: btn.dataset.name || el.dataset.productName || "محصول",
-                    price: parseInt(btn.dataset.price || el.dataset.productPrice, 10) || 0,
-                });
-            })
-        );
-        updateCartBadge();
-        renderCartPage();
-    }
-
-    function renderCartPage() {
-        const box = $("[data-cart-render]");
-        if (!box) return;
-        const items = cartGet();
-        const emptyTpl = $("[data-cart-empty]");
-        const list = $("[data-cart-list]", box);
-
-        if (!items.length) {
-            if (list) list.innerHTML = "";
-            if (emptyTpl) emptyTpl.hidden = false;
-            const pay = $("[data-cart-pay]");
-            if (pay) pay.disabled = true;
-            return;
-        }
-        if (emptyTpl) emptyTpl.hidden = true;
-
-        if (list) {
-            list.innerHTML = items.map(it => (
-                "<div class='cart-line' data-line='" + it.id + "'>" +
-                "<div class='cart-line__thumb'><svg viewBox='0 0 60 36'><rect x='8' y='12' width='6' height='14' fill='var(--up)'/><rect x='20' y='8' width='6' height='18' fill='var(--down)'/><rect x='32' y='14' width='6' height='10' fill='var(--up)'/><rect x='44' y='6' width='6' height='16' fill='var(--up)'/></svg></div>" +
-                "<div class='cart-line__body'>" +
-                "<div class='cart-line__title'>" + it.name + "</div>" +
-                "<div class='cart-line__meta'>لایسنس دائمی · دانلود فوری</div>" +
-                "</div>" +
-                "<div class='price num'><small>تومان</small> " + money(it.price * (it.qty || 1)) + "</div>" +
-                "<button class='btn btn--danger btn--sm' data-remove='" + it.id + "'>حذف</button>" +
-                "</div>"
-            )).join("");
-
-            $$("[data-remove]", list).forEach(b => b.addEventListener("click", () => {
-                cartSet(cartGet().filter(i => i.id !== b.dataset.remove));
-                renderCartPage();
-                toast("محصول از سبد حذف شد");
-            }));
-        }
-
-        const total = items.reduce((s, i) => s + i.price * (i.qty || 1), 0);
-        $$("[data-cart-total]").forEach(el => { el.textContent = money(total); });
-        const pay = $("[data-cart-pay]");
-        if (pay) pay.disabled = false;
-        // mirror total to checkout summary if present
-        $$("[data-checkout-total]").forEach(el => { el.textContent = money(total); });
-    }
-
     /* ---------- Blog comments (client-side demo) ---------- */
     function initComments() {
         const form = $("[data-comment-form]");
@@ -344,15 +259,15 @@
 
     /* ---------- Boot ---------- */
     document.addEventListener("DOMContentLoaded", () => {
-        initTheme(); initNav(); initCharts(); initCart();
+        initTheme(); initNav(); initCharts();
         initTabs(); initFilters(); initCounters();
         initCollapsibles();
         initComments();
     });
 })();
 
-    (function () {
-        "use strict";
+(function () {
+    "use strict";
 
     var menu = document.querySelector(".cat-nav");
     if (!menu) return;
@@ -363,13 +278,13 @@
 
     function activate(tab) {
         var id = tab.getAttribute("data-cat");
-    tabs.forEach(function (t) {
+        tabs.forEach(function (t) {
             var on = t === tab;
-    t.classList.toggle("is-active", on);
-    t.setAttribute("aria-expanded", on ? "true" : "false");
+            t.classList.toggle("is-active", on);
+            t.setAttribute("aria-expanded", on ? "true" : "false");
         });
-    panes.forEach(function (p) {
-        p.classList.toggle("is-active", p.getAttribute("data-pane") === id);
+        panes.forEach(function (p) {
+            p.classList.toggle("is-active", p.getAttribute("data-pane") === id);
         });
     }
 
@@ -395,8 +310,8 @@
     /* Esc → close + focus back to the trigger */
     document.addEventListener("keydown", function (e) {
         if (e.key === "Escape" && menu.open) {
-        menu.open = false;
-    summary.focus();
+            menu.open = false;
+            summary.focus();
         }
     });
 })();

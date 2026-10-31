@@ -34,14 +34,13 @@ namespace Application.Services.Implementaions
         {
             if (model is null) return Result.Failure(Messages.OperationFailedError);
 
-            if (await _dbSet.AnyAsync(n => n.StockOptionId == model.OptionId && n.Cart.Status == CartStatusEnum.PendingPayment))
+            if (await _dbSet.AnyAsync(n => n.Cart.Status == CartStatusEnum.PendingPayment))
                 return Result.Failure(Messages.ProductAlreadyInYourCartError);
 
             CartItem item = new CartItem()
             {
                 CartId = model.CartId,
                 ProductId = model.ProductId,
-                StockOptionId = model.OptionId,
             };
 
             await _dbSet.AddAsync(item);
@@ -58,7 +57,7 @@ namespace Application.Services.Implementaions
             var userIP = _httpContextAccessor.HttpContext.GetUserIP();
 
             var item = await _dbSet.Where(n => (n.Cart.UserId == userId || n.Cart.UserIP == userIP) &&
-            n.Cart.Status == CartStatusEnum.PendingPayment && n.Id == id).FirstOrDefaultAsync();
+            n.Cart.Status == CartStatusEnum.PendingPayment).FirstOrDefaultAsync();
             if (item is null) return Result.Failure(Messages.OperationFailedError);
 
             _dbSet.Remove(item);
@@ -107,10 +106,9 @@ namespace Application.Services.Implementaions
 
             var conditions = Filter.GenerateConditions<CartItem>();
             conditions.Add(n => n.Cart.UserId == userId);
-            conditions.Add(n => n.Cart.Status != CartStatusEnum.PendingPayment && n.Cart.Status != CartStatusEnum.Canceled);
+            conditions.Add(n => n.Cart.Status != CartStatusEnum.PendingPayment && n.Cart.Status != CartStatusEnum.PendingPayment);
 
             IQueryable<CartItem> query = _dbSet;
-            query = query.OrderByDescending(n => n.Id);
 
             foreach (var item in conditions ?? new FilterConditions<CartItem>())
             {
@@ -119,7 +117,6 @@ namespace Application.Services.Implementaions
 
             await filter.Paging(query.Select(n => new ClientSideBoughtFileViewModel()
             {
-                Id = n.Id,
                 PaidDate = n.Cart.PaidDate ?? DateTime.UtcNow,
                 ProductTitle = n.Product.Title,
                 Type = n.Product.Type,
@@ -137,10 +134,10 @@ namespace Application.Services.Implementaions
             var userId = _httpContextAccessor.HttpContext.User.GetUserId();
             if (userId < 1) return Result.Failure<ClientSideDownloadFileViewModel>(Messages.OperationFailedError);
 
-            var file = await _dbSet.Where(n => n.Id == id &&
+            var file = await _dbSet.Where(n =>
             n.Cart.UserId == userId &&
             n.Cart.Status != CartStatusEnum.PendingPayment &&
-            n.Cart.Status != CartStatusEnum.Canceled &&
+            n.Cart.Status != CartStatusEnum.PendingPayment &&
             n.Product.Type == ProductTypeEnum.IndicatorFile)
                 .Select(n => new ClientSideDownloadFileViewModel()
                 {
@@ -157,7 +154,7 @@ namespace Application.Services.Implementaions
         public async Task<int> SoldProductsCount()
         {
             return await _dbSet.Where(n => n.Cart.Status != CartStatusEnum.PendingPayment &&
-            n.Cart.Status != CartStatusEnum.Canceled)
+            n.Cart.Status != CartStatusEnum.PendingPayment)
                 .CountAsync();
         }
     }

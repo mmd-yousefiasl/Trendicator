@@ -1,96 +1,111 @@
-﻿@using Application.Tools
-@using Application.Dtos.Cart.ClientSide
+﻿@using Application.Dtos.Cart.ClientSide
 @model List<ClientSideCartViewModel>
 
 @{
     ViewData["Title"] = "سبد خرید";
 }
 
-<div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-70 bg-image"
-     data-bg="@SiteTools.BreadcrumbBanner">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
-                    <div class="section-title-area ltn__section-title-2">
-                        <h1 class="section-title white-color">سبد خرید</h1>
+<main class="container">
+    <ul class="crumbs">
+        <li><a href="index.html">خانه</a></li>
+        <li>سبد خرید</li>
+    </ul>
+
+    <h1>سبد خرید</h1>
+
+    <div class="checkout-layout mt-3">
+        <!-- ============ Lines ============ -->
+        <div class="card card-pad" data-cart-render>
+            <!-- Filled by JS from localStorage -->
+            <div data-cart-list>
+
+                <div class="cart-line" data-line="price-action-pro">
+                    <div class="cart-line__thumb">
+                        <svg viewBox="0 0 60 36">
+                            <rect x="8" y="12" width="6" height="14" fill="var(--up)" />
+                            <rect x="20" y="8" width="6" height="18" fill="var(--down)" />
+                            <rect x="32" y="14" width="6" height="10" fill="var(--up)" />
+                            <rect x="44" y="6" width="6" height="16" fill="var(--up)" />
+                        </svg>
                     </div>
-                    <div class="ltn__breadcrumb-list">
-                        <ul>
-                            <li><a asp-area="" asp-controller="Home" asp-action="Index">صفحه اصلی</a></li>
-                            <li>سبد خرید</li>
-                        </ul>
+                    <div class="cart-line__body">
+                        <div class="cart-line__title">اندیکاتور پرایس اکشن پرو</div>
+                        <div class="cart-line__meta">لایسنس دائمی · دانلود فوری</div>
                     </div>
+                    <div class="price num"><small>تومان</small> ۲,۴۵۰,۰۰۰</div>
+                    <button class="btn btn--danger btn--sm" data-remove="price-action-pro">حذف</button>
                 </div>
+
+                <div class="cart-line" data-line="liquidity-map">
+                    <div class="cart-line__thumb">
+                        <svg viewBox="0 0 60 36">
+                            <rect x="8" y="12" width="6" height="14" fill="var(--up)" />
+                            <rect x="20" y="8" width="6" height="18" fill="var(--down)" />
+                            <rect x="32" y="14" width="6" height="10" fill="var(--up)" />
+                            <rect x="44" y="6" width="6" height="16" fill="var(--up)" />
+                        </svg>
+                    </div>
+                    <div class="cart-line__body">
+                        <div class="cart-line__title">اندیکاتور لیکوییدیتی مپ</div>
+                        <div class="cart-line__meta">لایسنس دائمی · دانلود فوری</div>
+                    </div>
+                    <div class="price num"><small>تومان</small> ۱,۸۹۰,۰۰۰</div>
+                    <button class="btn btn--danger btn--sm" data-remove="liquidity-map">حذف</button>
+                </div>
+
+                <div class="cart-line" data-line="harmonic-plus">
+                    <div class="cart-line__thumb">
+                        <svg viewBox="0 0 60 36">
+                            <rect x="8" y="12" width="6" height="14" fill="var(--up)" />
+                            <rect x="20" y="8" width="6" height="18" fill="var(--down)" />
+                            <rect x="32" y="14" width="6" height="10" fill="var(--up)" />
+                            <rect x="44" y="6" width="6" height="16" fill="var(--up)" />
+                        </svg>
+                    </div>
+                    <div class="cart-line__body">
+                        <div class="cart-line__title">الگوی هارمونیک پلاس</div>
+                        <div class="cart-line__meta">لایسنس دائمی · دانلود فوری</div>
+                    </div>
+                    <div class="price num"><small>تومان</small> ۹۵۰,۰۰۰</div>
+                    <button class="btn btn--danger btn--sm" data-remove="harmonic-plus">حذف</button>
+                </div>
+
+            </div>
+
+            <!-- Empty state -->
+            <div data-cart-empty hidden class="text-center" style="padding:48px 0">
+                <div>
+                    <svg class="ic" aria-hidden="true" style="width:3rem;height:3rem">
+                        <use href="#i-cart" />
+                    </svg>
+                </div>
+                <h2 style="font-size:1.15rem">سبد خرید شما خالی است</h2>
+                <p class="text-muted">از فروشگاه، اندیکاتور مناسب معاملات‌تان را انتخاب کنید.</p>
+                <a href="products.html" class="btn btn--primary">رفتن به فروشگاه</a>
             </div>
         </div>
-    </div>
-</div>
 
-<div class="liton__shoping-cart-area mb-120">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="shoping-cart-inner">
-                    @if (Model?.Any() ?? false)
-                    {
-                        <div class="shoping-cart-table table-responsive">
-                            <table class="table">
-                                <tbody>
-                                    @foreach (var item in Model ?? new List<ClientSideCartViewModel>())
-                                    {
-                                        <tr>
-                                            <td class="cart-product-remove">
-                                                <a asp-area="" asp-controller="Cart" asp-action="RemoveCartItem" asp-route-id="@item.Id">
-                                                    x
-                                                </a>
-                                            </td>
-                                            <td class="cart-product-image">
-                                                <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@item.Id" asp-route-slug="@item.Slug">
-                                                    <img src="@SiteTools.ProductBanner@item.FileName" alt="@item.Title">
-                                                </a>
-                                            </td>
-                                            <td class="cart-product-info">
-                                                <h4>
-                                                    <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@item.Id" asp-route-slug="@item.Slug">
-                                                        @item.Title
-                                                        (@item.OptionTitle)
-                                                    </a>
-                                                </h4>
-                                            </td>
-                                            <td class="cart-product-price">
-                                                @if (item.IsAvailable)
-                                                {
-                                                    @if (item.OrderPrice > 0)
-                                                    {
-                                                        <span>@item.OrderPrice?.ToToman()</span>
-                                                        <del>@item.Price.ToTomanFormat()</del>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span>@item.Price.ToToman()</span>
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    <span class="text-danger">ناموجود</span>
-                                                }
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                    else
-                    {
-                        <partial name="_NotFoundPartial" />
-                    }
-                    @await Component.InvokeAsync("CartOrderSummary")
-                </div>
+        <!-- ============ Summary ============ -->
+        <aside class="order-summary card card-pad">
+            <h3>خلاصه سفارش</h3>
+            <div class="flex flex--between" style="font-size:.9rem;color:var(--text-2)">
+                <span>جمع محصولات</span>
+                <span class="num"><span data-cart-total>۵,۲۹۰,۰۰۰</span> تومان</span>
             </div>
-        </div>
+            <div class="flex flex--between mt-1" style="font-size:.9rem;color:var(--text-2)">
+                <span>مالیات</span>
+                <span>۰ تومان</span>
+            </div>
+            <hr style="border:none;border-top:1px dashed var(--line);margin:14px 0">
+            <div class="flex flex--between" style="font-weight:800">
+                <span>مبلغ قابل پرداخت</span>
+                <span class="price"><small>تومان</small> <span data-cart-total>۵,۲۹۰,۰۰۰</span></span>
+            </div>
+            <a href="checkout.html" class="btn btn--primary btn--block mt-3" data-cart-pay>ادامه و پرداخت</a>
+            <p class="hint mt-2 mb-0 text-center">
+                با ادامه خرید، <a href="terms.html" class="text-brand">قوانین</a> را
+                می‌پذیرید.
+            </p>
+        </aside>
     </div>
-</div>
-
-@await Component.InvokeAsync("OurFeatures")
+</main>

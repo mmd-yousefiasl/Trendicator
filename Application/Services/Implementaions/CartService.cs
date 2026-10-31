@@ -96,7 +96,6 @@ namespace Application.Services.Implementaions
             {
                 Cart cart = new Cart()
                 {
-                    IsPaid = false,
                     UserIP = userIP,
                     UserId = userId,
                     Status = CartStatusEnum.PendingPayment,
@@ -107,7 +106,6 @@ namespace Application.Services.Implementaions
                 {
                     CartId = cart.Id,
                     ProductId = productIdResult.Value,
-                    StockOptionId = optionId,
                 });
 
                 await _dbSet.AddAsync(cart);
@@ -128,7 +126,6 @@ namespace Application.Services.Implementaions
                 .SelectMany(cart => cart.Items)
                 .Select(item => new
                 {
-                    item.Id,
                     item.Product.IsAvailable,
                     item.Product.BannerFileName,
                     item.Product.Title,
@@ -136,7 +133,6 @@ namespace Application.Services.Implementaions
                 })
                 .Select(x => new ClientSideCartViewModel
                 {
-                    Id = x.Id,
                     FileName = x.BannerFileName,
                     IsAvailable = x.IsAvailable,
                     Title = x.Title,
@@ -249,10 +245,9 @@ namespace Application.Services.Implementaions
             if (userId < 1) return Result.Failure<string>(Messages.OperationFailedError);
 
             var accountName = await _dbSet.Where(n => n.Status == CartStatusEnum.PendingPayment && n.UserId == userId)
-                .Select(n => n.TradingViewAccountName).FirstOrDefaultAsync();
-            if (string.IsNullOrWhiteSpace(accountName)) return Result.Failure<string>(Messages.OperationFailedError);
+                .FirstOrDefaultAsync();
 
-            return accountName;
+            return "";
         }
 
         public async Task<Result> ClientSideUpdateCurrentUserTradingViewAccountName(
@@ -270,8 +265,6 @@ namespace Application.Services.Implementaions
                 .FirstOrDefaultAsync();
             if (cart is null) return Result.Failure(Messages.OperationFailedError);
 
-            cart.TradingViewAccountName = model.TradingViewAccountName;
-
             _dbSet.Update(cart);
             await _context.SaveChangesAsync();
 
@@ -287,8 +280,7 @@ namespace Application.Services.Implementaions
             if (userId < 1) return Result.Failure(Messages.OperationFailedError);
 
             bool IsAnyAccountName = await _dbSet.Where(n => n.UserId == userId &&
-                                                            n.Status == CartStatusEnum.PendingPayment &&
-                                                            n.TradingViewAccountName != null).AnyAsync();
+                                                            n.Status == CartStatusEnum.PendingPayment).AnyAsync();
 
             if (IsAnyAccountName) return Result.Success();
 
@@ -393,14 +385,11 @@ namespace Application.Services.Implementaions
             if (transactionResult.IsFailure) return Result.Failure<int>(transactionResult.Message);
 
             var itemResult = await _itemService.IsAnyTradingViewProductInCart();
-            if (itemResult.IsSuccess) cart.Status = CartStatusEnum.InProgress;
-            else cart.Status = CartStatusEnum.Done;
+            if (itemResult.IsSuccess) cart.Status = CartStatusEnum.PendingPayment;
+            else cart.Status = CartStatusEnum.PendingPayment;
 
-            cart.IsPaid = true;
             cart.TotalPaid = order.Total;
             cart.TotalDiscount = (order.TotalDiscount ?? 0) + (order.DiscountCodeAmount ?? 0);
-            cart.SubTotal = order.SubTotal;
-            cart.Tax = order.Tax ?? 0;
             cart.PaidDate = DateTime.UtcNow;
 
             _dbSet.Update(cart);
@@ -411,12 +400,12 @@ namespace Application.Services.Implementaions
                 cart.UserIP,
                 cart.UserId,
                 cart.Status,
-                cart.IsPaid,
+                true,
                 cart.TotalPaid,
                 cart.TotalDiscount,
                 cart.DiscountCode,
-                cart.SubTotal,
-                cart.Tax,
+                1,
+                1,
                 cart.PaidDate);
 
             await _mediator.PublishEvent(CartUpdatedEvent);
@@ -434,7 +423,6 @@ namespace Application.Services.Implementaions
             if (!string.IsNullOrWhiteSpace(filter.Search))
             {
                 conditions.Add(n => n.UserIP == filter.Search ||
-                                    n.TradingViewAccountName.Contains(filter.Search) ||
                                     n.DiscountCode.Contains(filter.Search));
             }
 
@@ -512,10 +500,7 @@ namespace Application.Services.Implementaions
             var cart = new AdminSideCartDetailsViewModel
             {
                 Id = cartEntity.Id,
-                TradingViewAccountName = cartEntity.TradingViewAccountName,
                 PaidDate = cartEntity.PaidDate ?? DateTime.UtcNow,
-                SubTotal = cartEntity.SubTotal ?? 0,
-                Tax = cartEntity.Tax ?? 0,
                 TotalDiscount = cartEntity.TotalDiscount ?? 0,
                 TotalPaid = cartEntity.TotalPaid ?? 0,
                 Products = cartEntity.Items?.Select(i =>
@@ -587,10 +572,7 @@ namespace Application.Services.Implementaions
             var cart = new ClientSideCartDetailsViewModel
             {
                 Id = cartEntity.Id,
-                TradingViewAccountName = cartEntity.TradingViewAccountName,
                 PaidDate = cartEntity.PaidDate ?? DateTime.UtcNow,
-                SubTotal = cartEntity.SubTotal ?? 0,
-                Tax = cartEntity.Tax ?? 0,
                 TotalDiscount = cartEntity.TotalDiscount ?? 0,
                 TotalPaid = cartEntity.TotalPaid ?? 0,
                 Products = cartEntity.Items?.Select(i =>
@@ -608,13 +590,13 @@ namespace Application.Services.Implementaions
         public async Task<int> OrdersCount()
         {
             return await _dbSet.Where(n => n.Status != CartStatusEnum.PendingPayment &&
-                                           n.Status != CartStatusEnum.Canceled).CountAsync();
+                                           n.Status != CartStatusEnum.PendingPayment).CountAsync();
         }
 
         public async Task<decimal> OrdersValue()
         {
             return await _dbSet.Where(n => n.Status != CartStatusEnum.PendingPayment &&
-                                           n.Status != CartStatusEnum.Canceled)
+                                           n.Status != CartStatusEnum.PendingPayment)
                 .SumAsync(n => (n.TotalPaid ?? 0));
         }
 
@@ -624,7 +606,7 @@ namespace Application.Services.Implementaions
             if (userId < 1) return 0;
 
             return await _dbSet.Where(n => n.UserId == userId && n.Status != CartStatusEnum.PendingPayment &&
-                                           n.Status != CartStatusEnum.Canceled).CountAsync();
+                                           n.Status != CartStatusEnum.PendingPayment).CountAsync();
         }
 
         public async Task<decimal> MyTotalPurchesAmount()
@@ -633,7 +615,7 @@ namespace Application.Services.Implementaions
             if (userId < 1) return 0;
 
             return await _dbSet.Where(n => n.UserId == userId && n.Status != CartStatusEnum.PendingPayment &&
-                                           n.Status != CartStatusEnum.Canceled).SumAsync(n => (n.TotalPaid ?? 0));
+                                           n.Status != CartStatusEnum.PendingPayment).SumAsync(n => (n.TotalPaid ?? 0));
         }
     }
 }

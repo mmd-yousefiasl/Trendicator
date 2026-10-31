@@ -13,9 +13,14 @@ namespace Data.Context.Configurations.Shopping
             builder.HasKey(n => n.Id);
             builder.HasQueryFilter(n => !n.IsDeleted);
 
-            builder.Property(n => n.UserIP).HasMaxLength(50);
             builder.Property(n => n.DiscountCode).HasMaxLength(200);
-            builder.Property(n => n.TradingViewAccountName).HasMaxLength(500);
+            builder.Property(n => n.UserIP).HasMaxLength(50);
+
+            builder.Property(n => n.TotalPaid)
+                .HasColumnType("numeric(18,0)");
+
+            builder.Property(n => n.TotalDiscount)
+                .HasColumnType("numeric(18,0)");
 
             builder.Property(n => n.Id)
                    .UseIdentityColumn()
