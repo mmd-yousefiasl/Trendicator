@@ -1,0 +1,154 @@
+(() => {
+    const summary = document.querySelector('.order-summary');
+    if (!summary) return;
+
+    // ── Config comes from the DOM, set by Razor ──────────────────
+    const applyUrl = summary.dataset.applyUrl;
+    const removeUrl = summary.dataset.removeUrl;
+    const csrfToken = summary.dataset.csrfToken || null;
+
+    const postHeaders = () => {
+        const h = { 'Content-Type': 'application/json' };
+        if (csrfToken) h['RequestVerificationToken'] = csrfToken;
+        return h;
+    };
+
+    /* ─────────────────────────── Events ─────────────────────────── */
+
+    summary.addEventListener('click', (e) => {
+        const open = e.target.closest('[data-open-coupon]');
+        const apply = e.target.closest('[data-coupon-apply]');
+        const remove = e.target.closest('.coupon-applied__remove');
+
+        if (open) { e.preventDefault(); toggleForm(); return; }
+        if (apply) { e.preventDefault(); applyCoupon(apply); return; }
+        if (remove) { e.preventDefault(); removeCoupon(); return; }
+    });
+
+    summary.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && e.target.matches('[data-coupon-input]')) {
+            e.preventDefault();
+            summary.querySelector('[data-coupon-apply]')?.click();
+        }
+    });
+
+    summary.addEventListener('input', (e) => {
+        if (e.target.matches('[data-coupon-input]')) clearError();
+    });
+
+    /* ─────────────────────────── Helpers ─────────────────────────── */
+
+    function toggleForm() {
+        const form = summary.querySelector('[data-coupon-form]');
+        if (!form) return;
+        form.classList.toggle('is-open');
+        if (!form.classList.contains('is-open')) clearError();
+    }
+
+    function clearError() {
+        const box = summary.querySelector('[data-coupon-error]');
+        const inp = summary.querySelector('[data-coupon-input]');
+        if (box) box.hidden = true;
+        inp?.classList.remove('is-error');
+    }
+
+    function showError(msg) {
+        const form = summary.querySelector('[data-coupon-form]');
+        const box = summary.querySelector('[data-coupon-error]');
+        const txt = summary.querySelector('[data-coupon-error-text]');
+        const inp = summary.querySelector('[data-coupon-input]');
+        if (!box) return;
+
+        form?.classList.add('is-open');
+        txt.textContent = msg;
+        box.hidden = false;
+
+        if (inp) {
+            inp.classList.remove('is-error');
+            void inp.offsetWidth;
+            inp.classList.add('is-error');
+            inp.focus();
+        }
+    }
+
+    function setLoading(on) {
+        summary.classList.toggle('is-loading', on);
+    }
+
+    function flashSuccess() {
+        summary.classList.remove('is-success-flash');
+        void summary.offsetWidth;
+        summary.classList.add('is-success-flash');
+        setTimeout(() => summary.classList.remove('is-success-flash'), 1050);
+    }
+
+    async function swapSummary(html) {
+        summary.classList.add('is-swapping');
+        await new Promise(r => setTimeout(r, 220));
+        summary.innerHTML = html;
+        summary.classList.remove('is-swapping', 'is-loading');
+    }
+
+    /* ─────────────────────────── Actions ─────────────────────────── */
+
+    async function applyCoupon(btn) {
+        const input = summary.querySelector('[data-coupon-input]');
+        const code = input?.value.trim();
+
+        if (!code) { showError('لطفاً کد تخفیف را وارد کنید.'); return; }
+
+        clearError();
+        btn.disabled = true;
+        setLoading(true);
+
+        try {
+            const res = await fetch(applyUrl, {
+                method: 'POST',
+                headers: postHeaders(),
+                body: JSON.stringify({ code })
+            });
+            const data = await res.json().catch(() => ({}));
+
+            if (!res.ok || !data.success) {
+                setLoading(false);
+                btn.disabled = false;
+                showError(data.message || 'کد تخفیف معتبر نیست یا منقضی شده است.');
+                return;
+            }
+            if (!data.html) {
+                setLoading(false);
+                btn.disabled = false;
+                showError('خطا در بارگذاری اطلاعات سبد.');
+                return;
+            }
+
+            await swapSummary(data.html);
+            flashSuccess();
+
+        } catch {
+            setLoading(false);
+            btn.disabled = false;
+            showError('خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید.');
+        }
+    }
+
+    async function removeCoupon() {
+        setLoading(true);
+        try {
+            const res = await fetch(removeUrl, {
+                method: 'POST',
+                headers: postHeaders()
+            });
+            const data = await res.json().catch(() => ({}));
+
+            if (res.ok && data.success && data.html) {
+                await swapSummary(data.html);
+                flashSuccess();
+            } else {
+                setLoading(false);
+            }
+        } catch {
+            setLoading(false);
+        }
+    }
+})();

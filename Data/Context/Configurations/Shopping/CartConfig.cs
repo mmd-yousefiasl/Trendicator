@@ -11,7 +11,6 @@ namespace Data.Context.Configurations.Shopping
             builder.ToTable("Carts");
 
             builder.HasKey(n => n.Id);
-            builder.HasQueryFilter(n => !n.IsDeleted);
 
             builder.Property(n => n.DiscountCode).HasMaxLength(200);
             builder.Property(n => n.UserIP).HasMaxLength(50);

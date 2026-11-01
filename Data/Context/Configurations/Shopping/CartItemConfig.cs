@@ -14,11 +14,14 @@ namespace Data.Context.Configurations.Shopping
 
             builder.HasOne(n => n.Cart)
                 .WithMany(n => n.Items)
-                .HasForeignKey(n => n.CartId);
+                .HasForeignKey(n => n.CartId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(true);
 
             builder.HasOne(n => n.Product)
                 .WithMany(n => n.CartItems)
-                .HasForeignKey(n => n.ProductId);
+                .HasForeignKey(n => n.ProductId)
+                .IsRequired(false);
         }
     }
 }
