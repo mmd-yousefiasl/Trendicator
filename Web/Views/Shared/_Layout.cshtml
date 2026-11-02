@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@{
+    var cartCsrf = Xsrf.GetAndStoreTokens(Context).RequestToken;
+}
+
+<!DOCTYPE html>
 <html lang="fa" dir="rtl" data-theme="dark">
 <head>
 
@@ -19,7 +24,9 @@
         <link rel="canonical" href="@($"{SiteTools.SiteUrl.TrimEnd('/')}{Context.Request.Path}")" />
     }
 </head>
-<body>
+<body data-cart-add-url="@Url.Action("Add", "Cart")"
+      data-cart-remove-url="@Url.Action("Remove", "Cart")"
+      data-csrf-token="@cartCsrf">
     <partial name="_Header" />
 
     @RenderBody()

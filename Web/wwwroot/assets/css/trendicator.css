@@ -3152,3 +3152,131 @@ ul, ol {
         font-size: .82rem;
         color: var(--text-3);
     }
+/* ═══════════ Add to cart · toggle button ═══════════ */
+
+[data-cart-toggle] {
+    position: relative;
+    min-width: 92px; /* keep width stable when label changes */
+    white-space: nowrap;
+}
+
+    [data-cart-toggle] .btn__label {
+        display: inline-block;
+        transition: opacity 180ms ease;
+    }
+
+    /* Loading: text fades out, spinner fades in — layout unchanged */
+    [data-cart-toggle].is-loading {
+        pointer-events: none;
+    }
+
+        [data-cart-toggle].is-loading .btn__label {
+            opacity: 0;
+        }
+
+        [data-cart-toggle].is-loading::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 16px;
+            height: 16px;
+            border: 2px solid currentColor;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: btnSpin 700ms linear infinite;
+        }
+
+    /* “In cart” state overrides btn--soft: outlined, muted, hover turns red */
+    [data-cart-toggle].is-in-cart {
+        background: transparent;
+        color: var(--text-2);
+        border-color: var(--line);
+    }
+
+        [data-cart-toggle].is-in-cart:hover {
+            color: var(--down);
+            border-color: var(--down);
+            background: var(--down-soft);
+        }
+
+    /* Success pulse — brand ring around the button */
+    [data-cart-toggle].is-cart-flash {
+        animation: btnFlash 700ms cubic-bezier(.4, 0, .2, 1);
+    }
+
+    /* Error shake */
+    [data-cart-toggle].is-error {
+        animation: btnShake 380ms cubic-bezier(.36, .07, .19, .97);
+    }
+
+@keyframes btnSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes btnFlash {
+    0%, 100% {
+        box-shadow: none;
+    }
+
+    30% {
+        box-shadow: 0 0 0 4px var(--brand-soft);
+    }
+}
+
+@keyframes btnShake {
+    10%, 90% {
+        transform: translateX(-1px);
+    }
+
+    20%, 80% {
+        transform: translateX(2px);
+    }
+
+    30%, 50%, 70% {
+        transform: translateX(-3px);
+    }
+
+    40%, 60% {
+        transform: translateX(3px);
+    }
+}
+
+/* ═══════════ Add to cart · card flash ═══════════ */
+
+[data-cart-container].is-cart-flash {
+    animation: cardFlash 900ms cubic-bezier(.4, 0, .2, 1);
+}
+
+@keyframes cardFlash {
+    0%, 100% {
+        border-color: var(--line);
+        box-shadow: var(--shadow-1);
+    }
+
+    25% {
+        border-color: var(--brand);
+        box-shadow: 0 0 0 4px var(--brand-soft), var(--shadow-2);
+    }
+}
+
+
+/* ═══════════ Product card foot · discounted layout ═══════════ */
+
+/* Discounted cards: price on top, button full-width below.
+   Non-discounted cards keep the original single-row layout. */
+.product-card__foot {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+}
+
+    .product-card__foot > .price {
+        justify-content: flex-start;
+    }
+
+    .product-card__foot > [data-cart-toggle] {
+        width: 100%;
+    }

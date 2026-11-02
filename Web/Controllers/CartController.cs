@@ -11,6 +11,7 @@ namespace Web.Controllers
         #region Fields
         private readonly ICartService _cartService;
         private readonly ICartItemService _itemService;
+        private static readonly HashSet<int> InCart = new();
         #endregion
 
         #region Ctor
@@ -30,6 +31,47 @@ namespace Web.Controllers
             if (result.IsFailure) return View(new List<ClientSideCartViewModel>());
 
             return View(result.Value);
+        }
+
+        public class CartToggleRequest
+        {
+            public int ProductId { get; set; }
+        }
+
+        [HttpPost("/cart/add")]
+        public async Task<IActionResult> Add([FromBody] CartToggleRequest req)
+        {
+            /*            if (req?.ProductId <= 0)
+                            return Json(new { success = false, message = "شناسه محصول نامعتبر است." }); */
+            await Task.Delay(500);
+
+            InCart.Add(req.ProductId);
+
+            return Json(new
+            {
+                success = true,
+                inCart = true,
+                message = "محصول به سبد خرید اضافه شد.",
+                cartCount = InCart.Count
+            });
+        }
+
+        [HttpPost("/cart/remove")]
+        public async Task<IActionResult> Remove([FromBody] CartToggleRequest req)
+        {
+            await Task.Delay(500);
+            if (req?.ProductId <= 0)
+                return Json(new { success = false, message = "شناسه محصول نامعتبر است." });
+
+            InCart.Remove(req.ProductId);
+
+            return Json(new
+            {
+                success = true,
+                inCart = false,
+                message = "محصول از سبد خرید حذف شد.",
+                cartCount = InCart.Count
+            });
         }
 
         [HttpGet("/add-to-cart/{optionId}")]

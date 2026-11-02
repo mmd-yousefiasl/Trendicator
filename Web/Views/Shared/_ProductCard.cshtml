@@ -4,7 +4,9 @@
 
 @if (Model is not null)
 {
-    <article class="product-card @(Model.IsAvailable ? null : "product-card--soldout")">
+    <article class="product-card @(Model.IsAvailable ? null : "product-card--soldout")"
+             data-cart-container
+             data-product-id="@Model.Id">
         <div class="product-card__media">
             <div class="product-card__tags"><span class="badge badge--brand">پرفروش</span></div>
             <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@Model.Id" asp-route-slug="@Model.Slug">
@@ -32,11 +34,7 @@
                 </span>
                 @if (Model.ReviewRate > 0)
                 {
-                    <span>
-                        ·
-                        @Model.ReviewRate
-                        ★
-                    </span>
+                    <span>· @Model.ReviewRate ★</span>
                 }
             </div>
             <p class="text-muted" style="font-size:.85rem;margin:0">
@@ -55,7 +53,13 @@
                         <small>تومان</small>
                         @Model.OrderPrice.ToTomanFormat()
                     </div>
-                    <button class="btn btn--soft btn--sm">افزودن</button>
+
+                    <button type="button"
+                            class="btn btn--soft btn--sm @(Model.IsInCart ? "is-in-cart" : null)"
+                            data-cart-toggle
+                            data-state="@(Model.IsInCart ? "in" : "out")">
+                        <span class="btn__label">@(Model.IsInCart ? "حذف از سبد" : "افزودن")</span>
+                    </button>
                 }
                 else
                 {

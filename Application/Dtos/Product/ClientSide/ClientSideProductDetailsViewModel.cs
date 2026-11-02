@@ -21,6 +21,7 @@ namespace Application.Dtos.Product.ClientSide
         public int ViewsCount { get; set; }
         public int ReviewsCount { get; set; }
         public int PurchaseCount { get; set; }
+        public bool IsInCart { get; set; }
 
         public List<ClientSideProductFaqViewModel>? Faqs { get; set; }
         public List<ClientSideProductDetailsDto>? Details { get; set; }

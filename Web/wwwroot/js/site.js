@@ -143,3 +143,134 @@ function FillPageId(id) {
 
     document.getElementById("search-form").submit();
 }
+
+(() => {
+    const body = document.body;
+    const addUrl = body.dataset.cartAddUrl;
+    const removeUrl = body.dataset.cartRemoveUrl;
+    const csrfToken = body.dataset.csrfToken || null;
+
+    if (!addUrl || !removeUrl) {
+        console.warn('[cart-add] Missing data-cart-add-url / data-cart-remove-url on <body>.');
+        return;
+    }
+
+    /* ─────────────────────────── Delegated click ─────────────────────────── */
+
+    document.addEventListener('click', async (e) => {
+        const btn = e.target.closest('[data-cart-toggle]');
+        if (!btn || btn.disabled) return;
+        e.preventDefault();
+
+        const container = btn.closest('[data-cart-container]');
+        if (!container) return;
+
+        const productId = container.dataset.productId;
+        if (!productId) return;
+
+        const inCart = btn.dataset.state === 'in';
+        const url = inCart ? removeUrl : addUrl;
+        const label = btn.querySelector('.btn__label');
+
+        // ── lock ──────────────────────────────────────────────
+        btn.disabled = true;
+        btn.classList.add('is-loading');
+
+        try {
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(csrfToken ? { 'RequestVerificationToken': csrfToken } : {})
+                },
+                body: JSON.stringify({ productId: Number(productId) })
+            });
+            const data = await res.json().catch(() => ({}));
+
+            // ── failure ──────────────────────────────────────
+            if (!res.ok || !data.success) {
+                btn.classList.remove('is-loading');
+                btn.classList.add('is-error');
+                setTimeout(() => {
+                    btn.classList.remove('is-error');
+                    btn.disabled = false;
+                }, 500);
+                notify('error', data.message || 'خطا در ارتباط با سرور');
+                return;
+            }
+
+            // ── success: swap label + state ──────────────────
+            const nowInCart = !!data.inCart;
+            btn.dataset.state = nowInCart ? 'in' : 'out';
+            label.textContent = nowInCart ? 'حذف از سبد' : 'افزودن';
+            btn.classList.toggle('is-in-cart', nowInCart);
+
+            // remove spinner → new text fades in
+            btn.classList.remove('is-loading');
+
+            // pulse button + flash card
+            btn.classList.add('is-cart-flash');
+            setTimeout(() => btn.classList.remove('is-cart-flash'), 720);
+            setTimeout(() => { btn.disabled = false; }, 260);
+
+            container.classList.remove('is-cart-flash');
+            void container.offsetWidth;          // restart animation
+            container.classList.add('is-cart-flash');
+            setTimeout(() => container.classList.remove('is-cart-flash'), 950);
+
+            // update the single source of truth — the sync listener does the rest
+            if (typeof data.cartCount === 'number') {
+                const input = document.getElementById('CartItemsCount');
+                if (input && Number(input.value) !== data.cartCount) {
+                    input.value = data.cartCount;
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            }
+
+            // toast with backend message
+            if (data.message) notify('success', data.message);
+
+        } catch {
+            btn.classList.remove('is-loading');
+            btn.classList.add('is-error');
+            setTimeout(() => {
+                btn.classList.remove('is-error');
+                btn.disabled = false;
+            }, 500);
+            notify('error', 'خطا در ارتباط با سرور');
+        }
+    });
+})();
+
+(() => {
+    const input = document.getElementById('CartItemsCount');
+    if (!input) return;
+
+    function sync() {
+        const count = Number(input.value) || 0;
+
+        document.querySelectorAll('[data-cart-count-badge]').forEach(el => {
+            el.textContent = count;
+            el.hidden = count === 0;
+
+            // Restart the bump animation even if it's already playing
+            el.classList.remove('is-bumped');
+            void el.offsetWidth;
+            el.classList.add('is-bumped');
+            setTimeout(() => el.classList.remove('is-bumped'), 420);
+        });
+    }
+
+    input.addEventListener('change', sync);
+})();
+
+// Wrapper so the button still works if Toast isn't loaded on this page
+function notify(type, msg) {
+    if (!msg) return;
+    if (window.Toast && typeof Toast[type] === 'function') {
+        Toast[type](msg, { duration: 5000 });
+    } else {
+        // Fallback: never lose the message silently
+        console.warn(`[cart-add] Toast.${type}:`, msg);
+    }
+}

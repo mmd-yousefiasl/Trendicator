@@ -81,7 +81,7 @@
 
         <!-- Buy panel -->
         <div class="product-hero__panel">
-            <div class="card card-pad">
+   <div class="card card-pad" data-cart-container data-product-id="@Model.Id">
                 <div class="flex flex--wrap" style="gap:6px">
                     @if (Model.IsAvailable && Model.Percent > 0)
                     {
@@ -105,7 +105,15 @@
                     <p class="hint">@Model.Hint</p>
 
                     <div class="flex mt-2" style="gap:10px">
-                        <button class="btn btn--primary" style="flex:1">افزودن به سبد خرید</button>
+                        <button type="button"
+                                class="btn btn--primary @(Model.IsInCart ? "is-in-cart" : null)"
+                                style="flex:1"
+                                data-cart-toggle
+                                data-state="@(Model.IsInCart ? "in" : "out")"
+                                data-label-add="افزودن به سبد خرید"
+                                data-label-remove="حذف از سبد خرید">
+                            <span class="btn__label">@(Model.IsInCart ? "حذف از سبد خرید" : "افزودن به سبد خرید")</span>
+                        </button>
 
                         <button type="button"
                                 class="btn btn--ghost"

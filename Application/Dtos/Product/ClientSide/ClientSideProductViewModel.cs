@@ -12,5 +12,6 @@
         public string? ParentCategory { get; set; }
         public string? ParentCategorySlug { get; set; }
         public bool IsAvailable { get; set; }
+        public bool IsInCart { get; set; }
     }
 }
