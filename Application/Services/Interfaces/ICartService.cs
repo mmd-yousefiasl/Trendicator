@@ -7,6 +7,8 @@ namespace Application.Services.Interfaces
 {
     public interface ICartService
     {
+        Task<int> ClientSideGetCartItemsCount();
+
         Task<Result> AddToCart(int optionId);
 
         Task<Result<List<ClientSideCartViewModel>>> ClientSideGetCart();

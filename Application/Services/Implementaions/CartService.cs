@@ -68,6 +68,29 @@ namespace Application.Services.Implementaions
 
         #endregion
 
+        public async Task<int> ClientSideGetCartItemsCount()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+
+            var query = _context.Carts
+                .AsNoTracking()
+                .Where(c => c.Status == CartStatusEnum.PendingPayment);
+
+            if (userId > 0)
+            {
+                query = query.Where(n => n.UserId == userId);
+            }
+            else
+            {
+                var visitorId = _visitorService.GetOrCreateVisitorId();
+                query = query.Where(n => n.VisitorId == visitorId);
+            }
+
+            return await query
+                .Select(c => c.ItemsCount)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<Result> AddToCart(int optionId)
         {
             if (optionId < 1) return Result.Failure(Messages.OperationFailedError);
@@ -79,9 +102,9 @@ namespace Application.Services.Implementaions
             if (productIdResult.IsFailure) return Result.Failure(Messages.OperationFailedError);
 
             if (await _dbSet.AnyAsync(n =>
-                    (n.UserId == userId || n.UserIP == userIP) && n.Status == CartStatusEnum.PendingPayment))
+                    (n.UserId == userId) && n.Status == CartStatusEnum.PendingPayment))
             {
-                var cartId = await _dbSet.Where(n => (n.UserId == userId || n.UserIP == userIP) &&
+                var cartId = await _dbSet.Where(n => (n.UserId == userId) &&
                                                      n.Status == CartStatusEnum.PendingPayment).Select(n => n.Id)
                     .FirstOrDefaultAsync();
                 if (cartId < 1) return Result.Failure(Messages.OperationFailedError);
@@ -99,7 +122,6 @@ namespace Application.Services.Implementaions
             {
                 Cart cart = new Cart()
                 {
-                    UserIP = userIP,
                     UserId = userId,
                     Status = CartStatusEnum.PendingPayment,
                     Items = new List<CartItem>()
@@ -164,7 +186,7 @@ namespace Application.Services.Implementaions
                 cartItems.Where(n => n.OrderPrice > 0 && n.IsAvailable).Sum(n => n.Price - n.OrderPrice);
             summary.SubTotalAfterDisocunt = summary.SubTotal - (summary.TotalDiscount ?? 0);
 
-            var cartCode = await _dbSet.Where(n => (n.UserId == userId || n.UserIP == userIP) &&
+            var cartCode = await _dbSet.Where(n => (n.UserId == userId) &&
                                                    n.Status == CartStatusEnum.PendingPayment)
                 .Select(n => n.DiscountCode)
                 .FirstOrDefaultAsync();
@@ -229,7 +251,7 @@ namespace Application.Services.Implementaions
 
             var userIP = _httpContextAccessor.HttpContext.GetUserIP();
 
-            var cart = await _dbSet.Where(n => (n.UserId == userId || n.UserIP == userIP) &&
+            var cart = await _dbSet.Where(n => (n.UserId == userId) &&
                                                n.Status == CartStatusEnum.PendingPayment &&
                                                (n.UserId == null || n.UserId == 0)).FirstOrDefaultAsync();
             if (cart is null) return Result.Failure(Messages.OperationFailedError);
@@ -399,7 +421,7 @@ namespace Application.Services.Implementaions
 
             CartUpdatedEvent CartUpdatedEvent = new CartUpdatedEvent(
                 cart.Id,
-                cart.UserIP,
+                "",
                 cart.UserId,
                 cart.Status,
                 true,
@@ -424,8 +446,7 @@ namespace Application.Services.Implementaions
 
             if (!string.IsNullOrWhiteSpace(filter.Search))
             {
-                conditions.Add(n => n.UserIP == filter.Search ||
-                                    n.DiscountCode.Contains(filter.Search));
+                conditions.Add(n => n.DiscountCode.Contains(filter.Search));
             }
 
             if (filter.Status is not null)
@@ -450,7 +471,6 @@ namespace Application.Services.Implementaions
                 TotalDiscount = n.TotalDiscount,
                 TotalPaid = n.TotalPaid,
                 UserId = n.UserId,
-                UserIP = n.UserIP
             }));
 
             return filter;

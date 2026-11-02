@@ -56,7 +56,7 @@ namespace Application.Services.Implementaions
             var userId = _httpContextAccessor.HttpContext.User.GetUserId();
             var userIP = _httpContextAccessor.HttpContext.GetUserIP();
 
-            var item = await _dbSet.Where(n => (n.Cart.UserId == userId || n.Cart.UserIP == userIP) &&
+            var item = await _dbSet.Where(n => (n.Cart.UserId == userId) &&
             n.Cart.Status == CartStatusEnum.PendingPayment).FirstOrDefaultAsync();
             if (item is null) return Result.Failure(Messages.OperationFailedError);
 

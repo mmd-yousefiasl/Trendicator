@@ -1,4 +1,5 @@
-﻿using Domain.Models.Shopping;
+﻿using Domain.Enums.Shopping;
+using Domain.Models.Shopping;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -15,9 +16,6 @@ namespace Data.Context.Configurations.Shopping
             builder.Property(n => n.DiscountCode)
                 .HasMaxLength(200);
 
-            builder.Property(n => n.UserIP)
-                .HasMaxLength(50);
-
             builder.Property(n => n.VisitorId)
                 .HasMaxLength(50);
 
@@ -30,6 +28,16 @@ namespace Data.Context.Configurations.Shopping
             builder.Property(n => n.Id)
                    .UseIdentityColumn()
                    .HasIdentityOptions(startValue: 10000, incrementBy: 1);
+
+            var pending = $"\"Status\" = {(int)CartStatusEnum.PendingPayment}";
+
+            builder.HasIndex(c => new { c.UserId, c.Status })
+                .HasFilter($"\"UserId\" IS NOT NULL AND {pending}")
+                .IncludeProperties(c => c.ItemsCount);
+
+            builder.HasIndex(c => new { c.VisitorId, c.Status })
+                .HasFilter($"\"VisitorId\" IS NOT NULL AND {pending}")
+                .IncludeProperties(c => c.ItemsCount);
         }
     }
 }
