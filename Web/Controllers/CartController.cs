@@ -22,6 +22,16 @@ namespace Web.Controllers
         }
         #endregion
 
+        [HttpGet("/cart")]
+        public async Task<IActionResult> Cart()
+        {
+            ViewData["NoIndex"] = true;
+            var result = await _cartService.ClientSideGetCart();
+            if (result.IsFailure) return View(new List<ClientSideCartViewModel>());
+
+            return View(result.Value);
+        }
+
         [HttpGet("/add-to-cart/{optionId}")]
         public async Task<IActionResult> AddToCart(int optionId)
         {
@@ -52,16 +62,6 @@ namespace Web.Controllers
             if (result.IsFailure) return Json(new { success = false, message = result.Message });
 
             return Json(new { success = true, message = result.Message });
-        }
-
-        [HttpGet("/cart")]
-        public async Task<IActionResult> Cart()
-        {
-            ViewData["NoIndex"] = true;
-            var result = await _cartService.ClientSideGetCart();
-            if (result.IsFailure) return View(new List<ClientSideCartViewModel>());
-
-            return View(result.Value);
         }
 
         [HttpGet("/cart/remove/{id}")]

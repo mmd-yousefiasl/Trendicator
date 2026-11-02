@@ -8,6 +8,36 @@
 @{
     ViewData["Title"] = Model.Title;
     ViewData["CanonicalOverride"] = (SiteTools.SiteUrl + "p/" + Model.Id + "/" + Model.Slug);
+    var shortUrl = SiteTools.SiteUrl + "p/" + Model.Id;
+
+    // FAQ schema is computed once here; only rendered when FAQs exist.
+    string faqSchemaJson = null;
+    if (Model?.Faqs?.Any() ?? false)
+    {
+        var jsonOptions = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        };
+
+        var faqSchema = new Dictionary<string, object>
+        {
+            ["@context"] = "https://schema.org",
+            ["@type"] = "FAQPage",
+            ["mainEntity"] = Model.Faqs.Select(item => new Dictionary<string, object>
+            {
+                ["@type"] = "Question",
+                ["name"] = item.Question ?? string.Empty,
+                ["acceptedAnswer"] = new Dictionary<string, object>
+                {
+                    ["@type"] = "Answer",
+                    ["text"] = item.Answer ?? string.Empty
+                }
+            }).ToList()
+        };
+
+        faqSchemaJson = JsonSerializer.Serialize(faqSchema, jsonOptions);
+    }
 }
 
 <main class="container">
@@ -19,7 +49,7 @@
     </ul>
 
     <!-- ============ Product hero ============ -->
-    <div class="product-hero mt-2">
+    <div class="product-hero mt-2 @(Model.IsAvailable ? null : "product-hero--soldout")">
         <div>
             <div class="product-view card" aria-label="@Model.Title">
                 <img src="@SiteTools.ProductBanner@Model.BannerFileName" decoding="async" alt="@Model.Slug">
@@ -53,7 +83,7 @@
         <div class="product-hero__panel">
             <div class="card card-pad">
                 <div class="flex flex--wrap" style="gap:6px">
-                    @if (Model.Percent > 0)
+                    @if (Model.IsAvailable && Model.Percent > 0)
                     {
                         <span class="badge badge--brand">@Model.Percent%</span>
                     }
@@ -63,19 +93,40 @@
                 <h1 class="mt-2" style="font-size:1.5rem">@Model.Title</h1>
                 <p class="text-muted">@Model.ShortDescription</p>
 
-                <div class="price price--lg mt-2">
-                    @if (Model.DisplayPrice > 0)
-                    {
-                        <del>@Model.DisplayPrice.ToTomanFormat()</del>
-                    }
-                    <small>تومان</small> @Model.OrderPrice.ToTomanFormat()
-                </div>
-                <p class="hint">@Model.Hint</p>
+                @if (Model.IsAvailable)
+                {
+                    <div class="price price--lg mt-2">
+                        @if (Model.DisplayPrice > 0)
+                        {
+                            <del>@Model.DisplayPrice.ToTomanFormat()</del>
+                        }
+                        <small>تومان</small> @Model.OrderPrice.ToTomanFormat()
+                    </div>
+                    <p class="hint">@Model.Hint</p>
 
-                <div class="flex mt-2" style="gap:10px">
-                    <button class="btn btn--primary" style="flex:1" data-add-to-cart data-id="p1" data-name="ترند اسکالپر پرو" data-price="2480000">افزودن به سبد خرید</button>
-                    <a href="cart.html" class="btn btn--ghost">خرید سریع</a>
-                </div>
+                    <div class="flex mt-2" style="gap:10px">
+                        <button class="btn btn--primary" style="flex:1">افزودن به سبد خرید</button>
+
+                        <button type="button"
+                                class="btn btn--ghost"
+                                data-copy-link
+                                data-url="@shortUrl"
+                                aria-label="کپی لینک محصول">
+                            <svg class="ic" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                                <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z" />
+                                <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z" />
+                            </svg>
+                            کپی لینک
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <div class="product-unavailable mt-2">
+                        <b>این محصول فعلاً ناموجود است</b>
+                        <span>به‌زودی دوباره در دسترس قرار می‌گیرد</span>
+                    </div>
+                }
 
                 @if (Model?.Features?.Count() > 0)
                 {
@@ -148,7 +199,6 @@
 
                 @if (Model.ReviewsCount > 10)
                 {
-                    <!-- Load more -->
                     <div class="text-center mt-2" id="load-more-wrapper">
                         <button type="button"
                                 class="btn btn--ghost"
@@ -161,7 +211,6 @@
             }
             else
             {
-                <!-- حالت خالی -->
                 <div class="card card-pad">
                     <div class="empty">
                         <div class="empty__icon">
@@ -178,48 +227,24 @@
             }
 
             <partial name="_AddProductReview" model="@(new ClientSideAddProductCommentDto() { ProductId = Model.Id })" />
-
         </div>
     </section>
 
     @if (Model?.Faqs?.Any() ?? false)
     {
-        var faqItems = Model.Faqs;
-
-        var jsonOptions = new JsonSerializerOptions
-        {
-            WriteIndented = true,
-            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-        };
-
-        var faqSchema = new Dictionary<string, object>
-        {
-            ["@context"] = "https://schema.org",
-            ["@type"] = "FAQPage",
-            ["mainEntity"] = faqItems.Select(item => new Dictionary<string, object>
-            {
-                ["@type"] = "Question",
-                ["name"] = item.Question ?? string.Empty,
-                ["acceptedAnswer"] = new Dictionary<string, object>
-                {
-                    ["@type"] = "Answer",
-                    ["text"] = item.Answer ?? string.Empty
-                }
-            }).ToList()
-        };
-
-        var schemaJson = JsonSerializer.Serialize(faqSchema, jsonOptions);
-
-        @section FooterReferences {
-            <script type="application/ld+json">
-                    @Html.Raw(schemaJson)
-            </script>
-
-            <script src="/js/product-details.js" asp-append-version="true"></script>
-        }
-
-        <partial name="_ProductFaqs" model="faqItems" />
+        <partial name="_ProductFaqs" model="Model.Faqs" />
     }
 
     @await Component.InvokeAsync("RelatedProducts", new { id = Model.Id, categoryId = Model.CategoryId })
 </main>
+
+@section FooterReferences {
+    @if (faqSchemaJson != null)
+    {
+        <script type="application/ld+json">
+            @Html.Raw(faqSchemaJson)
+        </script>
+    }
+
+    <script src="/js/product-details.js" asp-append-version="true"></script>
+}

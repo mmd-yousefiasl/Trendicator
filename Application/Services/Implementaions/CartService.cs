@@ -34,6 +34,7 @@ namespace Application.Services.Implementaions
         private readonly IPaymentService _paymentService;
         private readonly IUserService _userService;
         private readonly IBalanceTransactionService _transactionService;
+        private readonly IVisitorService _visitorService;
 
         #endregion
 
@@ -48,7 +49,8 @@ namespace Application.Services.Implementaions
             ICouponService couponService,
             IPaymentService paymentService,
             IUserService userService,
-            IBalanceTransactionService transactionService)
+            IBalanceTransactionService transactionService,
+            IVisitorService visitorService)
         {
             _context = context;
             _dbSet = _context.Set<Cart>();
@@ -61,6 +63,7 @@ namespace Application.Services.Implementaions
             _paymentService = paymentService;
             _userService = userService;
             _transactionService = transactionService;
+            _visitorService = visitorService;
         }
 
         #endregion
@@ -118,11 +121,10 @@ namespace Application.Services.Implementaions
         public async Task<Result<List<ClientSideCartViewModel>>> ClientSideGetCart()
         {
             var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            var userIP = _httpContextAccessor.HttpContext.GetUserIP();
+            var visitorId = _visitorService.GetOrCreateVisitorId();
 
             var items = await _dbSet
-                .Where(cart => (cart.UserId == userId || cart.UserIP == userIP)
-                               && cart.Status == CartStatusEnum.PendingPayment)
+                .Where(cart => (cart.UserId == userId || cart.VisitorId == visitorId) && cart.Status == CartStatusEnum.PendingPayment)
                 .SelectMany(cart => cart.Items)
                 .Select(item => new
                 {

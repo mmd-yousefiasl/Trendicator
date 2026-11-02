@@ -12,8 +12,14 @@ namespace Data.Context.Configurations.Shopping
 
             builder.HasKey(n => n.Id);
 
-            builder.Property(n => n.DiscountCode).HasMaxLength(200);
-            builder.Property(n => n.UserIP).HasMaxLength(50);
+            builder.Property(n => n.DiscountCode)
+                .HasMaxLength(200);
+
+            builder.Property(n => n.UserIP)
+                .HasMaxLength(50);
+
+            builder.Property(n => n.VisitorId)
+                .HasMaxLength(50);
 
             builder.Property(n => n.TotalPaid)
                 .HasColumnType("numeric(18,0)");

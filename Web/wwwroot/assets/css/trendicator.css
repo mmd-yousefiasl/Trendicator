@@ -3032,3 +3032,123 @@ ul, ol {
         font-size: .88rem;
     }
 }
+
+/* ---------- Sold-out product card ---------- */
+/* Add .product-card--soldout to the <article> when IsAvailable == false.
+   Desaturates the media, drops a rubber-stamp over it, and hides the price. */
+
+.product-card--soldout .product-card__media {
+    filter: grayscale(.85) brightness(.82);
+}
+
+    .product-card--soldout .product-card__media::after {
+        content: "ناموجود";
+        position: absolute;
+        z-index: 2;
+        inset-block-start: 50%;
+        inset-inline-start: 50%;
+        transform: translate(-50%, -50%) rotate(-7deg);
+        padding: 5px 20px;
+        font-size: 1rem;
+        font-weight: 900;
+        letter-spacing: 5px;
+        text-indent: 5px; /* balances the trailing letter-spacing */
+        color: var(--down);
+        background: color-mix(in srgb, var(--bg) 82%, transparent);
+        border: 2px solid var(--down);
+        border-radius: var(--r-sm);
+        box-shadow: var(--shadow-2), inset 0 0 0 3px color-mix(in srgb, var(--bg) 55%, transparent);
+        white-space: nowrap;
+        user-select: none;
+        pointer-events: none;
+    }
+
+/* Keep the lift on hover, but a neutral border — brand-green would scream "buy me" */
+.product-card--soldout:hover {
+    border-color: var(--line);
+}
+
+/* Mute title / meta / description a touch so the stamp wins the eye */
+.product-card--soldout .product-card__title,
+.product-card--soldout .product-card__meta,
+.product-card--soldout .product-card__body > p {
+    opacity: .7;
+}
+
+/* Replace the previous `.product-card--soldout .product-card__foot` rule with: */
+
+.product-card--soldout .product-card__foot {
+    justify-content: center;
+    gap: 0;
+    margin-inline: -18px; /* cancel .product-card__body's padding */
+    margin-bottom: -18px;
+    margin-top: auto;
+    padding: 11px 18px;
+    border-top: 1px dashed var(--line);
+    background: repeating-linear-gradient( -45deg, transparent 0 7px, color-mix(in srgb, var(--down) 6%, transparent) 7px 14px ), var(--panel-2);
+    color: var(--text-3);
+    font-size: .82rem;
+    font-weight: 800;
+    letter-spacing: .2px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* ---------- Sold-out product detail ---------- */
+
+/* Mute the hero image + rubber-stamp it (same visual language as the card) */
+.product-hero--soldout .product-view {
+    position: relative;
+}
+
+    .product-hero--soldout .product-view img {
+        filter: grayscale(.85) brightness(.82);
+    }
+
+    .product-hero--soldout .product-view::after {
+        content: "ناموجود";
+        position: absolute;
+        z-index: 2;
+        inset-block-start: 50%;
+        inset-inline-start: 50%;
+        transform: translate(-50%, -50%) rotate(-7deg);
+        padding: 8px 28px;
+        font-size: clamp(1.1rem, 3vw, 1.5rem);
+        font-weight: 900;
+        letter-spacing: 7px;
+        text-indent: 7px; /* re-balances the trailing letter-spacing */
+        color: var(--down);
+        background: color-mix(in srgb, var(--bg) 82%, transparent);
+        border: 2px solid var(--down);
+        border-radius: var(--r-sm);
+        box-shadow: var(--shadow-3), inset 0 0 0 4px color-mix(in srgb, var(--bg) 55%, transparent);
+        white-space: nowrap;
+        user-select: none;
+        pointer-events: none;
+    }
+
+/* Replaces price + CTA row when the product can't be bought */
+.product-unavailable {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin-top: 16px;
+    padding: 16px 20px;
+    border-radius: var(--r-md);
+    border: 1px dashed color-mix(in srgb, var(--down) 45%, var(--line));
+    background: repeating-linear-gradient( -45deg, transparent 0 8px, color-mix(in srgb, var(--down) 7%, transparent) 8px 16px ), var(--panel-2);
+    text-align: center;
+}
+
+    .product-unavailable b {
+        color: var(--text);
+        font-size: 1rem;
+        font-weight: 800;
+        letter-spacing: .2px;
+    }
+
+    .product-unavailable span {
+        font-size: .82rem;
+        color: var(--text-3);
+    }

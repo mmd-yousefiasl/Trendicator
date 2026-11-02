@@ -32,3 +32,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+(function () {
+    if (window.__copyLinkBound) return;
+    window.__copyLinkBound = true;
+
+    function onCopied() {
+        if (window.Toast && typeof Toast.info === 'function') {
+            Toast.info('لینک محصول کپی شد', { duration: 5000 });
+        }
+    }
+
+    function legacyCopy(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.top = '-1000px';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); onCopied(); }
+        catch { /* silent */ }
+        finally { ta.remove(); }
+    }
+
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('[data-copy-link]');
+        if (!btn) return;
+
+        const url = btn.getAttribute('data-url');
+        if (!url) return;
+
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(url)
+                .then(onCopied)
+                .catch(() => legacyCopy(url));
+        } else {
+            legacyCopy(url);
+        }
+    });
+})();
