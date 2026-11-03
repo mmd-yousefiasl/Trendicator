@@ -376,12 +376,12 @@ a.cart-line__title {
     }
 }
 
-    /* Dim the card’s children while the request is in flight */
-    .order-summary.is-loading > * {
-        opacity: .35;
-        pointer-events: none;
-        transition: opacity 200ms ease;
-    }
+/* Dim the card’s children while the request is in flight */
+.order-summary.is-loading > * {
+    opacity: .35;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+}
 
 /* Soft brand pulse on the border */
 .order-summary.is-loading {
@@ -436,4 +436,8 @@ a.cart-line__title {
 
 .coupon__error[hidden] {
     display: none !important;
+}
+/* ═══════════ Cart · empty state · collapse the two-column grid ═══════════ */
+.checkout-layout.checkout-layout--empty {
+    grid-template-columns: 1fr;
 }

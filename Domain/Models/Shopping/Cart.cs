@@ -11,7 +11,6 @@ namespace Domain.Models.Shopping
         public DateTime? PaidDate { get; set; }
         public int? UserId { get; set; }
         public string? VisitorId { get; set; }
-        public int ItemsCount { get; set; }
 
         #region Relations
         public ICollection<CartItem>? Items { get; set; }

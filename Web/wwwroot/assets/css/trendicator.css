@@ -1701,6 +1701,72 @@ ul, ol {
     border-radius: var(--r-full);
 }
 
+/* ---------- Confirm dialog ---------- */
+.confirm {
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--panel);
+    color: var(--text);
+    padding: 0;
+    width: min(400px, calc(100vw - 32px));
+    box-shadow: var(--shadow-3);
+    font-family: inherit;
+}
+
+    .confirm::backdrop {
+        background: rgba(0, 0, 0, .5);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+    }
+
+    .confirm[open] {
+        animation: confirmIn 180ms cubic-bezier(.4, 0, .2, 1);
+    }
+
+.confirm__body {
+    padding: 24px 24px 12px;
+}
+
+.confirm__title {
+    margin: 0 0 8px;
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1.5;
+}
+
+.confirm__msg {
+    margin: 0;
+    color: var(--text-2);
+    font-size: .9rem;
+    line-height: 1.8;
+}
+
+.confirm__actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    padding: 8px 24px 20px;
+}
+
+@keyframes confirmIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px) scale(.98);
+    }
+}
+
+/* Filled red — the existing .btn--danger is text-only, too soft for a modal action */
+.btn--danger-solid {
+    background: var(--down);
+    color: #fff;
+    border-color: var(--down);
+}
+
+    .btn--danger-solid:hover {
+        background: color-mix(in srgb, var(--down) 85%, #000);
+        color: #fff;
+    }
+
 /* Toast */
 .toast-region {
     position: fixed;

@@ -13,5 +13,11 @@
         public const string FaqCacheKey = "Faq";
         public const string ProductCategoriesCacheKey = "ProductCategory";
         public const string SiteMapCacheKey = "SiteMap";
+
+        #region Cart
+        public const string CartCacheKeyTemplate = "Cart:{0}";
+        public static string CartCacheKey(string id)
+            => string.Format(CartCacheKeyTemplate, id);
+        #endregion
     }
 }

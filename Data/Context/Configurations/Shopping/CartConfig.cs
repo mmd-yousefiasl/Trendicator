@@ -17,7 +17,11 @@ namespace Data.Context.Configurations.Shopping
                 .HasMaxLength(200);
 
             builder.Property(n => n.VisitorId)
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .IsRequired(false);
+
+            builder.Property(n => n.UserId)
+                .IsRequired(false);
 
             builder.Property(n => n.TotalPaid)
                 .HasColumnType("numeric(18,0)");
@@ -32,12 +36,12 @@ namespace Data.Context.Configurations.Shopping
             var pending = $"\"Status\" = {(int)CartStatusEnum.PendingPayment}";
 
             builder.HasIndex(c => new { c.UserId, c.Status })
-                .HasFilter($"\"UserId\" IS NOT NULL AND {pending}")
-                .IncludeProperties(c => c.ItemsCount);
+                .IsUnique()
+                .HasFilter($"\"UserId\" IS NOT NULL AND {pending}");
 
             builder.HasIndex(c => new { c.VisitorId, c.Status })
-                .HasFilter($"\"VisitorId\" IS NOT NULL AND {pending}")
-                .IncludeProperties(c => c.ItemsCount);
+                .IsUnique()
+                .HasFilter($"\"VisitorId\" IS NOT NULL AND {pending}");
         }
     }
 }

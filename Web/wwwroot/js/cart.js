@@ -152,3 +152,112 @@
         }
     }
 })();
+
+/* ─────────────────── Cart page: remove a single line ─────────────────── */
+(() => {
+    const body = document.body;
+    const removeUrl = body.dataset.cartRemoveUrl;
+    const csrfToken =
+        body.dataset.csrfToken ||
+        document.querySelector('[data-csrf-token]')?.dataset.csrfToken ||
+        null;
+
+    if (!removeUrl) {
+        console.warn('[cart-remove] Missing data-cart-remove-url on <body>.');
+        return;
+    }
+
+    document.addEventListener('click', async (e) => {
+        const btn = e.target.closest('[data-cart-remove]');
+        if (!btn || btn.disabled) return;
+        e.preventDefault();
+
+        const line = btn.closest('[data-cart-line]');
+        if (!line) return;
+
+        const productId = line.dataset.productId;
+        if (!productId) return;
+
+        // themed confirm (fallback to native if Trendicator didn't load)
+        const confirmed = window.Trendicator?.confirm
+            ? await Trendicator.confirm({
+                title: 'حذف از سبد خرید',
+                message: 'این محصول از سبد خرید شما حذف شود؟',
+                okText: 'حذف',
+                cancelText: 'انصراف',
+                danger: true
+            })
+            : confirm('این محصول از سبد خرید حذف شود؟');
+
+        if (!confirmed) return;
+
+        btn.disabled = true;
+        btn.classList.add('is-loading');
+
+        try {
+            const res = await fetch(removeUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(csrfToken ? { 'RequestVerificationToken': csrfToken } : {})
+                },
+                body: JSON.stringify({ productId: Number(productId) })
+            });
+
+            const data = await res.json().catch(() => ({}));
+
+            if (!res.ok || !data.success) {
+                btn.disabled = false;
+                btn.classList.remove('is-loading');
+                notify('error', data.message || 'خطا در حذف محصول از سبد خرید');
+                return;
+            }
+
+            // stash the message — it'll be shown after the page re-renders
+            if (data.message) {
+                try {
+                    sessionStorage.setItem('cart-flash', JSON.stringify({
+                        type: 'success',
+                        msg: data.message,
+                        at: Date.now()
+                    }));
+                } catch { /* private mode / quota — silently skip */ }
+            }
+
+            location.reload();
+        } catch {
+            btn.disabled = false;
+            btn.classList.remove('is-loading');
+            notify('error', 'خطا در ارتباط با سرور');
+        }
+    });
+})();
+
+/* ─────────────────── Flash toast (survives reload) ─────────────────── */
+(() => {
+    let raw;
+    try { raw = sessionStorage.getItem('cart-flash'); } catch { return; }
+    if (!raw) return;
+
+    try { sessionStorage.removeItem('cart-flash'); } catch { }
+
+    let flash;
+    try { flash = JSON.parse(raw); } catch { return; }
+
+    // discard if it's older than ~5s (user navigated away & came back)
+    if (!flash?.msg || Date.now() - (flash.at || 0) > 5000) return;
+
+    const fire = () => (window.notify || window.Trendicator?.toast || (() => { }))(
+        flash.type || 'success',
+        flash.msg
+    );
+
+    // Toast region lives in <body>; DOMContentLoaded is the safe point.
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', fire, { once: true });
+    } else {
+        // already parsed (script at bottom of body) — fire right away,
+        // but give the new DOM a beat to settle so the animation reads clearly
+        setTimeout(fire, 250);
+    }
+})();

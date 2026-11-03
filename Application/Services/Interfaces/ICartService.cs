@@ -1,5 +1,6 @@
 ﻿using Application.Dtos.Cart.AdminSide;
 using Application.Dtos.Cart.ClientSide;
+using Application.Dtos.CartItem.ClientSide;
 using Application.Dtos.Payment;
 using Domain.Shared;
 
@@ -7,11 +8,19 @@ namespace Application.Services.Interfaces
 {
     public interface ICartService
     {
+        Task<Result<ClientSideCartSnapshotDto>> ClientSideGetCartSnapshot();
+
+        Task<Result<int>> ClientSideCreateNewCart();
+
+        Task<List<int>> ClientSideGetCartProductIds();
+
         Task<int> ClientSideGetCartItemsCount();
 
-        Task<Result> AddToCart(int optionId);
+        Task<Result<List<ClientSideCartDto>>> ClientSideGetCart();
 
-        Task<Result<List<ClientSideCartViewModel>>> ClientSideGetCart();
+        Task<Result<int>> ClientSideAddToCart(ClientSideCartItemToggleDto model);
+
+        Task<Result<int>> ClientSideRemoveFromCart(ClientSideCartItemToggleDto model);
 
         Task<Result<ClientSideCartSummaryViewModel>> ClientSideCartSummary();
 

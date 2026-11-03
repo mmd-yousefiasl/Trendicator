@@ -24,7 +24,7 @@
         <link rel="canonical" href="@($"{SiteTools.SiteUrl.TrimEnd('/')}{Context.Request.Path}")" />
     }
 </head>
-<body data-cart-add-url="@Url.Action("Add", "Cart")"
+<body data-cart-add-url="@Url.Action("AddToCart", "Cart", new { area = "" })"
       data-cart-remove-url="@Url.Action("Remove", "Cart")"
       data-csrf-token="@cartCsrf">
     <partial name="_Header" />

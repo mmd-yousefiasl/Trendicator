@@ -1,4 +1,5 @@
 ﻿using Application.Dtos.Cart.ClientSide;
+using Application.Dtos.CartItem.ClientSide;
 using Application.Services.Interfaces;
 using Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
@@ -28,61 +29,43 @@ namespace Web.Controllers
         {
             ViewData["NoIndex"] = true;
             var result = await _cartService.ClientSideGetCart();
-            if (result.IsFailure) return View(new List<ClientSideCartViewModel>());
+            if (result.IsFailure) return View(new List<ClientSideCartDto>());
 
             return View(result.Value);
         }
 
-        public class CartToggleRequest
-        {
-            public int ProductId { get; set; }
-        }
-
         [HttpPost("/cart/add")]
-        public async Task<IActionResult> Add([FromBody] CartToggleRequest req)
+        public async Task<IActionResult> AddToCart([FromBody] ClientSideCartItemToggleDto model)
         {
-            /*            if (req?.ProductId <= 0)
-                            return Json(new { success = false, message = "شناسه محصول نامعتبر است." }); */
-            await Task.Delay(500);
+            if (model?.ProductId < 1)
+                return Json(new { success = false, message = Messages.OperationFailedError });
 
-            InCart.Add(req.ProductId);
-
-            return Json(new
+            var result = await _cartService.ClientSideAddToCart(model!);
+            if (result.IsFailure)
             {
-                success = true,
-                inCart = true,
-                message = "محصول به سبد خرید اضافه شد.",
-                cartCount = InCart.Count
-            });
+                return Json(new { success = false, message = result.Message });
+            }
+            else
+            {
+                return Json(new { success = true, message = result.Message, inCart = true, cartCount = result.Value });
+            }
         }
 
         [HttpPost("/cart/remove")]
-        public async Task<IActionResult> Remove([FromBody] CartToggleRequest req)
+        public async Task<IActionResult> RemoveFromCart([FromBody] ClientSideCartItemToggleDto model)
         {
-            await Task.Delay(500);
-            if (req?.ProductId <= 0)
-                return Json(new { success = false, message = "شناسه محصول نامعتبر است." });
+            if (model?.ProductId < 1)
+                return Json(new { success = false, message = Messages.OperationFailedError });
 
-            InCart.Remove(req.ProductId);
-
-            return Json(new
+            var result = await _cartService.ClientSideRemoveFromCart(model!);
+            if (result.IsFailure)
             {
-                success = true,
-                inCart = false,
-                message = "محصول از سبد خرید حذف شد.",
-                cartCount = InCart.Count
-            });
-        }
-
-        [HttpGet("/add-to-cart/{optionId}")]
-        public async Task<IActionResult> AddToCart(int optionId)
-        {
-            if (optionId < 1) return Json(new { success = false, message = Messages.OperationFailedError });
-
-            var result = await _cartService.AddToCart(optionId);
-            if (result.IsFailure) return Json(new { success = false, message = result.Message });
-
-            return Json(new { success = true, message = result.Message });
+                return Json(new { success = false, message = result.Message });
+            }
+            else
+            {
+                return Json(new { success = true, message = result.Message, inCart = false, cartCount = result.Value });
+            }
         }
 
         [HttpGet("/cart-modal")]
@@ -90,7 +73,7 @@ namespace Web.Controllers
         {
             ViewData["NoIndex"] = true;
             var result = await _cartService.ClientSideGetCart();
-            if (result.IsFailure) return PartialView("_CartModal", new List<ClientSideCartViewModel>());
+            if (result.IsFailure) return PartialView("_CartModal", new List<ClientSideCartDto>());
 
             return PartialView("_CartModal", result.Value);
         }

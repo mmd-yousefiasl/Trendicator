@@ -5,6 +5,7 @@ using Application.Dtos.CartItem.ClientSide;
 using Application.Dtos.Payment;
 using Application.Mediator;
 using Application.Services.Interfaces;
+using Application.Static;
 using Application.Tools;
 using Data.Context;
 using Domain.Enums.Payment;
@@ -16,18 +17,17 @@ using Domain.Shared;
 using Domain.Statics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace Application.Services.Implementaions
 {
     public class CartService : ICartService
     {
         #region Fields
-
         private readonly TrendicatorDbContext _context;
         private protected DbSet<Cart> _dbSet;
         private readonly IMediatorHandler _mediator;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IProductService _productService;
         private readonly ICartItemService _itemService;
         private readonly IPaymentDataService _paymentDataService;
         private readonly ICouponService _couponService;
@@ -35,6 +35,7 @@ namespace Application.Services.Implementaions
         private readonly IUserService _userService;
         private readonly IBalanceTransactionService _transactionService;
         private readonly IVisitorService _visitorService;
+        private readonly ICacheManager _cacheManager;
 
         #endregion
 
@@ -43,20 +44,19 @@ namespace Application.Services.Implementaions
         public CartService(TrendicatorDbContext context,
             IMediatorHandler mediator,
             IHttpContextAccessor httpContextAccessor,
-            IProductService productService,
             ICartItemService itemService,
             IPaymentDataService paymentDataService,
             ICouponService couponService,
             IPaymentService paymentService,
             IUserService userService,
             IBalanceTransactionService transactionService,
-            IVisitorService visitorService)
+            IVisitorService visitorService,
+            ICacheManager cacheManager)
         {
             _context = context;
             _dbSet = _context.Set<Cart>();
             _mediator = mediator;
             _httpContextAccessor = httpContextAccessor;
-            _productService = productService;
             _itemService = itemService;
             _paymentDataService = paymentDataService;
             _couponService = couponService;
@@ -64,109 +64,236 @@ namespace Application.Services.Implementaions
             _userService = userService;
             _transactionService = transactionService;
             _visitorService = visitorService;
+            _cacheManager = cacheManager;
         }
 
         #endregion
 
-        public async Task<int> ClientSideGetCartItemsCount()
+        public async Task<Result<ClientSideCartSnapshotDto>> ClientSideGetCartSnapshot()
         {
             var userId = _httpContextAccessor.HttpContext.User.GetUserId();
 
-            var query = _context.Carts
-                .AsNoTracking()
-                .Where(c => c.Status == CartStatusEnum.PendingPayment);
+            string cacheKey;
+            int? userFilter = null;
+            string? visitorFilter = null;
 
             if (userId > 0)
             {
-                query = query.Where(n => n.UserId == userId);
+                userFilter = userId;
+                cacheKey = CacheKeys.CartCacheKey(userId.ToString());
+            }
+            else
+            {
+                visitorFilter = _visitorService.GetOrCreateVisitorId();
+                cacheKey = CacheKeys.CartCacheKey(visitorFilter);
+            }
+
+            var cartSnapshot = await _cacheManager.GetAsync(cacheKey, async () =>
+            {
+                var query = _context.Carts
+                    .AsNoTracking()
+                    .Where(c => c.Status == CartStatusEnum.PendingPayment);
+
+                query = userFilter.HasValue
+                    ? query.Where(c => c.UserId == userFilter.Value)
+                    : query.Where(c => c.VisitorId == visitorFilter);
+
+                var snapshot = await query
+                    .Select(n => new ClientSideCartSnapshotDto
+                    {
+                        CartId = n.Id,
+                        ProductIds = n.Items.Select(i => i.ProductId).ToList()
+                    })
+                    .FirstOrDefaultAsync();
+
+                // Never return null → the "no cart yet" case is cached too.
+                return snapshot ?? new ClientSideCartSnapshotDto
+                {
+                    CartId = 0,
+                    ProductIds = new List<int>()
+                };
+            }, TimeSpan.FromMinutes(10));
+
+            if (cartSnapshot?.CartId == 0)
+                return Result.Failure<ClientSideCartSnapshotDto>(Messages.OperationFailedError);
+
+            return cartSnapshot;
+        }
+
+        public async Task<Result<int>> ClientSideCreateNewCart()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            var cart = new Cart { Status = CartStatusEnum.PendingPayment };
+            string? cartCacheKey = null;
+
+            if (userId > 0)
+            {
+                cart.UserId = userId;
+                cartCacheKey = CacheKeys.CartCacheKey(userId.ToString());
+            }
+            else
+            {
+                cart.VisitorId = _visitorService.GetOrCreateVisitorId();
+                cartCacheKey = CacheKeys.CartCacheKey(cart.VisitorId);
+            }
+
+            try
+            {
+                _context.Carts.Add(cart);
+                await _context.SaveChangesAsync();
+                return cart.Id;
+            }
+            catch (DbUpdateException ex) when (ex.InnerException is PostgresException { SqlState: "23505" })
+            {
+                _context.Entry(cart).State = EntityState.Detached;
+
+                var cartId = await _context.Carts
+                    .Where(n => n.Status == CartStatusEnum.PendingPayment && (userId > 0 ? n.UserId == userId : n.VisitorId == cart.VisitorId))
+                    .AsNoTracking()
+                    .Select(n => n.Id)
+                    .FirstOrDefaultAsync();
+
+                if (cartId < 1)
+                    return Result.Failure<int>(Messages.OperationFailedError);
+
+                return cartId;
+            }
+            finally
+            {
+                await _cacheManager.RemoveByKeyAsync(cartCacheKey);
+            }
+        }
+
+        public async Task<List<int>> ClientSideGetCartProductIds()
+        {
+            var cartResult = await ClientSideGetCartSnapshot();
+            if (cartResult.IsFailure)
+                return new List<int>();
+
+            return cartResult.Value?.ProductIds ?? new List<int>();
+        }
+
+        public async Task<int> ClientSideGetCartItemsCount()
+        {
+            var productIds = await ClientSideGetCartProductIds();
+
+            return productIds.Count();
+        }
+
+        public async Task<Result<List<ClientSideCartDto>>> ClientSideGetCart()
+        {
+            var productIds = await ClientSideGetCartProductIds();
+            if (productIds is null || !productIds.Any())
+                return new List<ClientSideCartDto>();
+
+            var cartItems = await _context.Products
+                .AsNoTracking()
+                .Where(n => productIds.Contains(n.Id))
+                .Select(n => new ClientSideCartDto()
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Slug = n.Slug,
+                    Hint = n.Hint,
+                    DisplayPrice = n.DisplayPrice,
+                    OrderPrice = n.OrderPrice,
+                    FileName = n.BannerFileName,
+                    IsAvailable = n.IsAvailable
+                }).ToListAsync();
+
+            return cartItems;
+        }
+
+        public async Task<Result<int>> ClientSideAddToCart(ClientSideCartItemToggleDto model)
+        {
+            if (model is null || model.ProductId < 1)
+                return Result.Failure<int>(Messages.OperationFailedError);
+
+            int? cartId = null;
+
+            var cartResult = await ClientSideGetCartSnapshot();
+            if (cartResult.IsSuccess)
+            {
+                cartId = cartResult.Value.CartId;
+
+                if (cartResult.Value.ProductIds.Contains(model.ProductId))
+                    return Result.Success(cartResult.Value.ProductIds.Count(), Messages.AddedToCartSuccessfully);
+
+            }
+            else
+            {
+                var createCartResult = await ClientSideCreateNewCart();
+
+                if (createCartResult.IsFailure)
+                    return Result.Failure<int>(Messages.OperationFailedError);
+
+                cartId = createCartResult.Value;
+            }
+
+            var cartItem = new CartItem()
+            {
+                CartId = cartId.Value,
+                ProductId = model.ProductId
+            };
+
+            try
+            {
+                _context.CartItems.Add(cartItem);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex) when (ex.InnerException is PostgresException { SqlState: "23505" })
+            {
+                _context.Entry(cartItem).State = EntityState.Detached;
+            }
+            finally
+            {
+                var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+                if (userId > 0)
+                {
+                    await _cacheManager.RemoveByKeyAsync(CacheKeys.CartCacheKey(userId.ToString()));
+                }
+                else
+                {
+                    var visitorId = _visitorService.GetOrCreateVisitorId();
+                    await _cacheManager.RemoveByKeyAsync(CacheKeys.CartCacheKey(visitorId));
+                }
+            }
+
+            return Result.Success(await ClientSideGetCartItemsCount(), Messages.AddedToCartSuccessfully);
+        }
+
+        public async Task<Result<int>> ClientSideRemoveFromCart(ClientSideCartItemToggleDto model)
+        {
+            if (model is null || model.ProductId < 1)
+                return Result.Failure<int>(Messages.OperationFailedError);
+
+            var cartResult = await ClientSideGetCartSnapshot();
+
+            if (cartResult.IsFailure)
+                return Result.Failure<int>(cartResult.Message!);
+
+            if (!cartResult.Value.ProductIds.Contains(model.ProductId))
+                return Result.Success(cartResult.Value.ProductIds.Count(), Messages.RemovedFromCartSuccessfully);
+
+            var deleted = await _context.CartItems
+                .Where(ci => ci.CartId == cartResult.Value.CartId && ci.ProductId == model.ProductId)
+                .ExecuteDeleteAsync();
+
+            if (deleted == 0)
+                return Result.Failure<int>(Messages.OperationFailedError);
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId > 0)
+            {
+                await _cacheManager.RemoveByKeyAsync(CacheKeys.CartCacheKey(userId.ToString()));
             }
             else
             {
                 var visitorId = _visitorService.GetOrCreateVisitorId();
-                query = query.Where(n => n.VisitorId == visitorId);
+                await _cacheManager.RemoveByKeyAsync(CacheKeys.CartCacheKey(visitorId));
             }
 
-            return await query
-                .Select(c => c.ItemsCount)
-                .FirstOrDefaultAsync();
-        }
-
-        public async Task<Result> AddToCart(int optionId)
-        {
-            if (optionId < 1) return Result.Failure(Messages.OperationFailedError);
-
-            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            var userIP = _httpContextAccessor.HttpContext.GetUserIP();
-
-            var productIdResult = await _productService.ClientSideGetProductIdByOptionId(optionId);
-            if (productIdResult.IsFailure) return Result.Failure(Messages.OperationFailedError);
-
-            if (await _dbSet.AnyAsync(n =>
-                    (n.UserId == userId) && n.Status == CartStatusEnum.PendingPayment))
-            {
-                var cartId = await _dbSet.Where(n => (n.UserId == userId) &&
-                                                     n.Status == CartStatusEnum.PendingPayment).Select(n => n.Id)
-                    .FirstOrDefaultAsync();
-                if (cartId < 1) return Result.Failure(Messages.OperationFailedError);
-
-                var itemResult = await _itemService.ClientSideCreateNewCartItem(
-                    new ClientSideCreateNewCartItemViewModel()
-                    {
-                        CartId = cartId,
-                        ProductId = productIdResult.Value,
-                        OptionId = optionId
-                    });
-                if (itemResult.IsFailure) return Result.Failure(itemResult.Message);
-            }
-            else
-            {
-                Cart cart = new Cart()
-                {
-                    UserId = userId,
-                    Status = CartStatusEnum.PendingPayment,
-                    Items = new List<CartItem>()
-                };
-
-                cart.Items.Add(new CartItem()
-                {
-                    CartId = cart.Id,
-                    ProductId = productIdResult.Value,
-                });
-
-                await _dbSet.AddAsync(cart);
-                await _context.SaveChangesAsync();
-            }
-
-            return Result.Success(Messages.AddedToCartSuccessfully);
-        }
-
-        public async Task<Result<List<ClientSideCartViewModel>>> ClientSideGetCart()
-        {
-            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            var visitorId = _visitorService.GetOrCreateVisitorId();
-
-            var items = await _dbSet
-                .Where(cart => (cart.UserId == userId || cart.VisitorId == visitorId) && cart.Status == CartStatusEnum.PendingPayment)
-                .SelectMany(cart => cart.Items)
-                .Select(item => new
-                {
-                    item.Product.IsAvailable,
-                    item.Product.BannerFileName,
-                    item.Product.Title,
-                    item.Product.Slug,
-                })
-                .Select(x => new ClientSideCartViewModel
-                {
-                    FileName = x.BannerFileName,
-                    IsAvailable = x.IsAvailable,
-                    Title = x.Title,
-                    Slug = x.Slug,
-                })
-                .AsNoTracking()
-                .ToListAsync();
-            if (!items.Any()) return Result.Failure<List<ClientSideCartViewModel>>(Messages.OperationFailedError);
-
-            return items;
+            return Result.Success(await ClientSideGetCartItemsCount(), Messages.RemovedFromCartSuccessfully);
         }
 
         public async Task<Result<ClientSideCartSummaryViewModel>> ClientSideCartSummary()
@@ -181,9 +308,9 @@ namespace Application.Services.Implementaions
             var cartItems = cartItemsResult.Value;
 
             ClientSideCartSummaryViewModel summary = new ClientSideCartSummaryViewModel();
-            summary.SubTotal = cartItems.Where(n => n.IsAvailable).Sum(n => n.Price);
+            summary.SubTotal = cartItems.Where(n => n.IsAvailable).Sum(n => n.DisplayPrice);
             summary.TotalDiscount =
-                cartItems.Where(n => n.OrderPrice > 0 && n.IsAvailable).Sum(n => n.Price - n.OrderPrice);
+                cartItems.Where(n => n.OrderPrice > 0 && n.IsAvailable).Sum(n => n.DisplayPrice - n.OrderPrice);
             summary.SubTotalAfterDisocunt = summary.SubTotal - (summary.TotalDiscount ?? 0);
 
             var cartCode = await _dbSet.Where(n => (n.UserId == userId) &&

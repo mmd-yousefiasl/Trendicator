@@ -33,6 +33,7 @@ namespace Application.Services.Implementaions
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IVisitorService _visitorService;
         private readonly ICacheManager _cacheManager;
+        private readonly ICartService _cartService;
         #endregion
 
         #region Ctor
@@ -40,13 +41,15 @@ namespace Application.Services.Implementaions
             IMediatorHandler mediator,
             IHttpContextAccessor httpContextAccessor,
             IVisitorService visitorService,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            ICartService cartService)
         {
             _context = context;
             _mediator = mediator;
             _httpContextAccessor = httpContextAccessor;
             _visitorService = visitorService;
             _cacheManager = cacheManager;
+            _cartService = cartService;
         }
         #endregion
 
@@ -368,6 +371,8 @@ namespace Application.Services.Implementaions
                 query = query.Where(item);
             }
 
+            var cartProductIds = await _cartService.ClientSideGetCartProductIds();
+
             await filter.Paging(query.Select(n => new ClientSideProductViewModel()
             {
                 Id = n.Id,
@@ -385,6 +390,7 @@ namespace Application.Services.Implementaions
                 DisplayPrice = n.DisplayPrice,
                 OrderPrice = n.OrderPrice,
                 Percent = ((n.DisplayPrice > 0) ? n.DisplayPrice.GetDiscountPercent(n.OrderPrice) : 0),
+                IsInCart = (cartProductIds.Any(p => p == n.Id))
             }));
 
             return filter;
@@ -394,6 +400,8 @@ namespace Application.Services.Implementaions
         {
             if (Id < 1)
                 return Result.Failure<ClientSideProductDetailsViewModel>(Messages.OperationFailedError);
+
+            var productIds = await _cartService.ClientSideGetCartProductIds();
 
             var product = await _context.Products
                 .AsNoTracking()
@@ -453,10 +461,12 @@ namespace Application.Services.Implementaions
                     OrderPrice = n.OrderPrice,
                     DisplayPrice = n.DisplayPrice,
                     Percent = ((n.DisplayPrice > 0) ? n.DisplayPrice.GetDiscountPercent(n.OrderPrice) : 0),
+                    IsInCart = (productIds.Any(p => p == n.Id)),
                 }).FirstOrDefaultAsync();
 
             if (product is null)
                 return Result.Failure<ClientSideProductDetailsViewModel>(Messages.OperationFailedError);
+
 
             return product;
         }

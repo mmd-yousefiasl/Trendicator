@@ -34,6 +34,64 @@
         region.appendChild(el);
         setTimeout(() => { el.style.opacity = "0"; setTimeout(() => el.remove(), 300); }, 2600);
     }
+
+    /* Promise-based confirm dialog → resolves true / false */
+    window.Trendicator.confirm = function (opts) {
+        opts = Object.assign({
+            title: 'تأیید',
+            message: '',
+            okText: 'تأیید',
+            cancelText: 'انصراف',
+            danger: false
+        }, opts || {});
+
+        return new Promise(resolve => {
+            const dlg = document.createElement('dialog');
+            dlg.className = 'confirm';
+            dlg.innerHTML = `
+            <div class="confirm__body">
+                <h3 class="confirm__title"></h3>
+                <p class="confirm__msg"></p>
+            </div>
+            <div class="confirm__actions">
+                <button type="button" class="btn btn--ghost btn--sm" data-cancel></button>
+                <button type="button"
+                        class="btn btn--sm ${opts.danger ? 'btn--danger-solid' : 'btn--primary'}"
+                        data-ok></button>
+            </div>`;
+
+            dlg.querySelector('.confirm__title').textContent = opts.title;
+            dlg.querySelector('.confirm__msg').textContent = opts.message;
+            dlg.querySelector('[data-cancel]').textContent = opts.cancelText;
+            dlg.querySelector('[data-ok]').textContent = opts.okText;
+
+            let result = false;
+
+            dlg.querySelector('[data-ok]').addEventListener('click', () => {
+                result = true;
+                dlg.close();
+            });
+            dlg.querySelector('[data-cancel]').addEventListener('click', () => dlg.close());
+
+            // Backdrop click → cancel (ignore clicks that land inside the card)
+            dlg.addEventListener('click', e => {
+                if (e.target === dlg) dlg.close();
+            });
+
+            // Escape / close() both land here
+            dlg.addEventListener('close', () => {
+                dlg.remove();
+                resolve(result);
+            });
+
+            document.body.appendChild(dlg);
+            dlg.showModal();
+
+            // Safer default: focus Cancel so Enter / accidental taps don't destroy anything
+            dlg.querySelector('[data-cancel]').focus();
+        });
+    };
+
     window.Trendicator.toast = toast;
 
     /* ---------- Theme-aware images ---------- */

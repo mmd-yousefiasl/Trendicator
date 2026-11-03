@@ -47,6 +47,7 @@
         public const string LoginCodeSentSuccessfully = "کد ورود با موفقیت ارسال شد";
         public const string ReviewAddedSuccessfully = "نظر شما با موفقیت ثبت شد";
         public const string AddedToCartSuccessfully = "محصول با موفقیت به سبد خرید اضافه شد";
+        public const string RemovedFromCartSuccessfully = "محصول با موفقیت از سبد خرید حذف شد";
         public const string DiscountAppliedSuccessfully = "تخفیف با موفقیت اعمال شد";
         public const string PaymentDoneSuccessfully = "پرداخت با موفقیت انجام شد";
         public const string TicketSentSuccessfully = "تیکت با موفقیت ارسال شد";

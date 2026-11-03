@@ -1,10 +1,19 @@
 ﻿@using Application.Dtos.Cart.ClientSide
-@model List<ClientSideCartViewModel>
+@using Application.Tools
+@model List<ClientSideCartDto>
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
 
 @{
     ViewData["Title"] = "سبد خرید";
     var csrfToken = Xsrf.GetAndStoreTokens(Context).RequestToken;
+
+    decimal totalPrice = Model.Select(n => n.DisplayPrice > 0 ? n.DisplayPrice : n.OrderPrice).Sum();
+    decimal total = Model.Sum(n => n.OrderPrice);
+    decimal discount = totalPrice - total;
+
+    var hasItems = Model?.Any() == true;
+    var listHidden = hasItems ? "" : "hidden";
+    var emptyHidden = hasItems ? "hidden" : "";
 }
 
 @section HeaderReferences {
@@ -13,79 +22,47 @@
 
 <main class="container">
     <ul class="crumbs">
-        <li><a href="index.html">خانه</a></li>
+        <partial name="_IndexLink" />
         <li>سبد خرید</li>
     </ul>
 
     <h1>سبد خرید</h1>
 
-    <div class="checkout-layout mt-3">
+    <div class="checkout-layout mt-3 @(hasItems ? "" : "checkout-layout--empty")">
         <!-- ============ Lines ============ -->
         <div class="card card-pad" data-cart-render>
-            <div data-cart-list>
-
-                <div class="cart-line" data-line="price-action-pro">
-                    <a class="cart-line__thumb" href="product.html" aria-label="اندیکاتور پرایس اکشن پرو">
-                        <svg viewBox="0 0 60 36">
-                            <rect x="8" y="12" width="6" height="14" fill="var(--up)" />
-                            <rect x="20" y="8" width="6" height="18" fill="var(--down)" />
-                            <rect x="32" y="14" width="6" height="10" fill="var(--up)" />
-                            <rect x="44" y="6" width="6" height="16" fill="var(--up)" />
-                        </svg>
-                    </a>
-                    <div class="cart-line__body">
-                        <a class="cart-line__title" href="product.html">اندیکاتور پرایس اکشن پرو</a>
-                        <div class="cart-line__meta">لایسنس دائمی · دانلود فوری</div>
+            <div data-cart-list @listHidden>
+                @foreach (var item in Model ?? new List<ClientSideCartDto>())
+                {
+                    <div class="cart-line"
+                         data-cart-line
+                         data-product-id="@item.Id"
+                         data-price="@item.OrderPrice.ToString("0", System.Globalization.CultureInfo.InvariantCulture)">
+                        <a class="cart-line__thumb" aria-label="@item.Title"
+                           asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@item.Id" asp-route-slug="@item.Slug">
+                            <img src="@SiteTools.ProductBanner@item.FileName" alt="@item.Title" />
+                        </a>
+                        <div class="cart-line__body">
+                            <a class="cart-line__title"
+                               asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@item.Id" asp-route-slug="@item.Slug">
+                                @item.Title
+                            </a>
+                            <div class="cart-line__meta">@item.Hint</div>
+                        </div>
+                        <div class="price num">
+                            @if (item.DisplayPrice > 0)
+                            {
+                                <del>@item.DisplayPrice.ToTomanFormat()</del>
+                            }
+                            <small>تومان</small> @item.OrderPrice.ToTomanFormat()
+                        </div>
+                        <button type="button" class="btn btn--danger btn--sm" data-cart-remove>حذف</button>
                     </div>
-                    <div class="price num">
-                        <del>۲,۴۵۰,۰۰۰</del>
-                        <small>تومان</small> ۲,۴۵۰,۰۰۰
-                    </div>
-                    <button type="button" class="btn btn--danger btn--sm" data-remove="price-action-pro">حذف</button>
-                </div>
-
-                <div class="cart-line" data-line="liquidity-map">
-                    <a class="cart-line__thumb" href="product.html" aria-label="اندیکاتور لیکوییدیتی مپ">
-                        <svg viewBox="0 0 60 36">
-                            <rect x="8" y="12" width="6" height="14" fill="var(--up)" />
-                            <rect x="20" y="8" width="6" height="18" fill="var(--down)" />
-                            <rect x="32" y="14" width="6" height="10" fill="var(--up)" />
-                            <rect x="44" y="6" width="6" height="16" fill="var(--up)" />
-                        </svg>
-                    </a>
-                    <div class="cart-line__body">
-                        <a class="cart-line__title" href="product.html">اندیکاتور لیکوییدیتی مپ</a>
-                        <div class="cart-line__meta">لایسنس دائمی · دانلود فوری</div>
-                    </div>
-                    <div class="price num">
-                        <small>تومان</small> ۱,۸۹۰,۰۰۰
-                    </div>
-                    <button type="button" class="btn btn--danger btn--sm" data-remove="liquidity-map">حذف</button>
-                </div>
-
-                <div class="cart-line" data-line="harmonic-plus">
-                    <a class="cart-line__thumb" href="product.html" aria-label="الگوی هارمونیک پلاس">
-                        <svg viewBox="0 0 60 36">
-                            <rect x="8" y="12" width="6" height="14" fill="var(--up)" />
-                            <rect x="20" y="8" width="6" height="18" fill="var(--down)" />
-                            <rect x="32" y="14" width="6" height="10" fill="var(--up)" />
-                            <rect x="44" y="6" width="6" height="16" fill="var(--up)" />
-                        </svg>
-                    </a>
-                    <div class="cart-line__body">
-                        <a class="cart-line__title" href="product.html">الگوی هارمونیک پلاس</a>
-                        <div class="cart-line__meta">لایسنس دائمی · دانلود فوری</div>
-                    </div>
-                    <div class="price num">
-                        <small>تومان</small> ۹۵۰,۰۰۰
-                    </div>
-                    <button type="button" class="btn btn--danger btn--sm" data-remove="harmonic-plus">حذف</button>
-                </div>
-
+                }
             </div>
 
             <!-- Empty state -->
-            <div data-cart-empty hidden class="text-center" style="padding:48px 0">
+            <div data-cart-empty @emptyHidden class="text-center" style="padding:48px 0">
                 <div>
                     <svg class="ic" aria-hidden="true" style="width:3rem;height:3rem">
                         <use href="#i-cart" />
@@ -93,12 +70,13 @@
                 </div>
                 <h2 style="font-size:1.15rem">سبد خرید شما خالی است</h2>
                 <p class="text-muted">از فروشگاه، اندیکاتور مناسب معاملات‌تان را انتخاب کنید.</p>
-                <a href="products.html" class="btn btn--primary">رفتن به فروشگاه</a>
+                <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="" class="btn btn--primary">رفتن به فروشگاه</a>
             </div>
         </div>
 
         <!-- ============ Summary ============ -->
         <aside class="order-summary card card-pad"
+            @(hasItems ? null : "hidden")
                data-apply-url="@Url.Action("ApplyCoupon", "Cart")"
                data-remove-url="@Url.Action("RemoveCoupon", "Cart")"
                data-csrf-token="@csrfToken">
@@ -106,17 +84,22 @@
 
             <div class="flex flex--between" style="font-size:.9rem;color:var(--text-2)">
                 <span>محصولات</span>
-                <span><span data-cart-count>۳</span> مورد</span>
+                <span><span data-cart-count>@Model.Count()</span> مورد</span>
             </div>
 
             <div class="flex flex--between mt-1" style="font-size:.9rem;color:var(--text-2)">
                 <span>جمع محصولات</span>
-                <span class="num"><span data-cart-subtotal>۵,۲۹۰,۰۰۰</span> تومان</span>
+                <span class="num">
+                    <span data-cart-subtotal>
+                        @totalPrice.ToTomanFormat()
+                    </span>
+                    تومان
+                </span>
             </div>
 
             <div class="flex flex--between mt-1" style="font-size:.9rem;color:var(--text-2)" data-cart-discount-row hidden>
                 <span>تخفیف</span>
-                <span class="num text-brand">− <span data-cart-discount>۰</span> تومان</span>
+                <span class="num text-brand">− <span data-cart-discount>@discount.ToTomanFormat()</span> تومان</span>
             </div>
 
             <div class="coupon mt-1" data-coupon>
@@ -185,7 +168,7 @@
                 <span>مبلغ قابل پرداخت</span>
                 <span class="price">
                     <small>تومان</small>
-                    <span data-cart-total>۵,۲۹۰,۰۰۰</span>
+                    <span data-cart-total>@total.ToTomanFormat()</span>
                 </span>
             </div>
 
