@@ -1,5 +1,4 @@
-﻿using Application.Dtos;
-using Domain.Shared;
+﻿using Domain.Shared;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.Dtos.Coupon.AdminSide
@@ -28,8 +27,5 @@ namespace Application.Dtos.Coupon.AdminSide
         [Range(1, 100, ErrorMessage = Messages.RangeError)]
         [Required(ErrorMessage = Messages.RequiredError)]
         public int Percent { get; set; }
-
-        [Display(Name = "کاربران")]
-        public List<int>? UserIds { get; set; }
     }
 }

@@ -42,7 +42,7 @@ namespace Web.Areas.Admin.Controllers
         public async Task<IActionResult> CreateNewCoupon(AdminSideCreateNewCouponViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
-            var result = await _couponService.CreateNewCoupon(model);
+            var result = await _couponService.AdminSideCreateNewCoupon(model);
             if (result.IsFailure)
             {
                 TempData[TemporaryErrorMessage] = result.Message;
@@ -62,7 +62,7 @@ namespace Web.Areas.Admin.Controllers
                 TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
                 return RedirectToAction(nameof(CouponsList));
             }
-            var result = await _couponService.GetCouponFouUpdate(id);
+            var result = await _couponService.AdminSideGetCouponFouUpdate(id);
             if (result.IsFailure)
             {
                 TempData[TemporaryErrorMessage] = result.Message;
@@ -77,7 +77,7 @@ namespace Web.Areas.Admin.Controllers
         public async Task<IActionResult> UpdateCoupon(AdminSideUpdateCouponViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
-            var result = await _couponService.UpdateCoupon(model);
+            var result = await _couponService.AdminSideUpdateCoupon(model);
             if (result.IsFailure)
             {
                 TempData[TemporaryErrorMessage] = result.Message;
@@ -97,7 +97,7 @@ namespace Web.Areas.Admin.Controllers
                 TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
                 return RedirectToAction(nameof(CouponsList));
             }
-            var result = await _couponService.SoftDeleteCoupon(id);
+            var result = await _couponService.AdminSideSoftDeleteCoupon(id);
             if (result.IsFailure)
             {
                 TempData[TemporaryErrorMessage] = result.Message;

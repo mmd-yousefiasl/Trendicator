@@ -168,8 +168,13 @@ namespace Application.Tools
 
         public static DateTime ConvertToMiladi(this DateTime value)
         {
-            PersianCalendar pc = new PersianCalendar();
-            return new DateTime(value.Year, value.Month, value.Day, pc);
+            var pc = new PersianCalendar();
+
+            // The (…, Calendar, DateTimeKind) overload exists and lets us set Kind directly.
+            return new DateTime(
+                value.Year, value.Month, value.Day,
+                value.Hour, value.Minute, value.Second, value.Millisecond,
+                pc, DateTimeKind.Utc);
         }
 
         public static DateTime ConvertToShamsi(this DateTime value)
@@ -200,6 +205,11 @@ namespace Application.Tools
             var remaining = (expiryTime - DateTime.UtcNow).TotalSeconds;
 
             return remaining > 0 ? (int)Math.Ceiling(remaining) : 0;
+        }
+
+        public static string NormalizeCouponCode(this string code)
+        {
+            return code.Replace(" ", string.Empty).ToUpper();
         }
     }
 }

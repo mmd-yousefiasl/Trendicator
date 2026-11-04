@@ -16,7 +16,7 @@ namespace Application.Services.Interfaces
 
         Task<int> ClientSideGetCartItemsCount();
 
-        Task<Result<List<ClientSideCartDto>>> ClientSideGetCart();
+        Task<Result<ClientSideCartDto>> ClientSideGetCart();
 
         Task<Result<int>> ClientSideAddToCart(ClientSideCartItemToggleDto model);
 

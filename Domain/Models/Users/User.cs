@@ -1,6 +1,4 @@
-﻿using Domain.Models.Coupons;
-
-namespace Domain.Models.Users
+﻿namespace Domain.Models.Users
 {
     public class User : AuditBaseEntity<int>
     {
@@ -15,7 +13,6 @@ namespace Domain.Models.Users
         #region Relations
         public ICollection<UserRoleMapping>? UserRoleMapping { get; set; }
         public ICollection<BalanceTransaction>? Transactions { get; set; }
-        public ICollection<CouponUserMapping>? Coupons { get; set; }
         #endregion
     }
 }

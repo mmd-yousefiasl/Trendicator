@@ -34,7 +34,6 @@ namespace Data.Context
         public DbSet<ContactUsForm> ContactUsForms => Set<ContactUsForm>();
 
         public DbSet<Coupon> Coupons => Set<Coupon>();
-        public DbSet<CouponUserMapping> CouponUserMappings => Set<CouponUserMapping>();
 
         public DbSet<Faq> Faqs => Set<Faq>();
 

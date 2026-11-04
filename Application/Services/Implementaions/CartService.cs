@@ -102,6 +102,7 @@ namespace Application.Services.Implementaions
                     .Select(n => new ClientSideCartSnapshotDto
                     {
                         CartId = n.Id,
+                        DiscountCode = n.DiscountCode,
                         ProductIds = n.Items.Select(i => i.ProductId).ToList()
                     })
                     .FirstOrDefaultAsync();
@@ -110,6 +111,7 @@ namespace Application.Services.Implementaions
                 return snapshot ?? new ClientSideCartSnapshotDto
                 {
                     CartId = 0,
+                    DiscountCode = null,
                     ProductIds = new List<int>()
                 };
             }, TimeSpan.FromMinutes(10));
@@ -180,16 +182,16 @@ namespace Application.Services.Implementaions
             return productIds.Count();
         }
 
-        public async Task<Result<List<ClientSideCartDto>>> ClientSideGetCart()
+        public async Task<Result<ClientSideCartDto>> ClientSideGetCart()
         {
-            var productIds = await ClientSideGetCartProductIds();
-            if (productIds is null || !productIds.Any())
-                return new List<ClientSideCartDto>();
+            var cartSnapShot = await ClientSideGetCartSnapshot();
+            if (cartSnapShot.IsFailure || !cartSnapShot.Value.ProductIds.Any())
+                return new ClientSideCartDto();
 
             var cartItems = await _context.Products
                 .AsNoTracking()
-                .Where(n => productIds.Contains(n.Id))
-                .Select(n => new ClientSideCartDto()
+                .Where(n => cartSnapShot.Value.ProductIds.Contains(n.Id))
+                .Select(n => new ClientSideCartItemDto()
                 {
                     Id = n.Id,
                     Title = n.Title,
@@ -201,7 +203,16 @@ namespace Application.Services.Implementaions
                     IsAvailable = n.IsAvailable
                 }).ToListAsync();
 
-            return cartItems;
+            var cart = new ClientSideCartDto()
+            {
+                ItemsCount = cartItems.Count(),
+                DisplayPriceSum = cartItems.Where(n => n.IsAvailable).Select(n => (n.DisplayPrice > 0 ? n.DisplayPrice : n.OrderPrice)).Sum(),
+                OrderPriceSum = cartItems.Where(n => n.IsAvailable).Sum(n => n.OrderPrice),
+                Items = cartItems,
+            };
+            cart.ProductsDiscount = cart.DisplayPriceSum - cart.OrderPriceSum;
+
+            return cart;
         }
 
         public async Task<Result<int>> ClientSideAddToCart(ClientSideCartItemToggleDto model)
@@ -348,50 +359,51 @@ namespace Application.Services.Implementaions
 
         public async Task<Result<ClientSideCartSummaryViewModel>> ClientSideCartSummary()
         {
-            var cartItemsResult = await ClientSideGetCart();
-            if (cartItemsResult.IsFailure)
-                return Result.Failure<ClientSideCartSummaryViewModel>(cartItemsResult.Message);
+            /*            var cartItemsResult = await ClientSideGetCart();
+                        if (cartItemsResult.IsFailure)
+                            return Result.Failure<ClientSideCartSummaryViewModel>(cartItemsResult.Message);
 
-            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            var userIP = _httpContextAccessor.HttpContext.GetUserIP();
+                        var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+                        var userIP = _httpContextAccessor.HttpContext.GetUserIP();
 
-            var cartItems = cartItemsResult.Value;
+                        var cartItems = cartItemsResult.Value;
 
-            ClientSideCartSummaryViewModel summary = new ClientSideCartSummaryViewModel();
-            summary.SubTotal = cartItems.Where(n => n.IsAvailable).Sum(n => n.DisplayPrice);
-            summary.TotalDiscount =
-                cartItems.Where(n => n.OrderPrice > 0 && n.IsAvailable).Sum(n => n.DisplayPrice - n.OrderPrice);
-            summary.SubTotalAfterDisocunt = summary.SubTotal - (summary.TotalDiscount ?? 0);
+                        ClientSideCartSummaryViewModel summary = new ClientSideCartSummaryViewModel();
+                        summary.SubTotal = cartItems.Where(n => n.IsAvailable).Sum(n => n.DisplayPrice);
+                        summary.TotalDiscount =
+                            cartItems.Where(n => n.OrderPrice > 0 && n.IsAvailable).Sum(n => n.DisplayPrice - n.OrderPrice);
+                        summary.SubTotalAfterDisocunt = summary.SubTotal - (summary.TotalDiscount ?? 0);
 
-            var cartCode = await _dbSet.Where(n => (n.UserId == userId) &&
-                                                   n.Status == CartStatusEnum.PendingPayment)
-                .Select(n => n.DiscountCode)
-                .FirstOrDefaultAsync();
-            if (!string.IsNullOrWhiteSpace(cartCode))
-            {
-                var percentResult = await _couponService.ClientSideGetCouponPercentByCode(cartCode);
-                if (percentResult.IsSuccess)
-                {
-                    summary.DiscountCode = cartCode;
-                    summary.DiscountPercent = percentResult.Value;
-                    summary.DiscountCodeAmount = summary.SubTotal.GetAmount(percentResult.Value);
-                    summary.SubTotalAfterDisocunt -= (summary.DiscountCodeAmount ?? 0);
-                }
-            }
+                        var cartCode = await _dbSet.Where(n => (n.UserId == userId) &&
+                                                               n.Status == CartStatusEnum.PendingPayment)
+                            .Select(n => n.DiscountCode)
+                            .FirstOrDefaultAsync();
+                        if (!string.IsNullOrWhiteSpace(cartCode))
+                        {
+                            var percentResult = await _couponService.ClientSideGetCouponPercentByCode(cartCode);
+                            if (percentResult.IsSuccess)
+                            {
+                                summary.DiscountCode = cartCode;
+                                summary.DiscountPercent = percentResult.Value;
+                                summary.DiscountCodeAmount = summary.SubTotal.GetAmount(percentResult.Value);
+                                summary.SubTotalAfterDisocunt -= (summary.DiscountCodeAmount ?? 0);
+                            }
+                        }
 
-            var taxResult = await _paymentDataService.GetTaxRate();
-            if (taxResult.IsSuccess)
-            {
-                summary.Tax = summary.SubTotalAfterDisocunt.GetAmount(taxResult.Value);
-                summary.TaxRate = taxResult.Value;
-            }
+                        var taxResult = await _paymentDataService.GetTaxRate();
+                        if (taxResult.IsSuccess)
+                        {
+                            summary.Tax = summary.SubTotalAfterDisocunt.GetAmount(taxResult.Value);
+                            summary.TaxRate = taxResult.Value;
+                        }
 
-            summary.Total = summary.SubTotal -
-                            (summary.TotalDiscount ?? 0) -
-                            (summary.DiscountCodeAmount ?? 0) +
-                            (summary.Tax ?? 0);
+                        summary.Total = summary.SubTotal -
+                                        (summary.TotalDiscount ?? 0) -
+                                        (summary.DiscountCodeAmount ?? 0) +
+                                        (summary.Tax ?? 0);
 
-            return summary;
+                        return summary;*/
+            return new ClientSideCartSummaryViewModel();
         }
 
         public async Task<Result> AddCoupon(ClientSideAddCouponToCartViewModel model)
@@ -406,8 +418,8 @@ namespace Application.Services.Implementaions
                                            n.Status == CartStatusEnum.PendingPayment))
                 return Result.Failure(Messages.AlreadyUsedThisCouponError);
 
-            var couponResult = await _couponService.CheckCouponIsValidForUser(model.Code);
-            if (couponResult.IsFailure) return Result.Failure(couponResult.Message);
+            var couponResult = await _couponService.ClientSideCheckCouponIsValid(model.Code);
+            if (couponResult.IsFailure) return Result.Failure(couponResult.Message!);
 
             var cart = await _dbSet.Where(n => n.UserId == userId && n.Status == CartStatusEnum.PendingPayment)
                 .FirstOrDefaultAsync();

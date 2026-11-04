@@ -1,17 +1,14 @@
 ﻿@using Application.Dtos.Cart.ClientSide
+@using Application.Dtos.CartItem.ClientSide
 @using Application.Tools
-@model List<ClientSideCartDto>
+@model ClientSideCartDto
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
 
 @{
     ViewData["Title"] = "سبد خرید";
     var csrfToken = Xsrf.GetAndStoreTokens(Context).RequestToken;
 
-    decimal totalPrice = Model.Select(n => n.DisplayPrice > 0 ? n.DisplayPrice : n.OrderPrice).Sum();
-    decimal total = Model.Sum(n => n.OrderPrice);
-    decimal discount = totalPrice - total;
-
-    var hasItems = Model?.Any() == true;
+    var hasItems = Model.ItemsCount > 0 ? true : false;
     var listHidden = hasItems ? "" : "hidden";
     var emptyHidden = hasItems ? "hidden" : "";
 }
@@ -32,7 +29,7 @@
         <!-- ============ Lines ============ -->
         <div class="card card-pad" data-cart-render>
             <div data-cart-list @listHidden>
-                @foreach (var item in Model ?? new List<ClientSideCartDto>())
+                @foreach (var item in Model.Items ?? new List<ClientSideCartItemDto>())
                 {
                     <div class="cart-line"
                          data-cart-line
@@ -49,13 +46,21 @@
                             </a>
                             <div class="cart-line__meta">@item.Hint</div>
                         </div>
-                        <div class="price num">
-                            @if (item.DisplayPrice > 0)
-                            {
-                                <del>@item.DisplayPrice.ToTomanFormat()</del>
-                            }
-                            <small>تومان</small> @item.OrderPrice.ToTomanFormat()
-                        </div>
+                        @if (item.IsAvailable)
+                        {
+                            <div class="price num">
+                                @if (item.DisplayPrice > 0)
+                                {
+                                    <del>@item.DisplayPrice.ToTomanFormat()</del>
+                                }
+                                <small>تومان</small>
+                                @item.OrderPrice.ToTomanFormat()
+                            </div>
+                        }
+                        else
+                        {
+                            @: ناموجود
+                        }
                         <button type="button" class="btn btn--danger btn--sm" data-cart-remove>حذف</button>
                     </div>
                 }
@@ -84,14 +89,14 @@
 
             <div class="flex flex--between" style="font-size:.9rem;color:var(--text-2)">
                 <span>محصولات</span>
-                <span><span data-cart-count>@Model.Count()</span> مورد</span>
+                <span><span data-cart-count>@Model.ItemsCount</span> مورد</span>
             </div>
 
             <div class="flex flex--between mt-1" style="font-size:.9rem;color:var(--text-2)">
                 <span>جمع محصولات</span>
                 <span class="num">
                     <span data-cart-subtotal>
-                        @totalPrice.ToTomanFormat()
+                        @Model.DisplayPriceSum.ToTomanFormat()
                     </span>
                     تومان
                 </span>
@@ -99,7 +104,7 @@
 
             <div class="flex flex--between mt-1" style="font-size:.9rem;color:var(--text-2)" data-cart-discount-row hidden>
                 <span>تخفیف</span>
-                <span class="num text-brand">− <span data-cart-discount>@discount.ToTomanFormat()</span> تومان</span>
+                <span class="num text-brand">− <span data-cart-discount>@Model.ProductsDiscount.ToTomanFormat()</span> تومان</span>
             </div>
 
             <div class="coupon mt-1" data-coupon>
@@ -168,7 +173,7 @@
                 <span>مبلغ قابل پرداخت</span>
                 <span class="price">
                     <small>تومان</small>
-                    <span data-cart-total>@total.ToTomanFormat()</span>
+                    <span data-cart-total>@Model.PayAmount.ToTomanFormat()</span>
                 </span>
             </div>
 

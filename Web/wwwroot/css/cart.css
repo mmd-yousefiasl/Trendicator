@@ -441,3 +441,20 @@ a.cart-line__title {
 .checkout-layout.checkout-layout--empty {
     grid-template-columns: 1fr;
 }
+
+
+/* ═══════════ Cart line · unavailable ═══════════ */
+
+/* No .price child ⇒ unavailable.
+   The bare "ناموجود" text inherits these styles.
+   On mobile it auto-places into the empty "price" grid cell. */
+.cart-line:not(:has(.price)) {
+    color: var(--down);
+    font-size: .82rem;
+    font-weight: 700;
+}
+
+    /* Title uses `color: inherit` — keep it readable, not red */
+    .cart-line:not(:has(.price)) .cart-line__title {
+        color: var(--text-3);
+    }

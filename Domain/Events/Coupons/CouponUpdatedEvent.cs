@@ -8,7 +8,6 @@ namespace Domain.Events.Coupons
     DateTime FromDate,
     DateTime ToDate,
     string Code,
-    int Percent,
-    List<int>? UserIds
+    int Percent
     ) : INotification;
 }

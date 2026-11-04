@@ -1,6 +1,5 @@
-﻿@using Application.Services.Interfaces
-@using Application.Dtos.Coupon.AdminSide
-@using Application.Dtos.User.AdminSide
+﻿@using Application.Dtos.Coupon.AdminSide
+@using Application.Services.Interfaces
 @model AdminSideCreateNewCouponViewModel
 
 @inject IUserService _userService;
@@ -46,7 +45,7 @@
                     <div class="mb-3 row">
                         <label asp-for="Code" class="col-md-2 col-form-label"></label>
                         <div class="col-md-10">
-                            <input class="form-control" type="text" asp-for="Code">
+                            <input class="form-control" type="text" asp-for="Code" dir="ltr">
                             <span asp-validation-for="Code" class="text-danger"></span>
                         </div>
                     </div>
@@ -80,22 +79,6 @@
                         <div class="col-md-10">
                             <input class="form-control" asp-for="Percent">
                             <span asp-validation-for="Percent" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="mb-3 row">
-                        <label asp-for="UserIds" class="col-md-2 col-form-label"></label>
-                        <div class="col-md-10">
-                            <select class="form-control select2" asp-for="UserIds" multiple="multiple">
-                                @if (usersResult.IsSuccess)
-                                {
-                                    foreach (var item in usersResult.Value ?? new List<AdminSideUserAsOptionDto>())
-                                    {
-                                        <option value="@item.Id">@($"{item.Mobile} {item.FullName}")</option>
-                                    }
-                                }
-                            </select>
-                            <span asp-validation-for="UserIds" class="text-danger"></span>
                         </div>
                     </div>
 

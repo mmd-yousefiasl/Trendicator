@@ -7,11 +7,5 @@
         public DateTime ToDate { get; set; }
         public string Code { get; set; }
         public int Percent { get; set; }
-
-        #region Relations
-
-        public ICollection<CouponUserMapping>? Users { get; set; }
-
-        #endregion
     }
 }

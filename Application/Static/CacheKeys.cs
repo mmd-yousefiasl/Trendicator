@@ -13,6 +13,7 @@
         public const string FaqCacheKey = "Faq";
         public const string ProductCategoriesCacheKey = "ProductCategory";
         public const string SiteMapCacheKey = "SiteMap";
+        public const string CouponCacheKey = "Coupon";
 
         #region Cart
         public const string CartCacheKeyTemplate = "Cart:{0}";

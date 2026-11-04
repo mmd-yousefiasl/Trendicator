@@ -15,6 +15,9 @@ namespace Data.Context.Configurations.Coupons
 
             builder.Property(n => n.Title).HasMaxLength(100);
             builder.Property(n => n.Code).HasMaxLength(200);
+
+            builder.HasIndex(n => n.Code)
+                .IsUnique();
         }
     }
 }

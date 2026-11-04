@@ -1,22 +1,27 @@
 ﻿using Application.Dtos.Coupon.AdminSide;
+using Application.Dtos.Coupon.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces
 {
     public interface ICouponService
     {
+        #region Admin Side
         Task<Result<AdminSideFilterCouponsViewModel>> AdminSideFilterCoupons(AdminSideFilterCouponsViewModel filter);
 
-        Task<Result> SoftDeleteCoupon(int id);
+        Task<Result> AdminSideSoftDeleteCoupon(int id);
 
-        Task<Result> CreateNewCoupon(AdminSideCreateNewCouponViewModel model);
+        Task<Result> AdminSideCreateNewCoupon(AdminSideCreateNewCouponViewModel model);
 
-        Task<Result<AdminSideUpdateCouponViewModel>> GetCouponFouUpdate(int id);
+        Task<Result<AdminSideUpdateCouponViewModel>> AdminSideGetCouponFouUpdate(int id);
 
-        Task<Result> UpdateCoupon(AdminSideUpdateCouponViewModel model);
+        Task<Result> AdminSideUpdateCoupon(AdminSideUpdateCouponViewModel model);
+        #endregion
 
-        Task<Result> CheckCouponIsValidForUser(string code);
+        #region Client Side
+        Task<Result<List<ClientSideCouponSnapshotDto>>> ClientSideGetCouponSnapshot();
 
-        Task<Result<int>> ClientSideGetCouponPercentByCode(string code);
+        Task<Result<int>> ClientSideCheckCouponIsValid(string code);
+        #endregion
     }
 }
