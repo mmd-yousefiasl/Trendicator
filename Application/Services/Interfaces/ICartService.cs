@@ -22,6 +22,8 @@ namespace Application.Services.Interfaces
 
         Task<Result<int>> ClientSideRemoveFromCart(ClientSideCartItemToggleDto model);
 
+        Task<Result> ClientSideUpdateCartAfterUserLoggedIn(int userId);
+
         Task<Result<ClientSideCartSummaryViewModel>> ClientSideCartSummary();
 
         Task<Result> AddCoupon(ClientSideAddCouponToCartViewModel model);

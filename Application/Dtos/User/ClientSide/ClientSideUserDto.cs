@@ -1,6 +1,4 @@
-﻿using Application.Dtos;
-
-namespace Application.Dtos.User.ClientSide
+﻿namespace Application.Dtos.User.ClientSide
 {
     public class ClientSideUserDto : CommonDto
     {

@@ -172,7 +172,14 @@
                 </span>
             </div>
 
-            <a href="checkout.html" class="btn btn--primary btn--block btn--lg mt-3" data-cart-pay>ادامه و پرداخت</a>
+            @if (User.Identity?.IsAuthenticated ?? false)
+            {
+                <a href="checkout.html" class="btn btn--primary btn--block btn--lg mt-3">ادامه و پرداخت</a>
+            }
+            else
+            {
+                <a asp-area="" asp-controller="Account" asp-action="Login" asp-route-ReturnUrl="/cart" class="btn btn--primary btn--block btn--lg mt-3">ورود و پرداخت</a>
+            }
 
             <p class="hint mt-2 mb-0 text-center">
                 <svg class="ic" aria-hidden="true"><use href="#i-shield-lock" /></svg>

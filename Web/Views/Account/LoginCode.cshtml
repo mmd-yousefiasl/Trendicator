@@ -28,6 +28,7 @@
                 <form asp-area="" asp-controller="Account" asp-action="VerifyLoginCode" method="post" autocomplete="off">
                     <input type="hidden" asp-for="Mobile" />
                     <input type="hidden" asp-for="CreatedDate" />
+                    <input type="hidden" asp-for="ReturnUrl">
 
                     <div class="field">
                         <div class="otp" data-otp aria-label="کد تایید ۵ رقمی">

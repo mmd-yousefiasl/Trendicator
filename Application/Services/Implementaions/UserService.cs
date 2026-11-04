@@ -360,16 +360,25 @@ namespace Application.Services.Implementaions
             string loginCode = string.Join("", model.LoginCode);
 
             var validationResult = await ValidateUserLoginCode(model.Mobile, loginCode);
+
             if (validationResult.IsFailure)
                 return Result.Failure<ClientSideUserDto>(validationResult.Message!);
 
-            var user = await _context.Users.Where(n => n.Mobile == model.Mobile).Select(n => new ClientSideUserDto()
-            {
-                Id = n.Id,
-                IsBanned = n.IsUserBanned,
-                Mobile = n.Mobile,
-            }).AsNoTracking().FirstOrDefaultAsync();
-            if (user is null) return Result.Failure<ClientSideUserDto>(Messages.OperationFailedError);
+            var user = await _context.Users
+                .AsNoTracking()
+                .Where(n => n.Mobile == model.Mobile).Select(n => new ClientSideUserDto()
+                {
+                    Id = n.Id,
+                    IsBanned = n.IsUserBanned,
+                    Mobile = n.Mobile,
+                }).FirstOrDefaultAsync();
+
+            if (user is null)
+                return Result.Failure<ClientSideUserDto>(Messages.OperationFailedError);
+
+            UserLoggedInEvent UserLoggedInEvent = new UserLoggedInEvent(user.Id);
+
+            await _mediator.PublishEvent(UserLoggedInEvent);
 
             return user;
         }

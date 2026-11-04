@@ -296,6 +296,56 @@ namespace Application.Services.Implementaions
             return Result.Success(await ClientSideGetCartItemsCount(), Messages.RemovedFromCartSuccessfully);
         }
 
+        public async Task<Result> ClientSideUpdateCartAfterUserLoggedIn(int userId)
+        {
+            if (userId < 1)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var visitorCart = await ClientSideGetCartSnapshot();
+            if (visitorCart.IsFailure)
+                return Result.Success();
+
+            if (visitorCart.Value.ProductIds.Count() > 0)
+            {
+                var userCarts = await _context.Carts
+                    .Where(n => n.Status == CartStatusEnum.PendingPayment && n.UserId == userId)
+                    .ToListAsync();
+
+                _context.Carts.RemoveRange(userCarts);
+            }
+
+            var cart = await _context.Carts.FindAsync(visitorCart.Value.CartId);
+
+            if (cart is null)
+                return Result.Success();
+
+            string? visitorId = cart.VisitorId;
+
+            if (visitorCart.Value.ProductIds.Count() > 0)
+            {
+                cart.VisitorId = null;
+                cart.UserId = userId;
+            }
+            else
+            {
+                _context.Carts.Remove(cart);
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return Result.Success();   // someone else claimed it first — nothing to do
+            }
+
+            await _cacheManager.RemoveByKeyAsync(CacheKeys.CartCacheKey(visitorId ?? ""));
+            await _cacheManager.RemoveByKeyAsync(CacheKeys.CartCacheKey(userId.ToString()));
+
+            return Result.Success();
+        }
+
         public async Task<Result<ClientSideCartSummaryViewModel>> ClientSideCartSummary()
         {
             var cartItemsResult = await ClientSideGetCart();
