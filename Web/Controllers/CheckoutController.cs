@@ -86,7 +86,7 @@ namespace Web.Controllers
                 TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
                 return RedirectToAction(nameof(Checkout));
             }
-            var result = await _cartService.AddCoupon(model);
+            var result = await _cartService.ClientSideApplyCoupon(new ClientApplyCouponDto() { Code = model.Code });
             if (result.IsFailure)
             {
                 TempData[TemporaryErrorMessage] = result.Message;

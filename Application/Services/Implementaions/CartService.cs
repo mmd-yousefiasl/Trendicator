@@ -209,8 +209,25 @@ namespace Application.Services.Implementaions
                 DisplayPriceSum = cartItems.Where(n => n.IsAvailable).Select(n => (n.DisplayPrice > 0 ? n.DisplayPrice : n.OrderPrice)).Sum(),
                 OrderPriceSum = cartItems.Where(n => n.IsAvailable).Sum(n => n.OrderPrice),
                 Items = cartItems,
+                DiscountCode = cartSnapShot.Value.DiscountCode,
+                HaveUnavailableProduct = cartItems.Any(n => !n.IsAvailable)
             };
             cart.ProductsDiscount = cart.DisplayPriceSum - cart.OrderPriceSum;
+
+            if (!string.IsNullOrWhiteSpace(cart.DiscountCode))
+            {
+                var discountResult = await _couponService.ClientSideCheckCouponIsValid(cart.DiscountCode);
+                if (discountResult.IsFailure)
+                {
+                    cart.DiscountCode = null;
+                }
+                else
+                {
+                    cart.DiscountPercent = discountResult.Value;
+                    cart.DiscountCodeDiscount = cart.OrderPriceSum.GetDiscountAmount(cart.DiscountPercent);
+                }
+            }
+            cart.PayAmount = cart.OrderPriceSum - cart.DiscountCodeDiscount;
 
             return cart;
         }
@@ -357,6 +374,64 @@ namespace Application.Services.Implementaions
             return Result.Success();
         }
 
+        public async Task<Result> ClientSideApplyCoupon(ClientApplyCouponDto model)
+        {
+            if (model is null || string.IsNullOrWhiteSpace(model.Code))
+                return Result.Failure(Messages.InvalidCouponCodeError);
+
+            var cartResult = await ClientSideGetCartSnapshot();
+
+            if (cartResult.IsFailure)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var couponResult = await _couponService.ClientSideCheckCouponIsValid(model.Code.NormalizeCouponCode());
+
+            if (couponResult.IsFailure)
+                return Result.Failure(couponResult.Message!);
+
+            await _context.Carts
+                .Where(n => n.Id == cartResult.Value.CartId)
+                .ExecuteUpdateAsync(n => n.SetProperty(c => c.DiscountCode, model.Code.NormalizeCouponCode()));
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId > 0)
+            {
+                await _cacheManager.RemoveByKeyAsync(CacheKeys.CartCacheKey(userId.ToString()));
+            }
+            else
+            {
+                var visitorId = _visitorService.GetOrCreateVisitorId();
+                await _cacheManager.RemoveByKeyAsync(CacheKeys.CartCacheKey(visitorId));
+            }
+
+            return Result.Success(Messages.DiscountAppliedSuccessfully);
+        }
+
+        public async Task<Result> ClientSideRemoveCoupon()
+        {
+            var cartResult = await ClientSideGetCartSnapshot();
+
+            if (cartResult.IsFailure)
+                return Result.Failure(Messages.OperationFailedError);
+
+            await _context.Carts
+                .Where(n => n.Id == cartResult.Value.CartId)
+                .ExecuteUpdateAsync(n => n.SetProperty(c => c.DiscountCode, string.Empty));
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId > 0)
+            {
+                await _cacheManager.RemoveByKeyAsync(CacheKeys.CartCacheKey(userId.ToString()));
+            }
+            else
+            {
+                var visitorId = _visitorService.GetOrCreateVisitorId();
+                await _cacheManager.RemoveByKeyAsync(CacheKeys.CartCacheKey(visitorId));
+            }
+
+            return Result.Success(Messages.DiscountRemovedSuccessfully);
+        }
+
         public async Task<Result<ClientSideCartSummaryViewModel>> ClientSideCartSummary()
         {
             /*            var cartItemsResult = await ClientSideGetCart();
@@ -404,33 +479,6 @@ namespace Application.Services.Implementaions
 
                         return summary;*/
             return new ClientSideCartSummaryViewModel();
-        }
-
-        public async Task<Result> AddCoupon(ClientSideAddCouponToCartViewModel model)
-        {
-            if (model is null) return Result.Failure(Messages.OperationFailedError);
-
-            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            if (userId < 1) return Result.Failure(Messages.OperationFailedError);
-
-            if (await _dbSet.AnyAsync(n => n.UserId == userId &&
-                                           n.DiscountCode == model.Code &&
-                                           n.Status == CartStatusEnum.PendingPayment))
-                return Result.Failure(Messages.AlreadyUsedThisCouponError);
-
-            var couponResult = await _couponService.ClientSideCheckCouponIsValid(model.Code);
-            if (couponResult.IsFailure) return Result.Failure(couponResult.Message!);
-
-            var cart = await _dbSet.Where(n => n.UserId == userId && n.Status == CartStatusEnum.PendingPayment)
-                .FirstOrDefaultAsync();
-            if (cart is null) return Result.Failure(Messages.OperationFailedError);
-
-            cart.DiscountCode = model.Code;
-
-            _dbSet.Update(cart);
-            await _context.SaveChangesAsync();
-
-            return Result.Success(Messages.DiscountAppliedSuccessfully);
         }
 
         public async Task<Result> ClientSideAddUserIdToCurrentUserCart()

@@ -38,9 +38,9 @@ namespace Application.Services.Implementaions
         #endregion
 
         #region Admin Side
-        public async Task<Result<AdminSideFilterCouponsViewModel>> AdminSideFilterCoupons(AdminSideFilterCouponsViewModel filter)
+        public async Task<Result<AdminSideFilterCouponsDto>> AdminSideFilterCoupons(AdminSideFilterCouponsDto filter)
         {
-            if (filter is null) return Result.Failure<AdminSideFilterCouponsViewModel>(Messages.OperationFailedError);
+            if (filter is null) return Result.Failure<AdminSideFilterCouponsDto>(Messages.OperationFailedError);
 
             var conditions = Filter.GenerateConditions<Coupon>();
 
@@ -58,7 +58,7 @@ namespace Application.Services.Implementaions
                 query = query.Where(item);
             }
 
-            await filter.Paging(query.Select(n => new AdminSideCouponViewModel()
+            await filter.Paging(query.Select(n => new AdminSideCouponDto()
             {
                 Id = n.Id,
                 Code = n.Code,
@@ -71,7 +71,7 @@ namespace Application.Services.Implementaions
             return filter;
         }
 
-        public async Task<Result> AdminSideCreateNewCoupon(AdminSideCreateNewCouponViewModel model)
+        public async Task<Result> AdminSideCreateNewCoupon(AdminSideCreateNewCouponDto model)
         {
             if (model is null)
                 return Result.Failure(Messages.OperationFailedError);
@@ -109,15 +109,15 @@ namespace Application.Services.Implementaions
             return Result.Success();
         }
 
-        public async Task<Result<AdminSideUpdateCouponViewModel>> AdminSideGetCouponFouUpdate(int id)
+        public async Task<Result<AdminSideUpdateCouponDto>> AdminSideGetCouponFouUpdate(int id)
         {
             if (id < 1)
-                return Result.Failure<AdminSideUpdateCouponViewModel>(Messages.OperationFailedError);
+                return Result.Failure<AdminSideUpdateCouponDto>(Messages.OperationFailedError);
 
             var coupon = await _context.Coupons
                 .AsNoTracking()
                 .Where(n => n.Id == id)
-                .Select(n => new AdminSideUpdateCouponViewModel()
+                .Select(n => new AdminSideUpdateCouponDto()
                 {
                     Id = n.Id,
                     Code = n.Code,
@@ -128,7 +128,7 @@ namespace Application.Services.Implementaions
                 }).FirstOrDefaultAsync();
 
             if (coupon is null)
-                return Result.Failure<AdminSideUpdateCouponViewModel>(Messages.OperationFailedError);
+                return Result.Failure<AdminSideUpdateCouponDto>(Messages.OperationFailedError);
 
             return coupon;
         }
@@ -156,7 +156,7 @@ namespace Application.Services.Implementaions
             return Result.Success();
         }
 
-        public async Task<Result> AdminSideUpdateCoupon(AdminSideUpdateCouponViewModel model)
+        public async Task<Result> AdminSideUpdateCoupon(AdminSideUpdateCouponDto model)
         {
             if (model is null)
                 return Result.Failure(Messages.OperationFailedError);

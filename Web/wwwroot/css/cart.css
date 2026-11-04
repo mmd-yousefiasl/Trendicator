@@ -458,3 +458,34 @@ a.cart-line__title {
     .cart-line:not(:has(.price)) .cart-line__title {
         color: var(--text-3);
     }
+/* ═══════════ Checkout · blocked by unavailable product ═══════════ */
+
+.checkout-blocked {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+    font-size: .8rem;
+    font-weight: 600;
+    line-height: 1.6;
+    color: var(--down);
+    background: var(--down-soft);
+    border: 1px solid color-mix(in srgb, var(--down) 35%, transparent);
+    border-radius: var(--r-sm);
+    animation: couponErrorIn 260ms ease; /* reuses your existing keyframe */
+}
+
+    .checkout-blocked svg {
+        flex: none;
+        margin-top: 2px;
+    }
+
+/* Disabled primary button — muted, non-interactive.
+   (If .btn:disabled is already styled globally, this is a no-op.) */
+.btn--primary:disabled {
+    background: var(--line);
+    color: var(--text-3);
+    cursor: not-allowed;
+    box-shadow: none;
+    pointer-events: none;
+}

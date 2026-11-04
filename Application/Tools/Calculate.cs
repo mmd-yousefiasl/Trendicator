@@ -11,6 +11,11 @@
             return 100 - discountedPercent;
         }
 
+        public static decimal GetDiscountAmount(this decimal value, int percent)
+        {
+            return value * percent / 100;
+        }
+
         public static decimal GetAmount(this decimal value, int taxRate)
         {
             return value * taxRate / 100;

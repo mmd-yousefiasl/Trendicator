@@ -1,3 +1,23 @@
+/* ─────────────── Shared: flash message that survives reload ─────────────── */
+/* Exposed on window so it's safe even if this partial is rendered twice.     */
+(() => {
+    if (window.setPageFlash) return;
+
+    window.PAGE_FLASH_KEY = 'cart-flash';
+
+    window.setPageFlash = function (type, msg) {
+        if (!msg) return;
+        try {
+            sessionStorage.setItem(window.PAGE_FLASH_KEY, JSON.stringify({
+                type: type || 'success',
+                msg,
+                at: Date.now()
+            }));
+        } catch { /* private mode / quota — silently skip */ }
+    };
+})();
+
+/* ────────────────────── Coupon: apply / remove ────────────────────── */
 (() => {
     const summary = document.querySelector('.order-summary');
     if (!summary) return;
@@ -75,20 +95,6 @@
         summary.classList.toggle('is-loading', on);
     }
 
-    function flashSuccess() {
-        summary.classList.remove('is-success-flash');
-        void summary.offsetWidth;
-        summary.classList.add('is-success-flash');
-        setTimeout(() => summary.classList.remove('is-success-flash'), 1050);
-    }
-
-    async function swapSummary(html) {
-        summary.classList.add('is-swapping');
-        await new Promise(r => setTimeout(r, 220));
-        summary.innerHTML = html;
-        summary.classList.remove('is-swapping', 'is-loading');
-    }
-
     /* ─────────────────────────── Actions ─────────────────────────── */
 
     async function applyCoupon(btn) {
@@ -115,15 +121,10 @@
                 showError(data.message || 'کد تخفیف معتبر نیست یا منقضی شده است.');
                 return;
             }
-            if (!data.html) {
-                setLoading(false);
-                btn.disabled = false;
-                showError('خطا در بارگذاری اطلاعات سبد.');
-                return;
-            }
 
-            await swapSummary(data.html);
-            flashSuccess();
+            // success → stash message, reload; the server re-renders the summary
+            setPageFlash('success', data.message || 'کد تخفیف با موفقیت اعمال شد.');
+            location.reload();
 
         } catch {
             setLoading(false);
@@ -141,9 +142,9 @@
             });
             const data = await res.json().catch(() => ({}));
 
-            if (res.ok && data.success && data.html) {
-                await swapSummary(data.html);
-                flashSuccess();
+            if (res.ok && data.success) {
+                setPageFlash('success', data.message || 'کد تخفیف حذف شد.');
+                location.reload();
             } else {
                 setLoading(false);
             }
@@ -214,15 +215,7 @@
             }
 
             // stash the message — it'll be shown after the page re-renders
-            if (data.message) {
-                try {
-                    sessionStorage.setItem('cart-flash', JSON.stringify({
-                        type: 'success',
-                        msg: data.message,
-                        at: Date.now()
-                    }));
-                } catch { /* private mode / quota — silently skip */ }
-            }
+            setPageFlash('success', data.message);
 
             location.reload();
         } catch {

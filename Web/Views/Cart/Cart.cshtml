@@ -102,49 +102,58 @@
                 </span>
             </div>
 
-            <div class="flex flex--between mt-1" style="font-size:.9rem;color:var(--text-2)" data-cart-discount-row hidden>
-                <span>تخفیف</span>
-                <span class="num text-brand">− <span data-cart-discount>@Model.ProductsDiscount.ToTomanFormat()</span> تومان</span>
+            @if (Model.ProductsDiscount > 0 || Model.DiscountCodeDiscount > 0)
+            {
+                <div class="flex flex--between mt-1" style="font-size:.9rem;color:var(--text-2)" data-cart-discount-row hidden>
+                    <span>تخفیف</span>
+                    <span class="num text-brand">
+                        − <span data-cart-discount>
+                        @((Model.ProductsDiscount + Model.DiscountCodeDiscount).ToTomanFormat())
+                    </span> تومان
+                </span>
             </div>
+        }
 
-            <div class="coupon mt-1" data-coupon>
+        <div class="coupon mt-1" data-coupon>
 
-                <!-- ── Idle row + expandable input ─────────────────────── -->
-                <div data-coupon-idle>
-                    <div class="coupon__row">
-                        <span>کد تخفیف</span>
-                        <a href="#" class="coupon__toggle" data-open-coupon>افزودن کد</a>
-                    </div>
+            <!-- ── Idle row + expandable input ─────────────────────── -->
+            <div data-coupon-idle>
+                <div class="coupon__row">
+                    <span>کد تخفیف</span>
+                    <a href="#" class="coupon__toggle" data-open-coupon>افزودن کد</a>
+                </div>
 
-                    <div class="coupon__expand" data-coupon-form>
-                        <div class="coupon__expand-inner">
-                            <div class="coupon__input-row">
-                                <input class="input coupon__input"
-                                       type="text"
-                                       placeholder="WELCOME20"
-                                       autocomplete="off"
-                                       dir="ltr"
-                                       data-coupon-input />
-                                <button class="btn btn--primary btn--sm" type="button" data-coupon-apply>اعمال</button>
-                            </div>
+                <div class="coupon__expand" data-coupon-form>
+                    <div class="coupon__expand-inner">
+                        <div class="coupon__input-row">
+                            <input class="input coupon__input"
+                                   type="text"
+                                   maxlength="200"
+                                   placeholder="کد تخفیف"
+                                   autocomplete="off"
+                                   dir="ltr"
+                                   data-coupon-input />
+                            <button class="btn btn--primary btn--sm" type="button" data-coupon-apply>اعمال</button>
+                        </div>
 
-                            <div class="coupon__error" data-coupon-error hidden>
-                                <svg viewBox="0 0 16 16" width="14" height="14"
-                                     fill="none" stroke="currentColor" stroke-width="1.8"
-                                     stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="8" cy="8" r="6.5" />
-                                    <path d="M8 4.5v4M8 11.2v.1" />
-                                </svg>
-                                <span data-coupon-error-text></span>
-                            </div>
+                        <div class="coupon__error" data-coupon-error hidden>
+                            <svg viewBox="0 0 16 16" width="14" height="14"
+                                 fill="none" stroke="currentColor" stroke-width="1.8"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="8" cy="8" r="6.5" />
+                                <path d="M8 4.5v4M8 11.2v.1" />
+                            </svg>
+                            <span data-coupon-error-text></span>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- ── Applied (success) ──────────────────────────────── -->
-                <div class="coupon-applied" data-coupon-applied hidden aria-live="polite">
+            @if (!string.IsNullOrWhiteSpace(Model.DiscountCode))
+            {
+                <div class="coupon-applied" data-coupon-applied aria-live="polite">
                     <div class="coupon-applied__chip">
-                        <div class="coupon-applied__percent">۲۰٪</div>
+                        <div class="coupon-applied__percent">@Model.DiscountPercent٪</div>
                         <div class="coupon-applied__body">
                             <b>کد تخفیف اعمال شد</b>
                             <span class="coupon-applied__code">
@@ -153,7 +162,7 @@
                                      stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M3 8.5l3.2 3.2L13 5" />
                                 </svg>
-                                WELCOME20
+                                @Model.DiscountCode
                             </span>
                         </div>
                         <button type="button" class="coupon-applied__remove" aria-label="حذف کد تخفیف">
@@ -164,34 +173,52 @@
                         </button>
                     </div>
                 </div>
-
-            </div>
-
-            <hr style="border:none;border-top:1px dashed var(--line);margin:10px 0">
-
-            <div class="flex flex--between" style="font-weight:800">
-                <span>مبلغ قابل پرداخت</span>
-                <span class="price">
-                    <small>تومان</small>
-                    <span data-cart-total>@Model.PayAmount.ToTomanFormat()</span>
-                </span>
-            </div>
-
-            @if (User.Identity?.IsAuthenticated ?? false)
-            {
-                <a href="checkout.html" class="btn btn--primary btn--block btn--lg mt-3">ادامه و پرداخت</a>
-            }
-            else
-            {
-                <a asp-area="" asp-controller="Account" asp-action="Login" asp-route-ReturnUrl="/cart" class="btn btn--primary btn--block btn--lg mt-3">ورود و پرداخت</a>
             }
 
-            <p class="hint mt-2 mb-0 text-center">
-                <svg class="ic" aria-hidden="true"><use href="#i-shield-lock" /></svg>
-                اتصال SSL · درگاه رسمی شتاب
-            </p>
-        </aside>
-    </div>
+        </div>
+
+        <hr style="border:none;border-top:1px dashed var(--line);margin:10px 0">
+
+        <div class="flex flex--between" style="font-weight:800">
+            <span>مبلغ قابل پرداخت</span>
+            <span class="price">
+                <small>تومان</small>
+                <span data-cart-total>@Model.PayAmount.ToTomanFormat()</span>
+            </span>
+        </div>
+
+        @if (Model.HaveUnavailableProduct)
+        {
+            <div class="checkout-blocked mt-3" role="alert">
+                <svg viewBox="0 0 16 16" width="16" height="16"
+                     fill="none" stroke="currentColor" stroke-width="1.8"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="8" cy="8" r="6.5" />
+                    <path d="M8 4.5v4M8 11.2v.1" />
+                </svg>
+                <span>برای ادامه و پرداخت، ابتدا محصولات ناموجود را از سبد خرید حذف کنید.</span>
+            </div>
+
+            <button type="button" class="btn btn--primary btn--block btn--lg mt-3" disabled>
+                ادامه و پرداخت
+            </button>
+        }
+        else if (User.Identity?.IsAuthenticated ?? false)
+        {
+            <a href="checkout.html" class="btn btn--primary btn--block btn--lg mt-3">ادامه و پرداخت</a>
+        }
+        else
+        {
+            <a asp-area="" asp-controller="Account" asp-action="Login" asp-route-ReturnUrl="/cart"
+               class="btn btn--primary btn--block btn--lg mt-3">ورود و پرداخت</a>
+        }
+
+        <p class="hint mt-2 mb-0 text-center">
+            <svg class="ic" aria-hidden="true"><use href="#i-shield-lock" /></svg>
+            اتصال SSL · درگاه رسمی شتاب
+        </p>
+    </aside>
+</div>
 </main>
 
 @section FooterReferences {

@@ -1,6 +1,6 @@
-﻿@using Application.Tools
-@using Application.Dtos.Coupon.AdminSide
-@model AdminSideFilterCouponsViewModel
+﻿@using Application.Dtos.Coupon.AdminSide
+@using Application.Tools
+@model AdminSideFilterCouponsDto
 
 @{
     ViewData["Title"] = "لیست کدهای تخفیف";
@@ -67,7 +67,7 @@
                                     @{
                                         int counter = 0;
 
-                                        foreach (var item in Model.Entities ?? new List<AdminSideCouponViewModel>())
+                                        foreach (var item in Model.Entities ?? new List<AdminSideCouponDto>())
                                         {
                                             counter++;
 

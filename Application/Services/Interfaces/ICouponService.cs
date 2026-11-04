@@ -7,15 +7,15 @@ namespace Application.Services.Interfaces
     public interface ICouponService
     {
         #region Admin Side
-        Task<Result<AdminSideFilterCouponsViewModel>> AdminSideFilterCoupons(AdminSideFilterCouponsViewModel filter);
+        Task<Result<AdminSideFilterCouponsDto>> AdminSideFilterCoupons(AdminSideFilterCouponsDto filter);
 
         Task<Result> AdminSideSoftDeleteCoupon(int id);
 
-        Task<Result> AdminSideCreateNewCoupon(AdminSideCreateNewCouponViewModel model);
+        Task<Result> AdminSideCreateNewCoupon(AdminSideCreateNewCouponDto model);
 
-        Task<Result<AdminSideUpdateCouponViewModel>> AdminSideGetCouponFouUpdate(int id);
+        Task<Result<AdminSideUpdateCouponDto>> AdminSideGetCouponFouUpdate(int id);
 
-        Task<Result> AdminSideUpdateCoupon(AdminSideUpdateCouponViewModel model);
+        Task<Result> AdminSideUpdateCoupon(AdminSideUpdateCouponDto model);
         #endregion
 
         #region Client Side

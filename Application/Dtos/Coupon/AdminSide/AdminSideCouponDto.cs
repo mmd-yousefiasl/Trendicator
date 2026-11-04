@@ -2,7 +2,7 @@
 
 namespace Application.Dtos.Coupon.AdminSide
 {
-    public class AdminSideCouponViewModel : CommonDto
+    public class AdminSideCouponDto : CommonDto
     {
         public string Title { get; set; }
         public DateTime FromDate { get; set; }

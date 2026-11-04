@@ -22,10 +22,10 @@ namespace Web.Areas.Admin.Controllers
 
         [Permission("CouponsList")]
         [HttpGet("/admin/coupons-list")]
-        public async Task<IActionResult> CouponsList(AdminSideFilterCouponsViewModel filter)
+        public async Task<IActionResult> CouponsList(AdminSideFilterCouponsDto filter)
         {
             var result = await _couponService.AdminSideFilterCoupons(filter);
-            if (result.IsFailure) return View(new AdminSideFilterCouponsViewModel());
+            if (result.IsFailure) return View(new AdminSideFilterCouponsDto());
 
             return View(result.Value);
         }
@@ -39,7 +39,7 @@ namespace Web.Areas.Admin.Controllers
 
         [Permission("CreateNewCoupon")]
         [HttpPost("/admin/add-new-coupon"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateNewCoupon(AdminSideCreateNewCouponViewModel model)
+        public async Task<IActionResult> CreateNewCoupon(AdminSideCreateNewCouponDto model)
         {
             if (!ModelState.IsValid) return View(model);
             var result = await _couponService.AdminSideCreateNewCoupon(model);
@@ -74,7 +74,7 @@ namespace Web.Areas.Admin.Controllers
 
         [Permission("UpdateCoupon")]
         [HttpPost("/admin/edit-coupon"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateCoupon(AdminSideUpdateCouponViewModel model)
+        public async Task<IActionResult> UpdateCoupon(AdminSideUpdateCouponDto model)
         {
             if (!ModelState.IsValid) return View(model);
             var result = await _couponService.AdminSideUpdateCoupon(model);

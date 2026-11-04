@@ -1,6 +1,6 @@
 ﻿@using Application.Dtos.Coupon.AdminSide
 @using Application.Services.Interfaces
-@model AdminSideCreateNewCouponViewModel
+@model AdminSideCreateNewCouponDto
 
 @inject IUserService _userService;
 
@@ -54,7 +54,7 @@
                         <label asp-for="FromDate" class="col-md-2 col-form-label"></label>
                         <div class="col-md-10">
                             <div class="input-group" id="datepicker1">
-                                <input type="text" class="form-control" data-jdp data-jdp-min-date="today" asp-for="FromDate" />
+                                <input type="text" class="form-control" data-jdp  asp-for="FromDate" />
 
                                 <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
                             </div><!-- input-group -->
@@ -66,7 +66,7 @@
                         <label asp-for="ToDate" class="col-md-2 col-form-label"></label>
                         <div class="col-md-10">
                             <div class="input-group" id="datepicker1">
-                                <input type="text" class="form-control" data-jdp data-jdp-min-date="today" asp-for="ToDate" />
+                                <input type="text" class="form-control" data-jdp asp-for="ToDate" />
 
                                 <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
                             </div><!-- input-group -->
