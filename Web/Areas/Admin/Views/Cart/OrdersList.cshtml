@@ -1,7 +1,7 @@
 ﻿@using Application.Dtos.Cart.AdminSide
-@using Domain.Enums.Shopping
 @using Application.Tools
-@model AdminSideFilterCartsViewModel
+@using Domain.Enums.Shopping
+@model AdminSideFilterCartsDto
 
 @{
     ViewData["Title"] = "لیست سفارش ها";
@@ -31,12 +31,6 @@
                     <form novalidate asp-area="Admin" asp-controller="Cart" method="get" asp-action="OrdersList" id="search-form">
                         <input type="hidden" asp-for="Page" id="Page" />
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label" asp-for="Search"></label>
-                                    <input type="text" class="form-control" asp-for="Search" autocomplete="off">
-                                </div>
-                            </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label" asp-for="Status"></label>
@@ -74,14 +68,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var item in Model.Entities ?? new List<AdminSideCartViewModel>())
+                                    @foreach (var item in Model.Entities ?? new List<AdminSideCartDto>())
                                     {
                                         <tr>
                                             <th scope="row">@item.Id</th>
                                             <td>@item.PaidDate?.GetDateTime()</td>
                                             <td>
                                                 <a asp-area="Admin" asp-controller="User" asp-action="UpdateUser" asp-route-id="@item.UserId">
-                                                    @item.UserIP
+                                                    مشاهده کاربر
                                                 </a>
                                             </td>
                                             <td>@item.Status.GetDisplayName()</td>
@@ -89,10 +83,6 @@
                                             <td>@item.TotalDiscount?.ToToman()</td>
                                             <td>@item.DiscountCode</td>
                                             <td>
-                                                <a permission="UpdateOrder" asp-area="Admin" asp-controller="Cart" asp-action="UpdateOrder" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm edit" title="ویرایش">
-                                                    <i class="fas fa-pencil-alt"></i>
-                                                </a>
-
                                                 <a permission="OrderDetails" asp-area="Admin" asp-controller="Cart" asp-action="OrderDetails" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm edit" title="جزئیات سفارش">
                                                     <i class="fa fa-file-text"></i>
                                                 </a>

@@ -745,13 +745,6 @@ namespace Domain.Statics
             },
             new Permission
             {
-                Id = 107,
-                ParentId = 105,
-                Title = "ویرایش سفارش",
-                UniqueName = "UpdateOrder"
-            },
-            new Permission
-            {
                 Id = 108,
                 ParentId = 105,
                 Title = "جزئیات سفارش",

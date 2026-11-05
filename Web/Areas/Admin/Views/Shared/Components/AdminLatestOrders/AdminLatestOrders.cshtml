@@ -1,6 +1,6 @@
-﻿@using Application.Tools
-@using Application.Dtos.Cart.AdminSide
-@model AdminSideFilterCartsViewModel
+﻿@using Application.Dtos.Cart.AdminSide
+@using Application.Tools
+@model AdminSideFilterCartsDto
 
 @if (Model?.Entities?.Any() ?? false)
 {
@@ -16,14 +16,14 @@
                 <div class="table-responsive">
                     <table class="table align-middle table-centered table-vertical table-nowrap mb-1">
                         <tbody>
-                            @foreach (var item in Model.Entities ?? new List<AdminSideCartViewModel>())
+                            @foreach (var item in Model.Entities ?? new List<AdminSideCartDto>())
                             {
                                 <tr>
                                     <th scope="row">@item.Id#</th>
                                     <td>@item.PaidDate?.GetDateTime()</td>
                                     <td>
                                         <a asp-area="Admin" asp-controller="User" asp-action="UpdateUser" asp-route-id="@item.UserId">
-                                            @item.UserIP
+                                            مشاهده کاربر
                                         </a>
                                     </td>
                                     <td>@item.Status.GetDisplayName()</td>

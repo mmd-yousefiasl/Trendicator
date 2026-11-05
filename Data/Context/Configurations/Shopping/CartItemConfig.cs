@@ -12,6 +12,15 @@ namespace Data.Context.Configurations.Shopping
 
             builder.HasKey(n => new { n.CartId, n.ProductId });
 
+            builder.Property(n => n.Title)
+                .HasMaxLength(100);
+
+            builder.Property(u => u.OrderPrice)
+            .HasColumnType("numeric(18,0)");
+
+            builder.Property(u => u.DisplayPrice)
+                .HasColumnType("numeric(18,0)");
+
             builder.HasOne(n => n.Cart)
                 .WithMany(n => n.Items)
                 .HasForeignKey(n => n.CartId)

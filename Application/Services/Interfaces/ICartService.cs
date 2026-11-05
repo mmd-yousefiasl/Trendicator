@@ -32,19 +32,15 @@ namespace Application.Services.Interfaces
 
         Task<Result<ClientSidePaymentResultDto>> ClientSideVerifyCart();
 
+        Task<Result<AdminSideCartDetailsDto>> AdminSideGetCartDetails(int id);
+
         Task<Result<ClientSideCartSummaryViewModel>> ClientSideCartSummary();
 
         Task<Result<string>> ClientSideGetCurrentUserTradingViewAccountName();
 
         Task<Result<ClientSideProceedToCheckoutDto>> ClientSideProceedToCheckout(bool useWallet);
 
-        Task<Result<AdminSideFilterCartsViewModel>> AdminSideFilterCarts(AdminSideFilterCartsViewModel filter);
-
-        Task<Result<AdminSideUpdateCartStatusViewModel>> AdminSideGetStatusForUpdate(int id);
-
-        Task<Result> AdminSideUpdateCartStatus(AdminSideUpdateCartStatusViewModel model);
-
-        Task<Result<AdminSideCartDetailsViewModel>> AdminSideGetCartDetails(int id);
+        Task<Result<AdminSideFilterCartsDto>> AdminSideFilterCarts(AdminSideFilterCartsDto filter);
 
         Task<Result<ClientSideFilterCartsViewModel>> ClientSideFilterCarts(ClientSideFilterCartsViewModel filter);
 

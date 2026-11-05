@@ -14,8 +14,8 @@ namespace Web.Areas.Admin.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var result = await _cartService.AdminSideFilterCarts(new AdminSideFilterCartsViewModel());
-            if (result.IsFailure) return View("AdminLatestOrders", new AdminSideFilterCartsViewModel());
+            var result = await _cartService.AdminSideFilterCarts(new AdminSideFilterCartsDto());
+            if (result.IsFailure) return View("AdminLatestOrders", new AdminSideFilterCartsDto());
 
             return View("AdminLatestOrders", result.Value);
         }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.Dtos.Cart.AdminSide
 {
-    public class AdminSideFilterCartsViewModel : BasePaging<AdminSideCartViewModel>
+    public class AdminSideFilterCartsDto : BasePaging<AdminSideCartDto>
     {
         [Display(Name = "جست و جو")]
         public string? Search { get; set; }

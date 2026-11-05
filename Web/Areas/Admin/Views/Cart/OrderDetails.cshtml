@@ -1,6 +1,7 @@
 ﻿@using Application.Dtos.Cart.AdminSide
+@using Application.Dtos.CartItem.AdminSide
 @using Application.Tools
-@model AdminSideCartDetailsViewModel
+@model AdminSideCartDetailsDto
 
 @{
     ViewData["Title"] = "جزئیات سفارش";
@@ -44,12 +45,12 @@
                                     </address>
                                 </div>
 
-                                @if (!string.IsNullOrWhiteSpace(Model.TradingViewAccountName))
+                                @if (!string.IsNullOrWhiteSpace(Model.DiscountCode))
                                 {
                                     <div class="col-6 mt-4">
                                         <address>
-                                            <strong>نام اکانت تریدینگ ویو:</strong><br>
-                                            @Model.TradingViewAccountName
+                                            <strong>کد تخفیف:</strong><br>
+                                            @Model.DiscountCode
                                             <br><br>
                                         </address>
                                     </div>
@@ -77,11 +78,11 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach (var item in Model?.Products ?? new List<AdminSideCartItemViewModel>())
+                                                @foreach (var item in Model.Products ?? new List<AdminSideCartItemDto>())
                                                 {
                                                     <tr>
-                                                        <td>@item.Title (@item.Option)</td>
-                                                        <td class="text-center">@item.Price.ToToman()</td>
+                                                        <td>@item.Title</td>
+                                                        <td class="text-center">@((item.DisplayPrice > 0 ? item.DisplayPrice : item.OrderPrice).ToToman())</td>
                                                         <td class="thick-line"></td>
                                                     </tr>
                                                 }
@@ -90,7 +91,7 @@
                                                     <td class="thick-line text-center">
                                                         <strong>مجموع</strong>
                                                     </td>
-                                                    <td class="thick-line text-end">@Model.SubTotal.ToToman()</td>
+                                                    <td class="thick-line text-end">@Model.Products?.Select(n => (n.DisplayPrice > 0 ? n.DisplayPrice : n.OrderPrice)).Sum().ToToman()</td>
                                                 </tr>
                                                 @if (Model.TotalDiscount > 0)
                                                 {
@@ -100,16 +101,6 @@
                                                             <strong>تخفیف</strong>
                                                         </td>
                                                         <td class="thick-line text-end">@Model.TotalDiscount.ToToman()</td>
-                                                    </tr>
-                                                }
-                                                @if (Model.Tax > 0)
-                                                {
-                                                    <tr>
-                                                        <td class="no-line"></td>
-                                                        <td class="no-line text-center">
-                                                            <strong>مالیات</strong>
-                                                        </td>
-                                                        <td class="no-line text-end">@Model.Tax.ToToman()</td>
                                                     </tr>
                                                 }
                                                 <tr>

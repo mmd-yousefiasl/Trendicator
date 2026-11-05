@@ -22,47 +22,12 @@ namespace Web.Areas.Admin.Controllers
 
         [Permission("OrdersList")]
         [HttpGet("/admin/orders-list")]
-        public async Task<IActionResult> OrdersList(AdminSideFilterCartsViewModel filter)
+        public async Task<IActionResult> OrdersList(AdminSideFilterCartsDto filter)
         {
             var result = await _cartService.AdminSideFilterCarts(filter);
-            if (result.IsFailure) return View(new AdminSideFilterCartsViewModel());
+            if (result.IsFailure) return View(new AdminSideFilterCartsDto());
 
             return View(result.Value);
-        }
-
-        [Permission("UpdateOrder")]
-        [HttpGet("/admin/edit-order")]
-        public async Task<IActionResult> UpdateOrder(int id)
-        {
-            if (id < 1)
-            {
-                TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
-                return RedirectToAction(nameof(OrdersList));
-            }
-            var result = await _cartService.AdminSideGetStatusForUpdate(id);
-            if (result.IsFailure)
-            {
-                TempData[TemporaryErrorMessage] = result.Message;
-                return RedirectToAction(nameof(OrdersList));
-            }
-
-            return View(result.Value);
-        }
-
-        [Permission("UpdateOrder")]
-        [HttpPost("/admin/edit-order"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateOrder(AdminSideUpdateCartStatusViewModel model)
-        {
-            if (!ModelState.IsValid) return View(model);
-            var result = await _cartService.AdminSideUpdateCartStatus(model);
-            if (result.IsFailure)
-            {
-                TempData[TemporaryErrorMessage] = result.Message;
-                return View(model);
-            }
-            TempData[TemporarySuccessMessage] = result.Message;
-
-            return RedirectToAction(nameof(OrdersList));
         }
 
         [Permission("OrderDetails")]

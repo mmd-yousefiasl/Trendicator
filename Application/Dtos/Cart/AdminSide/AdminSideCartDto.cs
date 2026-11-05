@@ -1,11 +1,9 @@
-﻿using Application.Dtos;
-using Domain.Enums.Shopping;
+﻿using Domain.Enums.Shopping;
 
 namespace Application.Dtos.Cart.AdminSide
 {
-    public class AdminSideCartViewModel : CommonDto
+    public class AdminSideCartDto : CommonDto
     {
-        public string UserIP { get; set; }
         public int? UserId { get; set; }
         public CartStatusEnum Status { get; set; }
         public decimal? TotalPaid { get; set; }

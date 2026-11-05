@@ -3,7 +3,6 @@
     public class AdminSideCartItemViewModel
     {
         public string Title { get; set; }
-        public string Option { get; set; }
-        public decimal Price { get; set; }
+        public decimal OrderPrice { get; set; }
     }
 }
