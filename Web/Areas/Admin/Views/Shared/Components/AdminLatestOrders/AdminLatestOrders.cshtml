@@ -31,10 +31,6 @@
                                     <td>@item.TotalDiscount?.ToToman()</td>
                                     <td>@item.DiscountCode</td>
                                     <td>
-                                        <a permission="UpdateOrder" asp-area="Admin" asp-controller="Cart" asp-action="UpdateOrder" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm edit" title="ویرایش">
-                                            <i class="fas fa-pencil-alt"></i>
-                                        </a>
-
                                         <a permission="OrderDetails" asp-area="Admin" asp-controller="Cart" asp-action="OrderDetails" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm edit" title="جزئیات سفارش">
                                             <i class="fa fa-file-text"></i>
                                         </a>
