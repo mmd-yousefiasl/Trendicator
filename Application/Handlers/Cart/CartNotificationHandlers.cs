@@ -7,20 +7,20 @@ using MediatR;
 
 namespace Application.Handlers.Cart
 {
-    public class CartSiteNotificationHandlers : INotificationHandler<CartUpdatedEvent>
+    public class CartNotificationHandlers : INotificationHandler<CartPaidEvent>
     {
         #region Fields
         private readonly ISiteNotificationService _notificationService;
         #endregion
 
         #region Ctor
-        public CartSiteNotificationHandlers(ISiteNotificationService notificationService)
+        public CartNotificationHandlers(ISiteNotificationService notificationService)
         {
             _notificationService = notificationService;
         }
         #endregion
 
-        public async Task Handle(CartUpdatedEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(CartPaidEvent notification, CancellationToken cancellationToken)
         {
             string content = $"سفارش با شناسه {notification.Id} ثبت شد! وضعیت جدید {notification.Status.GetDisplayName()}";
 

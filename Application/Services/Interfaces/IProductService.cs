@@ -35,6 +35,8 @@ namespace Application.Services.Interfaces
         Task<Result<List<AdminSideProductForSiteMapViewModel>>> AdminSideGetProductIdsForSiteMap();
 
         Task<Result> ClientSideAddProductView(int productId);
+
+        Task<Result> ClientSideUpdateProductsPurchaseCount(List<int> productIds);
         #endregion
 
         #region Product Category

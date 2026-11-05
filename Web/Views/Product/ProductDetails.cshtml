@@ -57,7 +57,7 @@
 
             <div class="grid grid--3 mt-3" style="gap:12px">
                 <div class="stat card"><b class="num">@Model.ViewsCount</b><span>بازدید کل</span></div>
-                <div class="stat card"><b class="num">@Model.PurchaseCount.ToTomanFormat()</b><span>دانلود موفق</span></div>
+                <div class="stat card"><b class="num">@Model.PurchaseCount.ToTomanFormat()</b><span>خرید موفق</span></div>
                 <div class="stat card">
                     <b>
                         @if (Model.ReviewRate > 0)
@@ -81,7 +81,7 @@
 
         <!-- Buy panel -->
         <div class="product-hero__panel">
-   <div class="card card-pad" data-cart-container data-product-id="@Model.Id">
+            <div class="card card-pad" data-cart-container data-product-id="@Model.Id">
                 <div class="flex flex--wrap" style="gap:6px">
                     @if (Model.IsAvailable && Model.Percent > 0)
                     {

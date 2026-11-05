@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Domain.Events.Shopping
 {
-    public record CartUpdatedEvent(
+    public record CartPaidEvent(
     int Id,
     CartStatusEnum Status,
     decimal? TotalPaid,
@@ -11,6 +11,7 @@ namespace Domain.Events.Shopping
     string? DiscountCode,
     DateTime? PaidDate,
     int? UserId,
-    string? VisitorId
+    string? VisitorId,
+    List<int>? ProductIds
     ) : INotification;
 }

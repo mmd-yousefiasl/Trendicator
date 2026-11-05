@@ -567,6 +567,24 @@ namespace Application.Services.Implementaions
 
             return Result.Success();
         }
+
+        public async Task<Result> ClientSideUpdateProductsPurchaseCount(List<int> productIds)
+        {
+            if (productIds is null || productIds.Count == 0)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var distinctIds = productIds.Distinct().ToList();
+
+            var updated = await _context.Products
+                .Where(p => distinctIds.Contains(p.Id))
+                .ExecuteUpdateAsync(
+                    s => s.SetProperty(p => p.PurchaseCount, p => p.PurchaseCount + 1));
+
+            if (updated != distinctIds.Count)
+                return Result.Failure(Messages.OperationFailedError);
+
+            return Result.Success();
+        }
         #endregion
 
         #region Product Category

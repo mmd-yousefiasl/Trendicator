@@ -522,7 +522,6 @@ namespace Application.Services.Implementaions
             if (orderResult.IsFailure)
                 return Result.Failure<ClientSidePaymentResultDto>(Messages.OperationFailedError);
 
-
             if (orderResult.Value.PayAmount < 1)
                 return Result.Failure<ClientSidePaymentResultDto>(Messages.OperationFailedError);
 
@@ -542,7 +541,7 @@ namespace Application.Services.Implementaions
 
             await _context.SaveChangesAsync();
 
-            CartUpdatedEvent CartUpdatedEvent = new CartUpdatedEvent(
+            CartPaidEvent CartUpdatedEvent = new CartPaidEvent(
                 cart.Id,
                 cart.Status,
                 cart.TotalPaid,
@@ -550,7 +549,8 @@ namespace Application.Services.Implementaions
                 cart.DiscountCode,
                 cart.PaidDate,
                 cart.UserId,
-                cart.VisitorId);
+                cart.VisitorId,
+                orderResult.Value.Items?.Select(n => n.Id).ToList());
 
             await _mediator.PublishEvent(CartUpdatedEvent);
 
