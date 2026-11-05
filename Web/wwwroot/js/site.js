@@ -1,6 +1,6 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
     // Listen for 'submit' on ALL forms on the page
-    document.querySelectorAll('form').forEach(function (form) {
+    document.querySelectorAll('form:not([data-skip-auto-spinner])').forEach(function (form) {
         form.addEventListener('submit', function (event) {
 
             // Find the submit button inside this specific form

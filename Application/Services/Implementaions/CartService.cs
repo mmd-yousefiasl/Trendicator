@@ -432,6 +432,88 @@ namespace Application.Services.Implementaions
             return Result.Success(Messages.DiscountRemovedSuccessfully);
         }
 
+        public async Task<Result<ClientSideProceedToCheckoutViewModel>> ClientSideProceedToCheckout(bool useWallet)
+        {
+            var orderResult = await ClientSideGetCart();
+            if (orderResult.IsFailure)
+                return Result.Failure<ClientSideProceedToCheckoutViewModel>(orderResult.Message!);
+
+            if (orderResult.Value.HaveUnavailableProduct)
+                return Result.Failure<ClientSideProceedToCheckoutViewModel>(Messages.RemoveUnavailableItemsBeforeProceedToCheckout);
+
+            decimal totalOrder = orderResult.Value.PayAmount;
+            if (totalOrder < 1)
+                return Result.Failure<ClientSideProceedToCheckoutViewModel>(Messages.OperationFailedError);
+
+            var userBalance = await _userService.GetCurrentUserBalance();
+
+            decimal payAmount = useWallet ? totalOrder - userBalance : totalOrder;
+
+            if (useWallet && userBalance >= totalOrder)
+            {
+                return Result.Success(new ClientSideProceedToCheckoutViewModel
+                {
+                    IsDone = true
+                });
+            }
+
+            if (payAmount < 1)
+                return Result.Failure<ClientSideProceedToCheckoutViewModel>(Messages.OperationFailedError);
+
+            var paymentResult = await _paymentService.Request(new PaymentRequestViewModel
+            {
+                Amount = payAmount * 10,
+                CallBackUrl = SiteTools.SiteUrl + SiteTools.CallBackURL
+            });
+
+            if (paymentResult.IsFailure || paymentResult.Value.result != 100)
+                return Result.Failure<ClientSideProceedToCheckoutViewModel>(paymentResult.Message!);
+
+            var transactionResult = await _transactionService.AddUnVerifiedTransaction(
+                new ClientSideCreateNewTransactionViewModel()
+                {
+                    Amount = payAmount,
+                    TransId = paymentResult.Value.trackId.ToString(),
+                    IsSuccess = false,
+                    Type = BalanceTransactionTypeEnum.Credit,
+                    Description = "افزایش موجودی کیف پول از طریق درگاه پرداخت به منظور پردازش سفارش"
+                });
+            if (transactionResult.IsFailure)
+                return Result.Failure<ClientSideProceedToCheckoutViewModel>(transactionResult.Message!);
+
+            return Result.Success(new ClientSideProceedToCheckoutViewModel
+            {
+                IsDone = false,
+                TransId = paymentResult.Value.trackId.ToString()
+            });
+        }
+
+        public async Task<Result> ClientSideCheckout(PaymentResultViewModel model)
+        {
+            if (model is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            if (model.success != 1 || model.status != PaymentResultStatusEnum.PaidNotVerified)
+                return Result.Failure(Messages.PaymentFailedError);
+
+            var verifyModel = new VerifyPaymentViewModel
+            {
+                TrackId = model.trackId,
+            };
+
+            var paymentResult = await _paymentService.VerifyPayment(verifyModel);
+
+            if (paymentResult.IsFailure || paymentResult.Value.status != VerifyPaymentResultStatusEnum.PaidAndVerified)
+                return Result.Failure(Messages.PaymentFailedError);
+
+            var verifyTransaction = await _transactionService.VerifyTransaction(model.trackId.ToString());
+
+            if (verifyTransaction.IsFailure)
+                return Result.Failure(Messages.PaymentFailedError);
+
+            return Result.Success(Messages.PaymentDoneSuccessfully);
+        }
+
         public async Task<Result<ClientSideCartSummaryViewModel>> ClientSideCartSummary()
         {
             /*            var cartItemsResult = await ClientSideGetCart();
@@ -546,85 +628,6 @@ namespace Application.Services.Implementaions
             if (IsAnyAccountName) return Result.Success();
 
             return Result.Failure(Messages.AddYourTradingViewAccountNameError);
-        }
-
-        public async Task<Result<ClientSideProceedToCheckoutViewModel>> ClientSideProceedToCheckout(bool useWallet)
-        {
-            var orderResult = await ClientSideCartSummary();
-            if (orderResult.IsFailure)
-                return Result.Failure<ClientSideProceedToCheckoutViewModel>(orderResult.Message!);
-
-            decimal totalOrder = orderResult.Value.Total;
-            if (totalOrder < 1)
-                return Result.Failure<ClientSideProceedToCheckoutViewModel>(Messages.OperationFailedError);
-
-            var userBalance = await _userService.GetCurrentUserBalance();
-            if (userBalance.IsFailure)
-                return Result.Failure<ClientSideProceedToCheckoutViewModel>(userBalance.Message!);
-
-            decimal payAmount = useWallet ? totalOrder - userBalance.Value : totalOrder;
-
-            if (useWallet && userBalance.Value >= totalOrder)
-            {
-                return Result.Success(new ClientSideProceedToCheckoutViewModel
-                {
-                    IsDone = true
-                });
-            }
-
-            if (payAmount < 1)
-                return Result.Failure<ClientSideProceedToCheckoutViewModel>(Messages.OperationFailedError);
-
-            var paymentResult = await _paymentService.Request(new PaymentRequestViewModel
-            {
-                Amount = payAmount * 10,
-                CallBackUrl = SiteTools.SiteUrl + SiteTools.CallBackURL
-            });
-
-            if (paymentResult.IsFailure || paymentResult.Value.result != 100)
-                return Result.Failure<ClientSideProceedToCheckoutViewModel>(paymentResult.Message);
-
-            var transactionResult = await _transactionService.AddUnVerifiedTransaction(
-                new ClientSideCreateNewTransactionViewModel()
-                {
-                    Amount = payAmount,
-                    TransId = paymentResult.Value.trackId.ToString(),
-                    IsSuccess = false,
-                    Type = BalanceTransactionTypeEnum.Credit,
-                    Description = "افزایش موجودی کیف پول از طریق درگاه پرداخت به منظور پردازش سفارش"
-                });
-            if (transactionResult.IsFailure)
-                return Result.Failure<ClientSideProceedToCheckoutViewModel>(transactionResult.Message);
-
-            return Result.Success(new ClientSideProceedToCheckoutViewModel
-            {
-                IsDone = false,
-                TransId = paymentResult.Value.trackId.ToString()
-            });
-        }
-
-        public async Task<Result> ClientSideCheckout(PaymentResultViewModel model)
-        {
-            if (model is null)
-                return Result.Failure(Messages.OperationFailedError);
-
-            if (model.success != 1 || model.status != PaymentResultStatusEnum.PaidNotVerified)
-                return Result.Failure(Messages.PaymentFailedError);
-
-            var verifyModel = new VerifyPaymentViewModel
-            {
-                TrackId = model.trackId,
-            };
-
-            var paymentResult = await _paymentService.VerifyPayment(verifyModel);
-            if (paymentResult.IsFailure || paymentResult.Value.status != VerifyPaymentResultStatusEnum.PaidAndVerified)
-                return Result.Failure(Messages.PaymentFailedError);
-
-            var verifyTransaction = await _transactionService.VerifyTransaction(model.trackId.ToString());
-            if (verifyTransaction.IsFailure)
-                return Result.Failure(Messages.PaymentFailedError);
-
-            return Result.Success(Messages.PaymentDoneSuccessfully);
         }
 
         public async Task<Result<int>> ClientSideVerifyCart()

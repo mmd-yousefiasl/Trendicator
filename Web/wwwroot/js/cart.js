@@ -254,3 +254,67 @@
         setTimeout(fire, 250);
     }
 })();
+
+(() => {
+    const form = document.querySelector('[data-checkout-form]');
+    if (!form) return;
+
+    const overlay = document.querySelector('[data-page-overlay]');
+    const btn = form.querySelector('button[type="submit"]');
+
+    // Same fallback chain used by the remove handler
+    const notify = window.notify || window.Trendicator?.toast || console.warn;
+
+    const showOverlay = () => {
+        overlay.hidden = false;
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('is-overlay-open');
+    };
+
+    const hideOverlay = () => {
+        overlay.hidden = true;
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('is-overlay-open');
+    };
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        showOverlay();
+        btn.disabled = true;
+
+        try {
+            const res = await fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                credentials: 'same-origin'
+            });
+
+            if (!res.ok) throw new Error('network');
+
+            const data = await res.json();
+
+            if (data.success && data.url) {
+                // Overlay stays up — page is leaving.
+                window.location.replace(data.url);
+                return;
+            }
+
+            hideOverlay();
+            btn.disabled = false;
+            notify('error', data.message || 'خطایی رخ داد. لطفاً دوباره تلاش کنید.');
+
+        } catch {
+            hideOverlay();
+            btn.disabled = false;
+            notify('error', 'اتصال به سرور برقرار نشد. لطفاً دوباره تلاش کنید.');
+        }
+    });
+
+    // bfcache — Back from bank restores DOM; reset everything.
+    window.addEventListener('pageshow', (e) => {
+        if (!e.persisted) return;
+        hideOverlay();
+        btn.disabled = false;
+    });
+})();

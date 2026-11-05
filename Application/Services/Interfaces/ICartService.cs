@@ -28,6 +28,8 @@ namespace Application.Services.Interfaces
 
         Task<Result> ClientSideRemoveCoupon();
 
+        Task<Result> ClientSideCheckout(PaymentResultViewModel model);
+
         Task<Result<ClientSideCartSummaryViewModel>> ClientSideCartSummary();
 
         Task<Result> ClientSideAddUserIdToCurrentUserCart();
@@ -39,8 +41,6 @@ namespace Application.Services.Interfaces
         Task<Result> CheckUserCanProccedToCheckout();
 
         Task<Result<ClientSideProceedToCheckoutViewModel>> ClientSideProceedToCheckout(bool useWallet);
-
-        Task<Result> ClientSideCheckout(PaymentResultViewModel model);
 
         Task<Result<int>> ClientSideVerifyCart();
 

@@ -107,7 +107,8 @@ namespace Application.Services.Implementaions
             if (model.Type == BalanceTransactionTypeEnum.Credit) user.Balance += model.Amount;
             else user.Balance -= model.Amount;
 
-            if (user.Balance < 1) return Result.Failure(Messages.OperationFailedError);
+            if (user.Balance < 0)
+                return Result.Failure(Messages.OperationFailedError);
 
             // Save both transaction and updated user
             await _dbSet.AddAsync(transaction);

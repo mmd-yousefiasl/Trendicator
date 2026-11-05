@@ -1,5 +1,4 @@
 ﻿using Application.Services.Interfaces;
-using Application.Dtos.Cart.ClientSide;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Components
@@ -16,15 +15,8 @@ namespace Web.Components
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var result = await _userService.GetCurrentUserBalance();
-            if (result.IsFailure)
-                return View("UseUserWallet", new ClientSideCheckoutViewModel());
 
-
-            return View("UseUserWallet", new ClientSideCheckoutViewModel()
-            {
-                Balance = result.Value,
-                UseWallet = false
-            });
+            return View("UseUserWallet", result);
         }
     }
 }

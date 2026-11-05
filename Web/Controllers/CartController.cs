@@ -2,6 +2,8 @@
 using Application.Dtos.CartItem.ClientSide;
 using Application.Services.Interfaces;
 using Domain.Shared;
+using Domain.Statics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
@@ -92,6 +94,17 @@ namespace Web.Controllers
             {
                 return Json(new { success = true, message = result.Message });
             }
+        }
+
+        [Authorize]
+        [HttpPost("/cart/checkout"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> Checkout(bool useWallet = false)
+        {
+            var result = await _cartService.ClientSideProceedToCheckout(useWallet);
+            if (result.IsFailure)
+                return Json(new { success = false, message = result.Message });
+
+            return Json(new { success = true, url = SiteTools.StartPaymentURL + result.Value.TransId });
         }
     }
 }

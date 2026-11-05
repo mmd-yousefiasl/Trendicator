@@ -489,3 +489,119 @@ a.cart-line__title {
     box-shadow: none;
     pointer-events: none;
 }
+
+/* ═══════════ Page overlay · full-page blocking loader ═══════════ */
+
+.page-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+    background: rgba(15, 23, 42, .55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    animation: pageOverlayIn 260ms ease;
+}
+
+    .page-overlay[hidden] {
+        display: none;
+    }
+
+@keyframes pageOverlayIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.page-overlay__inner {
+    text-align: center;
+    color: #fff;
+    padding: 1rem;
+    animation: pageOverlayPop 380ms cubic-bezier(.34, 1.4, .64, 1);
+}
+
+@keyframes pageOverlayPop {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.page-overlay__spinner {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 1.25rem;
+    border: 4px solid rgba(255, 255, 255, .25);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: pageSpinner 800ms linear infinite;
+}
+
+@keyframes pageSpinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.page-overlay__text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 0 0 .35rem;
+}
+
+.page-overlay__sub {
+    font-size: .82rem;
+    opacity: .75;
+    margin: 0;
+}
+
+/* Lock background scroll while the overlay is up */
+body.is-overlay-open {
+    overflow: hidden;
+}
+
+.wallet-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 0;
+    font-size: .9rem;
+    color: var(--text-2);
+    cursor: pointer;
+    user-select: none;
+}
+
+.wallet-row__check {
+    flex: none;
+    margin-top: 2px;
+    accent-color: var(--brand);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.wallet-row__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    line-height: 1.5;
+}
+
+.wallet-row__hint {
+    font-size: .78rem;
+    color: var(--text-3);
+}
+
+    .wallet-row__hint:empty {
+        display: none;
+    }

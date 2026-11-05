@@ -1,31 +1,21 @@
 ﻿@using Application.Tools
-@using Application.Dtos.Cart.ClientSide
-@model ClientSideCheckoutViewModel
+@model decimal
 
-@if (Model?.Balance > 0)
+@if (Model > 0)
 {
-    <label class="checkbox-inline">
-        <input type="checkbox" asp-for="UseWallet">
-        <span>
-            از موجودی کیف پولم استفاده کن
-            (موجودی:
-            @Model.Balance.ToToman())
+    <label class="wallet-row" for="useWallet">
+        <input type="checkbox"
+               id="useWallet"
+               name="useWallet"
+               value="true"
+               class="wallet-row__check" />
+        <span class="wallet-row__text">
+            استفاده از موجودی کیف پول
+            <br />
+            (
+            @Model.ToToman()
+            )
+            <small class="wallet-row__hint" data-wallet-balance></small>
         </span>
     </label>
-
-    <br />
-    <br />
 }
-
-<label class="checkbox-inline">
-    <input type="checkbox" asp-for="PrivacyPolicy">
-    <span>
-        با
-        <a asp-area="" asp-controller="TermsAndConditions" asp-action="PrivacyPolicy" target="_blank">سیاست حفظ حریم خصوصی</a>
-        و
-        <a asp-area="" asp-controller="TermsAndConditions" asp-action="TermsAndConditions" target="_blank">شرایط و ضوابط</a>
-        موافقت می‌کنم.
-    </span>
-</label>
-<br />
-<span class="text-danger" asp-validation-for="PrivacyPolicy"></span>

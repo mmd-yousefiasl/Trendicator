@@ -230,10 +230,12 @@ namespace Application.Services.Implementaions
             return user;
         }
 
-        public async Task<Result<decimal>> GetCurrentUserBalance()
+        public async Task<decimal> GetCurrentUserBalance()
         {
             var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            if (userId < 1) return Result.Failure<decimal>(Messages.OperationFailedError);
+
+            if (userId < 1)
+                return 0;
 
             var balance = await _context.Users
                 .AsNoTracking()
@@ -241,7 +243,8 @@ namespace Application.Services.Implementaions
                 .Select(n => n.Balance)
                 .FirstOrDefaultAsync();
 
-            if (balance < 0) return Result.Failure<decimal>(Messages.OperationFailedError);
+            if (balance < 0)
+                return 0;
 
             return balance;
         }
