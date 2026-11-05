@@ -9,8 +9,6 @@ namespace Application.Services.Interfaces
 
         Task<Result> AdminSideUpdatePaymentData(AdminSideUpdatePaymentDataViewModel model);
 
-        Task<Result<int>> GetTaxRate();
-
         Task<Result<string>> GetPin();
     }
 }

@@ -28,8 +28,6 @@ namespace Application.Services.Implementaions
         private protected DbSet<Cart> _dbSet;
         private readonly IMediatorHandler _mediator;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ICartItemService _itemService;
-        private readonly IPaymentDataService _paymentDataService;
         private readonly ICouponService _couponService;
         private readonly IPaymentService _paymentService;
         private readonly IUserService _userService;
@@ -44,8 +42,6 @@ namespace Application.Services.Implementaions
         public CartService(TrendicatorDbContext context,
             IMediatorHandler mediator,
             IHttpContextAccessor httpContextAccessor,
-            ICartItemService itemService,
-            IPaymentDataService paymentDataService,
             ICouponService couponService,
             IPaymentService paymentService,
             IUserService userService,
@@ -57,8 +53,6 @@ namespace Application.Services.Implementaions
             _dbSet = _context.Set<Cart>();
             _mediator = mediator;
             _httpContextAccessor = httpContextAccessor;
-            _itemService = itemService;
-            _paymentDataService = paymentDataService;
             _couponService = couponService;
             _paymentService = paymentService;
             _userService = userService;
@@ -206,7 +200,7 @@ namespace Application.Services.Implementaions
             var cart = new ClientSideCartDto()
             {
                 Id = cartSnapShot.Value.CartId,
-                ItemsCount = cartItems.Count(),
+                ItemsCount = cartItems.Where(n => n.IsAvailable).Count(),
                 DisplayPriceSum = cartItems.Where(n => n.IsAvailable).Select(n => (n.DisplayPrice > 0 ? n.DisplayPrice : n.OrderPrice)).Sum(),
                 OrderPriceSum = cartItems.Where(n => n.IsAvailable).Sum(n => n.OrderPrice),
                 Items = cartItems,
@@ -433,18 +427,18 @@ namespace Application.Services.Implementaions
             return Result.Success(Messages.DiscountRemovedSuccessfully);
         }
 
-        public async Task<Result<ClientSideProceedToCheckoutViewModel>> ClientSideProceedToCheckout(bool useWallet)
+        public async Task<Result<ClientSideProceedToCheckoutDto>> ClientSideProceedToCheckout(bool useWallet)
         {
             var orderResult = await ClientSideGetCart();
             if (orderResult.IsFailure)
-                return Result.Failure<ClientSideProceedToCheckoutViewModel>(orderResult.Message!);
+                return Result.Failure<ClientSideProceedToCheckoutDto>(orderResult.Message!);
 
             if (orderResult.Value.HaveUnavailableProduct)
-                return Result.Failure<ClientSideProceedToCheckoutViewModel>(Messages.RemoveUnavailableItemsBeforeProceedToCheckout);
+                return Result.Failure<ClientSideProceedToCheckoutDto>(Messages.RemoveUnavailableItemsBeforeProceedToCheckout);
 
             decimal totalOrder = orderResult.Value.PayAmount;
             if (totalOrder < 1)
-                return Result.Failure<ClientSideProceedToCheckoutViewModel>(Messages.OperationFailedError);
+                return Result.Failure<ClientSideProceedToCheckoutDto>(Messages.OperationFailedError);
 
             var userBalance = await _userService.GetCurrentUserBalance();
 
@@ -452,14 +446,14 @@ namespace Application.Services.Implementaions
 
             if (useWallet && userBalance >= totalOrder)
             {
-                return Result.Success(new ClientSideProceedToCheckoutViewModel
+                return Result.Success(new ClientSideProceedToCheckoutDto
                 {
                     IsDone = true
                 });
             }
 
             if (payAmount < 1)
-                return Result.Failure<ClientSideProceedToCheckoutViewModel>(Messages.OperationFailedError);
+                return Result.Failure<ClientSideProceedToCheckoutDto>(Messages.OperationFailedError);
 
             var paymentResult = await _paymentService.Request(new PaymentRequestViewModel
             {
@@ -468,7 +462,7 @@ namespace Application.Services.Implementaions
             });
 
             if (paymentResult.IsFailure || paymentResult.Value.result != 100)
-                return Result.Failure<ClientSideProceedToCheckoutViewModel>(paymentResult.Message!);
+                return Result.Failure<ClientSideProceedToCheckoutDto>(paymentResult.Message!);
 
             var transactionResult = await _transactionService.AddUnVerifiedTransaction(
                 new ClientSideCreateNewTransactionViewModel()
@@ -480,9 +474,9 @@ namespace Application.Services.Implementaions
                     Description = "افزایش موجودی کیف پول از طریق درگاه پرداخت به منظور پردازش سفارش"
                 });
             if (transactionResult.IsFailure)
-                return Result.Failure<ClientSideProceedToCheckoutViewModel>(transactionResult.Message!);
+                return Result.Failure<ClientSideProceedToCheckoutDto>(transactionResult.Message!);
 
-            return Result.Success(new ClientSideProceedToCheckoutViewModel
+            return Result.Success(new ClientSideProceedToCheckoutDto
             {
                 IsDone = false,
                 TransId = paymentResult.Value.trackId.ToString()
@@ -522,25 +516,24 @@ namespace Application.Services.Implementaions
             if (userId < 1)
                 return Result.Failure<ClientSidePaymentResultDto>(Messages.OperationFailedError);
 
-            var cart = await _context.Carts
-                .Where(n => n.UserId == userId && n.Status == CartStatusEnum.PendingPayment)
-                .FirstOrDefaultAsync();
-
-            if (cart is null)
-                return Result.Failure<ClientSidePaymentResultDto>(Messages.OperationFailedError);
+            await _cacheManager.RemoveByKeyAsync(CacheKeys.CartCacheKey(userId.ToString()));
 
             var orderResult = await ClientSideGetCart();
-            if (orderResult.IsFailure || orderResult.Value.Id != cart.Id)
+            if (orderResult.IsFailure)
                 return Result.Failure<ClientSidePaymentResultDto>(Messages.OperationFailedError);
 
 
             if (orderResult.Value.PayAmount < 1)
                 return Result.Failure<ClientSidePaymentResultDto>(Messages.OperationFailedError);
 
-            var transactionResult = await _userService.WithdrawCurrentUserCart(orderResult.Value.PayAmount, cart.Id);
+            var transactionResult = await _userService.WithdrawCurrentUserCart(orderResult.Value.PayAmount, orderResult.Value.Id);
 
             if (transactionResult.IsFailure)
                 return Result.Failure<ClientSidePaymentResultDto>(transactionResult.Message!);
+
+            var cart = await _context.Carts.FindAsync(orderResult.Value.Id);
+            if (cart is null)
+                return Result.Failure<ClientSidePaymentResultDto>(Messages.OperationFailedError);
 
             cart.TotalPaid = orderResult.Value.PayAmount;
             cart.TotalDiscount = (orderResult.Value.DiscountCodeDiscount) + (orderResult.Value.ProductsDiscount);
@@ -619,25 +612,6 @@ namespace Application.Services.Implementaions
             return new ClientSideCartSummaryViewModel();
         }
 
-        public async Task<Result> ClientSideAddUserIdToCurrentUserCart()
-        {
-            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            if (userId < 1) return Result.Failure(Messages.OperationFailedError);
-
-            var userIP = _httpContextAccessor.HttpContext.GetUserIP();
-
-            var cart = await _dbSet.Where(n => (n.UserId == userId) &&
-                                               n.Status == CartStatusEnum.PendingPayment &&
-                                               (n.UserId == null || n.UserId == 0)).FirstOrDefaultAsync();
-            if (cart is null) return Result.Failure(Messages.OperationFailedError);
-
-            cart.UserId = userId;
-            _dbSet.Update(cart);
-            await _context.SaveChangesAsync();
-
-            return Result.Success();
-        }
-
         public async Task<Result<string>> ClientSideGetCurrentUserTradingViewAccountName()
         {
             var userId = _httpContextAccessor.HttpContext.User.GetUserId();
@@ -647,43 +621,6 @@ namespace Application.Services.Implementaions
                 .FirstOrDefaultAsync();
 
             return "";
-        }
-
-        public async Task<Result> ClientSideUpdateCurrentUserTradingViewAccountName(
-            ClientSideUpdateTradingViewAccountNameViewModel model)
-        {
-            if (model is null) return Result.Failure(Messages.OperationFailedError);
-
-            var IsAllowedResult = await _itemService.IsAnyTradingViewProductInCart();
-            if (IsAllowedResult.IsFailure) return Result.Failure(Messages.OperationFailedError);
-
-            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            if (userId < 1) return Result.Failure(Messages.OperationFailedError);
-
-            var cart = await _dbSet.Where(n => n.UserId == userId && n.Status == CartStatusEnum.PendingPayment)
-                .FirstOrDefaultAsync();
-            if (cart is null) return Result.Failure(Messages.OperationFailedError);
-
-            _dbSet.Update(cart);
-            await _context.SaveChangesAsync();
-
-            return Result.Success();
-        }
-
-        public async Task<Result> CheckUserCanProccedToCheckout()
-        {
-            var itemResult = await _itemService.IsAnyTradingViewProductInCart();
-            if (itemResult.IsFailure) return Result.Success();
-
-            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            if (userId < 1) return Result.Failure(Messages.OperationFailedError);
-
-            bool IsAnyAccountName = await _dbSet.Where(n => n.UserId == userId &&
-                                                            n.Status == CartStatusEnum.PendingPayment).AnyAsync();
-
-            if (IsAnyAccountName) return Result.Success();
-
-            return Result.Failure(Messages.AddYourTradingViewAccountNameError);
         }
 
         public async Task<Result<AdminSideFilterCartsViewModel>> AdminSideFilterCarts(

@@ -90,6 +90,7 @@
                                         <th>قیمت نمایشی</th>
                                         <th>قیمت سفارش</th>
                                         <th>وضعیت انتشار</th>
+                                        <th>وضعیت موجودی</th>
                                         <th>بازدید</th>
                                         <th>نوع</th>
                                         <th>عملیات</th>
@@ -114,6 +115,16 @@
                                                     else
                                                     {
                                                         <span class="text-danger">منتشرنشده</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (item.IsAvailable)
+                                                    {
+                                                        <span class="text-success">موجود</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-danger">ناموجود</span>
                                                     }
                                                 </td>
                                                 <td>@item.ViewsCount</td>

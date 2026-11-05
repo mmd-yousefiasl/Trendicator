@@ -4,7 +4,6 @@ namespace Domain.Events.SiteInfo
 {
     public record PaymentDataUpdatedEvent(
         int Id,
-        int Tax,
         string PaymentGatewayPin
         ) : INotification;
 }

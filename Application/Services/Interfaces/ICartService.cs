@@ -34,15 +34,9 @@ namespace Application.Services.Interfaces
 
         Task<Result<ClientSideCartSummaryViewModel>> ClientSideCartSummary();
 
-        Task<Result> ClientSideAddUserIdToCurrentUserCart();
-
         Task<Result<string>> ClientSideGetCurrentUserTradingViewAccountName();
 
-        Task<Result> ClientSideUpdateCurrentUserTradingViewAccountName(ClientSideUpdateTradingViewAccountNameViewModel model);
-
-        Task<Result> CheckUserCanProccedToCheckout();
-
-        Task<Result<ClientSideProceedToCheckoutViewModel>> ClientSideProceedToCheckout(bool useWallet);
+        Task<Result<ClientSideProceedToCheckoutDto>> ClientSideProceedToCheckout(bool useWallet);
 
         Task<Result<AdminSideFilterCartsViewModel>> AdminSideFilterCarts(AdminSideFilterCartsViewModel filter);
 

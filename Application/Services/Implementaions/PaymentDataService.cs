@@ -4,7 +4,6 @@ using Application.Services.Interfaces;
 using Application.Static;
 using Data.Context;
 using Domain.Events.SiteInfo;
-using Domain.Models.SiteInfo;
 using Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +13,6 @@ namespace Application.Services.Implementaions
     {
         #region Fields
         private readonly TrendicatorDbContext _context;
-        private protected DbSet<PaymentData> _dbSet;
         private readonly IMediatorHandler _mediator;
         private readonly ICacheManager _cacheManager;
         #endregion
@@ -25,7 +23,6 @@ namespace Application.Services.Implementaions
             ICacheManager cacheManager)
         {
             _context = context;
-            _dbSet = _context.Set<PaymentData>();
             _mediator = mediator;
             _cacheManager = cacheManager;
         }
@@ -33,12 +30,16 @@ namespace Application.Services.Implementaions
 
         public async Task<Result<AdminSideUpdatePaymentDataViewModel>> AdminSideGetPaymentDataForUpdate()
         {
-            var data = await _dbSet.Where(n => n.Id == 1).Select(n => new AdminSideUpdatePaymentDataViewModel()
-            {
-                Tax = n.Tax ?? 0,
-                PaymentGatewayPin = n.PaymentGatewayPin,
-            }).AsNoTracking().FirstOrDefaultAsync();
-            if (data is null) return Result.Failure<AdminSideUpdatePaymentDataViewModel>(Messages.OperationFailedError);
+            var data = await _context.PaymentData
+                .AsNoTracking()
+                .Where(n => n.Id == 1)
+                .Select(n => new AdminSideUpdatePaymentDataViewModel()
+                {
+                    PaymentGatewayPin = n.PaymentGatewayPin,
+                }).FirstOrDefaultAsync();
+
+            if (data is null)
+                return Result.Failure<AdminSideUpdatePaymentDataViewModel>(Messages.OperationFailedError);
 
             return data;
         }
@@ -47,18 +48,16 @@ namespace Application.Services.Implementaions
         {
             if (model is null) return Result.Failure(Messages.OperationFailedError);
 
-            var data = await _dbSet.FindAsync(1);
+            var data = await _context.PaymentData.FindAsync(1);
             if (data is null) return Result.Failure(Messages.OperationFailedError);
 
-            data.Tax = model.Tax;
             data.PaymentGatewayPin = model.PaymentGatewayPin;
 
-            _dbSet.Update(data);
+            _context.PaymentData.Update(data);
             await _context.SaveChangesAsync();
 
             PaymentDataUpdatedEvent PaymentDataUpdatedEvent = new PaymentDataUpdatedEvent(
                 data.Id,
-                data.Tax.Value,
                 data.PaymentGatewayPin);
 
             await _mediator.PublishEvent(PaymentDataUpdatedEvent);
@@ -66,28 +65,21 @@ namespace Application.Services.Implementaions
             return Result.Success();
         }
 
-        public async Task<Result<int>> GetTaxRate()
-        {
-            var data = await _cacheManager.GetAsync(CacheKeys.PaymentDataCacheKey, async () =>
-            {
-                return await _dbSet.Where(n => n.Id == 1).FirstOrDefaultAsync();
-            });
-            if (data is null) return Result.Failure<int>(Messages.OperationFailedError);
-
-            if (data.Tax < 0) return Result.Failure<int>(Messages.OperationFailedError);
-
-            return data.Tax;
-        }
-
         public async Task<Result<string>> GetPin()
         {
             var data = await _cacheManager.GetAsync(CacheKeys.PaymentDataCacheKey, async () =>
             {
-                return await _dbSet.Where(n => n.Id == 1).FirstOrDefaultAsync();
+                return await _context.PaymentData
+                .AsNoTracking()
+                .Where(n => n.Id == 1)
+                .FirstOrDefaultAsync();
             });
-            if (data is null) return Result.Failure<string>(Messages.OperationFailedError);
 
-            if (string.IsNullOrWhiteSpace(data.PaymentGatewayPin)) return Result.Failure<string>(Messages.OperationFailedError);
+            if (data is null)
+                return Result.Failure<string>(Messages.OperationFailedError);
+
+            if (string.IsNullOrWhiteSpace(data.PaymentGatewayPin))
+                return Result.Failure<string>(Messages.OperationFailedError);
 
             return data.PaymentGatewayPin;
         }

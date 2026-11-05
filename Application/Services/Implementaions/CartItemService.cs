@@ -30,59 +30,6 @@ namespace Application.Services.Implementaions
         }
         #endregion
 
-        public async Task<Result> ClientSideCreateNewCartItem(ClientSideCreateNewCartItemViewModel model)
-        {
-            if (model is null) return Result.Failure(Messages.OperationFailedError);
-
-            if (await _dbSet.AnyAsync(n => n.Cart.Status == CartStatusEnum.PendingPayment))
-                return Result.Failure(Messages.ProductAlreadyInYourCartError);
-
-            CartItem item = new CartItem()
-            {
-                CartId = model.CartId,
-                ProductId = model.ProductId,
-            };
-
-            await _dbSet.AddAsync(item);
-            await _context.SaveChangesAsync();
-
-            return Result.Success();
-        }
-
-        public async Task<Result> ClientSideDeleteItemFromCart(int id)
-        {
-            if (id < 1) return Result.Failure(Messages.OperationFailedError);
-
-            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            var userIP = _httpContextAccessor.HttpContext.GetUserIP();
-
-            var item = await _dbSet.Where(n => (n.Cart.UserId == userId) &&
-            n.Cart.Status == CartStatusEnum.PendingPayment).FirstOrDefaultAsync();
-            if (item is null) return Result.Failure(Messages.OperationFailedError);
-
-            _dbSet.Remove(item);
-            await _context.SaveChangesAsync();
-
-            return Result.Success();
-        }
-
-        public async Task<Result> CheckIfCartItemsIsAvailable()
-        {
-            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            if (userId < 1) return Result.Failure(Messages.OperationFailedError);
-
-            bool AnyUnAvailable = await _dbSet.Where(n => n.Cart.Status == CartStatusEnum.PendingPayment && n.Cart.UserId == userId &&
-            n.Product.IsAvailable == false).AnyAsync();
-
-            if (AnyUnAvailable) return Result.Failure(Messages.RemoveUnavailableItemsBeforeProceedToCheckout);
-
-            bool AnyItem = await _dbSet.Where(n => n.Cart.Status == CartStatusEnum.PendingPayment && n.Cart.UserId == userId)
-                .AnyAsync();
-            if (!AnyItem) return Result.Failure(Messages.AddAProductAtLeastToCartBeforeProceedToCheckout);
-
-            return Result.Success();
-        }
-
         public async Task<Result> IsAnyTradingViewProductInCart()
         {
             var userId = _httpContextAccessor.HttpContext.User.GetUserId();
