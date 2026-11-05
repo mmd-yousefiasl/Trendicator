@@ -2,7 +2,7 @@
 
 namespace Application.Dtos.Cart.ClientSide
 {
-    public class ClientSideCartDto
+    public class ClientSideCartDto : CommonDto
     {
         public int ItemsCount { get; set; }
         public decimal DisplayPriceSum { get; set; }

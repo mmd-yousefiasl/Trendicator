@@ -22,7 +22,7 @@ namespace Application.Handlers.Cart
 
         public async Task Handle(CartUpdatedEvent notification, CancellationToken cancellationToken)
         {
-            string content = $"سفارش با شناسه {notification.id} ثبت شد! وضعیت جدید {notification.Status.GetDisplayName()}";
+            string content = $"سفارش با شناسه {notification.Id} ثبت شد! وضعیت جدید {notification.Status.GetDisplayName()}";
 
             var adminNotification = new AdminSideCreateNewNotificationDto
             {

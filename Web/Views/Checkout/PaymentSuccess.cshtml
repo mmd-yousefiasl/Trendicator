@@ -1,73 +1,72 @@
-﻿@model int
+﻿@using Application.Dtos.Cart.ClientSide
+@using Application.Tools
+@model ClientSidePaymentResultDto
 
 @{
     ViewData["Title"] = "پرداخت موفق";
-    ViewData["NoIndex"] = true;
 }
 
 @section HeaderReferences {
     <link rel="stylesheet" href="/css/payment-success.css" asp-append-version="true" />
 }
 
-<main class="success-page">
-    <canvas class="success-confetti" data-confetti aria-hidden="true"></canvas>
+@if (Model is not null)
+{
+    <main class="success-page">
+        <canvas class="success-confetti" data-confetti aria-hidden="true"></canvas>
 
-    <section class="success-card">
-        <div class="success-check" aria-hidden="true">
-            <svg viewBox="0 0 52 52" fill="none">
-                <circle cx="26" cy="26" r="24" stroke="currentColor" stroke-width="2" opacity=".18" />
-    <path d="M15 27l7 7 15-15"
-      stroke="currentColor" stroke-width="3.5"
-      stroke-linecap="round" stroke-linejoin="round"
-      pathLength="1"
-      class="success-check__tick" />
-            </svg>
-        </div>
-
-        <h1 class="success-title">پرداخت با موفقیت انجام شد</h1>
-        <p class="success-subtitle">سفارش شما ثبت شد و به‌زودی پردازش می‌شود.</p>
-
-        <dl class="success-details">
-            <div>
-                <dt>شماره سفارش</dt>
-                <dd dir="ltr">#2312412</dd>
+        <section class="success-card">
+            <div class="success-check" aria-hidden="true">
+                <svg viewBox="0 0 52 52" fill="none">
+                    <circle cx="26" cy="26" r="24" stroke="currentColor" stroke-width="2" opacity=".18" />
+                    <path d="M15 27l7 7 15-15"
+                          stroke="currentColor" stroke-width="3.5"
+                          stroke-linecap="round" stroke-linejoin="round"
+                          pathLength="1"
+                          class="success-check__tick" />
+                </svg>
             </div>
-            <div>
-                <dt>کد پیگیری</dt>
-                <dd dir="ltr">#2312412</dd>
-            </div>
-            <div>
-                <dt>مبلغ پرداخت‌شده</dt>
-                <dd><span class="num">1.200.000</span> تومان</dd>
-            </div>
-            <div>
-                <dt>تاریخ</dt>
-                <dd>30 اسفند</dd>
-            </div>
-        </dl>
 
-        <div class="success-actions">
-            <a asp-area="" asp-controller="Order" asp-action="Index"
-               class="btn btn--primary btn--lg">
-                مشاهده سفارش‌ها
-            </a>
-<a asp-area="" asp-controller="Home" asp-action="Index"
-   class="btn btn--ghost btn--lg">
-    بازگشت به فروشگاه
-</a>
-        </div>
+            <h1 class="success-title">پرداخت با موفقیت انجام شد</h1>
+            <p class="success-subtitle">سفارش شما ثبت شد و به‌زودی پردازش می‌شود.</p>
 
-        <p class="success-note">
-            <svg viewBox="0 0 16 16" width="14" height="14"
-                 fill="none" stroke="currentColor" stroke-width="1.6"
-                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M2 4l6 4.5L14 4" />
-                <rect x="2" y="3" width="12" height="10" rx="1.5" />
-            </svg>
-            فاکتور سفارش به ایمیل شما ارسال شد.
-        </p>
-    </section>
-</main>
+            <dl class="success-details">
+                @if (Model.CartId is not null)
+                {
+                    <div>
+                        <dt>شماره سفارش</dt>
+                        <dd dir="ltr">#@Model.CartId</dd>
+                    </div>
+                }
+                <div>
+                    <dt>تاریخ</dt>
+                    <dd>@Model.CurrentDate.GetDate()</dd>
+                </div>
+            </dl>
+
+            <div class="success-actions">
+                <a asp-area="" asp-controller="Order" asp-action="Index"
+                   class="btn btn--primary btn--lg">
+                    مشاهده سفارش‌ها
+                </a>
+                <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category=""
+                   class="btn btn--ghost btn--lg">
+                    بازگشت به فروشگاه
+                </a>
+            </div>
+
+            <p class="success-note">
+                <svg viewBox="0 0 16 16" width="14" height="14"
+                     fill="none" stroke="currentColor" stroke-width="1.6"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="8" cy="8" r="6.5" />
+                    <path d="M8 4.5V8l2.5 1.5" />
+                </svg>
+                وضعیت سفارش را می‌توانید از بخش «سفارش‌های من» پیگیری کنید.
+            </p>
+        </section>
+    </main>
+}
 
 @section FooterReferences {
     <script asp-append-version="true" src="~/js/payment-success.js"></script>

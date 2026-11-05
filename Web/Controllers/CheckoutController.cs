@@ -1,4 +1,5 @@
-﻿using Application.Dtos.Payment;
+﻿using Application.Dtos.Cart.ClientSide;
+using Application.Dtos.Payment;
 using Application.Services.Interfaces;
 using Domain.Shared;
 using Microsoft.AspNetCore.Authorization;
@@ -35,7 +36,7 @@ namespace Web.Controllers
             var result = await _cartService.ClientSideCheckout(model);
             if (result.IsFailure)
             {
-                return RedirectToAction(nameof(PaymentFailed));
+                return RedirectToAction(nameof(PaymentFailed), new ClientSidePaymentResultDto());
             }
 
             return RedirectToAction(nameof(VerifyCart));
@@ -45,23 +46,23 @@ namespace Web.Controllers
         public async Task<IActionResult> VerifyCart()
         {
             var result = await _cartService.ClientSideVerifyCart();
-            if (result.IsFailure) return RedirectToAction(nameof(PaymentFailed));
+            if (result.IsFailure) return RedirectToAction(nameof(PaymentFailed), new ClientSidePaymentResultDto());
 
-            return RedirectToAction(nameof(PaymentSuccess), new { orderId = result.Value });
+            return RedirectToAction(nameof(PaymentSuccess), result.Value);
         }
 
-        [HttpGet("/payment/success/{orderId}")]
-        public IActionResult PaymentSuccess(int orderId)
+        [HttpGet("/payment/success")]
+        public IActionResult PaymentSuccess(ClientSidePaymentResultDto model)
         {
             ViewData["NoIndex"] = true;
-            return View(orderId);
+            return View(model);
         }
 
         [HttpGet("/payment/failed")]
-        public IActionResult PaymentFailed()
+        public IActionResult PaymentFailed(ClientSidePaymentResultDto model)
         {
             ViewData["NoIndex"] = true;
-            return View();
+            return View(model);
         }
     }
 }

@@ -1,0 +1,57 @@
+﻿/* ═══════════ Payment failed — modifiers on payment-success.css ═══════════ */
+
+/* Icon: red, with a brief shake — not the success "pop" */
+.success-page--failed .success-check {
+    color: var(--down);
+    animation: failedIconIn 620ms cubic-bezier(.34, 1.56, .64, 1);
+}
+
+@keyframes failedIconIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    40% {
+        transform: scale(1.12) rotate(-4deg);
+        opacity: 1;
+    }
+
+    60% {
+        transform: scale(0.94) rotate(3deg);
+    }
+
+    80% {
+        transform: scale(1.02) rotate(-1deg);
+    }
+
+    100% {
+        transform: scale(1) rotate(0);
+    }
+}
+
+/* X strokes: draw in, staggered so the two lines cross one at a time */
+.success-page--failed .success-check__tick {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: failedDrawTick 340ms 340ms cubic-bezier(.65, 0, .45, 1) forwards;
+}
+
+.success-page--failed .success-check__tick--second {
+    animation-delay: 560ms;
+}
+
+@keyframes failedDrawTick {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Details grid: faint red-tinted surface — matches the mood without shouting */
+.success-page--failed .success-details {
+    border-color: color-mix(in srgb, var(--down) 22%, var(--line));
+}
+
+    .success-page--failed .success-details > div {
+        background: color-mix(in srgb, var(--panel) 95%, var(--down));
+    }

@@ -104,6 +104,9 @@ namespace Web.Controllers
             if (result.IsFailure)
                 return Json(new { success = false, message = result.Message });
 
+            if (result.Value.IsDone)
+                return Json(new { success = true, url = "/verify-cart" });
+
             return Json(new { success = true, url = SiteTools.StartPaymentURL + result.Value.TransId });
         }
     }

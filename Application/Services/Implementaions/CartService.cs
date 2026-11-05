@@ -205,6 +205,7 @@ namespace Application.Services.Implementaions
 
             var cart = new ClientSideCartDto()
             {
+                Id = cartSnapShot.Value.CartId,
                 ItemsCount = cartItems.Count(),
                 DisplayPriceSum = cartItems.Where(n => n.IsAvailable).Select(n => (n.DisplayPrice > 0 ? n.DisplayPrice : n.OrderPrice)).Sum(),
                 OrderPriceSum = cartItems.Where(n => n.IsAvailable).Sum(n => n.OrderPrice),
@@ -514,6 +515,61 @@ namespace Application.Services.Implementaions
             return Result.Success(Messages.PaymentDoneSuccessfully);
         }
 
+        public async Task<Result<ClientSidePaymentResultDto>> ClientSideVerifyCart()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+
+            if (userId < 1)
+                return Result.Failure<ClientSidePaymentResultDto>(Messages.OperationFailedError);
+
+            var cart = await _context.Carts
+                .Where(n => n.UserId == userId && n.Status == CartStatusEnum.PendingPayment)
+                .FirstOrDefaultAsync();
+
+            if (cart is null)
+                return Result.Failure<ClientSidePaymentResultDto>(Messages.OperationFailedError);
+
+            var orderResult = await ClientSideGetCart();
+            if (orderResult.IsFailure || orderResult.Value.Id != cart.Id)
+                return Result.Failure<ClientSidePaymentResultDto>(Messages.OperationFailedError);
+
+
+            if (orderResult.Value.PayAmount < 1)
+                return Result.Failure<ClientSidePaymentResultDto>(Messages.OperationFailedError);
+
+            var transactionResult = await _userService.WithdrawCurrentUserCart(orderResult.Value.PayAmount, cart.Id);
+
+            if (transactionResult.IsFailure)
+                return Result.Failure<ClientSidePaymentResultDto>(transactionResult.Message!);
+
+            cart.TotalPaid = orderResult.Value.PayAmount;
+            cart.TotalDiscount = (orderResult.Value.DiscountCodeDiscount) + (orderResult.Value.ProductsDiscount);
+            cart.PaidDate = DateTime.UtcNow;
+            cart.Status = CartStatusEnum.Paid;
+
+            await _context.SaveChangesAsync();
+
+            CartUpdatedEvent CartUpdatedEvent = new CartUpdatedEvent(
+                cart.Id,
+                cart.Status,
+                cart.TotalPaid,
+                cart.TotalDiscount,
+                cart.DiscountCode,
+                cart.PaidDate,
+                cart.UserId,
+                cart.VisitorId);
+
+            await _mediator.PublishEvent(CartUpdatedEvent);
+
+            await _cacheManager.RemoveByKeyAsync(CacheKeys.CartCacheKey(userId.ToString()));
+
+            return new ClientSidePaymentResultDto()
+            {
+                CartId = cart.Id,
+                CurrentDate = cart.PaidDate.Value
+            };
+        }
+
         public async Task<Result<ClientSideCartSummaryViewModel>> ClientSideCartSummary()
         {
             /*            var cartItemsResult = await ClientSideGetCart();
@@ -628,52 +684,6 @@ namespace Application.Services.Implementaions
             if (IsAnyAccountName) return Result.Success();
 
             return Result.Failure(Messages.AddYourTradingViewAccountNameError);
-        }
-
-        public async Task<Result<int>> ClientSideVerifyCart()
-        {
-            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            if (userId < 1) return Result.Failure<int>(Messages.OperationFailedError);
-
-            var cart = await _dbSet.Where(n => n.UserId == userId && n.Status == CartStatusEnum.PendingPayment)
-                .FirstOrDefaultAsync();
-            if (cart is null) return Result.Failure<int>(Messages.OperationFailedError);
-
-            var orderResult = await ClientSideCartSummary();
-            if (orderResult.IsFailure) return Result.Failure<int>(orderResult.Message);
-
-            var order = orderResult.Value;
-            if (order.Total < 1) return Result.Failure<int>(Messages.OperationFailedError);
-
-            var transactionResult = await _userService.WithdrawCurrentUserCart(order.Total, cart.Id);
-            if (transactionResult.IsFailure) return Result.Failure<int>(transactionResult.Message);
-
-            var itemResult = await _itemService.IsAnyTradingViewProductInCart();
-            if (itemResult.IsSuccess) cart.Status = CartStatusEnum.PendingPayment;
-            else cart.Status = CartStatusEnum.PendingPayment;
-
-            cart.TotalPaid = order.Total;
-            cart.TotalDiscount = (order.TotalDiscount ?? 0) + (order.DiscountCodeAmount ?? 0);
-            cart.PaidDate = DateTime.UtcNow;
-
-            _dbSet.Update(cart);
-            await _context.SaveChangesAsync();
-
-            CartUpdatedEvent CartUpdatedEvent = new CartUpdatedEvent(
-                cart.Id,
-                "",
-                cart.UserId,
-                cart.Status,
-                true,
-                cart.TotalPaid,
-                cart.TotalDiscount,
-                cart.DiscountCode,
-                1,
-                1,
-                cart.PaidDate);
-
-            await _mediator.PublishEvent(CartUpdatedEvent);
-            return cart.Id;
         }
 
         public async Task<Result<AdminSideFilterCartsViewModel>> AdminSideFilterCarts(

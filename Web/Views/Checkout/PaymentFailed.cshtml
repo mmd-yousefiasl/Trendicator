@@ -1,27 +1,77 @@
-﻿@{
+﻿@using Application.Dtos.Cart.ClientSide
+@using Application.Tools
+@model ClientSidePaymentResultDto
+
+@{
     ViewData["Title"] = "پرداخت ناموفق";
 }
 
-<div class="ltn__404-area ltn__404-area-1 mb-120">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="error-404-inner text-center">
-                    <h1 class="error-404-title">
-                        <img class="payment-result-img" src="/d-imgs/remove.webp" alt="پرداخت ناموفق" />
-                    </h1>
-                    <h2>@ViewData["Title"]</h2>
-                    <p>در صورتی که مبلغ سفارش از حساب شما کسر شده اما سفارش ثبت نشده است، لطفاً ابتدا موجودی کیف پول خود را بررسی کنید. در صورت نیاز، می‌توانید از طریق ارسال تیکت با پشتیبانی در ارتباط باشید.</p>
-                    <div class="btn-wrapper">
-                        <a asp-area="UserPanel" asp-controller="MyTransactions" asp-action="MyTransactions" class="btn btn-transparent">
-                            مشاهده تراکنش ها
-                            <i class="fas fa-long-arrow-alt-left"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+@section HeaderReferences {
+    <link rel="stylesheet" href="/css/payment-success.css" asp-append-version="true" />
+    <link rel="stylesheet" href="/css/payment-failed.css" asp-append-version="true" />
+}
 
-@await Component.InvokeAsync("OurFeatures")
+@if (Model is not null)
+{
+    <main class="success-page success-page--failed">
+        <section class="success-card">
+            <div class="success-check">
+                <svg viewBox="0 0 52 52" fill="none">
+                    <circle cx="26" cy="26" r="24" stroke="currentColor" stroke-width="2" opacity=".18" />
+                    <path d="M18 18l16 16 M34 18l-16 16"
+                          stroke="currentColor" stroke-width="3.5"
+                          stroke-linecap="round" stroke-linejoin="round"
+                          pathLength="1"
+                          class="success-check__tick" />
+                </svg>
+            </div>
+
+            <h1 class="success-title">پرداخت ناموفق بود</h1>
+            <p class="success-subtitle">
+                متأسفانه تراکنش شما تکمیل نشد. اگر مبلغی از حساب شما کسر شده باشد، طی ۷۲ ساعت آینده به‌صورت خودکار بازگردانده می‌شود.
+            </p>
+
+            <dl class="success-details">
+                @if (Model.CartId is not null)
+                {
+                    <div>
+                        <dt>شماره سفارش</dt>
+                        <dd dir="ltr">#@Model.CartId</dd>
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <dt>وضعیت تراکنش</dt>
+                        <dd>ناموفق</dd>
+                    </div>
+                }
+                <div>
+                    <dt>تاریخ</dt>
+                    <dd>@Model.CurrentDate.GetDate()</dd>
+                </div>
+            </dl>
+
+            <div class="success-actions">
+                <a asp-area="" asp-controller="Cart" asp-action="Cart"
+                   class="btn btn--primary btn--lg">
+                    تلاش مجدد
+                </a>
+                <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category=""
+                   class="btn btn--ghost btn--lg">
+                    بازگشت به فروشگاه
+                </a>
+            </div>
+
+            <p class="success-note">
+                <svg viewBox="0 0 16 16" width="14" height="14"
+                     fill="none" stroke="currentColor" stroke-width="1.6"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="8" cy="8" r="6.5" />
+                    <path d="M8 4.5v4M8 11.2v.1" />
+                </svg>
+                اگر چند بار متوالی ناموفق بود، با پشتیبانی تماس بگیرید.
+            </p>
+        </section>
+    </main>
+}
