@@ -1,5 +1,5 @@
 ﻿<!doctype html>
-<html lang="fa" dir="rtl">
+<html lang="fa" dir="rtl" data-theme="dark">
 
 <head>
     <partial name="_UserPanelMeta" />
@@ -9,24 +9,13 @@
     @await RenderSectionAsync("HeaderReferences", required: false)
 </head>
 
-<body data-sidebar="dark">
+<body>
+    <partial name="_Header" />
 
-    <div id="layout-wrapper">
+    @RenderBody()
 
-        <partial name="_UserPanelHeader" />
+    <partial name="_Footer" />
 
-        <partial name="_UserPanelVerticalMenu" />
-
-        <div class="main-content">
-            <div class="page-content">
-                @RenderBody()
-            </div>
-            <partial name="_UserPanelFooter" />
-        </div>
-
-    </div>
-
-    <div class="rightbar-overlay"></div>
 
     <partial name="_UserPanelFooterReferences" />
 

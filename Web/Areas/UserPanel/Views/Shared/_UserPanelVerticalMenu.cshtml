@@ -1,58 +1,37 @@
-﻿<div class="vertical-menu">
-
-    <div data-simplebar class="h-100">
-
-        <div id="sidebar-menu">
-            <ul class="metismenu list-unstyled" id="side-menu">
-                <li>
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="waves-effect">
-                        <i class="mdi mdi-home"></i>
-                        <span>بازگشت به سایت</span>
-                    </a>
-                </li>
-
-                <li class="menu-title">منو اصلی </li>
-
-                <li>
-                    <a asp-area="UserPanel" asp-controller="Notifications" asp-action="NotificationsList" class="waves-effect">
-                        <i class="mdi mdi-bell-ring-outline"></i>
-                        <span>اعلانات</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a asp-area="UserPanel" asp-controller="Cart" asp-action="MyOrders" class="waves-effect">
-                        <i class="mdi mdi-basket-outline"></i>
-                        <span>سفارش های من</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a asp-area="UserPanel" asp-controller="Downloads" asp-action="BoughtFiles" class="waves-effect">
-                        <i class="mdi mdi-cloud-download-outline"></i>
-                        <span>فایل های خریداری شده</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a asp-area="UserPanel" asp-controller="MyTransactions" asp-action="MyTransactions" class="waves-effect">
-                        <i class="mdi mdi-bank-transfer"></i>
-                        <span>تراکنش های من</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="mdi mdi-tag-multiple-outline"></i>
-                        <span>تیکت ها</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a asp-area="UserPanel" asp-controller="Ticket" asp-action="MyTickets">لیست تیکت ها</a></li>
-                        <li><a asp-area="UserPanel" asp-controller="Ticket" asp-action="CreateNewTicket">افزودن تیکت جدید</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        <!-- Sidebar -->
+﻿<!-- ============ Side nav ============ -->
+<aside class="account__side">
+    <div class="card" style="padding:10px">
+        <nav class="account__nav" id="panel-nav" aria-label="منوی پنل">
+            <a asp-area="UserPanel" asp-controller="Home" asp-action="Index">
+                <svg class="ic" aria-hidden="true">
+                    <use href="#i-bar-chart" />
+                </svg> داشبورد
+            </a>
+            <a asp-area="UserPanel" asp-controller="Cart" asp-action="MyOrders">
+                <svg class="ic" aria-hidden="true">
+                    <use href="#i-download" />
+                </svg> خریدهای من
+            </a>
+            <a href="account-subscription.html">
+                <svg class="ic" aria-hidden="true">
+                    <use href="#i-star" />
+                </svg> اشتراک من
+            </a>
+            <a href="account-tickets.html">
+                <svg class="ic" aria-hidden="true">
+                    <use href="#i-life-preserver" />
+                </svg> تیکت پشتیبانی
+            </a>
+            <a href="account-settings.html">
+                <svg class="ic" aria-hidden="true">
+                    <use href="#i-gear" />
+                </svg> تنظیمات حساب
+            </a>
+            <a asp-area="" asp-controller="Account" asp-action="Logout">
+                <svg class="ic" aria-hidden="true">
+                    <use href="#i-box-arrow-right" />
+                </svg> خروج
+            </a>
+        </nav>
     </div>
-</div>
+</aside>
