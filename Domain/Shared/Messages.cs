@@ -53,6 +53,8 @@
         public const string PaymentDoneSuccessfully = "پرداخت با موفقیت انجام شد";
         public const string TicketSentSuccessfully = "تیکت با موفقیت ارسال شد";
         public const string CommentSentSuccessfully = "دیدگاه شما ثبت شد و پس از تأیید نمایش داده می‌شود.";
+        public const string DeleteRequestSubmitedSuccessfully = "درخواست حذف حساب کاربری با موفقیت ثبت شد. لطفاً تا 48 ساعت آینده منتظر بمانید تا حساب شما حذف شود";
+        public const string DeleteRequestCanceledSuccessfully = "درخواست حذف حساب کاربری با موفقیت لغو شد";
 
         #endregion
     }

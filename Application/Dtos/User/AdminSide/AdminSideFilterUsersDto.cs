@@ -10,5 +10,8 @@ namespace Application.Dtos.User.AdminSide
 
         [Display(Name = "وضعیت حساب کاربری")]
         public bool? IsUserBanned { get; set; }
+
+        [Display(Name = "درخواست حذف")]
+        public bool? DeleteRequest { get; set; }
     }
 }

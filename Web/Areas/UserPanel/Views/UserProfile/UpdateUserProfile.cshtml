@@ -1,56 +1,98 @@
 ﻿@using Application.Dtos.User.AdminSide
+@using Application.Tools
 @model AdminSideUpdateUserProfileDto
 
 @{
     ViewData["Title"] = "ویرایش پروفایل";
 }
 
-<div class="container-fluid">
+<main class="container">
+    <ul class="crumbs">
+        <partial name="_IndexLink" />
+        <partial name="_UserPanelHomeLink" />
+        <li>پنل کاربری</li>
+    </ul>
 
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="page-title-box">
-                <h4>ویرایش پروفایل</h4>
-                <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item">
-                        <a asp-area="UserPanel" asp-controller="Home" asp-action="Index">صفحه نخست</a>
-                    </li>
-                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
-                </ol>
-            </div>
-        </div>
-    </div>
+    <partial name="_UserPanelWelcome" />
 
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="card">
-                <form class="card-body" asp-area="UserPanel" asp-controller="UserProfile" asp-action="UpdateUserProfile" autocomplete="off" onsubmit="submitAnimation()" method="post">
+    <div class="account mt-3">
 
-                    <h4 class="card-title">@ViewData["Title"]</h4>
+        <partial name="_UserPanelVerticalMenu" />
 
-                    <div class="mb-3 row">
-                        <label asp-for="FirstName" class="col-md-2 col-form-label"></label>
-                        <div class="col-md-10">
-                            <input class="form-control" type="text" asp-for="FirstName">
-                            <span asp-validation-for="FirstName" class="text-danger"></span>
+        <!-- ============ Content ============ -->
+        <div class="account__body">
+
+            <!-- Personal info -->
+            <section class="card card-pad">
+                <h2 style="font-size:1.1rem">اطلاعات شخصی</h2>
+                <form asp-area="UserPanel" asp-controller="UserProfile" asp-action="UpdateUserProfile" method="post">
+                    <div class="grid grid--2" style="gap:14px">
+                        <div class="field">
+                            <label asp-for="FirstName"></label>
+                            <input class="input" asp-for="FirstName">
+                            <span asp-validation-for="FirstName"></span>
+                        </div>
+                        <div class="field">
+                            <label asp-for="LastName"></label>
+                            <input class="input" asp-for="LastName">
+                            <span asp-validation-for="LastName"></span>
+                        </div>
+                        <div class="field">
+                            <span class="hint">برای تغییر شماره با پشتیبانی تماس بگیرید</span>
                         </div>
                     </div>
-
-                    <div class="mb-3 row">
-                        <label asp-for="LastName" class="col-md-2 col-form-label"></label>
-                        <div class="col-md-10">
-                            <input class="form-control" type="text" asp-for="LastName">
-                            <span asp-validation-for="LastName" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div asp-validation-summary="All" class="text-danger"></div>
-
-                    <div class="col-12 text-end mt-5">
-                        <button class="btn btn-primary btn-submit" type="submit">ویرایش پروفایل</button>
-                    </div>
+                    <button type="submit" class="btn btn--primary">ذخیره تغییرات</button>
                 </form>
-            </div>
+            </section>
+
+            <!-- Danger zone -->
+            @if (Model.DeleteRequest)
+            {
+                <section class="card card-pad">
+                    <h2 style="font-size:1.1rem">منطقه خطر</h2>
+
+                    <div class="alert alert--warn">
+                        درخواست حذف حساب کاربری شما ثبت شده است.
+
+                        <br />
+                        @if (Model.DeleteRequestDate is DateTime requestedAt)
+                        {
+                            @:حساب کاربری شما حداکثر تا
+                            @requestedAt.AddDays(2).GetDate()
+                            @:حذف خواهد شد. تا آن زمان می‌توانید درخواست را لغو کنید.
+                        }
+                    </div>
+
+                    <form method="post" asp-area="UserPanel"
+                          asp-controller="UserProfile" asp-action="CancelAccountDeleteRequest"
+                          data-confirm-delete
+                          data-confirm-title="درخواست حذف حساب لغو شود؟">
+                        <button type="button" class="btn btn--success mt-2">
+                            لغو درخواست حذف حساب کاربری
+                        </button>
+                    </form>
+                </section>
+            }
+            else
+            {
+                <section class="card card-pad">
+                    <h2 style="font-size:1.1rem">منطقه خطر</h2>
+                    <div class="alert alert--warn">
+                        حذف حساب کاربری دائمی است و قابل بازگشت نیست؛ تمام خریدها، لایسنس‌ها و سابقه دانلود شما برای همیشه از بین می‌رود.
+                        <br />
+                        حداکثر پس از 48 ساعت پس از ثبت درخواست، حساب کاربری شما حذف خواهد شد.
+                    </div>
+
+                    <form method="post" asp-area="UserPanel"
+                          asp-controller="UserProfile" asp-action="AccountDeleteRequest"
+                          data-confirm-delete
+                          data-confirm-title="درخواست حذف حساب ثبت شود؟">
+                        <button type="submit" class="btn btn--danger mt-2">
+                            ثبت درخواست حذف حساب کاربری
+                        </button>
+                    </form>
+                </section>
+            }
         </div>
     </div>
-</div>
+</main>

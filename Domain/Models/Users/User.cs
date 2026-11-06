@@ -9,6 +9,8 @@
         public decimal Balance { get; set; }
         public int AccessFailedCount { get; set; } = 0;
         public DateTime? LockoutEnd { get; set; }
+        public bool DeleteRequest { get; set; }
+        public DateTime? DeleteRequestDate { get; set; }
 
         #region Relations
         public ICollection<UserRoleMapping>? UserRoleMapping { get; set; }

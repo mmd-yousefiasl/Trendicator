@@ -44,7 +44,35 @@ namespace Web.Areas.UserPanel.Controllers
             }
             TempData[TemporarySuccessMessage] = result.Message;
 
-            return RedirectToAction("Index", "Home", new { area = "UserPanel" });
+            return RedirectToAction(nameof(UpdateUserProfile));
+        }
+
+        [HttpPost("/user/account-delete-request"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> AccountDeleteRequest()
+        {
+            var result = await _userService.ClientSideAccountDeleteRequest();
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+                return RedirectToAction(nameof(UpdateUserProfile));
+            }
+
+            TempData[TemporarySuccessMessage] = result.Message;
+            return RedirectToAction(nameof(UpdateUserProfile));
+        }
+
+        [HttpPost("/user/cancel-account-delete-request"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> CancelAccountDeleteRequest()
+        {
+            var result = await _userService.ClientSideCancelAccountDelete();
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+                return RedirectToAction(nameof(UpdateUserProfile));
+            }
+
+            TempData[TemporarySuccessMessage] = result.Message;
+            return RedirectToAction(nameof(UpdateUserProfile));
         }
     }
 }

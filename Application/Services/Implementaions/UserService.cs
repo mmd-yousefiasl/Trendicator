@@ -74,6 +74,11 @@ namespace Application.Services.Implementaions
                 conditions.Add(n => n.IsUserBanned == filter.IsUserBanned);
             }
 
+            if (filter.DeleteRequest is not null)
+            {
+                conditions.Add(n => n.DeleteRequest == filter.DeleteRequest);
+            }
+
             IQueryable<User> query = _context.Users;
 
             query = query.OrderByDescending(n => n.Id);
@@ -90,7 +95,9 @@ namespace Application.Services.Implementaions
                 FirstName = n.FirstName,
                 LastName = n.LastName,
                 IsUserBanned = n.IsUserBanned,
-                Balance = n.Balance
+                Balance = n.Balance,
+                DeleteRequest = n.DeleteRequest,
+                DeleteRequestDate = n.DeleteRequestDate
             }));
 
             return filter;
@@ -240,7 +247,9 @@ namespace Application.Services.Implementaions
                 .Select(n => new AdminSideUpdateUserProfileDto()
                 {
                     FirstName = n.FirstName,
-                    LastName = n.LastName
+                    LastName = n.LastName,
+                    DeleteRequest = n.DeleteRequest,
+                    DeleteRequestDate = n.DeleteRequestDate
                 }).FirstOrDefaultAsync();
 
             if (user is null) return Result.Failure<AdminSideUpdateUserProfileDto>(Messages.OperationFailedError);
@@ -533,6 +542,42 @@ namespace Application.Services.Implementaions
                 return Result.Failure<string>(Messages.OperationFailedError);
 
             return fullName;
+        }
+
+        public async Task<Result> ClientSideAccountDeleteRequest()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var updated = await _context.Users
+                 .Where(n => n.Id == userId && !n.DeleteRequest)
+                 .ExecuteUpdateAsync(u => u
+                 .SetProperty(n => n.DeleteRequest, true)
+                 .SetProperty(n => n.DeleteRequestDate, DateTime.UtcNow));
+
+            if (updated != 1)
+                return Result.Failure(Messages.OperationFailedError);
+
+            return Result.Success(Messages.DeleteRequestSubmitedSuccessfully);
+        }
+
+        public async Task<Result> ClientSideCancelAccountDelete()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var updated = await _context.Users
+                 .Where(n => n.Id == userId && n.DeleteRequest)
+                 .ExecuteUpdateAsync(u => u
+                 .SetProperty(n => n.DeleteRequest, false)
+                 .SetProperty(n => n.DeleteRequestDate, (DateTime?)null));
+
+            if (updated != 1)
+                return Result.Failure(Messages.OperationFailedError);
+
+            return Result.Success(Messages.DeleteRequestCanceledSuccessfully);
         }
     }
 }

@@ -31,3 +31,36 @@
         best.setAttribute('aria-current', 'page');
     }
 })();
+
+document.addEventListener('click', (e) => {
+    const form = e.target.closest('form[data-confirm-delete]');
+    if (!form || form.disabled) return;
+    e.preventDefault();
+    ConfirmDelete(form);
+});
+
+async function ConfirmDelete(element) {
+    if (element.dataset.confirming === 'true') return;
+    element.dataset.confirming = 'true';
+
+    const confirmed = window.Trendicator?.confirm
+        ? await Trendicator.confirm({
+            title: 'آیا از انجام این عملیات مطمئن هستید؟',
+            message: element.dataset.confirmMessage || 'این عملیات قابل بازگشت نیست.',
+            okText: 'آره، مطمئنم',
+            cancelText: 'نه، منصرف شدم',
+            danger: true
+        })
+        : confirm('آیا از انجام این عملیات مطمئن هستید؟');
+
+    element.dataset.confirming = 'false';
+    if (!confirmed) return;
+
+    // requestSubmit fires the 'submit' event → your spinner handler runs.
+    // element.submit() would NOT fire it.
+    if (typeof element.requestSubmit === 'function') {
+        element.requestSubmit();
+    } else {
+        element.submit();
+    }
+}

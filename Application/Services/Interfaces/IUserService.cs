@@ -41,5 +41,9 @@ namespace Application.Services.Interfaces
         Task<int> SiteUsersCount();
 
         Task<Result<string>> ClientSideGetCurrentUserFullName();
+
+        Task<Result> ClientSideAccountDeleteRequest();
+
+        Task<Result> ClientSideCancelAccountDelete();
     }
 }
