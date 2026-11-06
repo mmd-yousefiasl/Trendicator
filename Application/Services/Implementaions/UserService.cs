@@ -210,26 +210,6 @@ namespace Application.Services.Implementaions
             return Result.Success();
         }
 
-        public async Task<Result<AdminSideUserDetailsDto>> AdminSideGetUserDetails(int id)
-        {
-            if (id < 1) return Result.Failure<AdminSideUserDetailsDto>(Messages.OperationFailedError);
-
-            var user = await _context.Users
-                .AsNoTracking()
-                .Where(n => n.Id == id).Select(n => new AdminSideUserDetailsDto()
-                {
-                    FirstName = n.FirstName,
-                    IsUserBanned = n.IsUserBanned,
-                    LastName = n.LastName,
-                    Mobile = n.Mobile
-                }).FirstOrDefaultAsync();
-
-            if (user is null)
-                return Result.Failure<AdminSideUserDetailsDto>(Messages.OperationFailedError);
-
-            return user;
-        }
-
         public async Task<decimal> GetCurrentUserBalance()
         {
             var userId = _httpContextAccessor.HttpContext.User.GetUserId();
@@ -537,21 +517,22 @@ namespace Application.Services.Implementaions
                 .CountAsync();
         }
 
-        public async Task<Result<DateTime>> GetMySignInDate()
+        public async Task<Result<string>> ClientSideGetCurrentUserFullName()
         {
             var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            if (userId < 1) return Result.Failure<DateTime>(Messages.OperationFailedError);
+            if (userId < 1)
+                return Result.Failure<string>(Messages.OperationFailedError);
 
-            DateTime? date = await _context.Users
+            var fullName = await _context.Users
                 .AsNoTracking()
                 .Where(n => n.Id == userId)
-                .Select(n => n.CreatedDate)
+                .Select(n => n.FirstName + " " + n.LastName)
                 .FirstOrDefaultAsync();
 
-            if (date is null)
-                return Result.Failure<DateTime>(Messages.OperationFailedError);
+            if (string.IsNullOrWhiteSpace(fullName))
+                return Result.Failure<string>(Messages.OperationFailedError);
 
-            return date;
+            return fullName;
         }
     }
 }

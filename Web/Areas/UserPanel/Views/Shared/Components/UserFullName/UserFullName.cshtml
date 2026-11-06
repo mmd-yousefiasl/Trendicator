@@ -1,0 +1,5 @@
+﻿@model string
+
+<h1 style="margin-bottom:8px">
+    سلام@((string.IsNullOrWhiteSpace(Model) ? "" : "، " + Model))
+</h1>

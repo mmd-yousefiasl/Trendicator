@@ -20,8 +20,6 @@ namespace Application.Services.Interfaces
 
         Task<Result> SoftDeleteUser(int id);
 
-        Task<Result<AdminSideUserDetailsDto>> AdminSideGetUserDetails(int id);
-
         Task<decimal> GetCurrentUserBalance();
 
         Task<Result<AdminSideUpdateUserProfileDto>> AdminSideGetUserProfileForUpdate();
@@ -42,6 +40,6 @@ namespace Application.Services.Interfaces
 
         Task<int> SiteUsersCount();
 
-        Task<Result<DateTime>> GetMySignInDate();
+        Task<Result<string>> ClientSideGetCurrentUserFullName();
     }
 }

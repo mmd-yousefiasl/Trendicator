@@ -1,6 +1,6 @@
 ﻿@using Application.Tools
 
 <div class="flex flex--between flex--wrap" style="align-items:flex-end">
-    <h1 style="margin-bottom:8px">سلام، امیر</h1>
+    @await Component.InvokeAsync("UserFullName")
     <span class="badge badge--brand mb-1">@(DateTime.UtcNow.GetDate())</span>
 </div>
