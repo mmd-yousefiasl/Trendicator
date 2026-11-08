@@ -1,0 +1,79 @@
+﻿@using Application.Dtos.Cart.ClientSide
+@using Application.Tools
+
+@model ClientSideFilterCartsDto
+
+@if (Model?.Entities?.Any() ?? false)
+{
+    <section class="card card-pad">
+        <div class="flex flex--between flex--wrap mb-2">
+            <h2 style="font-size:1.05rem;margin:0">خریدهای اخیر</h2>
+            <a asp-area="UserPanel" asp-controller="Cart" asp-action="MyOrders" class="btn btn--ghost btn--sm">مشاهده همه</a>
+        </div>
+
+        <div class="table-wrap" style="border:none">
+            <table class="table table--cards">
+                <thead>
+                    <tr>
+                        <th>کد سفارش</th>
+                        <th>تاریخ</th>
+                        <th>مبلغ</th>
+                        <th>تخفیف</th>
+                        <th>وضعیت</th>
+                        <th>فاکتور</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Entities ?? new List<ClientSideOrderDto>())
+                    {
+                        <tr>
+                            <td data-label="کد سفارش"><span dir="ltr" class="num">#@item.Id</span></td>
+                            <td data-label="تاریخ" class="num">@item.PaidDate?.GetDateTime()</td>
+                            <td data-label="مبلغ" class="num">@item.TotalPaid?.ToToman()</td>
+                            <td data-label="تخفیف" class="num">@item.TotalDiscount?.ToToman()</td>
+                            <td data-label="وضعیت"><span class="badge badge--up">@item.Status.GetDisplayName()</span></td>
+                            <td data-label="فاکتور">
+                                <a asp-area="UserPanel" asp-controller="Cart" asp-action="MyOrderDetails" asp-route-id="@item.Id"
+                                   class="btn btn--ghost btn--sm" title="مشاهده">
+                                    <svg class="ic" aria-hidden="true">
+                                        <use href="#i-eye" />
+                                    </svg>مشاهده
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+}
+else
+{
+    <div class="card">
+        <div class="empty" role="status">
+            <div class="empty__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 8.25h12l-1.05 10.5A2 2 0 0 1 14.96 20.5H9.04a2 2 0 0 1-1.99-1.75L6 8.25Z"
+                          stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+                    <path d="M9 8.25V6a3 3 0 0 1 6 0v2.25"
+                          stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                    <path d="M10 13.5h4"
+                          stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55" />
+                </svg>
+            </div>
+
+            <h3>هنوز سفارشی ثبت نکرده‌اید</h3>
+            <p>
+                به‌محض ثبت اولین سفارش، کد سفارش، تاریخ، مبلغ و وضعیت آن در همین صفحه نمایش داده می‌شود.
+            </p>
+
+            <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="" class="btn btn--primary">
+                <svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2"
+                          stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                شروع خرید
+            </a>
+        </div>
+    </div>
+}

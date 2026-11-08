@@ -1,6 +1,6 @@
 ﻿@using Application.Dtos.Cart.ClientSide
 @using Application.Tools
-@model ClientSideFilterCartsViewModel
+@model ClientSideFilterCartsDto
 
 @{
     ViewData["Title"] = "لیست سفارش های من";
@@ -34,119 +34,79 @@
 
             <!-- Orders -->
             <section class="card card-pad">
+                <form method="get" asp-area="UserPanel" asp-controller="Cart" asp-action="MyOrders" id="search-form">
+                    <input type="hidden" asp-for="Page" />
+                </form>
                 <h2 class="mb-2" style="font-size:1.05rem">تاریخچه سفارش‌ها</h2>
-                <div class="table-wrap" style="border:none">
-                    <table class="table table--cards">
-                        <thead>
-                            <tr>
-                                <th>کد سفارش</th>
-                                <th>تاریخ</th>
-                                <th>محصولات</th>
-                                <th>مبلغ</th>
-                                <th>وضعیت</th>
-                                <th>فاکتور</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td data-label="کد سفارش"><span dir="ltr" class="num">TRD-۱۴۰۵-۱۰۲۴</span></td>
-                                <td class="num" data-label="تاریخ">۳۱ مرداد ۱۴۰۵</td>
-                                <td data-label="محصولات"><b>ترند اسکالپر پرو</b> <span class="text-dim">MT5</span></td>
-                                <td class="num" data-label="مبلغ">۲٬۴۸۰٬۰۰۰ تومان</td>
-                                <td data-label="وضعیت"><span class="badge badge--up">پرداخت شده</span></td>
-                                <td data-label="فاکتور"><a href="#" class="btn btn--ghost btn--sm">دانلود PDF</a></td>
-                            </tr>
-                            <tr>
-                                <td data-label="کد سفارش"><span dir="ltr" class="num">TRD-۱۴۰۵-۱۰۱۹</span></td>
-                                <td class="num" data-label="تاریخ">۲۴ مرداد ۱۴۰۵</td>
-                                <td data-label="محصولات"><b>سوپر ترند دارچین</b> <span class="text-dim">TradingView</span></td>
-                                <td class="num" data-label="مبلغ">۱٬۸۹۰٬۰۰۰ تومان</td>
-                                <td data-label="وضعیت"><span class="badge badge--up">پرداخت شده</span></td>
-                                <td data-label="فاکتور"><a href="#" class="btn btn--ghost btn--sm">دانلود PDF</a></td>
-                            </tr>
-                            <tr>
-                                <td data-label="کد سفارش"><span dir="ltr" class="num">TRD-۱۴۰۵-۱۰۱۲</span></td>
-                                <td class="num" data-label="تاریخ">۱۰ مرداد ۱۴۰۵</td>
-                                <td data-label="محصولات"><b>اسمارت مانی فلو</b> <span class="text-dim">MT5</span></td>
-                                <td class="num" data-label="مبلغ">۲٬۴۶۰٬۰۰۰ تومان</td>
-                                <td data-label="وضعیت"><span class="badge badge--up">پرداخت شده</span></td>
-                                <td data-label="فاکتور"><a href="#" class="btn btn--ghost btn--sm">دانلود PDF</a></td>
-                            </tr>
-                            <tr>
-                                <td data-label="کد سفارش"><span dir="ltr" class="num">TRD-۱۴۰۵-۱۰۰۷</span></td>
-                                <td class="num" data-label="تاریخ">۲ مرداد ۱۴۰۵</td>
-                                <td data-label="محصولات"><b>ایکسپرت گاردین</b> <span class="text-dim">MT4</span></td>
-                                <td class="num" data-label="مبلغ">۳٬۱۰۰٬۰۰۰ تومان</td>
-                                <td data-label="وضعیت"><span class="badge badge--brand">در حال پردازش</span></td>
-                                <td class="text-dim" data-label="فاکتور">—</td>
-                            </tr>
-                            <tr>
-                                <td data-label="کد سفارش"><span dir="ltr" class="num">TRD-۱۴۰۵-۰۹۹۳</span></td>
-                                <td class="num" data-label="تاریخ">۲۸ تیر ۱۴۰۵</td>
-                                <td data-label="محصولات"><b>پرو ساپورت رزیستانس</b> <span class="text-dim">MT4</span></td>
-                                <td class="num" data-label="مبلغ">۹۸۰٬۰۰۰ تومان</td>
-                                <td data-label="وضعیت"><span class="badge badge--down">لغو شده</span></td>
-                                <td class="text-dim" data-label="فاکتور">—</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+                @if (Model?.Entities?.Any() ?? false)
+                {
+                    <div class="table-wrap" style="border:none">
+                        <table class="table table--cards">
+                            <thead>
+                                <tr>
+                                    <th>کد سفارش</th>
+                                    <th>تاریخ</th>
+                                    <th>مبلغ</th>
+                                    <th>تخفیف</th>
+                                    <th>وضعیت</th>
+                                    <th>فاکتور</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Entities ?? new List<ClientSideOrderDto>())
+                                {
+                                    <tr>
+                                        <td data-label="کد سفارش"><span dir="ltr" class="num">#@item.Id</span></td>
+                                        <td data-label="تاریخ" class="num">@item.PaidDate?.GetDateTime()</td>
+                                        <td data-label="مبلغ" class="num">@item.TotalPaid?.ToToman()</td>
+                                        <td data-label="تخفیف" class="num">@item.TotalDiscount?.ToToman()</td>
+                                        <td data-label="وضعیت"><span class="badge badge--up">@item.Status.GetDisplayName()</span></td>
+                                        <td data-label="فاکتور">
+                                            <a asp-area="UserPanel" asp-controller="Cart" asp-action="MyOrderDetails" asp-route-id="@item.Id"
+                                               class="btn btn--ghost btn--sm" title="مشاهده">
+                                                <svg class="ic" aria-hidden="true">
+                                                    <use href="#i-eye" />
+                                                </svg>مشاهده
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
 
-            <!-- Downloads -->
-            <section class="card card-pad">
-                <h2 class="mb-2" style="font-size:1.05rem">فایل‌های قابل دانلود</h2>
-                <div class="table-wrap" style="border:none">
-                    <table class="table table--cards">
-                        <thead>
-                            <tr>
-                                <th>محصول</th>
-                                <th>پلتفرم</th>
-                                <th>نسخه</th>
-                                <th>تاریخ به‌روزرسانی</th>
-                                <th>دانلود</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td data-label="محصول"><b>ترند اسکالپر پرو</b></td>
-                                <td data-label="پلتفرم">MT5</td>
-                                <td data-label="نسخه"><span dir="ltr" class="num">v3.2</span></td>
-                                <td class="num" data-label="تاریخ به‌روزرسانی">۳۱ مرداد ۱۴۰۵</td>
-                                <td data-label="دانلود"><a href="#" class="btn btn--soft btn--sm">دانلود</a></td>
-                            </tr>
-                            <tr>
-                                <td data-label="محصول"><b>سوپر ترند دارچین</b></td>
-                                <td data-label="پلتفرم">TradingView</td>
-                                <td data-label="نسخه"><span dir="ltr" class="num">v2.1</span></td>
-                                <td class="num" data-label="تاریخ به‌روزرسانی">۲۴ مرداد ۱۴۰۵</td>
-                                <td data-label="دانلود"><a href="#" class="btn btn--soft btn--sm">دانلود</a></td>
-                            </tr>
-                            <tr>
-                                <td data-label="محصول"><b>اسمارت مانی فلو</b></td>
-                                <td data-label="پلتفرم">MT5</td>
-                                <td data-label="نسخه"><span dir="ltr" class="num">v1.8</span></td>
-                                <td class="num" data-label="تاریخ به‌روزرسانی">۱۰ مرداد ۱۴۰۵</td>
-                                <td data-label="دانلود"><a href="#" class="btn btn--soft btn--sm">دانلود</a></td>
-                            </tr>
-                            <tr>
-                                <td data-label="محصول"><b>ایکسپرت گاردین</b></td>
-                                <td data-label="پلتفرم">MT4</td>
-                                <td data-label="نسخه"><span dir="ltr" class="num">v4.0</span></td>
-                                <td class="num" data-label="تاریخ به‌روزرسانی">۲ مرداد ۱۴۰۵</td>
-                                <td data-label="دانلود"><a href="#" class="btn btn--soft btn--sm">دانلود</a></td>
-                            </tr>
-                            <tr>
-                                <td data-label="محصول"><b>پرو ساپورت رزیستانس</b></td>
-                                <td data-label="پلتفرم">MT4</td>
-                                <td data-label="نسخه"><span dir="ltr" class="num">v2.3</span></td>
-                                <td class="num" data-label="تاریخ به‌روزرسانی">۲۸ تیر ۱۴۰۵</td>
-                                <td data-label="دانلود"><a href="#" class="btn btn--soft btn--sm">دانلود</a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <p class="hint mt-2 mb-0">هر فایل تا ۵ بار قابل دانلود است؛ پس از اتمام، از تیکت پشتیبانی تمدید کنید.</p>
+                    <partial name="_Paging" model="@Model.GetCurrentPaging()" />
+                }
+                else
+                {
+                    <div class="card">
+                        <div class="empty" role="status">
+                            <div class="empty__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6 8.25h12l-1.05 10.5A2 2 0 0 1 14.96 20.5H9.04a2 2 0 0 1-1.99-1.75L6 8.25Z"
+                                          stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+                                    <path d="M9 8.25V6a3 3 0 0 1 6 0v2.25"
+                                          stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                                    <path d="M10 13.5h4"
+                                          stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55" />
+                                </svg>
+                            </div>
+
+                            <h3>هنوز سفارشی ثبت نکرده‌اید</h3>
+                            <p>
+                                به‌محض ثبت اولین سفارش، کد سفارش، تاریخ، مبلغ و وضعیت آن در همین صفحه نمایش داده می‌شود.
+                            </p>
+
+                            <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="" class="btn btn--primary">
+                                <svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2"
+                                          stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                شروع خرید
+                            </a>
+                        </div>
+                    </div>
+                }
             </section>
         </div>
     </div>

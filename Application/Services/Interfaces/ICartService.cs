@@ -42,9 +42,9 @@ namespace Application.Services.Interfaces
 
         Task<Result<AdminSideFilterCartsDto>> AdminSideFilterCarts(AdminSideFilterCartsDto filter);
 
-        Task<Result<ClientSideFilterCartsViewModel>> ClientSideFilterCarts(ClientSideFilterCartsViewModel filter);
+        Task<Result<ClientSideFilterCartsDto>> ClientSideFilterCarts(ClientSideFilterCartsDto filter);
 
-        Task<Result<ClientSideCartDetailsViewModel>> ClientSideGetCartDetails(int id);
+        Task<Result<ClientSideCartDetailsDto>> ClientSideGetCartDetails(int id);
 
         Task<int> OrdersCount();
 

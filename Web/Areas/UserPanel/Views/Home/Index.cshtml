@@ -41,50 +41,7 @@
                 <p class="hint mt-1 mb-0">۱۲ روز از ۳۰ روز باقی مانده است</p>
             </section>
 
-            <!-- Purchases -->
-            <section class="card card-pad">
-                <div class="flex flex--between flex--wrap mb-2">
-                    <h2 style="font-size:1.05rem;margin:0">خریدهای اخیر</h2>
-                    <a href="account-purchases.html" class="btn btn--ghost btn--sm">مشاهده همه</a>
-                </div>
-
-                <div class="table-wrap" style="border:none">
-                    <table class="table table--cards">
-                        <thead>
-                            <tr>
-                                <th>محصول</th>
-                                <th>تاریخ خرید</th>
-                                <th>مبلغ</th>
-                                <th>وضعیت</th>
-                                <th>دانلود</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td data-label="محصول"><b>ترند اسکالپر پرو</b></td>
-                                <td class="num" data-label="تاریخ خرید">۳۱ مرداد ۱۴۰۵</td>
-                                <td class="num" data-label="مبلغ">۲٬۴۸۰٬۰۰۰ تومان</td>
-                                <td data-label="وضعیت"><span class="badge badge--up">پرداخت شده</span></td>
-                                <td data-label="دانلود"><a href="#" class="btn btn--soft btn--sm">دانلود</a></td>
-                            </tr>
-                            <tr>
-                                <td data-label="محصول"><b>سوپر ترند دارچین</b></td>
-                                <td class="num" data-label="تاریخ خرید">۲۴ مرداد ۱۴۰۵</td>
-                                <td class="num" data-label="مبلغ">۱٬۸۹۰٬۰۰۰ تومان</td>
-                                <td data-label="وضعیت"><span class="badge badge--up">پرداخت شده</span></td>
-                                <td data-label="دانلود"><a href="#" class="btn btn--soft btn--sm">دانلود</a></td>
-                            </tr>
-                            <tr>
-                                <td data-label="محصول"><b>اسمارت مانی فلو</b></td>
-                                <td class="num" data-label="تاریخ خرید">۱۰ مرداد ۱۴۰۵</td>
-                                <td class="num" data-label="مبلغ">۲٬۴۶۰٬۰۰۰ تومان</td>
-                                <td data-label="وضعیت"><span class="badge badge--up">پرداخت شده</span></td>
-                                <td data-label="دانلود"><a href="#" class="btn btn--soft btn--sm">دانلود</a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+            @await Component.InvokeAsync("UserPanelLatestPurchases")
 
             <!-- Tickets -->
             <section class="card card-pad">

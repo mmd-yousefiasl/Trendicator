@@ -659,6 +659,76 @@ namespace Application.Services.Implementaions
             return filter;
         }
 
+        public async Task<Result<ClientSideFilterCartsDto>> ClientSideFilterCarts(ClientSideFilterCartsDto filter)
+        {
+            if (filter is null)
+                return Result.Failure<ClientSideFilterCartsDto>(Messages.OperationFailedError);
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+
+            if (userId < 1)
+                return Result.Failure<ClientSideFilterCartsDto>(Messages.OperationFailedError);
+
+            var conditions = Filter.GenerateConditions<Cart>();
+
+            conditions.Add(n => n.UserId == userId);
+            conditions.Add(n => n.Status == CartStatusEnum.Paid);
+
+            IQueryable<Cart> query = _context.Carts;
+            query = query.OrderByDescending(n => n.Id);
+
+            foreach (var item in conditions ?? new FilterConditions<Cart>())
+            {
+                query = query.Where(item);
+            }
+
+            await filter.Paging(query.Select(n => new ClientSideOrderDto()
+            {
+                Id = n.Id,
+                Status = n.Status,
+                PaidDate = n.PaidDate,
+                TotalDiscount = n.TotalDiscount,
+                TotalPaid = n.TotalPaid
+            }));
+
+            return filter;
+        }
+
+        public async Task<Result<ClientSideCartDetailsDto>> ClientSideGetCartDetails(int id)
+        {
+            if (id < 1)
+                return Result.Failure<ClientSideCartDetailsDto>(Messages.OperationFailedError);
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1)
+                return Result.Failure<ClientSideCartDetailsDto>(Messages.OperationFailedError);
+
+            var cart = await _context
+                .Carts
+                .AsNoTracking()
+                .Where(c => c.Id == id && c.Status == CartStatusEnum.Paid && c.UserId == userId)
+                .Select(c => new ClientSideCartDetailsDto
+                {
+                    Id = c.Id,
+                    PaidDate = c.PaidDate ?? DateTime.UtcNow,
+                    TotalDiscount = c.TotalDiscount ?? 0,
+                    TotalPaid = c.TotalPaid ?? 0,
+                    DiscountCode = c.DiscountCode ?? "",
+                    Products = c.Items
+                        .Select(i => new ClientSIdeOrderItemDto
+                        {
+                            Title = i.Title,
+                            OrderPrice = i.OrderPrice,
+                            DisplayPrice = i.DisplayPrice
+                        }).ToList()
+                }).FirstOrDefaultAsync();
+
+            if (cart is null)
+                return Result.Failure<ClientSideCartDetailsDto>(Messages.OperationFailedError);
+
+            return cart;
+        }
+
         public async Task<Result<ClientSideCartSummaryViewModel>> ClientSideCartSummary()
         {
             /*            var cartItemsResult = await ClientSideGetCart();
@@ -717,78 +787,6 @@ namespace Application.Services.Implementaions
                 .FirstOrDefaultAsync();
 
             return "";
-        }
-
-        public async Task<Result<ClientSideFilterCartsViewModel>> ClientSideFilterCarts(
-            ClientSideFilterCartsViewModel filter)
-        {
-            if (filter is null) return Result.Failure<ClientSideFilterCartsViewModel>(Messages.OperationFailedError);
-
-            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            if (userId < 1) return Result.Failure<ClientSideFilterCartsViewModel>(Messages.OperationFailedError);
-
-            var conditions = Filter.GenerateConditions<Cart>();
-
-            conditions.Add(n => n.UserId == userId);
-            conditions.Add(n => n.Status != CartStatusEnum.PendingPayment);
-
-            IQueryable<Cart> query = _dbSet;
-            query = query.OrderByDescending(n => n.Id);
-
-            foreach (var item in conditions ?? new FilterConditions<Cart>())
-            {
-                query = query.Where(item);
-            }
-
-            await filter.Paging(query.Select(n => new ClientSideOrderViewModel()
-            {
-                Id = n.Id,
-                Status = n.Status,
-                DiscountCode = n.DiscountCode,
-                PaidDate = n.PaidDate,
-                TotalDiscount = n.TotalDiscount,
-                TotalPaid = n.TotalPaid
-            }));
-
-            return filter;
-        }
-
-        public async Task<Result<ClientSideCartDetailsViewModel>> ClientSideGetCartDetails(int id)
-        {
-            if (id < 1)
-                return Result.Failure<ClientSideCartDetailsViewModel>(Messages.OperationFailedError);
-
-            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            if (userId < 1) return Result.Failure<ClientSideCartDetailsViewModel>(Messages.OperationFailedError);
-
-            var cartEntity = await _dbSet
-                .Include(n => n.Items)
-                .ThenInclude(i => i.Product)
-                .AsNoTracking()
-                .AsSplitQuery()
-                .FirstOrDefaultAsync(n => n.Id == id &&
-                                          n.Status != CartStatusEnum.PendingPayment &&
-                                          n.UserId == userId);
-
-            if (cartEntity is null)
-                return Result.Failure<ClientSideCartDetailsViewModel>(Messages.OperationFailedError);
-
-            var cart = new ClientSideCartDetailsViewModel
-            {
-                Id = cartEntity.Id,
-                PaidDate = cartEntity.PaidDate ?? DateTime.UtcNow,
-                TotalDiscount = cartEntity.TotalDiscount ?? 0,
-                TotalPaid = cartEntity.TotalPaid ?? 0,
-                Products = cartEntity.Items?.Select(i =>
-                {
-                    return new ClientSIdeCartItemViewModel
-                    {
-                        Title = i.Product.Title,
-                    };
-                }).ToList() ?? new List<ClientSIdeCartItemViewModel>()
-            };
-
-            return cart;
         }
 
         public async Task<int> OrdersCount()

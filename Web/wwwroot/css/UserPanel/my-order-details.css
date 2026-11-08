@@ -1,0 +1,183 @@
+﻿/* ── Even stat boxes ─────────────────────────────────────── */
+.order-stats > .stat {
+    min-width: 0; /* kills the 1fr min-content blowout */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+}
+
+.order-stats .stat b {
+    font-size: clamp(.95rem, 2.2vw, 1.45rem);
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.order-stats .stat span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── PDF button + overlay ────────────────────────────────── */
+#btn-pdf[disabled] {
+    opacity: .6;
+    cursor: progress;
+}
+
+.pdf-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #0b0f14;
+    align-items: center;
+    justify-content: center;
+}
+
+body.is-generating-pdf .pdf-overlay {
+    display: flex;
+}
+
+.pdf-overlay__box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+    color: #14202c;
+    padding: 16px 22px;
+    border-radius: 12px;
+    font-weight: 700;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, .35);
+}
+
+.pdf-overlay__spinner {
+    width: 20px;
+    height: 20px;
+    flex: none;
+    border: 3px solid #10b981;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: pdfspin .8s linear infinite;
+}
+
+@keyframes pdfspin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ── Hidden invoice template (captured by html2canvas) ───── */
+.invoice-print {
+    position: fixed;
+    top: 0;
+    left: -20000px; /* parked off-screen until capture */
+    width: 794px; /* A4 @96dpi */
+    background: #ffffff;
+    color: #1a2432;
+    font-family: Vazirmatn, Tahoma, sans-serif;
+    font-size: 13px;
+    line-height: 1.8;
+    z-index: 1;
+    pointer-events: none;
+}
+
+    .invoice-print.is-capturing {
+        left: 0;
+        z-index: 9998;
+    }
+
+.invoice-print__inner {
+    padding: 40px 44px;
+}
+
+.invoice-print__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 18px;
+    border-bottom: 2px solid #10b981;
+    margin-bottom: 22px;
+}
+
+.invoice-print__brand {
+    font-size: 20px;
+    font-weight: 800;
+    color: #059669;
+}
+
+.invoice-print__muted {
+    font-size: 12px;
+    color: #6b7a8c;
+}
+
+.invoice-print__meta {
+    font-size: 12px;
+    line-height: 2;
+    color: #44536a;
+    text-align: left;
+}
+
+    .invoice-print__meta b {
+        color: #1a2432;
+    }
+
+.invoice-print__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+    .invoice-print__table th {
+        background: #f1f5f9;
+        color: #334155;
+        font-weight: 700;
+        padding: 8px 10px;
+        text-align: right;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .invoice-print__table td {
+        padding: 8px 10px;
+        text-align: right;
+        vertical-align: top;
+        border-bottom: 1px solid #eef2f7;
+        font-variant-numeric: tabular-nums;
+    }
+
+.invoice-print__totals {
+    margin-top: 18px;
+    margin-inline-start: auto;
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+    .invoice-print__totals > div {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 12px;
+        color: #44536a;
+    }
+
+    .invoice-print__totals .is-total {
+        padding-top: 8px;
+        border-top: 1px dashed #cbd5e1;
+        font-size: 14px;
+        font-weight: 800;
+        color: #059669;
+    }
+
+.invoice-print__foot {
+    margin-top: 28px;
+    padding-top: 12px;
+    border-top: 1px solid #eef2f7;
+    font-size: 11px;
+    color: #8595a8;
+    text-align: center;
+}

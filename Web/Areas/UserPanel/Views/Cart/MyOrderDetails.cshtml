@@ -1,143 +1,274 @@
 ﻿@using Application.Dtos.Cart.ClientSide
 @using Application.Tools
-@model ClientSideCartDetailsViewModel
+@model ClientSideCartDetailsDto
 
 @{
-    ViewData["Title"] = "جزئیات سفارش من";
+    ViewData["Title"] = $"جزئیات سفارش {Model.Id}";
+    var itemsTotal = Model.Products?.Select(n => (n.DisplayPrice > 0 ? n.DisplayPrice : n.OrderPrice)).Sum();
 }
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="page-title-box">
-                <h4>مدیریت سفارش های من</h4>
-                <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item">
-                        <a asp-area="UserPanel" asp-controller="Home" asp-action="Index">صفحه نخست</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a asp-area="UserPanel" asp-controller="Cart" asp-action="MyOrders">لیست سفارش های من</a>
-                    </li>
-                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
-                </ol>
-            </div>
-        </div>
-    </div>
+@section HeaderReferences {
+    <link rel="stylesheet" type="text/css" asp-append-version="true" href="/css/UserPanel/my-order-details.css" />
+}
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
+<main class="container">
+    <ul class="crumbs">
+        <partial name="_IndexLink" />
+        <partial name="_UserPanelHomeLink" />
+        <li><a asp-area="UserPanel" asp-controller="Cart" asp-action="MyOrders">خریدهای من</a></li>
+        <li>سفارش <span dir="ltr" class="num">@Model.Id</span></li>
+    </ul>
 
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="invoice-title">
-                                <h4 class="font-size-16"><strong>سفارش #@Model.Id</strong></h4>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-6 mt-4">
-                                    <address>
-                                        <strong>تاریخ سفارش:</strong><br>
-                                        @Model.PaidDate.GetDateTime()<br><br>
-                                    </address>
-                                </div>
+    <partial name="_UserPanelWelcome" />
 
-                                @if (!string.IsNullOrWhiteSpace(Model.TradingViewAccountName))
-                                {
-                                    <div class="col-6 mt-4">
-                                        <address>
-                                            <strong>نام اکانت تریدینگ ویو:</strong><br>
-                                            @Model.TradingViewAccountName
-                                            <br><br>
-                                        </address>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
+    <div class="account mt-3">
 
-                    <div class="row">
-                        <div class="col-12">
-                            <div>
-                                <div class="p-2">
-                                    <h3 class="font-size-16"><strong>خلاصه سفارش</strong></h3>
-                                </div>
-                                <div class="">
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <td><strong>محصول</strong></td>
-                                                    <td class="text-center">
-                                                        <strong>قیمت</strong>
-                                                    </td>
-                                                    <td class="text-end"><strong>مجموع</strong></td>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach (var item in Model?.Products ?? new List<ClientSIdeCartItemViewModel>())
-                                                {
-                                                    <tr>
-                                                        <td>
-                                                            @item.Title (@item.Option)        
-                                                        </td>
-                                                        <td class="text-center">@item.Price.ToToman()</td>
-                                                        <td class="thick-line"></td>
-                                                    </tr>
-                                                }
-                                                <tr>
-                                                    <td class="thick-line"></td>
-                                                    <td class="thick-line text-center">
-                                                        <strong>مجموع</strong>
-                                                    </td>
-                                                    <td class="thick-line text-end">@Model.SubTotal.ToToman()</td>
-                                                </tr>
-                                                @if (Model.TotalDiscount > 0)
-                                                {
-                                                    <tr>
-                                                        <td class="thick-line"></td>
-                                                        <td class="thick-line text-center">
-                                                            <strong>تخفیف</strong>
-                                                        </td>
-                                                        <td class="thick-line text-end">@Model.TotalDiscount.ToToman()</td>
-                                                    </tr>
-                                                }
-                                                @if (Model.Tax > 0)
-                                                {
-                                                    <tr>
-                                                        <td class="no-line"></td>
-                                                        <td class="no-line text-center">
-                                                            <strong>مالیات</strong>
-                                                        </td>
-                                                        <td class="no-line text-end">@Model.Tax.ToToman()</td>
-                                                    </tr>
-                                                }
-                                                <tr>
-                                                    <td class="no-line"></td>
-                                                    <td class="no-line text-center">
-                                                        <strong>کل</strong>
-                                                    </td>
-                                                    <td class="no-line text-end">
-                                                        <h4 class="m-0">@Model.TotalPaid.ToToman()</h4>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="d-print-none">
-                                        <div class="float-end">
-                                            <a href="javascript:window.print()" class="btn btn-success waves-effect waves-light me-2">
-                                                <i class="fa fa-print"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <partial name="_UserPanelVerticalMenu" />
+
+        <!-- ============ Content ============ -->
+        <div class="account__body">
+
+            <div class="flex flex--between flex--wrap" style="align-items:center;gap:12px">
+                <div>
+                    <h1 style="font-size:1.4rem;margin-bottom:2px">
+                        سفارش <span dir="ltr" class="num">#@Model.Id</span>
+                    </h1>
+                    <p class="text-muted mb-0" style="font-size:.85rem">
+                        تاریخ پرداخت: <span class="num">@Model.PaidDate.GetDateTime()</span>
+                    </p>
+                </div>
+
+                <div class="flex flex--wrap" style="gap:8px">
+                    <button type="button" id="btn-pdf" class="btn btn--primary btn--sm"
+                            data-order-id="@Model.Id">
+                        <svg class="ic" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"
+                                  stroke="currentColor" stroke-width="2"
+                                  stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        دانلود فاکتور PDF
+                    </button>
+
+                    <a asp-area="UserPanel" asp-controller="Cart" asp-action="MyOrders"
+                       class="btn btn--ghost btn--sm">
+                        <svg class="ic" aria-hidden="true">
+                            <use href="#i-box-arrow-right" />
+                        </svg>
+                        بازگشت به خریدها
+                    </a>
                 </div>
             </div>
+
+            <!-- Stats -->
+            <div class="grid grid--4 order-stats" style="gap:14px">
+                <div class="card stat stat--brand" title="@Model.TotalPaid.ToToman()">
+                    <b class="num">@Model.TotalPaid.ToToman()</b>
+                    <span>مبلغ پرداخت‌شده</span>
+                </div>
+                <div class="card stat" title="@Model.TotalDiscount.ToToman()">
+                    <b class="num">@Model.TotalDiscount.ToToman()</b>
+                    <span>تخفیف</span>
+                </div>
+                <div class="card stat"
+                     title="@(string.IsNullOrWhiteSpace(Model.DiscountCode) ? "بدون کد تخفیف" : Model.DiscountCode)">
+                    <b class="num" dir="ltr">
+                        @(string.IsNullOrWhiteSpace(Model.DiscountCode) ? "—" : Model.DiscountCode)
+                    </b>
+                    <span>کد تخفیف</span>
+                </div>
+                <div class="card stat">
+                    <b class="num">@(Model.Products?.Count ?? 0)</b>
+                    <span>تعداد محصول</span>
+                </div>
+            </div>
+
+            <!-- Products -->
+            <section class="card card-pad">
+                <h2 class="mb-2" style="font-size:1.05rem">اقلام سفارش</h2>
+
+                @if (Model.Products?.Any() ?? false)
+                {
+                    <div class="table-wrap" style="border:none">
+                        <table class="table table--cards">
+                            <thead>
+                                <tr>
+                                    <th>عنوان</th>
+                                    <th>قیمت</th>
+                                    <th>تخفیف</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var p in Model.Products)
+                                {
+                                    <tr>
+                                        <td data-label="عنوان">@p.Title</td>
+
+                                        <td data-label="قیمت" class="num">
+                                            <span class="price">
+                                                @if (p.DisplayPrice > 0)
+                                                {
+                                                    <del>@((p.DisplayPrice - p.OrderPrice).ToToman())</del>
+                                                }
+                                                @p.OrderPrice.ToToman()
+                                            </span>
+                                        </td>
+
+                                        <td data-label="تخفیف">
+                                            @if (p.DisplayPrice > 0)
+                                            {
+                                                <span class="badge badge--up">@((p.DisplayPrice - p.OrderPrice).ToToman())</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-dim">—</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="card">
+                        <div class="empty" role="status">
+                            <div class="empty__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6 8.25h12l-1.05 10.5A2 2 0 0 1 14.96 20.5H9.04a2 2 0 0 1-1.99-1.75L6 8.25Z"
+                                          stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+                                    <path d="M9 8.25V6a3 3 0 0 1 6 0v2.25"
+                                          stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                                </svg>
+                            </div>
+                            <h3>اقلامی برای این سفارش ثبت نشده است</h3>
+                            <p>در صورت نیاز با پشتیبانی در ارتباط باشید.</p>
+                        </div>
+                    </div>
+                }
+            </section>
+
+            <!-- Payment summary -->
+            <section class="card card-pad">
+                <h2 class="mb-2" style="font-size:1.05rem">خلاصه پرداخت</h2>
+
+                <div style="display:flex;flex-direction:column;gap:10px">
+                    <div class="flex flex--between">
+                        <span class="text-muted">جمع قیمت اقلام</span>
+                        <span class="num">@itemsTotal?.ToToman()</span>
+                    </div>
+
+                    <div class="flex flex--between">
+                        <span class="text-muted">
+                            تخفیف
+                            @if (!string.IsNullOrWhiteSpace(Model.DiscountCode))
+                            {
+                                <span class="badge badge--brand" dir="ltr" style="margin-inline-start:6px">
+                                    @Model.DiscountCode
+                                </span>
+                            }
+                        </span>
+                        <span class="num text-up">− @Model.TotalDiscount.ToToman()</span>
+                    </div>
+
+                    <div class="flex flex--between"
+                         style="padding-top:12px;border-top:1px dashed var(--line)">
+                        <span style="font-weight:800">مبلغ پرداخت‌شده</span>
+                        <span class="price num">
+                            @Model.TotalPaid.ToToman() <small>تومان</small>
+                        </span>
+                    </div>
+                </div>
+            </section>
+
         </div>
     </div>
-</div>
+
+    <!-- ============ Hidden invoice template (A4) ============ -->
+    <div class="invoice-print" id="invoice-print" dir="rtl" aria-hidden="true">
+        <div class="invoice-print__inner">
+
+            <header class="invoice-print__head">
+                <div>
+                    <div class="invoice-print__brand">@SiteTools.SiteName</div>
+                    <div class="invoice-print__muted">فاکتور خرید</div>
+                </div>
+                <div class="invoice-print__meta">
+                    <div>شماره سفارش: <b dir="ltr">#@Model.Id</b></div>
+                    <div>تاریخ پرداخت: <b>@Model.PaidDate.GetDateTime()</b></div>
+                </div>
+            </header>
+
+            <table class="invoice-print__table">
+                <thead>
+                    <tr>
+                        <th style="width:38px">#</th>
+                        <th>عنوان محصول</th>
+                        <th style="width:110px">قیمت اصلی</th>
+                        <th style="width:100px">تخفیف</th>
+                        <th style="width:120px">مبلغ پرداختی</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var row = 0;
+                    }
+                    @foreach (var p in Model.Products ?? Enumerable.Empty<ClientSIdeOrderItemDto>())
+                    {
+                        row++;
+                        <tr>
+                            <td>@row</td>
+                            <td>@p.Title</td>
+                            <td>@((p.DisplayPrice > 0 ? p.DisplayPrice : p.OrderPrice).ToToman())</td>
+                            <td>@(p.DisplayPrice > 0 ? (p.DisplayPrice - p.OrderPrice).ToToman() : "—")</td>
+                            <td>@p.OrderPrice.ToToman()</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="invoice-print__totals">
+                <div>
+                    <span>جمع قیمت اقلام</span>
+                    <b>@Model.Products?.Select(n => (n.DisplayPrice > 0 ? n.DisplayPrice : n.OrderPrice)).Sum().ToToman()</b>
+                </div>
+                @if (Model.TotalDiscount > 0)
+                {
+                    <div>
+                        <span>
+                            تخفیف
+                            @if (!string.IsNullOrWhiteSpace(Model.DiscountCode))
+                            {
+                                <span dir="ltr">(@Model.DiscountCode)</span>
+                            }
+                        </span>
+                        <b>− @Model.TotalDiscount.ToToman()</b>
+                    </div>
+                }
+                <div class="is-total">
+                    <span>مبلغ پرداخت‌شده</span>
+                    <b>@Model.TotalPaid.ToToman() تومان</b>
+                </div>
+            </div>
+
+            <footer class="invoice-print__foot">
+                این فاکتور به‌صورت خودکار توسط سامانه
+                @SiteTools.SiteName
+                صادر شده است.
+            </footer>
+        </div>
+    </div>
+
+    <!-- ============ PDF generation overlay ============ -->
+    <div class="pdf-overlay" id="pdf-overlay" aria-hidden="true">
+        <div class="pdf-overlay__box">
+            <span class="pdf-overlay__spinner" aria-hidden="true"></span>
+            <span>در حال ساخت فاکتور…</span>
+        </div>
+    </div>
+
+</main>
+
+<script src="/lib/pdf/html2canvas.js" asp-append-version="true"></script>
+<script src="/lib/pdf/jspdf.js" asp-append-version="true"></script>
+<script asp-append-version="true" src="/js/UserPanel/my-order-details.js"></script>

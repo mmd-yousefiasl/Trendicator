@@ -151,7 +151,7 @@ function FillPageId(id) {
     const csrfToken = body.dataset.csrfToken || null;
 
     if (!addUrl || !removeUrl) {
-        console.warn('[cart-add] Missing data-cart-add-url / data-cart-remove-url on <body>.');
+        //console.warn('[cart-add] Missing data-cart-add-url / data-cart-remove-url on <body>.');
         return;
     }
 

@@ -1,6 +1,5 @@
 ﻿using Application.Dtos.Cart.ClientSide;
 using Application.Services.Interfaces;
-using Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Areas.UserPanel.Controllers
@@ -19,10 +18,12 @@ namespace Web.Areas.UserPanel.Controllers
         #endregion
 
         [HttpGet("/user/my-orders")]
-        public async Task<IActionResult> MyOrders(ClientSideFilterCartsViewModel filter)
+        public async Task<IActionResult> MyOrders(ClientSideFilterCartsDto filter)
         {
             var result = await _cartService.ClientSideFilterCarts(filter);
-            if (result.IsFailure) return View(new ClientSideFilterCartsViewModel());
+
+            if (result.IsFailure)
+                return View(new ClientSideFilterCartsDto());
 
             return View(result.Value);
         }
@@ -30,11 +31,6 @@ namespace Web.Areas.UserPanel.Controllers
         [HttpGet("/user/my-order-details/{id}")]
         public async Task<IActionResult> MyOrderDetails(int id)
         {
-            if (id < 1)
-            {
-                TempData[TemporaryErrorMessage] = Messages.OperationFailedError;
-                return RedirectToAction(nameof(MyOrders));
-            }
             var result = await _cartService.ClientSideGetCartDetails(id);
             if (result.IsFailure)
             {
