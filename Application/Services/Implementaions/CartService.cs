@@ -4,6 +4,7 @@ using Application.Dtos.Cart.ClientSide;
 using Application.Dtos.CartItem.AdminSide;
 using Application.Dtos.CartItem.ClientSide;
 using Application.Dtos.Payment;
+using Application.Dtos.UserOrderStats.ClientSide;
 using Application.Mediator;
 using Application.Services.Interfaces;
 using Application.Static;
@@ -823,5 +824,141 @@ namespace Application.Services.Implementaions
             return await _dbSet.Where(n => n.UserId == userId && n.Status != CartStatusEnum.PendingPayment &&
                                            n.Status != CartStatusEnum.PendingPayment).SumAsync(n => (n.TotalPaid ?? 0));
         }
+
+        #region User Order Stats
+        public async Task<Result<ClientSideUserOrderStatsDto>> ClientSideGetUserOrderStats()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1)
+                return Result.Failure<ClientSideUserOrderStatsDto>(Messages.OperationFailedError);
+
+            var cacheKey = CacheKeys.UserOrderStatsCacheKey(userId.ToString());
+
+            // 1) try cache → fallback to DB
+            var stats = await _cacheManager.GetAsync(cacheKey, async () =>
+                await _context.UserOrderStats
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(n => n.UserId == userId));
+
+            // 2) no row, or row is flagged → recompute
+            if (stats is null || stats.NeedToUpdate)
+            {
+                var claimed = false;
+
+                if (stats is null)
+                {
+                    // insert a stub, then recompute
+                    var fresh = new UserOrderStats { UserId = userId, NeedToUpdate = true };
+                    _context.UserOrderStats.Add(fresh);
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        claimed = true;
+                    }
+                    catch (DbUpdateException)
+                    {
+                        // another request inserted it in the meantime
+                        _context.Entry(fresh).State = EntityState.Detached;
+                        claimed = await _context.UserOrderStats
+                            .Where(n => n.UserId == userId && n.NeedToUpdate)
+                            .ExecuteUpdateAsync(s => s.SetProperty(n => n.NeedToUpdate, false)) == 1;
+                    }
+                }
+                else
+                {
+                    // atomic claim: only one caller flips the flag and recomputes
+                    claimed = await _context.UserOrderStats
+                        .Where(n => n.UserId == userId && n.NeedToUpdate)
+                        .ExecuteUpdateAsync(s => s.SetProperty(n => n.NeedToUpdate, false)) == 1;
+                }
+
+                if (claimed)
+                {
+                    // totals per order
+                    var agg = await _context.Carts
+                        .Where(n => n.UserId == userId && n.Status == CartStatusEnum.Paid)
+                        .GroupBy(n => 1)
+                        .Select(g => new
+                        {
+                            OrdersCount = g.Count(),
+                            TotalPaid = g.Sum(c => c.TotalPaid ?? 0),
+                            TotalDiscount = g.Sum(c => c.TotalDiscount ?? 0),
+                        })
+                        .FirstOrDefaultAsync();
+
+                    // distinct products ever bought — adjust nav name to your schema
+                    var purchasedProductsCount = await _context.Carts
+                        .Where(n => n.UserId == userId && n.Status == CartStatusEnum.Paid)
+                        .SelectMany(n => n.Items)
+                        .Select(d => d.ProductId)
+                        .CountAsync();
+
+                    await _context.UserOrderStats
+                        .Where(n => n.UserId == userId)
+                        .ExecuteUpdateAsync(s => s
+                            .SetProperty(n => n.OrdersCount, agg?.OrdersCount ?? 0)
+                            .SetProperty(n => n.TotalPaid, agg?.TotalPaid ?? 0)
+                            .SetProperty(n => n.TotalDiscount, agg?.TotalDiscount ?? 0)
+                            .SetProperty(n => n.PurchasedProductsCount, purchasedProductsCount));
+                }
+
+                // drop stale cache; the next call repopulates from DB
+                await _cacheManager.RemoveByKeyAsync(cacheKey);
+
+                stats = await _context.UserOrderStats
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(n => n.UserId == userId);
+            }
+
+            var dto = new ClientSideUserOrderStatsDto
+            {
+                OrdersCount = stats?.OrdersCount ?? 0,
+                TotalPaid = stats?.TotalPaid ?? 0,
+                TotalDiscount = stats?.TotalDiscount ?? 0,
+                PurchasedProductsCount = stats?.PurchasedProductsCount ?? 0,
+            };
+
+            return Result.Success(dto);
+        }
+
+        public async Task<Result> UserOrderStatsNeedUpdate(int userId)
+        {
+            if (userId < 1)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var exists = await _context.UserOrderStats
+                .AsNoTracking().AnyAsync(n => n.UserId == userId);
+
+            if (!exists)
+            {
+                var stats = new UserOrderStats()
+                {
+                    UserId = userId,
+                    NeedToUpdate = true,
+                };
+
+                try
+                {
+                    _context.UserOrderStats.Add(stats);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException ex) when (ex.InnerException is PostgresException { SqlState: "23505" })
+                {
+                    _context.Entry(stats).State = EntityState.Detached;
+                }
+            }
+
+            var updated = await _context.UserOrderStats
+                .Where(n => n.UserId == userId)
+                .ExecuteUpdateAsync(n => n.SetProperty(c => c.NeedToUpdate, true));
+
+            if (updated != 1)
+                return Result.Failure(Messages.OperationFailedError);
+
+            await _cacheManager.RemoveByKeyAsync(CacheKeys.UserOrderStatsCacheKey(userId.ToString()));
+
+            return Result.Success();
+        }
+        #endregion
     }
 }

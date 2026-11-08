@@ -54,6 +54,7 @@ namespace Data.Context
 
         public DbSet<Cart> Carts => Set<Cart>();
         public DbSet<CartItem> CartItems => Set<CartItem>();
+        public DbSet<UserOrderStats> UserOrderStats => Set<UserOrderStats>();
 
         public DbSet<Banner> Banners => Set<Banner>();
         public DbSet<EmailData> EmailData => Set<EmailData>();

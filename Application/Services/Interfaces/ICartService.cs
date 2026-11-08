@@ -2,6 +2,7 @@
 using Application.Dtos.Cart.ClientSide;
 using Application.Dtos.CartItem.ClientSide;
 using Application.Dtos.Payment;
+using Application.Dtos.UserOrderStats.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces
@@ -53,5 +54,10 @@ namespace Application.Services.Interfaces
         Task<int> MyOrdersCount();
 
         Task<decimal> MyTotalPurchesAmount();
+
+        #region User Order Stats
+        Task<Result<ClientSideUserOrderStatsDto>> ClientSideGetUserOrderStats();
+        Task<Result> UserOrderStatsNeedUpdate(int userId);
+        #endregion
     }
 }

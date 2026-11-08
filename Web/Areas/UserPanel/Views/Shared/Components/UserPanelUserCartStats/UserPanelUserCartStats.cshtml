@@ -1,0 +1,14 @@
+﻿@using Application.Dtos.UserOrderStats.ClientSide
+@using Application.Tools
+@model ClientSideUserOrderStatsDto
+
+@if (Model is not null)
+{
+    <!-- Stats -->
+    <div class="grid grid--4" style="gap:14px">
+        <div class="card stat stat--brand"><b class="num">@Model.OrdersCount</b><span>سفارش انجام شده</span></div>
+        <div class="card stat"><b class="num">@Model.TotalPaid.ToToman()</b><span>تومان مجموع خرید</span></div>
+        <div class="card stat"><b class="num">@Model.TotalDiscount.ToToman()</b><span>تومان مجموع تخفیف</span></div>
+        <div class="card stat"><b class="num">@Model.PurchasedProductsCount</b><span>محصول خریداری شده</span></div>
+    </div>
+}

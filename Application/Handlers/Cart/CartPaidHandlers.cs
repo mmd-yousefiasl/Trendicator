@@ -7,16 +7,19 @@ using MediatR;
 
 namespace Application.Handlers.Cart
 {
-    public class CartNotificationHandlers : INotificationHandler<CartPaidEvent>
+    public class CartPaidHandlers : INotificationHandler<CartPaidEvent>
     {
         #region Fields
         private readonly ISiteNotificationService _notificationService;
+        private readonly ICartService _cartService;
         #endregion
 
         #region Ctor
-        public CartNotificationHandlers(ISiteNotificationService notificationService)
+        public CartPaidHandlers(ISiteNotificationService notificationService,
+            ICartService cartService)
         {
             _notificationService = notificationService;
+            _cartService = cartService;
         }
         #endregion
 
@@ -40,6 +43,7 @@ namespace Application.Handlers.Cart
                 };
 
                 await _notificationService.ClientSideCreateNewNotification(userNotification);
+                await _cartService.UserOrderStatsNeedUpdate(notification.UserId.Value);
             }
         }
     }

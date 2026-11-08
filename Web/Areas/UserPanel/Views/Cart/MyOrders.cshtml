@@ -24,13 +24,7 @@
 
             <h1 style="font-size:1.4rem;margin-bottom:0">خریدهای من</h1>
 
-            <!-- Stats -->
-            <div class="grid grid--4" style="gap:14px">
-                <div class="card stat stat--brand"><b class="num">۷</b><span>محصول خریداری‌شده</span></div>
-                <div class="card stat"><b class="num">۸٬۴۲۰٬۰۰۰</b><span>تومان مجموع خرید</span></div>
-                <div class="card stat"><b class="num">۲۳</b><span>دانلود</span></div>
-                <div class="card stat"><b class="num">۱</b><span>لایسنس در انتظار فعال‌سازی</span></div>
-            </div>
+            @await Component.InvokeAsync("UserPanelUserCartStats")
 
             <!-- Orders -->
             <section class="card card-pad">

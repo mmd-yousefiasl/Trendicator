@@ -20,5 +20,11 @@
         public static string CartCacheKey(string id)
             => string.Format(CartCacheKeyTemplate, id);
         #endregion
+
+        #region User Order Stats
+        public const string UserOrderStatsCacheKeyTemplate = "UserOrderStats:{0}";
+        public static string UserOrderStatsCacheKey(string id)
+            => string.Format(UserOrderStatsCacheKeyTemplate, id);
+        #endregion
     }
 }
