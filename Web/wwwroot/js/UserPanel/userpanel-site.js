@@ -64,3 +64,52 @@ async function ConfirmDelete(element) {
         element.submit();
     }
 }
+
+(function () {
+    var input = document.getElementById('Attachment');
+    var zone = document.getElementById('fileDrop');
+    var name = document.getElementById('fileDropName');
+    var hint = document.getElementById('fileDropHint');
+    if (!input || !zone) return;
+
+    zone.addEventListener('mouseenter', function () {
+        if (!zone.dataset.hasFile) {
+            zone.style.borderColor = 'var(--brand)';
+            zone.style.background = 'var(--brand-soft)';
+        }
+    });
+    zone.addEventListener('mouseleave', function () {
+        if (!zone.dataset.hasFile) {
+            zone.style.borderColor = 'var(--line)';
+            zone.style.background = 'var(--bg-soft)';
+        }
+    });
+
+    input.addEventListener('change', function () {
+        if (this.files && this.files.length > 0) {
+            var f = this.files[0];
+
+            zone.dataset.hasFile = '1';
+            zone.style.borderStyle = 'solid';
+            zone.style.borderColor = 'var(--brand)';
+            zone.style.background = 'var(--brand-soft)';
+
+            name.textContent = f.name;
+            name.style.color = 'var(--brand)';
+
+            var kb = f.size / 1024;
+            hint.textContent = (kb >= 1024
+                ? (kb / 1024).toFixed(1) + ' مگابایت'
+                : kb.toFixed(0) + ' کیلوبایت');
+        } else {
+            zone.dataset.hasFile = '';
+            zone.style.borderStyle = 'dashed';
+            zone.style.borderColor = 'var(--line)';
+            zone.style.background = 'var(--bg-soft)';
+
+            name.textContent = 'فایلی انتخاب نشده — برای انتخاب کلیک کنید';
+            name.style.color = 'var(--text-2)';
+            hint.textContent = 'PNG, JPG, JPEG, WEBP — حداکثر ۵۰۰ کیلوبایت';
+        }
+    });
+})();

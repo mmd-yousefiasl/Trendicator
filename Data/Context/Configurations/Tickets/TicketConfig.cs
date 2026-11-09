@@ -10,14 +10,15 @@ namespace Data.Context.Configurations.Tickets
         {
             builder.ToTable("Tickets");
 
-            builder.HasKey(n => n.Id);
-            builder.HasQueryFilter(n => !n.IsDeleted);
+            builder.HasQueryFilter(t => !t.IsDeleted);
 
-            builder.Property(n => n.Subject).HasMaxLength(200);
+            builder.HasKey(t => t.Id);
 
-            builder.Property(n => n.Id)
-                .UseIdentityColumn()
-                .HasIdentityOptions(startValue: 10000, incrementBy: 1);
+            builder.Property(t => t.Title)
+                .HasMaxLength(200)
+                .IsRequired();
+
+            builder.HasIndex(t => t.UserId);
         }
     }
 }

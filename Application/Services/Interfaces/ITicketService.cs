@@ -1,31 +1,36 @@
-﻿using Application.Dtos.Ticket.AdminSide;
-using Application.Dtos.Ticket.ClientSide;
+﻿using Application.Dtos.Tickets;
+using Application.Dtos.Tickets.AdminSide;
+using Application.Dtos.Tickets.ClientSide;
 using Domain.Shared;
 
 namespace Application.Services.Interfaces
 {
     public interface ITicketService
     {
-        Task<Result<ClientSideFilterTicketsViewModel>> ClientSideFilterTickets(ClientSideFilterTicketsViewModel filter);
+        Task<Result<int>> ClientSideCreateNewTicket(ClientSideCreateNewTicketDto dto);
 
-        Task<Result> ClientSideCreateNewTicket(ClientSideCreateNewTicketViewModel model);
+        Task<Result<ClientSideFilterTicketsDto>> ClientSideFilterTickets(ClientSideFilterTicketsDto filter);
 
-        Task<Result<ClientSideTicketDetailsViewModel>> ClientSideGetTicketDetails(int id);
+        Task<Result<ClientSideTicketDetailsDto>> ClientSideGetTicketDetails(int ticketId);
 
-        Task<Result> ClientSideCreateNewMessage(ClientSideCreateNewTicketMessageViewModel model);
+        Task<Result> ClientSideCloseTicket(int ticketId);
 
-        Task<Result<AdminSideFilterTicketsViewModel>> AdminSideFilterTickets(AdminSideFilterTicketsViewModel filter);
+        Task<Result> ClientSideSendNewMessage(ClientSideSendTicketMessageDto dto);
 
-        Task<Result<AdminSideTicketDetailsViewModel>> AdminSideGetTicketDetails(int id);
+        Task<Result> ClientSideCanUserAccessAtachment(string fileName);
 
-        Task<Result> AdminSideCreateNewMessage(AdminSideCreateNewTicketMessageViewModel model);
+        Task<Result<AdminSideFilterTicketsDto>> AdminSideFilterTickets(AdminSideFilterTicketsDto filter);
 
-        Task<Result> SoftDeleteTicket(int id);
+        Task<Result<AdminSideTicketDetailsDto>> AdminSideGetTicketDetails(int ticketId);
 
-        Task<Result> AdminSideCloseTicket(int id);
+        Task<Result> AdminSideCloseTicket(int ticketId);
 
-        Task<Result> ClientSideClostTicket(int id);
+        Task<Result> AdminSideSendNewMessage(AdminSideSendTicketMessageDto dto);
 
-        Task<int> MyTicketsCount();
+        Task CreateNewTicketHistory(CreateTicketHistoryDto dto);
+
+        Task<Result<AdminSideFilterTicketHistoryDto>> AdminSideFilterTicketHistory(AdminSideFilterTicketHistoryDto filter);
+
+        Task<Result> AdminSideUpdateTicketStatus(AdminSideUpdateTicketStatusDto dto);
     }
 }

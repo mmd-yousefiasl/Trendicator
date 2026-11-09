@@ -1,68 +1,104 @@
-﻿@using Application.Tools
-@using Application.Dtos.Ticket.AdminSide
-@model AdminSideTicketDetailsViewModel
+﻿@using Application.Dtos.Tickets.AdminSide
+@model AdminSideSendTicketMessageDto
 
 @{
-    ViewData["Title"] = "جزئیات تیکت";
+    ViewData["Title"] = "جزئیات و گفتگو تیکت";
 }
 
 <div class="container-fluid">
+
     <div class="row">
         <div class="col-sm-6">
             <div class="page-title-box">
-                <h4>مدیریت تیکت ها</h4>
+                <h4>مدیریت تیکت های پشتیبانی</h4>
                 <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item">
-                        <a asp-area="Admin" asp-controller="Home" asp-action="Index">صفحه نخست</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a asp-area="Admin" asp-controller="Ticket" asp-action="TicketsList">لیست تیکت ها</a>
-                    </li>
-                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Home" asp-action="Index">صفحه نخست</a></li>
+                    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Ticket" asp-action="TicketsList">تیکت‌های پشتیبانی</a></li>
+                    <li class="breadcrumb-item active">گفتگو</li>
                 </ol>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="card">
-                <div class="card-body">
-                    <div>
-                        <h5 class="font-size-14 mb-4">
-                            وضعیت: @Model.Status.GetDisplayName() :
-                            <a asp-area="Admin" asp-controller="Ticket" asp-action="CreateNewMessage" asp-route-id="@Model.Id" class="btn btn-sm btn-solid">
-                                + افزودن پیام جدید
-                            </a>
+
+    @if (Model == null)
+    {
+        <div class="alert alert-danger text-center font-size-13 border-danger mb-3" role="alert">
+            <i class="mdi mdi-alert-circle-outline me-1"></i> اطلاعات درخواست شده معتبر نمی‌باشد یا فرم با خطا مواجه شده است.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-12 col-lg-9">
+
+                @await Component.InvokeAsync("AdminSideTicketDetails", new { ticketId = Model.TicketId })
+
+                <div class="card border border-dark shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title font-size-13 text-dark mb-3">
+                            <i class="mdi mdi-reply me-1 text-muted"></i> ارسال پاسخ جدید
                         </h5>
 
-                        <ul class="list-unstyled activity-feed ms-1">
-                            @foreach (var item in Model.Messages ?? new List<AdminSideTicketMessageViewModel>())
-                            {
-                                <li class="feed-item">
-                                    <div class="feed-item-list">
-                                        <div>
-                                            <div class="date">
-                                                @item.CreatedDate.GetDateTime()
-                                                @if (item.IsSentByUser)
-                                                {
-                                                    <a href="javascript:void(0);" class="text-success">@@کاربر</a>
-                                                }
-                                                else
-                                                {
-                                                    <a href="javascript:void(0);" class="text-info">@@شما</a>
-                                                }
-                                            </div>
-                                            <p class="activity-text mb-0">
-                                                @item.Message
-                                            </p>
-                                        </div>
-                                    </div>
-                                </li>
-                            }
-                        </ul>
+                        <form permission="TicketDetails"  asp-area="Admin" asp-controller="Ticket" asp-action="TicketDetails" method="post" enctype="multipart/form-data">
+                            <input type="hidden" asp-for="TicketId" />
+
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label font-size-12 fw-bold text-dark" asp-for="MessageText"></label>
+                                    <textarea class="form-control border-dark-subtle font-size-13" asp-for="MessageText" rows="4" placeholder="متن پاسخ خود را بنویسید..."></textarea>
+                                    <span asp-validation-for="MessageText" class="text-danger font-size-11 mt-1 d-block"></span>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label font-size-12 fw-bold text-dark" asp-for="Attachment"></label>
+                                    <input type="file" class="form-control border-dark-subtle font-size-13" asp-for="Attachment">
+                                    <span asp-validation-for="Attachment" class="text-danger font-size-11 mt-1 d-block"></span>
+                                </div>
+
+                                <div class="col-12 text-start mt-3">
+                                    <button class="btn-submit btn btn-dark btn-sm px-4 font-size-13" type="submit">
+                                        ارسال پاسخ
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
+
+            </div>
+
+            <div class="col-12 col-lg-3 mt-3 mt-lg-0">
+                <div class="card border border-dark shadow-sm">
+                    <div class="card-body">
+                        <h6 class="font-size-12 text-dark fw-bold mb-3">عملیات تیکت</h6>
+
+                        <div class="d-flex flex-column flex-row gap-2 my-2">
+                            <form asp-area="Admin" permission="CloseTicket"
+                                  asp-controller="Ticket"
+                                  asp-action="CloseTicket"
+                                  asp-route-id="@Model.TicketId"
+                                  method="post"
+                                  onclick="ConfirmDelete(this)"
+                                  class="btn btn-danger btn-sm d-flex align-items-center justify-content-center m-0 flex-grow-1"
+                                  style="cursor: pointer; user-select: none; padding: 0.4rem 0.8rem;">
+
+                                <i class="mdi mdi-lock-outline me-1 font-size-14"></i>
+                                <span>بستن نهایی تیکت</span>
+                            </form>
+
+                            <a asp-area="Admin"
+                               asp-controller="Ticket"
+                               asp-action="TicketsList"
+                               class="btn btn-outline-dark btn-sm d-flex align-items-center justify-content-center flex-grow-1 font-size-12"
+                               style="padding: 0.4rem 0.8rem;">
+
+                                <span>بازگشت به لیست</span>
+                                <i class="mdi mdi-arrow-left ms-1 font-size-14"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div
             </div>
         </div>
-    </div>
+    }
 </div>

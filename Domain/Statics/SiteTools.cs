@@ -66,5 +66,11 @@
         public static string VisitorKeyName { get; set; }
         public static int VisitorExpirationDays { get; set; }
         #endregion
+
+        #region Tickets
+        public static int MaxTicketAttachmentLength { get; set; }
+        public static string TicketAttachmentFile { get; set; }
+
+        #endregion
     }
 }

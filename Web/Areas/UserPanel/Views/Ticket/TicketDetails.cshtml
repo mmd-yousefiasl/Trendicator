@@ -1,68 +1,117 @@
-﻿@using Application.Tools
-@using Application.Dtos.Ticket.ClientSide
-@model ClientSideTicketDetailsViewModel
+﻿@using Application.Dtos.Tickets.ClientSide
+@model ClientSideSendTicketMessageDto
 
 @{
-    ViewData["Title"] = "جزئیات تیکت";
+    ViewData["Title"] = "جزئیات و گفتگو تیکت";
 }
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="page-title-box">
-                <h4>مدیریت تیکت ها</h4>
-                <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item">
-                        <a asp-area="UserPanel" asp-controller="Home" asp-action="Index">صفحه نخست</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a asp-area="UserPanel" asp-controller="Ticket" asp-action="MyTickets">لیست تیکت ها</a>
-                    </li>
-                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="card">
-                <div class="card-body">
-                    <div>
-                        <h5 class="font-size-14 mb-4">
-                            وضعیت: @Model.Status.GetDisplayName() :
-                            <a asp-area="UserPanel" asp-controller="Ticket" asp-action="CreateNewMessage" asp-route-id="@Model.Id" class="btn btn-sm btn-solid">
-                                + افزودن پیام جدید
-                            </a>
-                        </h5>
+<main class="container">
+    <ul class="crumbs">
+        <partial name="_IndexLink" />
+        <partial name="_UserPanelHomeLink" />
+        <li>
+            <a asp-area="UserPanel" asp-controller="Ticket" asp-action="TicketsList">
+                تیکت‌های پشتیبانی
+            </a>
+        </li>
+        <li>گفتگو</li>
+    </ul>
 
-                        <ul class="list-unstyled activity-feed ms-1">
-                            @foreach (var item in Model.Messages ?? new List<ClientSideTicketMessageViewModel>())
-                            {
-                                <li class="feed-item">
-                                    <div class="feed-item-list">
-                                        <div>
-                                            <div class="date">
-                                                @item.CreatedDate.GetDateTime()
-                                                @if (item.IsSentByUser)
-                                                {
-                                                    <a href="javascript:void(0);" class="text-info">@@شما</a>
-                                                }
-                                                else
-                                                {
-                                                    <a href="javascript:void(0);" class="text-success">@@ادمین سایت</a>
-                                                }
-                                            </div>
-                                            <p class="activity-text mb-0">
-                                                @item.Message
-                                            </p>
-                                        </div>
-                                    </div>
-                                </li>
-                            }
-                        </ul>
-                    </div>
+    <partial name="_UserPanelWelcome" />
+
+    <div class="account mt-3">
+
+        <partial name="_UserPanelVerticalMenu" />
+
+        <div class="account__body">
+
+            @if (Model == null)
+            {
+                <div class="alert" style="border-color:var(--down);background:var(--down-soft);color:var(--down)">
+                    <span style="color:var(--down);font-size:1.15rem">
+                        <svg class="ic" aria-hidden="true"><use href="#i-exclamation-circle" /></svg>
+                    </span>
+                    <div>اطلاعات درخواست شده معتبر نمی‌باشد یا فرم با خطا مواجه شده است.</div>
                 </div>
-            </div>
+            }
+            else
+            {
+                @* ---- Header + conversation (separate partial) ---- *@
+                @await Component.InvokeAsync("ClientSideTicketDetails", new { ticketId = Model.TicketId })
+
+                @* ---- Reply form ---- *@
+                <section class="card card-pad">
+                    <h2 class="mb-2" style="font-size:1.05rem">ارسال پاسخ جدید</h2>
+
+                    <form asp-area="UserPanel" asp-controller="Ticket"
+                          asp-action="TicketDetails" method="post" enctype="multipart/form-data">
+
+                        <input type="hidden" asp-for="TicketId" />
+
+                        <div class="field">
+                            <label asp-for="MessageText"></label>
+                            <textarea class="textarea" asp-for="MessageText" rows="4"
+                                      placeholder="متن پاسخ خود را بنویسید..."></textarea>
+                            <span asp-validation-for="MessageText"></span>
+                        </div>
+
+                        @* ---- Drop-zone file input (same as create-ticket page) ---- *@
+                        <div class="field">
+                            <label asp-for="Attachment"></label>
+
+                            <label id="fileDrop"
+                                   style="position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:22px 20px;border:2px dashed var(--line);border-radius:var(--r-md);background:var(--bg-soft);cursor:pointer;text-align:center;transition:border-color var(--t), background var(--t);">
+
+                                <span style="color:var(--brand);display:inline-flex;margin-bottom:2px">
+                                    <svg class="ic" style="width:26px;height:26px" aria-hidden="true">
+                                        <use href="#i-cloud-arrow-up" />
+                                    </svg>
+                                </span>
+
+                                <b id="fileDropName" style="font-size:.9rem;font-weight:700;color:var(--text-2)">
+                                    فایلی انتخاب نشده — برای انتخاب کلیک کنید
+                                </b>
+
+                                <small id="fileDropHint" style="font-size:.75rem;color:var(--text-3)">
+                                    PNG, JPG, JPEG, WEBP — حداکثر ۵۰۰ کیلوبایت
+                                </small>
+
+                                <input type="file" asp-for="Attachment"
+                                       accept=".png,.jpg,.jpeg,.webp"
+                                       style="position:absolute;opacity:0;width:0;height:0;pointer-events:none" />
+                            </label>
+
+                            <span asp-validation-for="Attachment"></span>
+                        </div>
+
+                        <div class="flex flex--wrap mt-3" style="gap:8px">
+                            <button class="btn btn--primary" type="submit">
+                                <svg class="ic" aria-hidden="true"><use href="#i-send" /></svg>
+                                ارسال پاسخ
+                            </button>
+
+                            <a asp-area="UserPanel" asp-controller="Ticket" asp-action="TicketsList"
+                               class="btn btn--ghost">
+                                بازگشت به لیست
+                            </a>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="card card-pad">
+                    <h2 class="mb-2" style="font-size:1.05rem">عملیات تیکت</h2>
+
+                    <form asp-area="UserPanel" asp-controller="Ticket"
+                          asp-action="CloseTicket" asp-route-id="@Model.TicketId"
+                          method="post"
+                          data-confirm-delete
+                          data-confirm-title="تیکت بسته شود؟">
+                        <button type="submit" class="btn btn--danger mt-2">
+                            بستن نهایی تیکت
+                        </button>
+                    </form>
+                </section>
+            }
         </div>
     </div>
-</div>
+</main>

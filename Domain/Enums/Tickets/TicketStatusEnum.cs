@@ -4,11 +4,19 @@ namespace Domain.Enums.Tickets
 {
     public enum TicketStatusEnum
     {
-        [Display(Name = "ارسل شده")]
-        Sent = 1,
+        [Display(Name = "باز شده")]
+        Open = 1,
+
+        [Display(Name = "در دست بررسی")]
+        Pending = 2,
+
         [Display(Name = "پاسخ داده شده")]
-        Answered = 2,
+        Answered = 3,
+
+        [Display(Name = "پاسخ کاربر")]
+        UserReplied = 4,
+
         [Display(Name = "بسته شده")]
-        Closed = 3,
+        Closed = 5
     }
 }

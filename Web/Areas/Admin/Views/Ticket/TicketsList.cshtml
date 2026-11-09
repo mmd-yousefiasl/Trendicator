@@ -1,10 +1,10 @@
-﻿@using Application.Tools
-@using Application.Dtos.Ticket.AdminSide
+﻿@using Application.Dtos.Tickets.AdminSide
+@using Application.Tools
 @using Domain.Enums.Tickets
-@model AdminSideFilterTicketsViewModel
+@model AdminSideFilterTicketsDto
 
 @{
-    ViewData["Title"] = "لیست تیکت ها";
+    ViewData["Title"] = "لیست تیکت های پشتیبانی";
 }
 
 <div class="container-fluid">
@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col-sm-6">
             <div class="page-title-box">
-                <h4>مدیریت تیکت ها</h4>
+                <h4>مدیریت تیکت های پشتیبانی</h4>
                 <ol class="breadcrumb m-0">
                     <li class="breadcrumb-item">
                         <a asp-area="Admin" asp-controller="Home" asp-action="Index">صفحه نخست</a>
@@ -27,7 +27,7 @@
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">جست و جوی تیکت ها</h4>
+                    <h4 class="card-title">جست و جوی تیکت های پشتیبانی</h4>
                     <form novalidate asp-area="Admin" asp-controller="Ticket" method="get" asp-action="TicketsList" id="search-form">
                         <input type="hidden" asp-for="Page" id="Page" />
                         <div class="row">
@@ -39,8 +39,26 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
+                                    <label class="form-label" asp-for="Category"></label>
+                                    <select type="text" class="form-control" asp-for="Category" asp-items="Html.GetEnumSelectList<TicketCategoryEnum>()">
+                                        <option value="">همه</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label" asp-for="Priority"></label>
+                                    <select type="text" class="form-control" asp-for="Priority" asp-items="Html.GetEnumSelectList<TicketPriorityEnum>()">
+                                        <option value="">همه</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
                                     <label class="form-label" asp-for="Status"></label>
-                                    <select type="text" class="form-control" asp-for="Status" asp-items="@Html.GetEnumSelectList<TicketStatusEnum>()">
+                                    <select type="text" class="form-control" asp-for="Status" asp-items="Html.GetEnumSelectList<TicketStatusEnum>()">
                                         <option value="">همه</option>
                                     </select>
                                 </div>
@@ -53,73 +71,73 @@
         </div>
     </div>
 
-    @if (Model?.Entities?.Any() ?? false)
-    {
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>ایجاد</th>
-                                        <th>آخرین آپدیت</th>
-                                        <th>موضوع</th>
-                                        <th>وضعیت</th>
-                                        <th>کاربر</th>
-                                        <th>عملیات</th>
-                                    </tr>
-                                </thead>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>عنوان</th>
+                                    <th>دسته بندی</th>
+                                    <th>اولویت</th>
+                                    <th>وضعیت</th>
+                                    <th>تاریخ ایجاد</th>
+                                    <th>آخرین ویرایش</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            @if (Model?.Entities?.Any() ?? false)
+                            {
                                 <tbody>
                                     @{
                                         int counter = 0;
 
-                                        foreach (var item in Model.Entities ?? new List<AdminSideTicketViewModel>())
+                                        foreach (var item in Model.Entities ?? new List<AdminSideTicketDto>())
                                         {
                                             counter++;
 
                                             <tr>
                                                 <th scope="row">@counter</th>
+                                                <td>@item.Title</td>
+                                                <td>@item.Category.GetDisplayName()</td>
+                                                <td>@item.Priority.GetDisplayName()</td>
+                                                <td>@item.Status.GetDisplayName()</td>
                                                 <td>@item.CreatedDate.GetDateTime()</td>
                                                 <td>@item.LastUpdatedDate.GetDateTime()</td>
-                                                <td>@item.Subject</td>
-                                                <td>@item.Status.GetDisplayName()</td>
                                                 <td>
-                                                    <a asp-area="Admin" asp-controller="User" asp-action="UpdateUser" asp-route-id="@item.UserId">
-                                                        @((string.IsNullOrWhiteSpace(item.UserName) ? "نام کاربری" : item.UserName))
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <a permission="TicketDetails" asp-area="Admin" asp-controller="Ticket" asp-action="TicketDetails" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm edit" title="جزئیات تیکت">
+                                                    <a permission="TicketDetails" asp-area="Admin" asp-controller="Ticket" asp-action="TicketDetails" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm edit" title="جزئیات">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
 
-                                                    <form permission="DeleteTicket" class="btn btn-outline-secondary btn-sm" method="post" onclick="ConfirmDelete(this)" asp-route-id="@item.Id" asp-area="Admin" asp-controller="Ticket" asp-action="DeleteTicket" title="حذف">
-                                                        <i class="mdi mdi-delete"></i>
-                                                    </form>
-
-                                                    <form permission="CloseTicket" class="btn btn-outline-secondary btn-sm" method="post" onclick="ConfirmDelete(this)" asp-route-id="@item.Id" asp-area="Admin" asp-controller="Ticket" asp-action="CloseTicket" title="بستن تیکت">
-                                                        <i class="mdi mdi-close"></i>
-                                                    </form>
+                                                    <a permission="TicketHistory" asp-area="Admin" asp-controller="Ticket" asp-action="TicketHistory" asp-route-TicketId="@item.Id" class="btn btn-outline-secondary btn-sm edit" title="تاریخچه تغییرات">
+                                                        <i class="mdi mdi-card-text-outline"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         }
                                     }
                                 </tbody>
-                            </table>
-                        </div>
-
+                            }
+                            else
+                            {
+                                <tbody>
+                                    <tr>
+                                        <td colspan="100">
+                                            <partial name="_NotFoundPartial" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            }
+                        </table>
                     </div>
+
                 </div>
             </div>
         </div>
+    </div>
 
-        <partial name="_Paging" model="@Model.GetCurrentPaging()" />
-    }
-    else
-    {
-        <partial name="_NotFoundPartial" />
-    }
+    <partial name="_Paging" model="@Model.GetCurrentPaging()" />
 </div>

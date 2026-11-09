@@ -50,6 +50,14 @@ namespace Application.Tools
             }
         }
 
+
+        public static string GetSensitiveFilePath(this string fileName, string subFolder)
+        {
+            if (string.IsNullOrEmpty(fileName)) return string.Empty;
+
+            return Directory.GetCurrentDirectory() + "/SensitiveFiles" + subFolder + "/" + fileName;
+        }
+
         public static void RemoveFileFromServer(this string name, string path)
         {
             string fileAddress = Directory.GetCurrentDirectory() + "/wwwroot" + path + name;
@@ -68,40 +76,49 @@ namespace Application.Tools
             }
         }
 
-        public static bool IsImage(this IFormFile postedFile, bool checkImage = true)
-        {
-            if (checkImage)
-            {
-                //-------------------------------------------
-                //  Check the image mime types
-                //-------------------------------------------
-                if (postedFile.ContentType.ToLower() != "image/jpg" &&
-                    postedFile.ContentType.ToLower() != "image/jpeg" &&
-                    postedFile.ContentType.ToLower() != "image/x-png" &&
-                    postedFile.ContentType.ToLower() != "image/png" &&
-                    postedFile.ContentType.ToLower() != "image/svg+xml" &&
-                    postedFile.ContentType.ToLower() != "image/webp")
-                {
-                    return false;
-                }
+        // ۱. تعریف پسوندهای مجاز
+        private static readonly HashSet<string> AllowedExtensions = new() { ".jpg", ".jpeg", ".png", ".webp" };
 
-                //-------------------------------------------
-                //  Check the image extension
-                //-------------------------------------------
-                string extension = Path.GetExtension(postedFile.FileName).ToLower();
-                if (extension != ".jpg" &&
-                    extension != ".jpeg" &&
-                    extension != ".png" &&
-                    extension != ".svg" &&
-                    extension != ".webp")
-                {
+        // ۲. تعریف امضاهای بایتی واقعی تصاویر (Magic Numbers)
+        private static readonly Dictionary<string, byte[]> ImageSignatures = new() { { ".jpeg", new byte[] { 0xFF, 0xD8, 0xFF } }, { ".jpg", new byte[] { 0xFF, 0xD8, 0xFF } }, { ".png", new byte[] { 0x89, 0x50, 0x4E, 0x47 } }, { ".webp", new byte[] { 0x52, 0x49, 0x46, 0x46 } } };
+
+        public static bool IsImage(this IFormFile postedFile)
+        {
+            if (postedFile == null || postedFile.Length == 0) return false;
+
+            // -------------------------------------------
+            // الف) بررسی ظاهری پسوند فایل
+            // -------------------------------------------
+            var extension = Path.GetExtension(postedFile.FileName).ToLower();
+            if (!AllowedExtensions.Contains(extension)) return false;
+
+            // -------------------------------------------
+            // ب) بررسی محتوایی امضای بایت‌های فایل (ضد هک)
+            // -------------------------------------------
+            try
+            {
+                // خواندن چند بایت اول فایل بدون لود کردن کل فایل در حافظه
+                using var stream = postedFile.OpenReadStream();
+                using var reader = new BinaryReader(stream);
+
+                // بزرگترین امضای ما ۴ بایت است
+                byte[] fileBytes = reader.ReadBytes(4);
+
+                if (!ImageSignatures.TryGetValue(extension, out var signature))
                     return false;
+
+                // مقایسه بایت‌های فایل با امضای استاندارد
+                for (int i = 0; i < signature.Length; i++)
+                {
+                    if (fileBytes[i] != signature[i]) return false;
                 }
 
                 return true;
             }
-
-            return true;
+            catch
+            {
+                return false; // اگر فایل خراب بود یا خوانده نشد
+            }
         }
 
         public static bool IsCompressedFile(this IFormFile postedFile, bool checkFile = true)

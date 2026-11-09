@@ -11,6 +11,11 @@ namespace Application.Tools
             return mb * 1024 * 1024;
         }
 
+        public static long CalculateKB(this int kb)
+        {
+            return kb * 1024;
+        }
+
         private static readonly string[] PersianMonthNames =
         { "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند" };
 

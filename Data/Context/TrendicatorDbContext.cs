@@ -72,6 +72,7 @@ namespace Data.Context
 
         public DbSet<Ticket> Tickets => Set<Ticket>();
         public DbSet<TicketMessage> TicketMessages => Set<TicketMessage>();
+        public DbSet<TicketHistory> TicketHistories => Set<TicketHistory>();
 
         public DbSet<BalanceTransaction> BalanceTransactions => Set<BalanceTransaction>();
         public DbSet<User> Users => Set<User>();

@@ -1,0 +1,108 @@
+﻿@using Application.Dtos.Tickets.AdminSide
+@using Application.Tools
+@model AdminSideFilterTicketHistoryDto
+
+@{
+    ViewData["Title"] = "تاریخچه تیکت";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="page-title-box">
+                <h4>مدیریت تیکت های پشتیبانی</h4>
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="Home" asp-action="Index">صفحه نخست</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-area="Admin" asp-controller="Ticket" asp-action="TicketsList">لیست تیکت های پشتیبانی</a>
+                    </li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">جست و جوی تاریخچه</h4>
+                    <form novalidate asp-area="Admin" asp-controller="Ticket" method="get" asp-action="TicketHistory" id="search-form">
+                        <input type="hidden" asp-for="Page" id="Page" />
+                        <input type="hidden" asp-for="TicketId" />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label" asp-for="Search"></label>
+                                    <input type="text" class="form-control" asp-for="Search" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit">جست و جو</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>تاریخ</th>
+                                    <th>توضیحات</th>
+                                    <th>کاربر</th>
+                                </tr>
+                            </thead>
+                            @if (Model?.Entities?.Any() ?? false)
+                            {
+                                <tbody>
+                                    @{
+                                        int counter = 0;
+
+                                        foreach (var item in Model.Entities ?? new List<AdminSideTicketHistoryDto>())
+                                        {
+                                            counter++;
+
+                                            <tr>
+                                                <th scope="row">@counter</th>
+                                                <td>@item.CreatedDate.GetDateTime()</td>
+                                                <td>@item.Description</td>
+                                                <td>
+                                                    <a permission="UserDetails" asp-area="Admin" asp-controller="User" asp-action="UserDetails" asp-route-id="@item.ActorId" target="_blank">
+                                                        مشاهده کاربر
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            }
+                            else
+                            {
+                                <tbody>
+                                    <tr>
+                                        <td colspan="100">
+                                            <partial name="_NotFoundPartial" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <partial name="_Paging" model="@Model.GetCurrentPaging()" />
+</div>

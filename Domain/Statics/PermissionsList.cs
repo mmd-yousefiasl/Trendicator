@@ -757,43 +757,43 @@ namespace Domain.Statics
             {
                 Id = 109,
                 ParentId = 1,
-                Title = "مدیریت تیکت ها",
+                Title = "مدیریت تیکت های پشتیبانی",
                 UniqueName = "ManageTickets"
             },
             new Permission
             {
                 Id = 110,
                 ParentId = 109,
-                Title = "لیست تیکت ها",
+                Title = "لیست تیکت های پشتیبانی",
                 UniqueName = "TicketsList"
             },
             new Permission
             {
                 Id = 111,
                 ParentId = 109,
-                Title = "جزئیات تیکت",
+                Title = "جزئیات تیکت پشتیبانی",
                 UniqueName = "TicketDetails"
             },
             new Permission
             {
                 Id = 112,
                 ParentId = 109,
-                Title = "حذف تیکت",
-                UniqueName = "DeleteTicket"
+                Title = "بستن تیکت پشتیبانی",
+                UniqueName = "CloseTicket"
             },
             new Permission
             {
                 Id = 113,
                 ParentId = 109,
-                Title = "ارسال پیام",
-                UniqueName = "CreateNewMessage"
+                Title = "تاریخچه تیکت",
+                UniqueName = "TicketHistory"
             },
             new Permission
             {
                  Id = 114,
                  ParentId = 109,
-                 Title = "بستن تیکت",
-                 UniqueName = "CloseTicket"
+                 Title = "ویرایش وضعیت تیکت",
+                 UniqueName = "UpdateTicketStatus"
             },
             #endregion
 

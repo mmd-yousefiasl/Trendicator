@@ -10,14 +10,22 @@ namespace Data.Context.Configurations.Tickets
         {
             builder.ToTable("TicketMessages");
 
-            builder.HasKey(n => n.Id);
-            builder.HasQueryFilter(n => !n.IsDeleted);
+            builder.HasKey(tm => tm.Id);
 
-            builder.HasOne(n => n.Ticket)
-                .WithMany(n => n.Messages)
-                .HasForeignKey(n => n.TicketId);
+            builder.Property(tm => tm.Text)
+                .HasMaxLength(1500)
+                .IsRequired();
 
-            builder.Property(n => n.Message).HasMaxLength(500);
+            builder.Property(tm => tm.AttachmentPath)
+                .HasMaxLength(50)
+                .IsRequired(false);
+
+            builder.HasOne(tm => tm.Ticket)
+                .WithMany(t => t.Messages)
+                .HasForeignKey(tm => tm.TicketId)
+                .IsRequired(false);
+
+            builder.HasIndex(tm => tm.TicketId);
         }
     }
 }

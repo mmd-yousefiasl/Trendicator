@@ -1,0 +1,16 @@
+﻿@using Application.Dtos.Tickets.AdminSide
+@using Domain.Enums.Tickets
+@model AdminSideUpdateTicketStatusDto
+
+@if (Model is not null)
+{
+    <div class="mt-2 mt-sm-0">
+        <form permission="UpdateTicketStatus" onchange="submitFormOnChange(this)"
+              asp-area="Admin"
+              asp-controller="Ticket"
+              asp-action="UpdateTicketStatus">
+            <input type="hidden" asp-for="Id" />
+            <select asp-for="Status" asp-items="@Html.GetEnumSelectList<TicketStatusEnum>()"></select>
+        </form>
+    </div>
+}

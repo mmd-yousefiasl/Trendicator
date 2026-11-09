@@ -55,6 +55,18 @@
         public const string CommentSentSuccessfully = "دیدگاه شما ثبت شد و پس از تأیید نمایش داده می‌شود.";
         public const string DeleteRequestSubmitedSuccessfully = "درخواست حذف حساب کاربری با موفقیت ثبت شد. لطفاً تا 48 ساعت آینده منتظر بمانید تا حساب شما حذف شود";
         public const string DeleteRequestCanceledSuccessfully = "درخواست حذف حساب کاربری با موفقیت لغو شد";
+        public const string TicketClosedSuccessfully = "تیکت با موفقیت بسته شد";
+
+        #endregion
+
+        #region Messages
+
+        public const string NewTicketCreatedByUser = "تیکت جدید توسط کاربر ایجاد شد";
+        public const string TicketClosedByUser = "تیکت توسط کاربر بسته شد";
+        public const string NewMessageSentByUser = "پیام جدید تیکت توسط کاربر ارسال شد";
+        public const string TicketClosedByAdmin = "تیکت توسط ادمین بسته شد";
+        public const string NewMessageSentByAdmin = "پیام جدید تیکت توسط ادمین ارسال شد";
+        public const string TicketStatusUpdatedByAdmin = "وضعیت تیکت توسط ادمین ویرایش شد";
 
         #endregion
     }

@@ -1,56 +1,139 @@
-﻿@using Application.Dtos.Ticket.ClientSide
-@model ClientSideCreateNewTicketViewModel
+﻿@using Application.Dtos.Tickets.ClientSide
+@using Domain.Enums.Tickets
+@model ClientSideCreateNewTicketDto
 
 @{
-    ViewData["Title"] = "ارسال تیکت پشتیبانی";
+    ViewData["Title"] = "ثبت تیکت پشتیبانی جدید";
 }
 
-<div class="container-fluid">
+<main class="container">
+    <ul class="crumbs">
+        <partial name="_IndexLink" />
+        <partial name="_UserPanelHomeLink" />
+        <li>
+            <a asp-area="UserPanel" asp-controller="Ticket" asp-action="TicketsList">
+                تیکت‌های پشتیبانی
+            </a>
+        </li>
+        <li>@ViewData["Title"]</li>
+    </ul>
 
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="page-title-box">
-                <h4>مدیریت تیکت ها</h4>
-                <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item">
-                        <a asp-area="UserPanel" asp-controller="Home" asp-action="Index">صفحه نخست</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a asp-area="UserPanel" asp-controller="Ticket" asp-action="MyTickets">لیست تیکت ها</a>
-                    </li>
-                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
-                </ol>
+    <partial name="_UserPanelWelcome" />
+
+    <div class="account mt-3">
+
+        <partial name="_UserPanelVerticalMenu" />
+
+        <div class="account__body">
+
+            <!-- ============ Header ============ -->
+            <div class="flex flex--between flex--wrap">
+                <h1 style="font-size:1.4rem;margin-bottom:0">ایجاد تیکت جدید</h1>
+
+                <a asp-area="UserPanel" asp-controller="Ticket" asp-action="TicketsList"
+                   class="btn btn--ghost btn--sm">
+                    <svg class="ic" aria-hidden="true"><use href="#i-arrow-right" /></svg>
+                    بازگشت به لیست
+                </a>
             </div>
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="card">
-                <form class="card-body" asp-area="UserPanel" asp-controller="Ticket" asp-action="CreateNewTicket" autocomplete="off" onsubmit="submitAnimation()">
-                    <h4 class="card-title">@ViewData["Title"]</h4>
+            <!-- ============ Guide ============ -->
+            <div class="alert alert--info" role="note">
+                <span style="color:var(--info);font-size:1.15rem">
+                    <svg class="ic" aria-hidden="true"><use href="#i-info-circle" /></svg>
+                </span>
+                <div>
+                    <b>راهنمای ارسال تیکت</b>
+                    <p class="mt-1 mb-0" style="color:var(--text-2);font-size:.85rem;line-height:1.8">
+                        لطفاً قبل از ارسال تیکت، دپارتمان مربوطه را به درستی انتخاب کنید تا فرآیند
+                        پاسخ‌گویی در سریع‌ترین زمان ممکن انجام شود. از ارسال تیکت‌های مکرر برای
+                        یک موضوع خودداری فرمایید.
+                    </p>
+                </div>
+            </div>
 
-                    <div class="mb-3 row">
-                        <label asp-for="Subject" class="col-md-2 col-form-label"></label>
-                        <div class="col-md-10">
-                            <input class="form-control" type="text" asp-for="Subject" required>
-                            <span asp-validation-for="Subject" class="text-danger"></span>
+            <!-- ============ Form ============ -->
+            <section class="card card-pad">
+                <form asp-area="UserPanel" asp-controller="Ticket" asp-action="CreateNewTicket"
+                      method="post" enctype="multipart/form-data">
+
+                    <div class="field">
+                        <label asp-for="Title"></label>
+                        <input type="text" class="input" asp-for="Title" autocomplete="off"
+                               placeholder="موضوع تیکت خود را کوتاه و واضح بنویسید...">
+                        <span asp-validation-for="Title"></span>
+                    </div>
+
+                    <div class="grid grid--2" style="gap: 0 20px">
+                        <div class="field">
+                            <label asp-for="Category"></label>
+                            <select class="select" asp-for="Category"
+                                    asp-items="@Html.GetEnumSelectList<TicketCategoryEnum>()">
+                                <option value="">انتخاب دپارتمان...</option>
+                            </select>
+                            <span asp-validation-for="Category"></span>
+                        </div>
+
+                        <div class="field">
+                            <label asp-for="Priority"></label>
+                            <select class="select" asp-for="Priority"
+                                    asp-items="@Html.GetEnumSelectList<TicketPriorityEnum>()">
+                                <option value="">انتخاب اولویت...</option>
+                            </select>
+                            <span asp-validation-for="Priority"></span>
                         </div>
                     </div>
 
-                    <div class="mb-3 row">
-                        <label asp-for="Message" class="col-md-2 col-form-label"></label>
-                        <div class="col-md-10">
-                            <textarea class="form-control" rows="6" asp-for="Message"></textarea>
-                            <span asp-validation-for="Message" class="text-danger"></span>
-                        </div>
+                    <div class="field">
+                        <label asp-for="MessageText"></label>
+                        <textarea class="textarea" asp-for="MessageText" rows="6"
+                                  placeholder="توضیحات کامل مشکل یا درخواست خود را وارد کنید..."></textarea>
+                        <span asp-validation-for="MessageText"></span>
                     </div>
 
-                    <div class="col-12 text-end mt-5">
-                        <button class="btn btn-primary btn-submit" type="submit">ارسال</button>
+                    <!-- ============ File drop-zone ============ -->
+                    <div class="field">
+                        <label asp-for="Attachment"></label>
+
+                        <label id="fileDrop"
+                               style="position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:26px 20px;border:2px dashed var(--line);border-radius:var(--r-md);background:var(--bg-soft);cursor:pointer;text-align:center;transition:border-color var(--t), background var(--t);">
+
+                            <span style="color:var(--brand);display:inline-flex;margin-bottom:2px">
+                                <svg class="ic" style="width:28px;height:28px" aria-hidden="true">
+                                    <use href="#i-cloud-arrow-up" />
+                                </svg>
+                            </span>
+
+                            <b id="fileDropName" style="font-size:.9rem;font-weight:700;color:var(--text-2)">
+                                فایلی انتخاب نشده — برای انتخاب کلیک کنید
+                            </b>
+
+                            <small id="fileDropHint" style="font-size:.75rem;color:var(--text-3)">
+                                PNG, JPG, JPEG, WEBP — حداکثر ۵۰۰ کیلوبایت
+                            </small>
+
+                            <input type="file" asp-for="Attachment"
+                                   accept=".png,.jpg,.jpeg,.webp"
+                                   style="position:absolute;opacity:0;width:0;height:0;pointer-events:none" />
+                        </label>
+
+                        <span asp-validation-for="Attachment"></span>
+                    </div>
+
+                    <!-- ============ Actions ============ -->
+                    <div class="flex flex--wrap mt-3" style="gap:8px">
+                        <button class="btn btn--primary" type="submit">
+                            ثبت و ارسال تیکت
+                        </button>
+
+                        <a asp-area="UserPanel" asp-controller="Ticket" asp-action="TicketsList"
+                           class="btn btn--ghost">
+                            انصراف و بازگشت
+                        </a>
                     </div>
                 </form>
-            </div>
+            </section>
+
         </div>
     </div>
-</div>
+</main>
