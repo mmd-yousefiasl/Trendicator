@@ -249,7 +249,8 @@ namespace Application.Services.Implementaions
                     FirstName = n.FirstName,
                     LastName = n.LastName,
                     DeleteRequest = n.DeleteRequest,
-                    DeleteRequestDate = n.DeleteRequestDate
+                    DeleteRequestDate = n.DeleteRequestDate,
+                    Mobile = n.Mobile,
                 }).FirstOrDefaultAsync();
 
             if (user is null) return Result.Failure<AdminSideUpdateUserProfileDto>(Messages.OperationFailedError);

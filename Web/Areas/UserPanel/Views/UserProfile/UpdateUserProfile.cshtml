@@ -26,6 +26,7 @@
             <section class="card card-pad">
                 <h2 style="font-size:1.1rem">اطلاعات شخصی</h2>
                 <form asp-area="UserPanel" asp-controller="UserProfile" asp-action="UpdateUserProfile" method="post">
+                    <input type="hidden" asp-for="Mobile" />
                     <div class="grid grid--2" style="gap:14px">
                         <div class="field">
                             <label asp-for="FirstName"></label>
@@ -38,6 +39,8 @@
                             <span asp-validation-for="LastName"></span>
                         </div>
                         <div class="field">
+                            <label asp-for="Mobile"></label>
+                            <input class="input" asp-for="Mobile" disabled>
                             <span class="hint">برای تغییر شماره با پشتیبانی تماس بگیرید</span>
                         </div>
                     </div>

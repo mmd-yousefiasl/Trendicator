@@ -17,5 +17,8 @@ namespace Application.Dtos.User.AdminSide
 
         public bool DeleteRequest { get; set; }
         public DateTime? DeleteRequestDate { get; set; }
+
+        [Display(Name = "شماره موبایل")]
+        public string? Mobile { get; set; }
     }
 }
