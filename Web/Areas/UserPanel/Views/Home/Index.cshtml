@@ -17,65 +17,11 @@
         <!-- ============ Content ============ -->
         <div class="account__body">
 
-            <!-- Stats -->
-            <div class="grid grid--4" style="gap:14px">
-                <div class="card stat stat--brand"><b class="num">۷</b><span>محصول خریداری‌شده</span></div>
-                <div class="card stat"><b class="num">۱۲</b><span>روز باقی‌مانده اشتراک</span></div>
-                <div class="card stat"><b class="num">۲</b><span>تیکت باز</span></div>
-                <div class="card stat"><b class="num">۳۱</b><span>دانلود این ماه</span></div>
-            </div>
-
-            <!-- Subscription status -->
-            <section class="card card-pad">
-                <div class="flex flex--between flex--wrap">
-                    <div>
-                        <h2 style="font-size:1.05rem;margin-bottom:2px">اشتراک حرفه‌ای</h2>
-                        <p class="text-dim" style="font-size:.82rem;margin:0">تمدید خودکار در ۱۷ شهریور ۱۴۰۵</p>
-                    </div>
-                    <a href="account-subscription.html" class="btn btn--primary btn--sm">مدیریت اشتراک</a>
-                </div>
-                <div class="progress mt-2" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                     aria-label="وضعیت دوره اشتراک">
-                    <i style="width:60%"></i>
-                </div>
-                <p class="hint mt-1 mb-0">۱۲ روز از ۳۰ روز باقی مانده است</p>
-            </section>
+            @await Component.InvokeAsync("UserPanelUserCartStats")
 
             @await Component.InvokeAsync("UserPanelLatestPurchases")
 
-            <!-- Tickets -->
-            <section class="card card-pad">
-                <div class="flex flex--between flex--wrap mb-2">
-                    <h2 style="font-size:1.05rem;margin:0">تیکت‌های اخیر</h2>
-                    <a href="account-tickets.html" class="btn btn--primary btn--sm">تیکت جدید</a>
-                </div>
-                <div class="table-wrap" style="border:none">
-                    <table class="table table--cards">
-                        <thead>
-                            <tr>
-                                <th>موضوع</th>
-                                <th>دپارتمان</th>
-                                <th>وضعیت</th>
-                                <th>آخرین بروزرسانی</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td data-label="موضوع"><b>مشکل در نصب روی متاتریدر ۵</b></td>
-                                <td data-label="دپارتمان">فنی</td>
-                                <td data-label="وضعیت"><span class="badge badge--brand">در حال بررسی</span></td>
-                                <td class="num" data-label="آخرین بروزرسانی">۲ ساعت پیش</td>
-                            </tr>
-                            <tr>
-                                <td data-label="موضوع"><b>درخواست فاکتور رسمی</b></td>
-                                <td data-label="دپارتمان">مالی</td>
-                                <td data-label="وضعیت"><span class="badge badge--up">پاسخ داده شده</span></td>
-                                <td class="num" data-label="آخرین بروزرسانی">۱ روز پیش</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+            @await Component.InvokeAsync("UserPanelLatestTickets")
         </div>
     </div>
 </main>
