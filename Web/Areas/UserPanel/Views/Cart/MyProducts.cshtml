@@ -1,1 +1,175 @@
-﻿
+﻿@using Application.Dtos.CartItem.ClientSide
+@using Application.Tools
+@using Domain.Enums.Products
+@model ClientSideFilterMyProductsDto
+
+@{
+    ViewData["Title"] = "محصولات خریداری شده";
+
+    // True when the user has actually narrowed the result set.
+    // (The DTO enums are nullable — the form has "همه ..." empty options.)
+    bool hasFilter = Model?.CartId != null
+                            || Model?.Type != null;
+}
+
+<main class="container">
+    <ul class="crumbs">
+        <partial name="_IndexLink" />
+        <partial name="_UserPanelHomeLink" />
+        <li>محصولات خریداری شده</li>
+    </ul>
+
+    <partial name="_UserPanelWelcome" />
+
+    <div class="account mt-3">
+
+        <partial name="_UserPanelVerticalMenu" />
+
+        <!-- ============ Content ============ -->
+        <div class="account__body">
+
+            <h1 style="font-size:1.4rem;margin-bottom:0">محصولات خریداری شده</h1>
+
+            <section class="card card-pad">
+                <form novalidate asp-area="UserPanel" asp-controller="Cart"
+                      method="get" asp-action="MyProducts" id="search-form">
+
+                    <input type="hidden" asp-for="Page" id="Page" />
+
+                    <div class="grid grid--2">
+                        <div class="field">
+                            <label asp-for="CartId"></label>
+                            <input type="text" class="input" asp-for="CartId" dir="ltr"
+                                   autocomplete="off">
+                        </div>
+
+                        <div class="field">
+                            <label asp-for="Type"></label>
+                            <select class="select" asp-for="Type"
+                                    asp-items="@Html.GetEnumSelectList<ProductTypeEnum>()">
+                                <option value="">همه</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex flex--wrap" style="gap:8px">
+                        <button class="btn btn--primary" type="submit">
+                            <svg class="ic" aria-hidden="true"><use href="#i-search" /></svg>
+                            جستجو و فیلتر
+                        </button>
+
+                        <a asp-area="UserPanel" asp-controller="Cart" asp-action="MyProducts"
+                           class="btn btn--ghost">
+                            حذف فیلترها
+                        </a>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Orders -->
+            <section class="card card-pad">
+
+                @if (Model?.Entities?.Any() ?? false)
+                {
+                    <div class="table-wrap" style="border:none">
+                        <table class="table table--cards">
+                            <thead>
+                                <tr>
+                                    <th>کد سفارش</th>
+                                    <th>تاریخ</th>
+                                    <th>نام محصول</th>
+                                    <th>نوع</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Entities ?? new List<ClientSideMyProductDto>())
+                                {
+                                    <tr>
+                                        <td data-label="کد سفارش"><span dir="ltr" class="num">#@item.CartId</span></td>
+                                        <td data-label="تاریخ" class="num">@item.PaidDate.GetDateTime()</td>
+                                        <td data-label="نام محصول">
+                                            <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@item.ProductId" target="_blank">
+                                                @item.ProductTitle
+                                            </a>
+                                        </td>
+                                        <td data-label="نوع">@item.Type.GetDisplayName()</td>
+                                        <td data-label="عملیات">
+                                            @if (item.Type == ProductTypeEnum.IndicatorFile)
+                                            {
+                                                <form target="_blank" asp-area="UserPanel" asp-controller="Cart" asp-action="DownloadMyFile"
+                                                      asp-route-cartId="@item.CartId" asp-route-productId="@item.ProductId" method="post">
+                                                    <button class="btn btn--ghost btn--sm">
+                                                        دانلود
+                                                    </button>
+                                                </form>
+                                            }
+                                            else if (item.Type == ProductTypeEnum.MetaTraderLink)
+                                            {
+                                                <form target="_blank" asp-area="UserPanel" asp-controller="Cart" asp-action="ActivateMyProduct"
+                                                      asp-route-cartId="@item.CartId" asp-route-productId="@item.ProductId" method="post">
+                                                    <button class="btn btn--ghost btn--sm">
+                                                        فعالسازی
+                                                    </button>
+                                                </form>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <partial name="_Paging" model="@Model.GetCurrentPaging()" />
+                }
+                else
+                {
+                    <div class="card">
+                        <div class="empty" role="status">
+                            <div class="empty__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6 8.25h12l-1.05 10.5A2 2 0 0 1 14.96 20.5H9.04a2 2 0 0 1-1.99-1.75L6 8.25Z"
+                                          stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+                                    <path d="M9 8.25V6a3 3 0 0 1 6 0v2.25"
+                                          stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                                    <path d="M10 13.5h4"
+                                          stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55" />
+                                </svg>
+                            </div>
+
+                            @if (hasFilter)
+                            {
+                                <h3>محصولی با این فیلترها پیدا نشد</h3>
+                                <p>فیلترهای انتخابی نتیجه‌ای نداشتند. می‌توانید آن‌ها را تغییر دهید یا حذف کنید.</p>
+
+                                <a asp-area="UserPanel" asp-controller="Cart" asp-action="MyProducts"
+                                   class="btn btn--soft">
+                                    حذف فیلترها
+                                </a>
+                            }
+                            else
+                            {
+                                <h3>هنوز محصولی خریداری نکرده‌اید</h3>
+                                <p>
+                                    به‌محض ثبت اولین خرید، محصولات خریداری‌شده به همراه
+                                    کد سفارش، تاریخ خرید، نوع محصول و لینک فعالسازی
+                                    در همین صفحه نمایش داده می‌شوند.
+                                </p>
+
+                                <a asp-area="" asp-controller="Product" asp-action="ProductsList" asp-route-category="" class="btn btn--primary">
+                                    <svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                        <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2"
+                                              stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    شروع خرید
+                                </a>
+                            }
+
+
+                        </div>
+                    </div>
+                }
+            </section>
+        </div>
+    </div>
+</main>

@@ -31,7 +31,17 @@
                 <form method="get" asp-area="UserPanel" asp-controller="Cart" asp-action="MyOrders" id="search-form">
                     <input type="hidden" asp-for="Page" />
                 </form>
-                <h2 class="mb-2" style="font-size:1.05rem">تاریخچه سفارش‌ها</h2>
+                <div class="flex flex--between flex--wrap mb-2">
+                    <h2 class="mb-2" style="font-size:1.05rem">تاریخچه سفارش‌ها</h2>
+
+                    <a asp-area="UserPanel" asp-controller="Cart" asp-action="MyProducts"
+                       class="btn btn--ghost btn--sm" title="محصولات خریداری شده">
+                        <svg class="ic" aria-hidden="true">
+                            <use href="#i-download" />
+                        </svg>
+                        محصولات خریداری شده
+                    </a>
+                </div>
                 @if (Model?.Entities?.Any() ?? false)
                 {
                     <div class="table-wrap" style="border:none">
@@ -44,6 +54,7 @@
                                     <th>تخفیف</th>
                                     <th>وضعیت</th>
                                     <th>فاکتور</th>
+                                    <th>محصولات</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -57,10 +68,19 @@
                                         <td data-label="وضعیت"><span class="badge badge--up">@item.Status.GetDisplayName()</span></td>
                                         <td data-label="فاکتور">
                                             <a asp-area="UserPanel" asp-controller="Cart" asp-action="MyOrderDetails" asp-route-id="@item.Id"
-                                               class="btn btn--ghost btn--sm" title="مشاهده">
-                                                <svg class="ic" aria-hidden="true">
+                                               class="btn btn--ghost btn--sm" title="مشاهده فاکتور">
+                                                <svg class="ic fs-icon" aria-hidden="true">
                                                     <use href="#i-eye" />
-                                                </svg>مشاهده
+                                                </svg>
+                                            </a>
+                                        </td>
+
+                                        <td data-label="محصولات">
+                                            <a asp-area="UserPanel" asp-controller="Cart" asp-action="MyProducts" asp-route-CartId="@item.Id"
+                                               class="btn btn--ghost btn--sm" title="محصولات من">
+                                                <svg class="ic fs-icon" aria-hidden="true">
+                                                    <use href="#i-download" />
+                                                </svg>
                                             </a>
                                         </td>
                                     </tr>

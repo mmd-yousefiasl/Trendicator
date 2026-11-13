@@ -11,6 +11,7 @@ using Application.Static;
 using Application.Tools;
 using Data.Context;
 using Domain.Enums.Payment;
+using Domain.Enums.Products;
 using Domain.Enums.Shopping;
 using Domain.Enums.Users;
 using Domain.Events.Shopping;
@@ -269,6 +270,7 @@ namespace Application.Services.Implementaions
                 OrderPrice = product.OrderPrice,
                 DisplayPrice = product.DisplayPrice,
                 Title = product.Title,
+                ProductType = product.Type,
             };
 
             try
@@ -805,24 +807,107 @@ namespace Application.Services.Implementaions
                 .SumAsync(n => (n.TotalPaid ?? 0));
         }
 
-        public async Task<int> MyOrdersCount()
+        public async Task<Result<ClientSideFilterMyProductsDto>> ClientSideFilterPurchasedProducts(ClientSideFilterMyProductsDto filter)
         {
-            return 999;
-            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            if (userId < 1) return 0;
+            if (filter is null)
+                return Result.Failure<ClientSideFilterMyProductsDto>(Messages.OperationFailedError);
 
-            return await _dbSet.Where(n => n.UserId == userId && n.Status != CartStatusEnum.PendingPayment &&
-                                           n.Status != CartStatusEnum.PendingPayment).CountAsync();
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+
+            if (userId < 1)
+                return Result.Failure<ClientSideFilterMyProductsDto>(Messages.OperationFailedError);
+
+            var conditions = Filter.GenerateConditions<CartItem>();
+
+            conditions.Add(n => n.Cart.UserId == userId);
+            conditions.Add(n => n.Cart.Status == CartStatusEnum.Paid);
+
+            if (filter.CartId > 0)
+            {
+                conditions.Add(n => n.CartId == filter.CartId);
+            }
+
+            if (filter.Type is not null)
+            {
+                conditions.Add(n => n.ProductType == filter.Type);
+            }
+
+            IQueryable<CartItem> query = _context.CartItems;
+
+            query = query.OrderByDescending(n => n.CartId);
+
+            foreach (var item in conditions ?? new FilterConditions<CartItem>())
+            {
+                query = query.Where(item);
+            }
+
+            await filter.Paging(query.Select(n => new ClientSideMyProductDto()
+            {
+                PaidDate = n.Cart.PaidDate ?? DateTime.UtcNow,
+                CartId = n.CartId,
+                ProductId = n.ProductId,
+                ProductTitle = n.Title,
+                Type = n.ProductType,
+            }));
+
+            return filter;
         }
 
-        public async Task<decimal> MyTotalPurchesAmount()
+        public async Task<Result<ClientSideDownloadFileDto>> ClientSideGetFileInfo(int cartId, int productId)
         {
-            return 999;
-            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            if (userId < 1) return 0;
+            if (cartId < 1 || productId < 1)
+                return Result.Failure<ClientSideDownloadFileDto>(Messages.OperationFailedError);
 
-            return await _dbSet.Where(n => n.UserId == userId && n.Status != CartStatusEnum.PendingPayment &&
-                                           n.Status != CartStatusEnum.PendingPayment).SumAsync(n => (n.TotalPaid ?? 0));
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+
+            if (userId < 1)
+                return Result.Failure<ClientSideDownloadFileDto>(Messages.OperationFailedError);
+
+            var file = await _context.CartItems
+                .AsNoTracking()
+                .Where(n => n.CartId == cartId &&
+                n.ProductId == productId &&
+                n.Cart.UserId == userId &&
+                n.Cart.Status == CartStatusEnum.Paid &&
+                n.ProductType == ProductTypeEnum.IndicatorFile)
+                .Select(n => new ClientSideDownloadFileDto()
+                {
+                    FileName = n.Product.Title,
+                    FileAddress = n.Product.IndicatorFileName ?? ""
+                }).FirstOrDefaultAsync();
+
+            if (file is null || string.IsNullOrWhiteSpace(file.FileAddress))
+                return Result.Failure<ClientSideDownloadFileDto>(Messages.OperationFailedError);
+
+            file.FileAddress = Directory.GetCurrentDirectory() + "/SensitiveFiles" + SiteTools.ProductIndicator + file.FileAddress;
+
+            return file;
+        }
+
+        public async Task<Result<string>> ClientSideGetMetaTraderLink(int cartId, int productId)
+        {
+            if (cartId < 1 || productId < 1)
+                return Result.Failure<string>(Messages.OperationFailedError);
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+
+            if (userId < 1)
+                return Result.Failure<string>(Messages.OperationFailedError);
+
+            var link = await _context.CartItems
+                .AsNoTracking()
+                .Where(n => n.CartId == cartId &&
+                n.ProductId == productId &&
+                n.Cart.UserId == userId &&
+                n.Cart.Status == CartStatusEnum.Paid &&
+                n.ProductType == ProductTypeEnum.MetaTraderLink)
+                .Select(n => n.Product.MetaTraderLink)
+                .FirstOrDefaultAsync();
+
+            if (string.IsNullOrWhiteSpace(link))
+                return Result.Failure<string>(Messages.OperationFailedError);
+
+            return link;
         }
 
         #region User Order Stats

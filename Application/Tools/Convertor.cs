@@ -131,17 +131,18 @@ namespace Application.Tools
 
         public static string GetDisplayName(this Enum value)
         {
-            FieldInfo fieldInfo = value.GetType().GetField(value.ToString());
+            if (value is null) return string.Empty;
+
+            Type type = value.GetType();
+            string name = value.ToString();
+
+            FieldInfo fieldInfo = type.GetField(name);
+
+            if (fieldInfo is null)
+                return name;   // undefined value, or "[Flags]" combination
 
             DisplayAttribute attribute = fieldInfo.GetCustomAttribute<DisplayAttribute>();
-            if (attribute != null)
-            {
-                return attribute.Name;
-            }
-            else
-            {
-                return value.ToString();
-            }
+            return attribute?.Name ?? name;
         }
 
         public static string ToToman(this decimal value)

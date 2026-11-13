@@ -51,9 +51,11 @@ namespace Application.Services.Interfaces
 
         Task<decimal> OrdersValue();
 
-        Task<int> MyOrdersCount();
+        Task<Result<ClientSideFilterMyProductsDto>> ClientSideFilterPurchasedProducts(ClientSideFilterMyProductsDto filter);
 
-        Task<decimal> MyTotalPurchesAmount();
+        Task<Result<ClientSideDownloadFileDto>> ClientSideGetFileInfo(int cartId, int productId);
+
+        Task<Result<string>> ClientSideGetMetaTraderLink(int cartId, int productId);
 
         #region User Order Stats
         Task<Result<ClientSideUserOrderStatsDto>> ClientSideGetUserOrderStats();

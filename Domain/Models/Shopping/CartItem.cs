@@ -1,4 +1,5 @@
-﻿using Domain.Models.Products;
+﻿using Domain.Enums.Products;
+using Domain.Models.Products;
 
 namespace Domain.Models.Shopping
 {
@@ -7,6 +8,7 @@ namespace Domain.Models.Shopping
         public string Title { get; set; }
         public decimal OrderPrice { get; set; }
         public decimal DisplayPrice { get; set; }
+        public ProductTypeEnum ProductType { get; set; }
 
         #region Relations
         public int CartId { get; set; }
