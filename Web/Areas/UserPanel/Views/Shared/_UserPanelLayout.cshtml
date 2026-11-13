@@ -4,6 +4,8 @@
 <head>
     <partial name="_UserPanelMeta" />
 
+    <title>@SiteTools.SiteName | @ViewData["Title"]</title>
+
     <partial name="_UserPanelHeaderReferences" />
 
     @await RenderSectionAsync("HeaderReferences", required: false)
