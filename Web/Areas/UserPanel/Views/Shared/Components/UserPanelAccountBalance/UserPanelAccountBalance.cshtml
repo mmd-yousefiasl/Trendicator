@@ -1,0 +1,25 @@
+﻿@using Application.Tools
+@model decimal
+
+@if (Model >= 0)
+{
+    <div class="balance-inline" data-balance>
+        <span class="balance-label">موجودی:</span>
+
+        <span class="balance-mask" data-balance-mask aria-hidden="true">••••••</span>
+        <span class="balance-spinner" data-balance-spinner hidden aria-hidden="true"></span>
+        <span class="balance-amount" data-balance-amount hidden>
+            @Model.ToTomanFormat()
+            <small>تومان</small>
+        </span>
+
+        <button type="button"
+                class="balance-toggle"
+                data-balance-toggle
+                aria-pressed="false"
+                aria-label="نمایش موجودی">
+            <svg class="ic ic--eye" aria-hidden="true"><use href="#i-eye" /></svg>
+            <svg class="ic ic--eye-off" aria-hidden="true"><use href="#i-eye-slash" /></svg>
+        </button>
+    </div>
+}

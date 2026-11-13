@@ -768,3 +768,143 @@
 .alert--info > span:has(> .ic) {
     color: var(--info);
 }
+
+/* ---------- Transactions header row ---------- */
+.tx-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+    .tx-head h2 {
+        margin: 0;
+        font-size: 1.05rem;
+        line-height: 1.4;
+    }
+
+/* Balance chip */
+.balance-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 6px 5px 12px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-full);
+    font-size: .9rem;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.balance-label {
+    font-size: .78rem;
+    font-weight: 600;
+    color: var(--text-3);
+}
+
+.balance-inline .balance-mask {
+    font-size: .95rem;
+    font-weight: 700;
+    color: var(--text-3);
+    letter-spacing: 3px;
+    user-select: none;
+}
+
+.balance-inline .balance-amount {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    font-size: .95rem;
+    font-weight: 800;
+    color: var(--brand);
+    font-variant-numeric: tabular-nums;
+}
+
+    .balance-inline .balance-amount small {
+        font-size: .72em;
+        font-weight: 600;
+        color: var(--text-3);
+    }
+
+/* Spinner — base + compact size inside the chip.
+   Uses the site-wide `btnSpin` keyframe from the global stylesheet. */
+.balance-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--brand-soft);
+    border-top-color: var(--brand);
+    border-radius: 50%;
+    animation: btnSpin 700ms linear infinite;
+}
+
+.balance-inline .balance-spinner {
+    width: 14px;
+    height: 14px;
+    border-width: 2px;
+}
+
+/* Compact eye button inside the chip */
+.balance-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--r-full);
+    background: var(--panel);
+    color: var(--text-2);
+    transition: border-color var(--t), color var(--t), background var(--t);
+}
+
+    .balance-toggle:hover {
+        border-color: var(--brand);
+        color: var(--brand);
+    }
+
+    .balance-toggle[aria-pressed="true"] {
+        color: var(--brand);
+        border-color: var(--brand-line);
+        background: var(--brand-soft);
+    }
+
+    .balance-toggle[disabled] {
+        opacity: .5;
+        cursor: wait;
+    }
+
+    .balance-toggle .ic {
+        width: 14px;
+        height: 14px;
+    }
+
+    .balance-toggle .ic--eye-off {
+        display: none;
+    }
+
+    .balance-toggle[aria-pressed="true"] .ic--eye {
+        display: none;
+    }
+
+    .balance-toggle[aria-pressed="true"] .ic--eye-off {
+        display: inline-block;
+    }
+
+/* `hidden` must beat the chip's own display rules */
+.balance-inline > [hidden] {
+    display: none !important;
+}
+
+/* Mobile: heading on its own row, chip full-width underneath */
+@media (max-width: 520px) {
+    .balance-inline {
+        width: 100%;
+        justify-content: space-between;
+        padding: 6px 8px 6px 14px;
+    }
+}

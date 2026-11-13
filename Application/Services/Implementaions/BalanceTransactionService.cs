@@ -179,18 +179,22 @@ namespace Application.Services.Implementaions
             return filter;
         }
 
-        public async Task<Result<ClientSideFilterTransactionsViewModel>> ClientSideFilterTransaction(ClientSideFilterTransactionsViewModel filter)
+        public async Task<Result<ClientSideFilterTransactionsDto>> ClientSideFilterTransaction(ClientSideFilterTransactionsDto filter)
         {
-            if (filter is null) return Result.Failure<ClientSideFilterTransactionsViewModel>(Messages.OperationFailedError);
+            if (filter is null)
+                return Result.Failure<ClientSideFilterTransactionsDto>(Messages.OperationFailedError);
 
             var userId = _httpContextAccessor.HttpContext.User.GetUserId();
-            if (userId < 1) return Result.Failure<ClientSideFilterTransactionsViewModel>(Messages.OperationFailedError);
+
+            if (userId < 1)
+                return Result.Failure<ClientSideFilterTransactionsDto>(Messages.OperationFailedError);
 
             var conditions = Filter.GenerateConditions<BalanceTransaction>();
 
             conditions.Add(n => n.UserId == userId);
 
-            IQueryable<BalanceTransaction> query = _dbSet;
+            IQueryable<BalanceTransaction> query = _context.BalanceTransactions;
+
             query = query.OrderByDescending(n => n.Id);
 
             foreach (var item in conditions ?? new FilterConditions<BalanceTransaction>())
@@ -198,7 +202,7 @@ namespace Application.Services.Implementaions
                 query = query.Where(item);
             }
 
-            await filter.Paging(query.Select(n => new ClientSideTransactionViewModel()
+            await filter.Paging(query.Select(n => new ClientSideTransactionDto()
             {
                 Amount = n.Amount,
                 IsSuccess = n.IsSuccess,

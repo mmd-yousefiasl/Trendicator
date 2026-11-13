@@ -18,6 +18,6 @@ namespace Application.Services.Interfaces
 
         Task<Result> AdminSideCreateNewTransaction(AdminSideCreateNewBalanceTransactionViewModel model);
 
-        Task<Result<ClientSideFilterTransactionsViewModel>> ClientSideFilterTransaction(ClientSideFilterTransactionsViewModel filter);
+        Task<Result<ClientSideFilterTransactionsDto>> ClientSideFilterTransaction(ClientSideFilterTransactionsDto filter);
     }
 }

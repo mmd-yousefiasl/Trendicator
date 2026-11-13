@@ -18,10 +18,12 @@ namespace Web.Areas.UserPanel.Controllers
         #endregion
 
         [HttpGet("/user/my-transactions")]
-        public async Task<IActionResult> MyTransactions(ClientSideFilterTransactionsViewModel filter)
+        public async Task<IActionResult> MyTransactions(ClientSideFilterTransactionsDto filter)
         {
             var result = await _transactionService.ClientSideFilterTransaction(filter);
-            if (result.IsFailure) return View(new ClientSideFilterTransactionsViewModel());
+
+            if (result.IsFailure)
+                return View(new ClientSideFilterTransactionsDto());
 
             return View(result.Value);
         }

@@ -40,5 +40,11 @@ namespace Web.Areas.UserPanel.Controllers
 
             return View(result.Value);
         }
+
+        [HttpGet("/user/my-products")]
+        public async Task<IActionResult> MyProducts()
+        {
+            return View();
+        }
     }
 }

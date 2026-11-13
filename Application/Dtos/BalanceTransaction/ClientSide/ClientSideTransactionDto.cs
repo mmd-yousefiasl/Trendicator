@@ -2,7 +2,7 @@
 
 namespace Application.Dtos.BalanceTransaction.ClientSide
 {
-    public class ClientSideTransactionViewModel
+    public class ClientSideTransactionDto
     {
         public DateTime  DateTime { get; set; }
         public decimal Amount { get; set; }

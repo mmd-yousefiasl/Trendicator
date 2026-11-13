@@ -113,3 +113,56 @@ async function ConfirmDelete(element) {
         }
     });
 })();
+
+(function () {
+    "use strict";
+
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var LOAD_DELAY = reduceMotion ? 0 : 650; // ms of fake "fetching"
+
+    document.addEventListener("click", function (e) {
+        var btn = e.target.closest("[data-balance-toggle]");
+        if (!btn) return;
+
+        var card = btn.closest("[data-balance]");
+        if (!card || card.dataset.busy === "1") return;
+
+        var mask = card.querySelector("[data-balance-mask]");
+        var spinner = card.querySelector("[data-balance-spinner]");
+        var amount = card.querySelector("[data-balance-amount]");
+        var isShown = btn.getAttribute("aria-pressed") === "true";
+
+        // ── Hide: instant, no delay ──
+        if (isShown) {
+            btn.setAttribute("aria-pressed", "false");
+            btn.setAttribute("aria-label", "نمایش موجودی");
+            amount.classList.remove("is-revealed");
+            amount.hidden = true;
+            spinner.hidden = true;
+            mask.hidden = false;
+            return;
+        }
+
+        // ── Show: spinner → amount ──
+        card.dataset.busy = "1";
+        btn.disabled = true;
+        mask.hidden = true;
+        amount.hidden = true;
+        spinner.hidden = false;
+
+        window.setTimeout(function () {
+            spinner.hidden = true;
+            amount.hidden = false;
+
+            // replay the reveal animation even on repeat clicks
+            amount.classList.remove("is-revealed");
+            void amount.offsetWidth;
+            amount.classList.add("is-revealed");
+
+            btn.disabled = false;
+            btn.setAttribute("aria-pressed", "true");
+            btn.setAttribute("aria-label", "مخفی کردن موجودی");
+            delete card.dataset.busy;
+        }, LOAD_DELAY);
+    });
+})();

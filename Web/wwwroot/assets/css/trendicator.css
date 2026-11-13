@@ -3346,3 +3346,30 @@ ul, ol {
     .product-card__foot > [data-cart-toggle] {
         width: 100%;
     }
+
+/* ---------- Transactions · description cell ---------- */
+.desc-cell {
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: .82em;
+    color: var(--text-2);
+}
+
+@media (max-width: 640px) {
+    /* Inside .table--cards every cell is already a labelled row,
+       so let the description wrap and keep the full text visible. */
+    .desc-cell {
+        max-width: none;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        font-size: .85em;
+        line-height: 1.7;
+    }
+}
+
+.overflow-x-hidden {
+    overflow-x: hidden;
+}
