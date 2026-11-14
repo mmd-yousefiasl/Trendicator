@@ -1,0 +1,51 @@
+﻿@using Application.Dtos.Cart.ClientSide
+@using Application.Tools
+@model ClientSideFilterCartsDto
+
+@if (Model?.Entities?.Any() ?? false)
+{
+    <div class="table-wrap" style="border:none">
+        <table class="table table--cards">
+            <thead>
+                <tr>
+                    <th>کد سفارش</th>
+                    <th>تاریخ</th>
+                    <th>مبلغ</th>
+                    <th>تخفیف</th>
+                    <th>وضعیت</th>
+                    <th>فاکتور</th>
+                    <th>محصولات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Entities ?? new List<ClientSideOrderDto>())
+                {
+                    <tr>
+                        <td data-label="کد سفارش"><span dir="ltr" class="num">#@item.Id</span></td>
+                        <td data-label="تاریخ" class="num">@item.PaidDate?.GetDateTime()</td>
+                        <td data-label="مبلغ" class="num">@item.TotalPaid?.ToToman()</td>
+                        <td data-label="تخفیف" class="num">@item.TotalDiscount?.ToToman()</td>
+                        <td data-label="وضعیت"><span class="badge badge--up">@item.Status.GetDisplayName()</span></td>
+                        <td data-label="فاکتور">
+                            <a asp-area="UserPanel" asp-controller="Cart" asp-action="MyOrderDetails" asp-route-id="@item.Id"
+                               class="btn btn--ghost btn--sm" title="مشاهده فاکتور">
+                                <svg class="ic fs-icon" aria-hidden="true">
+                                    <use href="#i-eye" />
+                                </svg>
+                            </a>
+                        </td>
+
+                        <td data-label="محصولات">
+                            <a asp-area="UserPanel" asp-controller="Cart" asp-action="MyProducts" asp-route-CartId="@item.Id"
+                               class="btn btn--ghost btn--sm" title="محصولات من">
+                                <svg class="ic fs-icon" aria-hidden="true">
+                                    <use href="#i-download" />
+                                </svg>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

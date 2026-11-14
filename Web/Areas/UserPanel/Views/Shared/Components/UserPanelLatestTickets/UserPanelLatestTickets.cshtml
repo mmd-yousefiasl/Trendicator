@@ -1,6 +1,4 @@
 ﻿@using Application.Dtos.Tickets.ClientSide
-@using Application.Tools
-@using Domain.Enums.Tickets
 @model ClientSideFilterTicketsDto
 
 @{
@@ -16,85 +14,11 @@
 {
     <section class="card card-pad">
         <div class="flex flex--between flex--wrap mb-2">
-            <h2 style="font-size:1.05rem;margin:0">خریدهای اخیر</h2>
+            <h2 style="font-size:1.05rem;margin:0">تیکت های اخیر</h2>
             <a asp-area="UserPanel" asp-controller="Ticket" asp-action="TicketsList" class="btn btn--ghost btn--sm">مشاهده همه</a>
         </div>
 
-        <div class="table-wrap" style="border:none">
-            <table class="table table--cards">
-                <thead>
-                    <tr>
-                        <th style="width:70px">کد</th>
-                        <th>عنوان تیکت</th>
-                        <th>دسته بندی</th>
-                        <th>اولویت</th>
-                        <th>وضعیت</th>
-                        <th>آخرین بروزرسانی</th>
-                        <th style="width:110px">عملیات</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Entities)
-                    {
-                        @* Status → design-system badges *@
-                        string statusClass = item.Status switch
-                        {
-                            TicketStatusEnum.Open => "badge--brand",
-                            TicketStatusEnum.Pending => "badge",
-                            TicketStatusEnum.Answered => "badge--up",
-                            TicketStatusEnum.UserReplied => "badge--brand",
-                            TicketStatusEnum.Closed => "badge",
-                            _ => "badge"
-                        };
-
-                        @* Priority → design-system badges *@
-                        string priorityClass = item.Priority switch
-                        {
-                            TicketPriorityEnum.High => "badge--down",
-                            _ => "badge"
-                        };
-
-                        <tr>
-                            <td data-label="کد">
-                                <span dir="ltr" class="num">#@item.Id</span>
-                            </td>
-
-                            <td data-label="عنوان">
-                                <a asp-area="UserPanel" asp-controller="Ticket"
-                                   asp-action="TicketDetails" asp-route-id="@item.Id">
-                                    @item.Title
-                                </a>
-                            </td>
-
-                            <td data-label="دسته بندی">
-                                <span class="badge">@item.Category.GetDisplayName()</span>
-                            </td>
-
-                            <td data-label="اولویت">
-                                <span class="badge @priorityClass">@item.Priority.GetDisplayName()</span>
-                            </td>
-
-                            <td data-label="وضعیت">
-                                <span class="badge @statusClass">@item.Status.GetDisplayName()</span>
-                            </td>
-
-                            <td data-label="بروزرسانی" class="num text-dim">
-                                @item.LastUpdatedDate.GetDateTime()
-                            </td>
-
-                            <td data-label="عملیات">
-                                <a asp-area="UserPanel" asp-controller="Ticket"
-                                   asp-action="TicketDetails" asp-route-id="@item.Id"
-                                   class="btn btn--ghost btn--sm" title="مشاهده">
-                                    <svg class="ic" aria-hidden="true"><use href="#i-eye" /></svg>
-                                    مشاهده
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+        <partial name="_UserPanelTicketTable" model="@Model" />
     </section>
 }
 else
