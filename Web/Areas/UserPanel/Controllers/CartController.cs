@@ -86,5 +86,37 @@ namespace Web.Areas.UserPanel.Controllers
 
             return Redirect(result.Value.ToString()!);
         }
+
+        [HttpGet("/user/edit-trading-view-account-name")]
+        public async Task<IActionResult> UpdateTradingViewAccountName(int cartId, int productId)
+        {
+            var result = await _cartService.ClientSideGetTradingViewAccountNameForUpdate(cartId, productId);
+
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+                return RedirectToAction(nameof(MyProducts), new { area = "UserPanel", Type = 1 });
+            }
+
+            return View(result.Value);
+        }
+
+        [HttpPost("/user/edit-trading-view-account-name"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateTradingViewAccountName(ClientSideUpdateTradingViewAccountNameDto model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var result = await _cartService.ClientSideUpdateTradingViewAccountName(model);
+
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+                return View(model);
+            }
+            TempData[TemporarySuccessMessage] = result.Message;
+
+            return RedirectToAction(nameof(MyProducts), new { area = "UserPanel", Type = 1 });
+        }
     }
 }

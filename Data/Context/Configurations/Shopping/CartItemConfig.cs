@@ -15,6 +15,10 @@ namespace Data.Context.Configurations.Shopping
             builder.Property(n => n.Title)
                 .HasMaxLength(100);
 
+            builder.Property(n => n.TradingViewAccountName)
+                .HasMaxLength(200)
+                .IsRequired(false);
+
             builder.Property(u => u.OrderPrice)
             .HasColumnType("numeric(18,0)");
 

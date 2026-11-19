@@ -12,5 +12,7 @@ namespace Domain.Enums.SiteNotifications
         NewContactUsForm = 3,
         [Display(Name = "تیکت جدید")]
         NewTicket = 4,
+        [Display(Name = "بررسی اطلاعات TradingView")]
+        CartItemNeedsReview = 5
     }
 }

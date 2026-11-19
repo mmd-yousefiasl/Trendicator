@@ -48,5 +48,23 @@ namespace Web.Areas.Admin.Controllers
 
             return View(result.Value);
         }
+
+        [Permission("OrderDetails")]
+        [HttpPost("/admin/update-cart-item-status"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateCartItemStatus(bool done, int cartId, int productId)
+        {
+            var result = await _cartService.AdminSideUpdateCartItemStatus(done, cartId, productId);
+
+            if (result.IsFailure)
+            {
+                TempData[TemporaryErrorMessage] = result.Message;
+            }
+            else
+            {
+                TempData[TemporarySuccessMessage] = result.Message;
+            }
+
+            return RedirectToAction(nameof(OrderDetails), new { area = "Admin", id = cartId });
+        }
     }
 }

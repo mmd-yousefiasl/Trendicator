@@ -1,6 +1,7 @@
 ﻿@using Application.Dtos.CartItem.ClientSide
 @using Application.Tools
 @using Domain.Enums.Products
+@using Domain.Enums.Shopping
 @model ClientSideFilterMyProductsDto
 
 @{
@@ -16,6 +17,7 @@
     <ul class="crumbs">
         <partial name="_IndexLink" />
         <partial name="_UserPanelHomeLink" />
+        <li><a asp-area="UserPanel" asp-controller="Cart" asp-action="MyOrders">خریدهای من</a></li>
         <li>محصولات خریداری شده</li>
     </ul>
 
@@ -79,12 +81,21 @@
                                     <th>تاریخ</th>
                                     <th>نام محصول</th>
                                     <th>نوع</th>
+                                    <th>وضعیت</th>
+                                    <th>اکانت تریدینگ ویو</th>
                                     <th>عملیات</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model.Entities ?? new List<ClientSideMyProductDto>())
                                 {
+                                    @* Status → design-system badges *@
+                                    string statusClass = item.Status switch
+                                    {
+                                        CartItemStatus.Pending => "badge--down",
+                                        CartItemStatus.InProgress => "badge",
+                                        CartItemStatus.Completed => "badge--up",
+                                    };
                                     <tr>
                                         <td data-label="کد سفارش"><span dir="ltr" class="num">#@item.CartId</span></td>
                                         <td data-label="تاریخ" class="num">@item.PaidDate.GetDateTime()</td>
@@ -94,6 +105,12 @@
                                             </a>
                                         </td>
                                         <td data-label="نوع">@item.Type.GetDisplayName()</td>
+                                        <td data-label="وضعیت">
+                                            <span class="badge @statusClass">
+                                                @item.Status.GetDisplayName()
+                                            </span>
+                                        </td>
+                                        <td data-label="اکانت تریدینگ ویو">@item.TradingViewAccountName</td>
                                         <td data-label="عملیات">
                                             @if (item.Type == ProductTypeEnum.IndicatorFile)
                                             {
@@ -112,6 +129,24 @@
                                                         فعالسازی
                                                     </button>
                                                 </form>
+                                            }
+                                            else
+                                            {
+                                                if (item.Type == ProductTypeEnum.TradingView && item.Status == CartItemStatus.Pending)
+                                                {
+                                                    <a asp-area="UserPanel"
+                                                       asp-controller="Cart"
+                                                       asp-action="UpdateTradingViewAccountName"
+                                                       asp-route-cartId="@item.CartId"
+                                                       asp-route-productId="@item.ProductId"
+                                                       class="btn btn--ghost btn--sm">
+                                                        ویرایش
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    @: --
+                                                }
                                             }
                                         </td>
                                     </tr>

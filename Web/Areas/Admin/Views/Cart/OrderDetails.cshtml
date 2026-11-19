@@ -1,6 +1,7 @@
 ﻿@using Application.Dtos.Cart.AdminSide
 @using Application.Dtos.CartItem.AdminSide
 @using Application.Tools
+@using Domain.Enums.Products
 @model AdminSideCartDetailsDto
 
 @{
@@ -71,6 +72,10 @@
                                             <thead>
                                                 <tr>
                                                     <td><strong>محصول</strong></td>
+                                                    <td><strong>نوع</strong></td>
+                                                    <td><strong>نام اکانت</strong></td>
+                                                    <td><strong>وضعیت</strong></td>
+                                                    <td><strong>عملیات</strong></td>
                                                     <td class="text-center">
                                                         <strong>قیمت</strong>
                                                     </td>
@@ -82,11 +87,55 @@
                                                 {
                                                     <tr>
                                                         <td>@item.Title</td>
+                                                        <td>@item.Type.GetDisplayName()</td>
+                                                        <td>
+                                                            @if (!string.IsNullOrWhiteSpace(item.TradingViewAccountName))
+                                                            {
+                                                                <span>
+                                                                    @item.TradingViewAccountName
+                                                                </span>
+                                                            }
+                                                            else
+                                                            {
+                                                                @: --
+                                                            }
+                                                        </td>
+                                                        <td>@item.Status.GetDisplayName()</td>
+                                                        <td>
+                                                            @if (item.Type == ProductTypeEnum.TradingView)
+                                                            {
+                                                                <form permission="OrderDetails" class="btn btn-outline-secondary btn-sm"
+                                                                      method="post" onclick="ConfirmDelete(this)"
+                                                                      asp-route-cartId="@Model.Id"
+                                                                      asp-route-productId="@item.ProductId"
+                                                                      asp-route-done="false"
+                                                                      asp-area="Admin"
+                                                                      asp-controller="Cart"
+                                                                      asp-action="UpdateCartItemStatus">
+                                                                    <i class="fa fa-ban"></i>
+                                                                </form>
+
+                                                                <form permission="OrderDetails" class="btn btn-outline-secondary btn-sm"
+                                                                      method="post" onclick="ConfirmDelete(this)"
+                                                                      asp-route-cartId="@Model.Id"
+                                                                      asp-route-productId="@item.ProductId"
+                                                                      asp-route-done="true"
+                                                                      asp-area="Admin"
+                                                                      asp-controller="Cart"
+                                                                      asp-action="UpdateCartItemStatus">
+                                                                    <i class="fa fa-check"></i>
+                                                                </form>
+                                                            }
+                                                        </td>
                                                         <td class="text-center">@((item.DisplayPrice > 0 ? item.DisplayPrice : item.OrderPrice).ToToman())</td>
                                                         <td class="thick-line"></td>
                                                     </tr>
                                                 }
                                                 <tr>
+                                                    <td class="thick-line"></td>
+                                                    <td class="thick-line"></td>
+                                                    <td class="thick-line"></td>
+                                                    <td class="thick-line"></td>
                                                     <td class="thick-line"></td>
                                                     <td class="thick-line text-center">
                                                         <strong>مجموع</strong>
@@ -97,6 +146,10 @@
                                                 {
                                                     <tr>
                                                         <td class="thick-line"></td>
+                                                        <td class="thick-line"></td>
+                                                        <td class="thick-line"></td>
+                                                        <td class="thick-line"></td>
+                                                        <td class="thick-line"></td>
                                                         <td class="thick-line text-center">
                                                             <strong>تخفیف</strong>
                                                         </td>
@@ -104,6 +157,10 @@
                                                     </tr>
                                                 }
                                                 <tr>
+                                                    <td class="no-line"></td>
+                                                    <td class="no-line"></td>
+                                                    <td class="no-line"></td>
+                                                    <td class="no-line"></td>
                                                     <td class="no-line"></td>
                                                     <td class="no-line text-center">
                                                         <strong>کل</strong>

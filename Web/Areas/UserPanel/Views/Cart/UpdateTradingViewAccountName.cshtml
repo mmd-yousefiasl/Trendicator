@@ -1,0 +1,56 @@
+﻿@using Application.Dtos.Cart.ClientSide
+@model ClientSideUpdateTradingViewAccountNameDto
+
+@{
+    ViewData["Title"] = "ویرایش اکانت تریدینگ ویو";
+}
+
+<main class="container">
+    <ul class="crumbs">
+        <partial name="_IndexLink" />
+        <partial name="_UserPanelHomeLink" />
+        <li><a asp-area="UserPanel" asp-controller="Cart" asp-action="MyOrders">خریدهای من</a></li>
+        <li><a asp-area="UserPanel" asp-controller="Cart" asp-action="MyProducts">محصولات خریداری شده</a></li>
+        <li>@ViewData["Title"]</li>
+    </ul>
+
+    <partial name="_UserPanelWelcome" />
+
+    <div class="account mt-3">
+
+        <partial name="_UserPanelVerticalMenu" />
+
+        <!-- ============ Content ============ -->
+        <div class="account__body">
+
+            <!-- Personal info -->
+            <section class="card card-pad">
+                @if (Model is not null)
+                {
+                    <h2 style="font-size:1.1rem" class="mb-3">
+                        برای محصول
+                        "
+                        <a asp-area="" asp-controller="Product" asp-action="ProductDetails" asp-route-id="@Model.ProductId" target="__blank">
+                            @Model.ProductTitle
+                        </a>
+                        "
+                    </h2>
+                }
+                <form asp-area="UserPanel" asp-controller="Cart" asp-action="UpdateTradingViewAccountName" method="post">
+                    <input type="hidden" asp-for="CartId" />
+                    <input type="hidden" asp-for="ProductId" />
+                    <input type="hidden" asp-for="ProductTitle" />
+
+                    <div class="grid grid--2" style="gap:14px">
+                        <div class="field">
+                            <label asp-for="TradingViewAccountName"></label>
+                            <input class="input" asp-for="TradingViewAccountName" dir="ltr">
+                            <span asp-validation-for="TradingViewAccountName"></span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn--primary">ویرایش</button>
+                </form>
+            </section>
+        </div>
+    </div>
+</main>

@@ -1,0 +1,35 @@
+﻿@model bool
+
+@if (Model)
+{
+    <div class="card card-pad action-notice">
+        <div class="action-notice__body">
+            <div class="action-notice__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                    <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                </svg>
+            </div>
+            <div class="action-notice__content">
+                <h3>اطلاعات محصول خریداری‌شده ناقص است</h3>
+                <p>
+                    برای فعال‌سازی و استفاده از محصولی که خریداری کرده‌اید،
+                    لطفاً اطلاعات مورد نیاز را تکمیل کنید.
+                </p>
+            </div>
+            <a asp-area="UserPanel"
+               asp-controller="Cart"
+               asp-action="MyProducts"
+               asp-route-Type="1"
+               class="btn btn--primary">
+                تکمیل اطلاعات
+                <svg aria-hidden="true" width="16" height="16"
+                     viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                </svg>
+            </a>
+        </div>
+    </div>
+}

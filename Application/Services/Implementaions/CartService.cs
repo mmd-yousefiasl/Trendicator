@@ -271,6 +271,7 @@ namespace Application.Services.Implementaions
                 DisplayPrice = product.DisplayPrice,
                 Title = product.Title,
                 ProductType = product.Type,
+                Status = (product.Type == ProductTypeEnum.TradingView ? CartItemStatus.Pending : CartItemStatus.Completed),
             };
 
             try
@@ -613,9 +614,13 @@ namespace Application.Services.Implementaions
                     Products = c.Items
                         .Select(i => new AdminSideCartItemDto
                         {
+                            ProductId = i.ProductId,
                             Title = i.Title,
                             OrderPrice = i.OrderPrice,
-                            DisplayPrice = i.DisplayPrice
+                            DisplayPrice = i.DisplayPrice,
+                            Status = i.Status,
+                            TradingViewAccountName = i.TradingViewAccountName,
+                            Type = i.ProductType
                         }).ToList()
                 }).FirstOrDefaultAsync();
 
@@ -848,6 +853,8 @@ namespace Application.Services.Implementaions
                 ProductId = n.ProductId,
                 ProductTitle = n.Title,
                 Type = n.ProductType,
+                Status = n.Status,
+                TradingViewAccountName = n.TradingViewAccountName
             }));
 
             return filter;
@@ -910,7 +917,115 @@ namespace Application.Services.Implementaions
             return link;
         }
 
-        #region User Order Stats
+        public async Task<Result<ClientSideUpdateTradingViewAccountNameDto>> ClientSideGetTradingViewAccountNameForUpdate(int cartId, int productId)
+        {
+            if (cartId < 1 || productId < 1)
+                return Result.Failure<ClientSideUpdateTradingViewAccountNameDto>(Messages.OperationFailedError);
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+
+            if (userId < 1)
+                return Result.Failure<ClientSideUpdateTradingViewAccountNameDto>(Messages.OperationFailedError);
+
+            var accountName = await _context.CartItems
+                .AsNoTracking()
+                .Where(n => n.CartId == cartId && n.ProductId == productId && n.Cart.UserId == userId)
+                .Select(n => new ClientSideUpdateTradingViewAccountNameDto()
+                {
+                    CartId = n.CartId,
+                    ProductId = n.ProductId,
+                    ProductTitle = n.Title,
+                    TradingViewAccountName = n.TradingViewAccountName
+                }).FirstOrDefaultAsync();
+
+            if (accountName is null)
+                return Result.Failure<ClientSideUpdateTradingViewAccountNameDto>(Messages.OperationFailedError);
+
+            return accountName;
+        }
+
+        public async Task<Result> ClientSideUpdateTradingViewAccountName(ClientSideUpdateTradingViewAccountNameDto model)
+        {
+            if (model is null || model.CartId < 1 || model.ProductId < 1)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+
+            if (userId < 1)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var cartItem = await _context.CartItems
+                .Where(n => n.CartId == model.CartId && n.ProductId == model.ProductId &&
+                n.Cart.UserId == userId &&
+                n.ProductType == ProductTypeEnum.TradingView)
+                .FirstOrDefaultAsync();
+
+            if (cartItem is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            cartItem.TradingViewAccountName = model.TradingViewAccountName;
+            cartItem.Status = CartItemStatus.InProgress;
+
+            await _context.SaveChangesAsync();
+
+            CartItemUpdatedEvent CartItemUpdatedEvent = new CartItemUpdatedEvent(
+                cartItem.Title,
+                cartItem.OrderPrice,
+                cartItem.DisplayPrice,
+                cartItem.ProductType,
+                cartItem.TradingViewAccountName,
+                cartItem.Status,
+                cartItem.CartId,
+                cartItem.ProductId);
+
+            await _mediator.PublishEvent(CartItemUpdatedEvent);
+
+            return Result.Success();
+        }
+
+        public async Task<Result> AdminSideUpdateCartItemStatus(bool done, int cartId, int productId)
+        {
+            if (cartId < 1 || productId < 1)
+                return Result.Failure(Messages.OperationFailedError);
+
+            var cartItem = await _context.CartItems
+                .Where(n => n.CartId == cartId && n.ProductId == productId)
+                .FirstOrDefaultAsync();
+
+            if (cartItem is null)
+                return Result.Failure(Messages.OperationFailedError);
+
+            cartItem.Status = (done == true ? CartItemStatus.Completed : CartItemStatus.Pending);
+
+            await _context.SaveChangesAsync();
+
+            CartItemUpdatedEvent CartItemUpdatedEvent = new CartItemUpdatedEvent(
+                cartItem.Title,
+                cartItem.OrderPrice,
+                cartItem.DisplayPrice,
+                cartItem.ProductType,
+                cartItem.TradingViewAccountName,
+                cartItem.Status,
+                cartItem.CartId,
+                cartItem.ProductId);
+
+            await _mediator.PublishEvent(CartItemUpdatedEvent);
+
+            return Result.Success();
+        }
+
+        public async Task<bool> UserHaveAnyPendingProduct()
+        {
+            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (userId < 1)
+                return false;
+
+            return await _context.CartItems
+                .AsNoTracking()
+                .Where(n => n.Cart.UserId == userId && n.Cart.Status == CartStatusEnum.Paid)
+                .AnyAsync(n => n.Status == CartItemStatus.Pending);
+        }
+
         public async Task<Result<ClientSideUserOrderStatsDto>> ClientSideGetUserOrderStats()
         {
             var userId = _httpContextAccessor.HttpContext.User.GetUserId();
@@ -1044,6 +1159,5 @@ namespace Application.Services.Implementaions
 
             return Result.Success();
         }
-        #endregion
     }
 }

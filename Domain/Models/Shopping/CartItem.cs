@@ -1,4 +1,5 @@
 ﻿using Domain.Enums.Products;
+using Domain.Enums.Shopping;
 using Domain.Models.Products;
 
 namespace Domain.Models.Shopping
@@ -9,6 +10,8 @@ namespace Domain.Models.Shopping
         public decimal OrderPrice { get; set; }
         public decimal DisplayPrice { get; set; }
         public ProductTypeEnum ProductType { get; set; }
+        public string? TradingViewAccountName { get; set; }
+        public CartItemStatus Status { get; set; }
 
         #region Relations
         public int CartId { get; set; }

@@ -912,3 +912,73 @@
 .fs-icon {
     font-size: 16px;
 }
+
+/* ---------- Action-required notice (user dashboard) ---------- */
+.action-notice {
+    border-color: color-mix(in srgb, var(--warn) 45%, var(--line));
+    background: linear-gradient(135deg, color-mix(in srgb, var(--warn) 9%, transparent) 0%, transparent 55%), var(--panel);
+}
+
+.action-notice__body {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.action-notice__icon {
+    flex: none;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--r-full);
+    background: color-mix(in srgb, var(--warn) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--warn) 40%, transparent);
+    color: var(--warn);
+}
+
+    .action-notice__icon svg {
+        width: 24px;
+        height: 24px;
+    }
+
+.action-notice__content {
+    flex: 1 1 240px;
+    min-width: 0;
+}
+
+    .action-notice__content h3 {
+        margin: 0 0 2px;
+        font-size: 1rem;
+        font-weight: 800;
+        line-height: 1.5;
+    }
+
+    .action-notice__content p {
+        margin: 0;
+        font-size: .88rem;
+        line-height: 1.8;
+        color: var(--text-2);
+    }
+
+.action-notice .btn {
+    flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+    .action-notice__icon {
+        width: 42px;
+        height: 42px;
+    }
+
+        .action-notice__icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+    .action-notice .btn {
+        width: 100%;
+    }
+}

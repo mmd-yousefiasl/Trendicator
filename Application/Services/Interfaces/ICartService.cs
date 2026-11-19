@@ -57,9 +57,16 @@ namespace Application.Services.Interfaces
 
         Task<Result<string>> ClientSideGetMetaTraderLink(int cartId, int productId);
 
-        #region User Order Stats
+        Task<Result<ClientSideUpdateTradingViewAccountNameDto>> ClientSideGetTradingViewAccountNameForUpdate(int cartId, int productId);
+
+        Task<Result> ClientSideUpdateTradingViewAccountName(ClientSideUpdateTradingViewAccountNameDto model);
+
+        Task<Result> AdminSideUpdateCartItemStatus(bool done, int cartId, int productId);
+
         Task<Result<ClientSideUserOrderStatsDto>> ClientSideGetUserOrderStats();
+
         Task<Result> UserOrderStatsNeedUpdate(int userId);
-        #endregion
+
+        Task<bool> UserHaveAnyPendingProduct();
     }
 }
