@@ -1,9 +1,9 @@
 <!-- ─────────────────────────────────────────────────────────────────────────────
-     ترندی‌کتور · README.fa (نسخه فارسی) · @mmd-yousefiasl
+     ترندیکاتور · README.fa (نسخه فارسی) · @mmd-yousefiasl
      نسخه انگلیسی: README.md
      ───────────────────────────────────────────────────────────────────────────── -->
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:512BD4,1:8E7CF3&height=200&section=header&text=TRENDICATOR&fontSize=48&fontColor=ffffff&desc=%D9%81%D8%B1%D9%88%D8%B4%DA%AF%D8%A7%D9%87%20%D8%A7%DB%8C%D9%86%D8%AA%D8%B1%D9%86%D8%AA%DB%8C%20%D8%A7%D8%A8%D8%B2%D8%A7%D8%B1%D9%87%D8%A7%DB%8C%20%D9%85%D8%B9%D8%A7%D9%85%D9%84%D8%A7%D8%AA%DB%8C%20%D9%88%20%D8%A7%D9%86%D8%AF%DB%8C%DA%A9%D8%A7%D8%AA%D9%88%D8%B1%D9%87%D8%A7&descSize=16&descAlignY=72&animation=fadeIn" alt="ترندی‌کتور — فروشگاه اینترنتی ابزارهای معاملاتی" />
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:512BD4,1:8E7CF3&height=200&section=header&text=TRENDICATOR&fontSize=48&fontColor=ffffff&desc=%D9%81%D8%B1%D9%88%D8%B4%DA%AF%D8%A7%D9%87%20%D8%A7%DB%8C%D9%86%D8%AA%D8%B1%D9%86%D8%AA%DB%8C%20%D8%A7%D8%A8%D8%B2%D8%A7%D8%B1%D9%87%D8%A7%DB%8C%20%D9%85%D8%B9%D8%A7%D9%85%D9%84%D8%A7%D8%AA%DB%8C%20%D9%88%20%D8%A7%D9%86%D8%AF%DB%8C%DA%A9%D8%A7%D8%AA%D9%88%D8%B1%D9%87%D8%A7&descSize=16&descAlignY=72&animation=fadeIn" alt="ترندیکاتور — فروشگاه اینترنتی ابزارهای معاملاتی" />
 
 <div align="center">
 
@@ -29,17 +29,13 @@
 
 > یک وب‌اپلیکیشن فروشگاهی برای ابزارهای معاملاتی و اندیکاتورها — ساخته‌شده با ASP.NET Core MVC، معماری Clean Architecture و PostgreSQL.
 
-<div align="center">
-  <img src="https://img.shields.io/badge/معرفی-2F1C6B?style=for-the-badge" alt="معرفی" />
-</div>
+<h2 align="center" dir="rtl">معرفی</h2>
 
-ترندی‌کتور یک وب‌سایت فروشگاهی است که در آن کاربران می‌توانند ابزارهای معاملاتی و اندیکاتورها را مرور کنند، جزئیات محصول را ببینند و سفارش ثبت کنند. یک بخش مدیریت هم امکان مدیریت کاتالوگ محصولات و همگام‌سازی اطلاعات با TradingView را فراهم می‌کند.
+ترندیکاتور یک وب‌سایت فروشگاهی است که در آن کاربران می‌توانند ابزارهای معاملاتی و اندیکاتورها را مرور کنند، جزئیات محصول را ببینند و سفارش ثبت کنند. یک بخش مدیریت هم امکان مدیریت کاتالوگ محصولات و همگام‌سازی اطلاعات با TradingView را فراهم می‌کند.
 
 این پروژه را به‌صورت **تک‌نفره و از صفر تا صد** توسعه داده‌ام؛ از طراحی معماری و پایگاه داده تا کنترلرها، ویوهای Razor و پیکربندی اجرا. هدف از ساخت آن، تمرینی در سطح پروژه واقعی برای ساختن یک اپلیکیشن ASP.NET Core MVC قابل نگهداری، با مرزبندی شفاف بین منطق کسب‌وکار، لایه دسترسی به داده و لایه نمایش بوده است.
 
-<div align="center">
-  <img src="https://img.shields.io/badge/نقش_من-2F1C6B?style=for-the-badge" alt="نقش من" />
-</div>
+<h2 align="center" dir="rtl">نقش من</h2>
 
 **تنها توسعه‌دهنده — چرخه کامل پروژه**
 
@@ -47,13 +43,11 @@
 - مدل‌سازی دامنه (کاربر، محصول، سفارش) و طراحی اسکیمای PostgreSQL
 - پیاده‌سازی لایه دسترسی به داده با Entity Framework Core و مایگریشن‌ها
 - ساخت لایه Application: use caseها، DTOها و ViewModelها
-- توسعه کنترلرهای MVC و ویوهای Razor (layout، partial، Tag Helper)
+- توسعه کنترلرهای MVC و ویوهای Razor (layout · partial · Tag Helper)
 - یکپارچه‌سازی با سرویس خارجی TradingView
 - پیکربندی متمرکز تزریق وابستگی برای سبک نگه‌داشتن پروژه Web
 
-<div align="center">
-  <img src="https://img.shields.io/badge/معماری-2F1C6B?style=for-the-badge" alt="معماری" />
-</div>
+<h2 align="center" dir="rtl">معماری</h2>
 
 راه‌حل بر پایه **Clean Architecture** و در پنج پروژه با مسئولیت مشخص سازمان‌دهی شده است:
 
@@ -85,13 +79,17 @@ IOC ──►  Data ┘
 
 **جریان یک درخواست**
 
+</div>
+
 ```
-مرورگر → کنترلر → سرویس Application → دامنه / ریپازیتوری → EF Core → PostgreSQL
-              ↓
-         ViewModel / DTO
-              ↓
-          ویوی Razor → پاسخ HTML
+Browser → Controller → Application Service → Domain / Repository → EF Core → PostgreSQL
+                ↓
+           ViewModel / DTO
+                ↓
+            Razor View → HTML response
 ```
+
+<div dir="rtl" align="right">
 
 کنترلرها به‌صورت آگاهانه لاغر نگه داشته شده‌اند: اعتبارسنجی ورودی، فراخوانی سرویس، تبدیل نتیجه به ViewModel و برگرداندن ویو. قواعد کسب‌وکار در لایه‌های Domain و Application زندگی می‌کنند، نه در کنترلرها یا فایل‌های `.cshtml`.
 
@@ -103,25 +101,21 @@ IOC ──►  Data ┘
 | **IOC** | ثبت متمرکز سرویس‌ها؛ نگه‌داشتن `Program.cs` کوتاه و خوانا. |
 | **Web** | کنترلرها، ویوهای Razor، layoutها، partialها، middleware و فایل‌های استاتیک. |
 
-<div align="center">
-  <img src="https://img.shields.io/badge/پشته_فناوری-2F1C6B?style=for-the-badge" alt="پشته فناوری" />
-</div>
+<h2 align="center" dir="rtl">پشته فناوری</h2>
 
 | دسته | فناوری‌ها |
 |------|-----------|
-| **Runtime** | .NET 10 |
+| **Runtime** | &#x200E;.NET 10 |
 | **فریم‌ورک** | ASP.NET Core MVC |
-| **موتور ویو** | Razor (`.cshtml`)، Layout، Partial، Tag Helper |
+| **موتور ویو** | Razor `(.cshtml)` · Layout · Partial · Tag Helper |
 | **زبان** | C# |
 | **معماری** | Clean Architecture، الگوی DTO / ViewModel، تزریق وابستگی |
 | **ORM** | Entity Framework Core |
 | **پایگاه داده** | PostgreSQL (مهاجرت‌شده از SQL Server) |
 | **یکپارچه‌سازی خارجی** | TradingView |
-| **فرانت‌اند** | HTML، CSS، JavaScript در `wwwroot` |
+| **فرانت‌اند** | HTML · CSS · JavaScript در `wwwroot` |
 
-<div align="center">
-  <img src="https://img.shields.io/badge/امکانات-2F1C6B?style=for-the-badge" alt="امکانات" />
-</div>
+<h2 align="center" dir="rtl">امکانات</h2>
 
 - **کاتالوگ محصولات** — مرور ابزارهای معاملاتی و اندیکاتورها با صفحه اختصاصی هر محصول
 - **حساب کاربری** — ثبت‌نام، ورود و مدیریت پروفایل
@@ -132,9 +126,7 @@ IOC ──►  Data ┘
 - **اعتبارسنجی دو سطحی** — Data Annotation روی مدل ورودی به‌همراه قواعد ثابت دامنه
 - **تزریق وابستگی متمرکز** — ثبت سرویس‌ها در پروژه IOC ایزوله شده است
 
-<div align="center">
-  <img src="https://img.shields.io/badge/تصمیم‌های_فنی_کلیدی-2F1C6B?style=for-the-badge" alt="تصمیم‌های فنی کلیدی" />
-</div>
+<h2 align="center" dir="rtl">تصمیم‌های فنی کلیدی</h2>
 
 **Clean Architecture در دل MVC.** ساختار MVC کنترلرهای حجیم و منطق داخل ویو را تشویق می‌کند. من کنترلرها را آگاهانه به چهار گام محدود کردم — اعتبارسنجی، فراخوانی سرویس، تبدیل به ViewModel، برگرداندن ویو — تا قواعد کسب‌وکار بدون نیاز به وب‌سرور قابل تست بمانند.
 
@@ -146,13 +138,11 @@ IOC ──►  Data ┘
 
 **ثبت متمرکز در IOC.** تمام ثبت‌های سرویس در پروژه `Trendicator.IOC` قرار دارند؛ این کار `Program.cs` را خوانا نگه می‌دارد و طول عمر سرویس‌ها را در کل راه‌حل یکدست می‌کند.
 
-<div align="center">
-  <img src="https://img.shields.io/badge/مهارت‌های_به‌کاررفته-2F1C6B?style=for-the-badge" alt="مهارت‌های به‌کاررفته" />
-</div>
+<h2 align="center" dir="rtl">مهارت‌های به‌کاررفته</h2>
 
 - ASP.NET Core MVC (کنترلرها، مسیریابی، فیلترها، middleware)
 - ویوهای Razor: Layout، Partial، Tag Helper، مدل‌های strongly typed
-- C# و .NET 10
+- C# و &#x200E;.NET 10
 - معماری Clean Architecture و طراحی لایه‌ای
 - الگوهای DTO و ViewModel
 - تزریق وابستگی و مدیریت طول عمر سرویس‌ها
@@ -162,9 +152,7 @@ IOC ──►  Data ┘
 - یکپارچه‌سازی با سرویس خارجی
 - Git برای کنترل نسخه
 
-<div align="center">
-  <img src="https://img.shields.io/badge/گام‌های_بعدی-2F1C6B?style=for-the-badge" alt="گام‌های بعدی" />
-</div>
+<h2 align="center" dir="rtl">گام‌های بعدی</h2>
 
 - افزودن پروژه‌های تست واحد و یکپارچه (xUnit، Moq)
 - پیاده‌سازی احراز هویت کوکی و مجوزدهی نقش‌محور
@@ -172,28 +160,22 @@ IOC ──►  Data ┘
 - کانتینری‌کردن اپلیکیشن و پایگاه داده با Docker Compose
 - افزودن لاگ ساخت‌یافته و health check
 
-<div align="center">
-  <img src="https://img.shields.io/badge/تماس_با_من-2F1C6B?style=for-the-badge" alt="تماس با من" />
-</div>
+<h2 align="center" dir="rtl">تماس با من</h2>
 
-<div align="center">
-
-**محمد یوسفی** — توسعه‌دهنده بک‌اند (.NET / ASP.NET Core)
-
-</div>
+<p align="center" dir="rtl"><b>محمد یوسفی</b> — توسعه‌دهنده بک‌اند (<span dir="ltr">.NET / ASP.NET Core</span>)</p>
 
 </div>
 
 <div align="center">
 
 <a href="mailto:mmdyousefi95@gmail.com">
-  <img src="https://img.shields.io/badge/ایمیل-mmdyousefi95%40gmail.com-512BD4?style=for-the-badge&logo=gmail&logoColor=white" alt="ایمیل" />
+  <img src="https://img.shields.io/badge/Email-mmdyousefi95%40gmail.com-512BD4?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
 </a>
 <a href="https://github.com/mmd-yousefiasl">
-  <img src="https://img.shields.io/badge/گیت‌هاب-%40mmd--yousefiasl-512BD4?style=for-the-badge&logo=github&logoColor=white" alt="گیت‌هاب" />
+  <img src="https://img.shields.io/badge/GitHub-%40mmd--yousefiasl-512BD4?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
 </a>
 <a href="https://t.me/mmd_u_a">
-  <img src="https://img.shields.io/badge/تلگرام-%40mmd__u__a-512BD4?style=for-the-badge&logo=telegram&logoColor=white" alt="تلگرام" />
+  <img src="https://img.shields.io/badge/Telegram-%40mmd__u__a-512BD4?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram" />
 </a>
 
 </div>
