@@ -1,9 +1,9 @@
 # Trendicator
 
-> A backend API for a trading-tools eCommerce platform — built with ASP.NET Core, Clean Architecture, and PostgreSQL.
+> An ASP.NET Core MVC web application for a trading-tools eCommerce platform — built with Clean Architecture, Razor views, and PostgreSQL.
 
 [![.NET](https://img.shields.io/badge/.NET-10-512BD4?style=flat&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
-[![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-Web%20API-512BD4?style=flat&logo=dotnet&logoColor=white)](https://learn.microsoft.com/en-us/aspnet/core/)
+[![ASP.NET Core MVC](https://img.shields.io/badge/ASP.NET%20Core-MVC-512BD4?style=flat&logo=dotnet&logoColor=white)](https://learn.microsoft.com/en-us/aspnet/core/mvc/overview)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Entity Framework Core](https://img.shields.io/badge/EF%20Core-512BD4?style=flat&logo=dotnet&logoColor=white)](https://learn.microsoft.com/en-us/ef/core/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -18,7 +18,7 @@
 - [Features](#-features)
 - [Getting Started](#-getting-started)
 - [Project Structure](#-project-structure)
-- [API Overview](#-api-overview)
+- [Pages & Routes](#-pages--routes)
 - [Design Decisions](#-design-decisions)
 - [Database & Migrations](#-database--migrations)
 - [Testing](#-testing)
@@ -31,14 +31,15 @@
 
 ## 📖 About The Project
 
-**Trendicator** is a RESTful backend service designed to power an eCommerce platform for trading tools, indicators, and digital products. It provides a scalable, maintainable foundation for managing users, products, orders, and third-party integrations (such as TradingView), while adhering to **Clean Architecture** principles.
+**Trendicator** is a server-rendered **ASP.NET Core MVC** web application for an eCommerce platform that sells trading tools, indicators, and digital products. Visitors can browse the catalog, view product details, and place orders, while an admin area handles product management and syncing with **TradingView**.
 
-The project was built to demonstrate how a modern .NET backend can be structured for long-term maintainability — with clear separation of concerns, testable business logic, and a clean, versionable API layer.
+The project is built with **Clean Architecture** so that business rules stay independent of the web framework and database. Razor views render the UI on the server, controllers coordinate requests, and the Application layer holds the use cases and DTOs/ViewModels that drive each page.
 
 ### Why this project exists
 
-- To serve as a production-style reference for **Clean Architecture in ASP.NET Core**
-- To practice **DTO-based API contracts**, **dependency injection**, and **layered validation**
+- To serve as a production-style reference for **Clean Architecture in an ASP.NET Core MVC application**
+- To practice **controller → application service → view** flow with clean separation of concerns
+- To apply **DTO / ViewModel patterns** so Razor views never bind directly to domain entities
 - To integrate with a real third-party service (TradingView) without coupling the core domain to it
 - To work with **PostgreSQL** and **EF Core** in a realistic eCommerce domain
 
@@ -51,10 +52,10 @@ The solution follows **Clean Architecture** and is split into five projects, eac
 ```
 Trendicator.sln
 ├── Trendicator.Domain          # Entities, enums, domain interfaces (no dependencies)
-├── Trendicator.Application     # Use cases, DTOs, service interfaces
+├── Trendicator.Application     # Use cases, DTOs/ViewModels, service interfaces
 ├── Trendicator.Data            # EF Core DbContext, repositories, migrations
 ├── Trendicator.IOC             # Dependency injection registration
-└── Trendicator.Web             # ASP.NET Core Web API (controllers, middleware)
+└── Trendicator.Web             # ASP.NET Core MVC (Controllers, Views, wwwroot)
 ```
 
 ### Dependency direction
@@ -77,10 +78,22 @@ IOC ──►  Data ┘
 | Layer | Responsibility |
 |-------|----------------|
 | **Domain** | Core business entities, enums, and repository/service contracts. Pure C#, no EF Core or ASP.NET references. |
-| **Application** | Use cases, DTOs, mapping logic, and application-level service interfaces. Orchestrates domain objects. |
+| **Application** | Use cases, DTOs/ViewModels, mapping logic, and application-level service interfaces. Orchestrates domain objects for the UI. |
 | **Data** | EF Core `DbContext`, entity configurations, repository implementations, and migrations. |
 | **IOC** | Centralized service registration (`AddApplication`, `AddData`, etc.) to keep `Program.cs` clean. |
-| **Web** | Controllers, middleware, filters, and API configuration. Handles HTTP concerns only. |
+| **Web** | MVC controllers, Razor views, layouts, partials, Tag Helpers, middleware, and static assets in `wwwroot`. Handles HTTP and rendering concerns only. |
+
+### Request flow
+
+```
+Browser → Controller → Application Service → Domain / Repository → EF Core → PostgreSQL
+                ↓
+           ViewModel / DTO
+                ↓
+            Razor View → HTML response
+```
+
+Controllers are thin: they validate input, call an application service, map the result to a ViewModel, and return a view. Business logic lives in the Application and Domain layers — not in controllers or views.
 
 ---
 
@@ -89,28 +102,30 @@ IOC ──►  Data ┘
 | Category | Technologies |
 |----------|--------------|
 | **Runtime** | .NET 10 |
-| **Framework** | ASP.NET Core Web API |
+| **Framework** | ASP.NET Core MVC |
+| **View Engine** | Razor (`.cshtml`), Layouts, Partials, Tag Helpers |
 | **Language** | C# |
-| **Architecture** | Clean Architecture, Layered Design, DTO pattern, Dependency Injection |
+| **Architecture** | Clean Architecture, Layered Design, DTO / ViewModel pattern, Dependency Injection |
 | **ORM** | Entity Framework Core |
 | **Database** | PostgreSQL (primary), previously SQL Server |
-| **External Integration** | TradingView API (product data) |
-| **API Documentation** | Swagger / OpenAPI |
+| **External Integration** | TradingView (product data) |
+| **Frontend** | HTML5, CSS, JavaScript (in `wwwroot`) |
 | **Version Control** | Git |
 
 ---
 
 ## ✨ Features
 
-- **User Management** — User registration, profile management, and persistence via EF Core.
-- **Product Catalog** — Manage trading tools, indicators, and digital products.
-- **Order Processing** — Create and manage orders for digital products.
+- **Product Catalog** — Browse trading tools, indicators, and digital products.
+- **Product Details** — Dedicated pages for each product with descriptions and pricing.
+- **User Accounts** — Registration, login, and profile management.
+- **Shopping / Order Flow** — Add products and place orders for digital goods.
+- **Admin Area** — Create, edit, and manage products through MVC pages.
 - **TradingView Integration** — Sync product information with TradingView's product flow.
-- **DTO-Based API Contracts** — Request/response models are decoupled from domain entities.
+- **ViewModel / DTO Separation** — Razor views bind to ViewModels, never to domain entities.
+- **Server-Side Validation** — Data annotations plus domain invariants for robust form handling.
 - **Dependency Injection** — Configured centrally via the `IOC` project.
-- **Layered Validation** — Domain invariants plus DTO-level validation for robust input handling.
 - **PostgreSQL Persistence** — Fully migrated from SQL Server to PostgreSQL with EF Core migrations.
-- **Swagger Documentation** — Interactive API exploration in development.
 
 > **Note:** This project is under active development. Some features may be partially implemented or planned. See the [Roadmap](#-roadmap) for details.
 
@@ -152,7 +167,7 @@ IOC ──►  Data ┘
    }
    ```
 
-   For local development, consider using **User Secrets** instead of committing credentials:
+   For local development, prefer **User Secrets** over committing credentials:
    ```bash
    cd Trendicator.Web
    dotnet user-secrets init
@@ -171,9 +186,12 @@ IOC ──►  Data ┘
    dotnet run --project Trendicator.Web
    ```
 
-6. **Explore the API**
-   - Swagger UI (development): `https://localhost:5001/swagger`
-   - Base API URL: `https://localhost:5001/api`
+6. **Open the site**
+   - Home page: `https://localhost:5001/`
+   - Product catalog: `https://localhost:5001/products`
+   - Admin area: `https://localhost:5001/admin` *(if enabled)*
+
+   Adjust the port to match your `launchSettings.json`.
 
 ### Running with Docker (optional)
 
@@ -187,7 +205,7 @@ docker run --name trendicator-db \
   -d postgres:16
 ```
 
-Then run the API with `dotnet run --project Trendicator.Web` as usual.
+Then run the web app with `dotnet run --project Trendicator.Web` as usual.
 
 ---
 
@@ -201,7 +219,8 @@ Trendicator/
 │   └── Interfaces/             # IRepository<T>, IUnitOfWork, etc.
 │
 ├── Trendicator.Application/
-│   ├── DTOs/                   # Request/response models
+│   ├── DTOs/                   # Data transfer objects
+│   ├── ViewModels/             # View-specific models for Razor pages
 │   ├── Services/               # Use-case implementations
 │   └── Interfaces/             # Application service contracts
 │
@@ -215,7 +234,14 @@ Trendicator/
 │   └── DependencyInjection.cs  # Service registration extensions
 │
 ├── Trendicator.Web/
-│   ├── Controllers/            # API controllers
+│   ├── Controllers/            # MVC controllers
+│   ├── Views/                  # Razor views (.cshtml)
+│   │   ├── Shared/             # _Layout.cshtml, partials
+│   │   ├── Home/
+│   │   ├── Products/
+│   │   ├── Account/
+│   │   └── Admin/
+│   ├── wwwroot/                # CSS, JS, images, libraries
 │   ├── Middleware/             # Exception handling, logging
 │   ├── Extensions/             # Program.cs helper extensions
 │   ├── appsettings.json
@@ -227,70 +253,49 @@ Trendicator/
 
 ---
 
-## 🔌 API Overview
+## 🧭 Pages & Routes
 
-Below is a high-level overview of the API surface. Refer to **Swagger** (`/swagger`) for the full contract.
+Trendicator uses conventional MVC routing (`/{controller}/{action}/{id?}`). Below is a high-level overview of the main pages. Update this table to match the actual controllers in `Trendicator.Web/Controllers`.
 
-| Resource | Method | Endpoint | Description |
-|----------|--------|----------|-------------|
-| **Users** | `GET` | `/api/users` | List all users |
-| | `GET` | `/api/users/{id}` | Get a user by ID |
-| | `POST` | `/api/users` | Create a new user |
-| | `PUT` | `/api/users/{id}` | Update user details |
-| | `DELETE` | `/api/users/{id}` | Delete a user |
-| **Products** | `GET` | `/api/products` | List all products |
-| | `GET` | `/api/products/{id}` | Get a product by ID |
-| | `POST` | `/api/products` | Create a product |
-| | `PUT` | `/api/products/{id}` | Update a product |
-| | `DELETE` | `/api/products/{id}` | Delete a product |
-| **Orders** | `GET` | `/api/orders` | List orders |
-| | `GET` | `/api/orders/{id}` | Get an order by ID |
-| | `POST` | `/api/orders` | Create an order |
-| | `PATCH` | `/api/orders/{id}/status` | Update order status |
-| **TradingView** | `GET` | `/api/tradingview/products` | Fetch synced TradingView products |
+| Page | Route | Controller / Action | Description |
+|------|-------|---------------------|-------------|
+| **Home** | `/` | `Home / Index` | Landing page with featured products |
+| **Product Catalog** | `/products` | `Products / Index` | Lists all available trading tools |
+| **Product Details** | `/products/details/{id}` | `Products / Details` | Single product view |
+| **Register** | `/account/register` | `Account / Register` | User registration form |
+| **Login** | `/account/login` | `Account / Login` | User login form |
+| **Profile** | `/account/profile` | `Account / Profile` | Authenticated user profile |
+| **Orders** | `/orders` | `Orders / Index` | User's order history |
+| **Order Details** | `/orders/details/{id}` | `Orders / Details` | Single order view |
+| **Admin – Products** | `/admin/products` | `Admin / Products` | Manage products (CRUD) |
+| **Admin – Product Edit** | `/admin/products/edit/{id}` | `Admin / EditProduct` | Edit a product |
+| **Error** | `/home/error` | `Home / Error` | Generic error page |
 
-> **Note:** Endpoint names and routes may differ. Update this table to reflect the actual controllers in `Trendicator.Web/Controllers`.
-
-### Sample request — Create a product
-
-```http
-POST /api/products
-Content-Type: application/json
-
-{
-  "name": "RSI Divergence Indicator",
-  "description": "A TradingView indicator for RSI divergence detection.",
-  "price": 49.99,
-  "productType": "Indicator"
-}
-```
-
-**Response**
-
-```json
-{
-  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "name": "RSI Divergence Indicator",
-  "price": 49.99,
-  "createdAt": "2026-01-15T10:30:00Z"
-}
-```
+> **Note:** Route names and actions may differ. Keep this table in sync with your controllers.
 
 ---
 
 ## 🧠 Design Decisions
 
-### 1. Clean Architecture over traditional N-tier
+### 1. Clean Architecture inside an MVC application
 
-Traditional N-tier solutions often couple business logic to the database or web framework. Clean Architecture keeps **Domain** and **Application** free of infrastructure concerns, so business rules can be tested without a database, and infrastructure can be replaced without rewriting logic.
+MVC makes it easy to put business logic in controllers or even views. This project deliberately avoids that. Controllers only:
 
-### 2. DTOs instead of exposing domain entities
+1. Validate the incoming model
+2. Call an Application service
+3. Map the result to a ViewModel
+4. Return a view
 
-The API never returns domain entities directly. Instead, **DTOs** in the Application layer define the request/response contracts. This:
+All business rules live in **Domain** and **Application**, so they can be tested without spinning up the web server.
 
-- Prevents over-posting and mass-assignment vulnerabilities
-- Decouples the public API from the database schema
-- Allows the API contract to evolve independently of the domain model
+### 2. ViewModels and DTOs instead of domain entities
+
+Razor views never bind to domain entities. Instead:
+
+- **DTOs** carry data between layers.
+- **ViewModels** are shaped specifically for each view (e.g., `ProductDetailsViewModel` includes a product plus related items).
+
+This prevents over-posting, keeps views stable when the domain changes, and avoids leaking persistence details into HTML.
 
 ### 3. PostgreSQL over SQL Server
 
@@ -301,28 +306,28 @@ The project was initially built on SQL Server and later migrated to **PostgreSQL
 - Better portability for Linux/container-based deployments
 - Active community and broad hosting support
 
-EF Core's provider abstraction made the migration a matter of updating the provider package and connection string, with minimal changes elsewhere.
+EF Core's provider abstraction made the migration a matter of updating the provider package and connection string.
 
 ### 4. Centralized IoC configuration
 
-All dependency registrations live in `Trendicator.IOC`. This:
-
-- Keeps `Program.cs` short and readable
-- Makes service lifetimes consistent across the solution
-- Allows new layers or services to be added with a single extension method
+All dependency registrations live in `Trendicator.IOC`. This keeps `Program.cs` short, makes service lifetimes consistent, and allows new services to be added with a single extension method.
 
 ### 5. TradingView as an isolated integration
 
-TradingView integration is treated as an **external adapter**. The core domain knows nothing about TradingView; the Application layer defines an interface, and the Data (or a dedicated integration) layer implements it. This keeps third-party coupling contained and replaceable.
+TradingView integration is treated as an **external adapter**. The core domain knows nothing about TradingView; the Application layer defines an interface, and the integration layer implements it. This keeps third-party coupling contained and replaceable.
 
-### 6. Layered validation
+### 6. Server-side validation at two levels
 
 Validation happens at two levels:
 
+- **ViewModel level** — data annotations for form input (required fields, string lengths, ranges)
 - **Domain level** — invariants that must always hold (e.g., a product must have a positive price)
-- **Application/DTO level** — input shape and format validation (e.g., required fields, string lengths)
 
-This separation ensures invalid data never reaches the domain, while domain rules remain authoritative.
+Invalid input never reaches the domain, and domain rules stay authoritative regardless of which UI calls them.
+
+### 7. Razor views with layouts and partials
+
+Shared UI lives in `Views/Shared/_Layout.cshtml`, with reusable pieces as partial views (e.g., product cards, navigation). This keeps views small, consistent, and easy to maintain.
 
 ---
 
@@ -365,7 +370,7 @@ The layered structure is designed to be testable:
 - **Domain** — pure unit tests for entity behavior and invariants
 - **Application** — service tests with mocked repository interfaces
 - **Data** — integration tests against a PostgreSQL test database (optional)
-- **Web** — endpoint tests using `WebApplicationFactory<T>`
+- **Web** — controller tests plus integration tests using `WebApplicationFactory<T>`
 
 > Test projects are not yet included in the solution. A planned addition is `Trendicator.Tests` using **xUnit** and **Moq**.
 
@@ -374,13 +379,13 @@ The layered structure is designed to be testable:
 ## 🗺 Roadmap
 
 - [ ] Add unit and integration test projects (`Trendicator.Tests`)
-- [ ] Implement authentication and authorization (JWT)
-- [ ] Add pagination, filtering, and sorting to list endpoints
-- [ ] Introduce caching (Redis) for product catalog reads
-- [ ] Add Docker Compose for API + PostgreSQL
+- [ ] Implement authentication and authorization (cookie-based auth)
+- [ ] Add pagination, filtering, and sorting to the product catalog
+- [ ] Introduce caching for product catalog pages
+- [ ] Add Docker Compose for the web app + PostgreSQL
 - [ ] Set up CI/CD with GitHub Actions
 - [ ] Add structured logging (Serilog) and health checks
-- [ ] Generate API versioning strategy
+- [ ] Improve admin area with bulk product management
 
 ---
 
@@ -403,7 +408,7 @@ Contributions, issues, and feature requests are welcome.
    ```
 5. Open a Pull Request
 
-Please make sure your code follows the existing layer boundaries and naming conventions.
+Please make sure your code follows the existing layer boundaries and naming conventions. Business logic belongs in the Application or Domain layers — not in controllers or views.
 
 ---
 
@@ -424,5 +429,5 @@ Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for more informa
 ---
 
 <p align="center">
-  <sub>Built with ❤️ and ASP.NET Core</sub>
+  <sub>Built with ❤️ and ASP.NET Core MVC</sub>
 </p>
