@@ -1,24 +1,45 @@
-<div dir="rtl" align="right">
+<!-- ─────────────────────────────────────────────────────────────────────────────
+     ترندی‌کتور · README.fa (نسخه فارسی) · @mmd-yousefiasl
+     نسخه انگلیسی: README.md
+     ───────────────────────────────────────────────────────────────────────────── -->
 
-# ترندی‌کتور (Trendicator)
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:512BD4,1:8E7CF3&height=200&section=header&text=TRENDICATOR&fontSize=48&fontColor=ffffff&desc=%D9%81%D8%B1%D9%88%D8%B4%DA%AF%D8%A7%D9%87%20%D8%A7%DB%8C%D9%86%D8%AA%D8%B1%D9%86%D8%AA%DB%8C%20%D8%A7%D8%A8%D8%B2%D8%A7%D8%B1%D9%87%D8%A7%DB%8C%20%D9%85%D8%B9%D8%A7%D9%85%D9%84%D8%A7%D8%AA%DB%8C%20%D9%88%20%D8%A7%D9%86%D8%AF%DB%8C%DA%A9%D8%A7%D8%AA%D9%88%D8%B1%D9%87%D8%A7&descSize=16&descAlignY=72&animation=fadeIn" alt="ترندی‌کتور — فروشگاه اینترنتی ابزارهای معاملاتی" />
 
-> یک وب‌اپلیکیشن فروشگاهی برای ابزارهای معاملاتی و اندیکاتورها — ساخته‌شده با ASP.NET Core MVC، معماری Clean Architecture و PostgreSQL.
+<div align="center">
 
-[English](README.md) | **فارسی**
+<a href="README.md">English</a> | <b>فارسی</b>
+
+<a href="https://github.com/mmd-yousefiasl/Trendicator">
+  <img src="https://readme-typing-svg.demolab.com?font=Vazirmatn&weight=600&size=18&pause=1200&color=A855F7&center=true&vCenter=true&width=620&height=44&lines=%D9%81%D8%B1%D9%88%D8%B4%DA%AF%D8%A7%D9%87+%D8%A7%DB%8C%D9%86%D8%AA%D8%B1%D9%86%D8%AA%DB%8C+%D8%A7%D8%A8%D8%B2%D8%A7%D8%B1%D9%87%D8%A7%DB%8C+%D9%85%D8%B9%D8%A7%D9%85%D9%84%D8%A7%D8%AA%DB%8C+%D9%88+%D8%A7%D9%86%D8%AF%DB%8C%DA%A9%D8%A7%D8%AA%D9%88%D8%B1%D9%87%D8%A7;%D9%85%D8%B9%D9%85%D8%A7%D8%B1%DB%8C+%D8%AA%D9%85%DB%8C%D8%B2+%C2%B7+%D8%AC%D8%AF%D8%A7%D8%B3%D8%A7%D8%B2%DB%8C+%D9%85%D8%B3%D8%A6%D9%88%D9%84%DB%8C%D8%AA%E2%80%8C%D9%87%D8%A7;ASP.NET+Core+MVC+%C2%B7+EF+Core+%C2%B7+PostgreSQL" alt="فروشگاه اینترنتی ابزارهای معاملاتی و اندیکاتورها" />
+</a>
+
+<br>
+
+<img src="https://img.shields.io/badge/.NET-10-512BD4?style=flat-square&logo=dotnet&logoColor=white" alt=".NET 10" />&nbsp;
+<img src="https://img.shields.io/badge/ASP.NET%20Core-MVC-512BD4?style=flat-square&logo=dotnet&logoColor=white" alt="ASP.NET Core MVC" />&nbsp;
+<img src="https://img.shields.io/badge/C%23-512BD4?style=flat-square" alt="C#" />&nbsp;
+<img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL" />&nbsp;
+<img src="https://img.shields.io/badge/EF%20Core-512BD4?style=flat-square&logo=dotnet&logoColor=white" alt="EF Core" />
 
 </div>
 
+<img width="100%" src="https://capsule-render.vercel.app/api?type=rect&color=0:512BD4,1:8E7CF3&height=2&width=1000" alt="" />
+
 <div dir="rtl" align="right">
 
-## درباره پروژه
+> یک وب‌اپلیکیشن فروشگاهی برای ابزارهای معاملاتی و اندیکاتورها — ساخته‌شده با ASP.NET Core MVC، معماری Clean Architecture و PostgreSQL.
+
+<div align="center">
+  <img src="https://img.shields.io/badge/معرفی-2F1C6B?style=for-the-badge" alt="معرفی" />
+</div>
 
 ترندی‌کتور یک وب‌سایت فروشگاهی است که در آن کاربران می‌توانند ابزارهای معاملاتی و اندیکاتورها را مرور کنند، جزئیات محصول را ببینند و سفارش ثبت کنند. یک بخش مدیریت هم امکان مدیریت کاتالوگ محصولات و همگام‌سازی اطلاعات با TradingView را فراهم می‌کند.
 
 این پروژه را به‌صورت **تک‌نفره و از صفر تا صد** توسعه داده‌ام؛ از طراحی معماری و پایگاه داده تا کنترلرها، ویوهای Razor و پیکربندی اجرا. هدف از ساخت آن، تمرینی در سطح پروژه واقعی برای ساختن یک اپلیکیشن ASP.NET Core MVC قابل نگهداری، با مرزبندی شفاف بین منطق کسب‌وکار، لایه دسترسی به داده و لایه نمایش بوده است.
 
----
-
-## نقش من
+<div align="center">
+  <img src="https://img.shields.io/badge/نقش_من-2F1C6B?style=for-the-badge" alt="نقش من" />
+</div>
 
 **تنها توسعه‌دهنده — چرخه کامل پروژه**
 
@@ -30,11 +51,13 @@
 - یکپارچه‌سازی با سرویس خارجی TradingView
 - پیکربندی متمرکز تزریق وابستگی برای سبک نگه‌داشتن پروژه Web
 
----
-
-## معماری
+<div align="center">
+  <img src="https://img.shields.io/badge/معماری-2F1C6B?style=for-the-badge" alt="معماری" />
+</div>
 
 راه‌حل بر پایه **Clean Architecture** و در پنج پروژه با مسئولیت مشخص سازمان‌دهی شده است:
+
+</div>
 
 ```
 Trendicator.sln
@@ -45,7 +68,11 @@ Trendicator.sln
 └── Trendicator.Web             # ASP.NET Core MVC (Controllers، Views، wwwroot)
 ```
 
+<div dir="rtl" align="right">
+
 **جهت وابستگی‌ها**
+
+</div>
 
 ```
 Web  ──►  Application  ──►  Domain
@@ -53,6 +80,8 @@ Web  ──►  Application  ──►  Domain
  ▼            │
 IOC ──►  Data ┘
 ```
+
+<div dir="rtl" align="right">
 
 **جریان یک درخواست**
 
@@ -74,9 +103,9 @@ IOC ──►  Data ┘
 | **IOC** | ثبت متمرکز سرویس‌ها؛ نگه‌داشتن `Program.cs` کوتاه و خوانا. |
 | **Web** | کنترلرها، ویوهای Razor، layoutها، partialها، middleware و فایل‌های استاتیک. |
 
----
-
-## پشته فناوری
+<div align="center">
+  <img src="https://img.shields.io/badge/پشته_فناوری-2F1C6B?style=for-the-badge" alt="پشته فناوری" />
+</div>
 
 | دسته | فناوری‌ها |
 |------|-----------|
@@ -90,9 +119,9 @@ IOC ──►  Data ┘
 | **یکپارچه‌سازی خارجی** | TradingView |
 | **فرانت‌اند** | HTML، CSS، JavaScript در `wwwroot` |
 
----
-
-## امکانات
+<div align="center">
+  <img src="https://img.shields.io/badge/امکانات-2F1C6B?style=for-the-badge" alt="امکانات" />
+</div>
 
 - **کاتالوگ محصولات** — مرور ابزارهای معاملاتی و اندیکاتورها با صفحه اختصاصی هر محصول
 - **حساب کاربری** — ثبت‌نام، ورود و مدیریت پروفایل
@@ -103,9 +132,9 @@ IOC ──►  Data ┘
 - **اعتبارسنجی دو سطحی** — Data Annotation روی مدل ورودی به‌همراه قواعد ثابت دامنه
 - **تزریق وابستگی متمرکز** — ثبت سرویس‌ها در پروژه IOC ایزوله شده است
 
----
-
-## تصمیم‌های فنی کلیدی
+<div align="center">
+  <img src="https://img.shields.io/badge/تصمیم‌های_فنی_کلیدی-2F1C6B?style=for-the-badge" alt="تصمیم‌های فنی کلیدی" />
+</div>
 
 **Clean Architecture در دل MVC.** ساختار MVC کنترلرهای حجیم و منطق داخل ویو را تشویق می‌کند. من کنترلرها را آگاهانه به چهار گام محدود کردم — اعتبارسنجی، فراخوانی سرویس، تبدیل به ViewModel، برگرداندن ویو — تا قواعد کسب‌وکار بدون نیاز به وب‌سرور قابل تست بمانند.
 
@@ -117,9 +146,9 @@ IOC ──►  Data ┘
 
 **ثبت متمرکز در IOC.** تمام ثبت‌های سرویس در پروژه `Trendicator.IOC` قرار دارند؛ این کار `Program.cs` را خوانا نگه می‌دارد و طول عمر سرویس‌ها را در کل راه‌حل یکدست می‌کند.
 
----
-
-## مهارت‌های به‌کاررفته
+<div align="center">
+  <img src="https://img.shields.io/badge/مهارت‌های_به‌کاررفته-2F1C6B?style=for-the-badge" alt="مهارت‌های به‌کاررفته" />
+</div>
 
 - ASP.NET Core MVC (کنترلرها، مسیریابی، فیلترها، middleware)
 - ویوهای Razor: Layout، Partial، Tag Helper، مدل‌های strongly typed
@@ -133,9 +162,9 @@ IOC ──►  Data ┘
 - یکپارچه‌سازی با سرویس خارجی
 - Git برای کنترل نسخه
 
----
-
-## گام‌های بعدی
+<div align="center">
+  <img src="https://img.shields.io/badge/گام‌های_بعدی-2F1C6B?style=for-the-badge" alt="گام‌های بعدی" />
+</div>
 
 - افزودن پروژه‌های تست واحد و یکپارچه (xUnit، Moq)
 - پیاده‌سازی احراز هویت کوکی و مجوزدهی نقش‌محور
@@ -143,14 +172,32 @@ IOC ──►  Data ┘
 - کانتینری‌کردن اپلیکیشن و پایگاه داده با Docker Compose
 - افزودن لاگ ساخت‌یافته و health check
 
----
+<div align="center">
+  <img src="https://img.shields.io/badge/تماس_با_من-2F1C6B?style=for-the-badge" alt="تماس با من" />
+</div>
 
-## تماس
+<div align="center">
 
 **محمد یوسفی** — توسعه‌دهنده بک‌اند (.NET / ASP.NET Core)
 
-- ایمیل: [mmdyousefi95@gmail.com](mailto:mmdyousefi95@gmail.com)
-- گیت‌هاب: [@mmd-yousefiasl](https://github.com/mmd-yousefiasl)
-- تلگرام: [@mmd_u_a](https://t.me/mmd_u_a)
+</div>
 
 </div>
+
+<div align="center">
+
+<a href="mailto:mmdyousefi95@gmail.com">
+  <img src="https://img.shields.io/badge/ایمیل-mmdyousefi95%40gmail.com-512BD4?style=for-the-badge&logo=gmail&logoColor=white" alt="ایمیل" />
+</a>
+<a href="https://github.com/mmd-yousefiasl">
+  <img src="https://img.shields.io/badge/گیت‌هاب-%40mmd--yousefiasl-512BD4?style=for-the-badge&logo=github&logoColor=white" alt="گیت‌هاب" />
+</a>
+<a href="https://t.me/mmd_u_a">
+  <img src="https://img.shields.io/badge/تلگرام-%40mmd__u__a-512BD4?style=for-the-badge&logo=telegram&logoColor=white" alt="تلگرام" />
+</a>
+
+</div>
+
+<br>
+
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:512BD4,1:8E7CF3&height=140&section=footer" alt="" />
