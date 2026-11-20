@@ -1,25 +1,41 @@
-# Trendicator
+<!-- ─────────────────────────────────────────────────────────────────────────────
+     Trendicator · README (English) · @mmd-yousefiasl
+     Persian version: README.fa.md
+     ───────────────────────────────────────────────────────────────────────────── -->
 
-> An eCommerce web application for trading tools and indicators — built with ASP.NET Core MVC, Clean Architecture, and PostgreSQL.
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:512BD4,1:8E7CF3&height=200&section=header&text=TRENDICATOR&fontSize=48&fontColor=ffffff&desc=Trader%20Tools%20eCommerce%20%C2%B7%20ASP.NET%20Core%20MVC%20%C2%B7%20Clean%20Architecture&descSize=16&descAlignY=72&animation=fadeIn" alt="Trendicator — Trader Tools eCommerce" />
 
-**English** | [فارسی](README.fa.md)
+<div align="center">
 
-![.NET](https://img.shields.io/badge/.NET-10-512BD4?style=flat&logo=dotnet&logoColor=white)
-![ASP.NET Core MVC](https://img.shields.io/badge/ASP.NET%20Core-MVC-512BD4?style=flat&logo=dotnet&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white)
-![EF Core](https://img.shields.io/badge/EF%20Core-512BD4?style=flat&logo=dotnet&logoColor=white)
+<b>English</b> | <a href="README.fa.md">فارسی</a>
 
----
+<a href="https://github.com/mmd-yousefiasl/Trendicator">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=18&pause=1200&color=A855F7&center=true&vCenter=true&width=620&height=44&lines=eCommerce+for+trading+tools+and+indicators;ASP.NET+Core+MVC+%C2%B7+Clean+Architecture;EF+Core+%C2%B7+PostgreSQL+%C2%B7+Razor+%C2%B7+DI" alt="eCommerce for trading tools and indicators" />
+</a>
 
-## Overview
+<br>
+
+<img src="https://img.shields.io/badge/.NET-10-512BD4?style=flat-square&logo=dotnet&logoColor=white" alt=".NET 10" />&nbsp;
+<img src="https://img.shields.io/badge/ASP.NET%20Core-MVC-512BD4?style=flat-square&logo=dotnet&logoColor=white" alt="ASP.NET Core MVC" />&nbsp;
+<img src="https://img.shields.io/badge/C%23-512BD4?style=flat-square" alt="C#" />&nbsp;
+<img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL" />&nbsp;
+<img src="https://img.shields.io/badge/EF%20Core-512BD4?style=flat-square&logo=dotnet&logoColor=white" alt="EF Core" />
+
+</div>
+
+<img width="100%" src="https://capsule-render.vercel.app/api?type=rect&color=0:512BD4,1:8E7CF3&height=2&width=1000" alt="" />
+
+<div align="center">
+  <img src="https://img.shields.io/badge/OVERVIEW-2F1C6B?style=for-the-badge" alt="Overview" />
+</div>
 
 Trendicator is a server-rendered eCommerce website where users can browse trading tools and indicators, view product details, and place orders. An admin area lets an administrator manage the product catalog and sync product data with TradingView.
 
 I built this project end-to-end as a **sole developer** — from architecture and database design to controllers, Razor views, and deployment setup. It was created as a production-style exercise in building a maintainable ASP.NET Core MVC application with a clear separation between business logic, data access, and presentation.
 
----
-
-## My Role
+<div align="center">
+  <img src="https://img.shields.io/badge/MY_ROLE-2F1C6B?style=for-the-badge" alt="My Role" />
+</div>
 
 **Sole developer — full project lifecycle**
 
@@ -31,9 +47,9 @@ I built this project end-to-end as a **sole developer** — from architecture an
 - Integrated an external third-party service (TradingView)
 - Configured dependency injection centrally to keep the web project thin
 
----
-
-## Architecture
+<div align="center">
+  <img src="https://img.shields.io/badge/ARCHITECTURE-2F1C6B?style=for-the-badge" alt="Architecture" />
+</div>
 
 The solution follows **Clean Architecture** across five projects, each with a single responsibility:
 
@@ -75,9 +91,9 @@ Controllers stay thin by design: they validate input, call an application servic
 | **IOC** | Centralized service registration; keeps `Program.cs` minimal. |
 | **Web** | Controllers, Razor views, layouts, partials, middleware, and static assets. |
 
----
-
-## Tech Stack
+<div align="center">
+  <img src="https://img.shields.io/badge/TECH_STACK-2F1C6B?style=for-the-badge" alt="Tech Stack" />
+</div>
 
 | Category | Technologies |
 |----------|--------------|
@@ -91,9 +107,9 @@ Controllers stay thin by design: they validate input, call an application servic
 | **External Integration** | TradingView |
 | **Frontend** | HTML, CSS, JavaScript in `wwwroot` |
 
----
-
-## Features
+<div align="center">
+  <img src="https://img.shields.io/badge/FEATURES-2F1C6B?style=for-the-badge" alt="Features" />
+</div>
 
 - **Product catalog** — browse trading tools and indicators with dedicated detail pages
 - **User accounts** — registration, login, and profile management
@@ -104,9 +120,9 @@ Controllers stay thin by design: they validate input, call an application servic
 - **Two-level validation** — data annotations on input models plus domain invariants
 - **Centralized DI** — service registration isolated in the IOC project
 
----
-
-## Key Technical Decisions
+<div align="center">
+  <img src="https://img.shields.io/badge/KEY_TECHNICAL_DECISIONS-2F1C6B?style=for-the-badge" alt="Key Technical Decisions" />
+</div>
 
 **Clean Architecture inside MVC.** MVC encourages fat controllers and logic in views. I deliberately kept controllers to four steps — validate, call service, map to ViewModel, return view — so business rules remain testable without the web server.
 
@@ -118,9 +134,9 @@ Controllers stay thin by design: they validate input, call an application servic
 
 **Centralized IoC registration.** All service registrations live in `Trendicator.IOC`, which keeps `Program.cs` readable and makes lifetimes consistent across the solution.
 
----
-
-## Skills Demonstrated
+<div align="center">
+  <img src="https://img.shields.io/badge/SKILLS_DEMONSTRATED-2F1C6B?style=for-the-badge" alt="Skills Demonstrated" />
+</div>
 
 - ASP.NET Core MVC (controllers, routing, filters, middleware)
 - Razor views: layouts, partials, Tag Helpers, strongly typed models
@@ -134,9 +150,9 @@ Controllers stay thin by design: they validate input, call an application servic
 - Third-party service integration
 - Git for version control
 
----
-
-## Next Steps
+<div align="center">
+  <img src="https://img.shields.io/badge/NEXT_STEPS-2F1C6B?style=for-the-badge" alt="Next Steps" />
+</div>
 
 - Add unit and integration test projects (xUnit, Moq)
 - Introduce cookie-based authentication and role-based authorization
@@ -144,12 +160,28 @@ Controllers stay thin by design: they validate input, call an application servic
 - Containerize the app and database with Docker Compose
 - Add structured logging and health checks
 
----
+<div align="center">
+  <img src="https://img.shields.io/badge/CONTACT-2F1C6B?style=for-the-badge" alt="Contact" />
+</div>
 
-## Contact
+<p align="center">
+  <b>Mohammad Yousefi</b> — Backend Developer (.NET / ASP.NET Core)
+</p>
 
-**Mohammad Yousefi** — Backend Developer (.NET / ASP.NET Core)
+<div align="center">
 
-- Email: [mmdyousefi95@gmail.com](mailto:mmdyousefi95@gmail.com)
-- GitHub: [@mmd-yousefiasl](https://github.com/mmd-yousefiasl)
-- Telegram: [@mmd_u_a](https://t.me/mmd_u_a)
+<a href="mailto:mmdyousefi95@gmail.com">
+  <img src="https://img.shields.io/badge/Email-mmdyousefi95%40gmail.com-512BD4?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
+</a>
+<a href="https://github.com/mmd-yousefiasl">
+  <img src="https://img.shields.io/badge/GitHub-%40mmd--yousefiasl-512BD4?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
+</a>
+<a href="https://t.me/mmd_u_a">
+  <img src="https://img.shields.io/badge/Telegram-%40mmd__u__a-512BD4?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram" />
+</a>
+
+</div>
+
+<br>
+
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:512BD4,1:8E7CF3&height=140&section=footer" alt="" />
