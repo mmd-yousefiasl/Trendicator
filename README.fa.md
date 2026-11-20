@@ -42,7 +42,7 @@
 - طراحی معماری راه‌حل و مرزهای بین لایه‌ها
 - مدل‌سازی دامنه (کاربر، محصول، سفارش) و طراحی اسکیمای PostgreSQL
 - پیاده‌سازی لایه دسترسی به داده با Entity Framework Core و مایگریشن‌ها
-- ساخت لایه Application: use caseها، DTOها و ViewModelها
+- ساخت لایه Application: منطق کاربرد (use case)، DTOها و ViewModelها
 - توسعه کنترلرهای MVC و ویوهای Razor (layout · partial · Tag Helper)
 - یکپارچه‌سازی با سرویس خارجی TradingView
 - پیکربندی متمرکز تزریق وابستگی برای سبک نگه‌داشتن پروژه Web
@@ -55,8 +55,8 @@
 
 ```
 Trendicator.sln
-├── Trendicator.Domain          # موجودیت‌ها، enumها و اینترفیس‌های دامنه (بدون وابستگی)
-├── Trendicator.Application     # use caseها، DTOها و ViewModelها، اینترفیس سرویس‌ها
+├── Trendicator.Domain          # موجودیت‌ها، نوع‌های شمارشی و اینترفیس‌های دامنه (بدون وابستگی)
+├── Trendicator.Application     # منطق کاربرد، مدل‌های انتقال و ویو، اینترفیس سرویس‌ها
 ├── Trendicator.Data            # DbContext، ریپازیتوری‌ها، مایگریشن‌ها
 ├── Trendicator.IOC             # ثبت تزریق وابستگی
 └── Trendicator.Web             # ASP.NET Core MVC (Controllers، Views، wwwroot)
@@ -108,7 +108,7 @@ Browser → Controller → Application Service → Domain / Repository → EF Co
 | **Runtime** | &#x200E;.NET 10 |
 | **فریم‌ورک** | ASP.NET Core MVC |
 | **موتور ویو** | Razor `(.cshtml)` · Layout · Partial · Tag Helper |
-| **زبان** | C# |
+| **زبان** | C#&lrm; |
 | **معماری** | Clean Architecture، الگوی DTO / ViewModel، تزریق وابستگی |
 | **ORM** | Entity Framework Core |
 | **پایگاه داده** | PostgreSQL (مهاجرت‌شده از SQL Server) |
@@ -142,7 +142,7 @@ Browser → Controller → Application Service → Domain / Repository → EF Co
 
 - ASP.NET Core MVC (کنترلرها، مسیریابی، فیلترها، middleware)
 - ویوهای Razor: Layout، Partial، Tag Helper، مدل‌های strongly typed
-- C# و &#x200E;.NET 10
+- C#&lrm; و &#x200E;.NET 10
 - معماری Clean Architecture و طراحی لایه‌ای
 - الگوهای DTO و ViewModel
 - تزریق وابستگی و مدیریت طول عمر سرویس‌ها
